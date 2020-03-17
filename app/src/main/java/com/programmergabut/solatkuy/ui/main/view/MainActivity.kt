@@ -1,77 +1,31 @@
 package com.programmergabut.solatkuy.ui.main.view
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
-import android.util.Log
-import android.view.View
-import android.widget.LinearLayout
-import android.widget.Toast
-import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
-import androidx.recyclerview.widget.LinearLayoutManager
+import android.view.Menu
+import androidx.appcompat.app.AppCompatActivity
+import com.google.android.material.badge.BadgeDrawable
 import com.programmergabut.solatkuy.R
-import com.programmergabut.solatkuy.data.api.ApiHelper
-import com.programmergabut.solatkuy.data.api.ApiServiceImpl
-import com.programmergabut.solatkuy.data.model.prayerApi.Data
-import com.programmergabut.solatkuy.data.model.prayerApi.PrayerApi
-import com.programmergabut.solatkuy.ui.base.ViewModelFactory
-import com.programmergabut.solatkuy.ui.main.adapter.MainAdapter
-import com.programmergabut.solatkuy.ui.main.viewmodel.MainViewModel
-import com.programmergabut.solatkuy.util.EnumStatus
-import kotlinx.android.synthetic.main.activity_main.*
+import kotlinx.android.synthetic.main.layout_bottom_bar.*
+
 
 class MainActivity : AppCompatActivity() {
 
-    private lateinit var adapter: MainAdapter
-    private lateinit var mainViewModel: MainViewModel
+    private var menuList: Menu? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        setupUI()
-        setupViewModel()
-        setupAPICall()
+        val badge: BadgeDrawable = bottom_navigation.getOrCreateBadge(1)
+        badge.isVisible = true
     }
 
-    private fun setupUI(){
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        adapter =  MainAdapter(arrayListOf())
-        recyclerView.adapter = adapter
+    override fun onCreateOptionsMenu(menu: Menu?): Boolean {
+
+        this.menuList = menu
+
+        menuInflater.inflate(R.menu.bottom_navigation_menu, menu)
+        return super.onCreateOptionsMenu(menu)
     }
-
-    private fun setupViewModel(){
-        mainViewModel = ViewModelProviders.of(this, ViewModelFactory(ApiHelper(ApiServiceImpl())))
-            .get(MainViewModel::class.java)
-    }
-
-    private fun setupAPICall(){
-        mainViewModel.getPrayer().observe(this, Observer {
-
-            when(it.Status){
-                EnumStatus.SUCCESS -> {
-                    progressBar.visibility = View.GONE
-                    it.data?.let { prayer -> renderList(prayer)}
-                    recyclerView.visibility = View.VISIBLE
-                }
-                EnumStatus.LOADING -> {
-                    progressBar.visibility = View.VISIBLE
-                    recyclerView.visibility = View.GONE
-                }
-                EnumStatus.ERROR -> {
-                    progressBar.visibility = View.GONE
-                    Toast.makeText(this,it.message,Toast.LENGTH_LONG).show()
-                }
-            }
-        })
-
-        mainViewModel.fetchPrayer()
-    }
-
-    private fun renderList(prayer: PrayerApi) {
-        adapter.addData(prayer)
-        adapter.notifyDataSetChanged()
-    }
-
 }
