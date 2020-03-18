@@ -7,15 +7,11 @@
     android:layout_height="match_parent"
     tools:context=".ui.main.view.MainActivity">
 
-    <androidx.core.widget.ContentLoadingProgressBar
-        android:id="@+id/progressBar"
+    <include
+        android:id="@+id/in_prayer_widget"
+        layout="@layout/layout_widget"
         android:layout_width="match_parent"
-        android:layout_height="match_parent" />
-
-    <ImageView
-        android:id="@+id/iv_prayer_widget"
-        android:layout_width="match_parent"
-        android:layout_height="250dp"
+        android:layout_height="wrap_content"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -28,8 +24,7 @@
         app:layout_constraintBottom_toTopOf="@+id/in_bottom_bar"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintHorizontal_bias="0.0"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@id/iv_prayer_widget" />
+        app:layout_constraintStart_toStartOf="parent" />
 
     <include
         android:id="@+id/in_bottom_bar"

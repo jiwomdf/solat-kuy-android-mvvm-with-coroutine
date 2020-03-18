@@ -6,10 +6,10 @@
 
     <item android:id="@+id/item1"
         android:icon="@drawable/ic_prayer_time_24dp"
-        android:title="More"/>
+        android:title="Prayer Time"/>
     <item android:id="@+id/item2"
         android:icon="@drawable/ic_prayer_time_24dp"
-        android:title="Prayer Time"/>
+        android:title="More"/>
     <item android:id="@+id/item3"
         android:icon="@drawable/ic_prayer_time_24dp"
         android:title="Setting"/>

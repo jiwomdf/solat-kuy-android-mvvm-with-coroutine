@@ -1,4 +1,12 @@
 <resources>
     <string name="app_name">Solat Kuy</string>
     <string name="loading">Loading..</string>
+    <string name="fajr">Fajr</string>
+    <string name="dhuhr">Dhuhr</string>
+    <string name="asr">Asr</string>
+    <string name="maghrib">Maghrib</string>
+    <string name="isha">Isha</string>
+    <string name="notified">Notified</string>
+    <string name="prayer_name">Prayer Name</string>
+    <string name="time">Time</string>
 </resources>

@@ -2,6 +2,8 @@
 <resources>
     <dimen name="smaller_margin">4dp</dimen>
     <dimen name="small_margin">8dp</dimen>
+    <dimen name="medium_text_size">16sp</dimen>
     <dimen name="large_text_size">20sp</dimen>
-    <dimen name="avatar_size">32sp</dimen>
+    <dimen name="larger_text_size">40sp</dimen>
+    <dimen name="avatar_size">40sp</dimen>
 </resources>

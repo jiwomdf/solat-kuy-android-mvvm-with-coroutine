@@ -38,6 +38,13 @@ dependencies {
     // Material Dependencies
     api 'com.google.android.material:material:1.2.0-alpha05'
 
+    // Glide
+    implementation 'com.github.bumptech.glide:glide:4.11.0'
+    annotationProcessor 'com.github.bumptech.glide:compiler:4.11.0'
+
+    // JodaTime
+    implementation 'joda-time:joda-time:2.10.5'
+
     // Added Dependencies
     implementation "androidx.recyclerview:recyclerview:1.1.0"
     implementation 'android.arch.lifecycle:extensions:1.1.1'
