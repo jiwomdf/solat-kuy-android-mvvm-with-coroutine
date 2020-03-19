@@ -9,211 +9,181 @@
     android:orientation="vertical"
     app:cardBackgroundColor="@color/colorPrimary">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:layout_width="match_parent"
-        android:layout_height="50dp" >
-
-        <ImageView
-            android:id="@+id/iv_notified"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_margin="5dp"
-            android:src="@drawable/ic_notifications_active_24dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/tv_prayer_name"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:text="@string/prayer_name"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toStartOf="@+id/textView"
-            app:layout_constraintStart_toEndOf="@+id/iv_notified"
-            app:layout_constraintTop_toTopOf="parent" />
-
-        <TextView
-            android:id="@+id/textView"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginEnd="10dp"
-            android:text="@string/time"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
-
     <androidx.cardview.widget.CardView
         android:id="@+id/cv_prayer_time"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        app:cardBackgroundColor="@color/colorPrimary">
+        android:layout_height="wrap_content">
 
-        <androidx.constraintlayout.widget.ConstraintLayout
+        <TableLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginBottom="10dp"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+            android:stretchColumns="0,2"
+            android:background="@color/colorPrimary">
+
+            <TableRow
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:paddingTop="@dimen/smaller_margin"
+                android:paddingBottom="@dimen/smaller_margin"
+                android:background="@color/colorWhite">
+
+                <ImageView
+                    android:id="@+id/iv_notified"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:layout_gravity="left"
+                    android:layout_marginStart="@dimen/smaller_margin"
+                    android:src="@drawable/ic_notifications_active_24dp" />
+
+                <TextView
+                    android:id="@+id/tv_prayer_name"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:text="@string/prayer_name"/>
+
+                <TextView
+                    android:id="@+id/textView"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:gravity="end"
+                    android:layout_marginEnd="@dimen/medium_margin"
+                    android:text="@string/time"/>
+
+            </TableRow>
 
             <!--Fajr-->
-            <CheckBox
-                android:id="@+id/cb_fajr"
-                android:layout_width="@dimen/avatar_size"
-                android:layout_height="@dimen/avatar_size"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+            <TableRow>
+                <CheckBox
+                    android:id="@+id/cb_fajr"
+                    android:layout_width="@dimen/avatar_size"
+                    android:layout_height="@dimen/avatar_size"
+                    />
 
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/tv_fajr"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/small_margin"
-                android:text="@string/fajr"
-                android:textColor="@color/colorWhite"
-                app:layout_constraintBottom_toTopOf="@id/tv_dhuhr"
-                app:layout_constraintEnd_toStartOf="@+id/tv_fajr_time"
-                app:layout_constraintStart_toEndOf="@+id/cb_fajr"
-                app:layout_constraintTop_toTopOf="parent" />
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tv_fajr"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="start|center"
+                    android:layout_marginStart="@dimen/smaller_margin"
+                    android:text="@string/fajr"
+                    android:textColor="@color/colorWhite" />
 
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/tv_fajr_time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/small_margin"
-                android:textColor="@color/colorWhite"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toTopOf="parent"
-                app:layout_constraintBottom_toTopOf="@id/tv_dhuhr_time"/>
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tv_fajr_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="04:00"
+                    android:gravity="end|center"
+                    android:layout_marginEnd="@dimen/small_margin"
+                    android:textColor="@color/colorWhite"/>
 
+            </TableRow>
 
             <!--Dhuhur-->
-            <CheckBox
-                android:id="@+id/cb_dhuhr"
-                android:layout_width="@dimen/avatar_size"
-                android:layout_height="@dimen/avatar_size"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/cb_fajr" />
+            <TableRow>
+                <CheckBox
+                    android:id="@+id/cb_dhuhr"
+                    android:layout_width="@dimen/avatar_size"
+                    android:layout_height="@dimen/avatar_size"/>
 
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/tv_dhuhr"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/small_margin"
-                android:text="@string/dhuhr"
-                android:textColor="@color/colorWhite"
-                app:layout_constraintBottom_toTopOf="@id/tv_asr"
-                app:layout_constraintEnd_toStartOf="@+id/tv_dhuhr_time"
-                app:layout_constraintStart_toEndOf="@+id/cb_dhuhr"
-                app:layout_constraintTop_toBottomOf="@id/tv_fajr" />
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tv_dhuhr"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="start|center"
+                    android:layout_marginStart="@dimen/smaller_margin"
+                    android:text="@string/dhuhr"
+                    android:textColor="@color/colorWhite"/>
 
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/tv_dhuhr_time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/colorWhite"
-                android:layout_marginEnd="@dimen/small_margin"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_fajr_time"
-                app:layout_constraintBottom_toTopOf="@id/tv_asr_time"/>
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tv_dhuhr_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="04:00"
+                    android:gravity="end|center"
+                    android:textColor="@color/colorWhite"
+                    android:layout_marginEnd="@dimen/small_margin"/>
+
+            </TableRow>
 
             <!--Asr-->
-            <CheckBox
-                android:id="@+id/cb_asr"
-                android:layout_width="@dimen/avatar_size"
-                android:layout_height="@dimen/avatar_size"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/cb_dhuhr" />
+            <TableRow>
+                <CheckBox
+                    android:id="@+id/cb_asr"
+                    android:layout_width="@dimen/avatar_size"
+                    android:layout_height="@dimen/avatar_size"/>
 
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/tv_asr"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/small_margin"
-                android:text="@string/asr"
-                android:textColor="@color/colorWhite"
-                app:layout_constraintBottom_toTopOf="@id/tv_maghrib"
-                app:layout_constraintEnd_toStartOf="@+id/tv_asr_time"
-                app:layout_constraintStart_toEndOf="@+id/cb_asr"
-                app:layout_constraintTop_toBottomOf="@id/tv_dhuhr" />
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tv_asr"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="start|center"                    android:layout_marginStart="@dimen/smaller_margin"
+                    android:text="@string/asr"
+                    android:textColor="@color/colorWhite"/>
 
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/tv_asr_time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/colorWhite"
-                android:layout_marginEnd="@dimen/small_margin"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_dhuhr_time"
-                app:layout_constraintBottom_toTopOf="@id/tv_maghrib_time"
-                />
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tv_asr_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="04:00"
+                    android:gravity="end|center"
+                    android:textColor="@color/colorWhite"
+                    android:layout_marginEnd="@dimen/small_margin"/>
+            </TableRow>
 
             <!--Maghrib-->
-            <CheckBox
-                android:id="@+id/cb_maghrib"
-                android:layout_width="@dimen/avatar_size"
-                android:layout_height="@dimen/avatar_size"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/cb_asr" />
+            <TableRow>
+                <CheckBox
+                    android:id="@+id/cb_maghrib"
+                    android:layout_width="@dimen/avatar_size"
+                    android:layout_height="@dimen/avatar_size" />
 
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/tv_maghrib"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/small_margin"
-                android:text="@string/maghrib"
-                android:textColor="@color/colorWhite"
-                app:layout_constraintBottom_toTopOf="@id/tv_isha"
-                app:layout_constraintEnd_toStartOf="@+id/tv_maghrib_time"
-                app:layout_constraintStart_toEndOf="@+id/cb_maghrib"
-                app:layout_constraintTop_toBottomOf="@id/tv_asr" />
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tv_maghrib"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="start|center"                    android:layout_marginStart="@dimen/smaller_margin"
+                    android:text="@string/maghrib"
+                    android:textColor="@color/colorWhite" />
 
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/tv_maghrib_time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:textColor="@color/colorWhite"
-                android:layout_marginEnd="@dimen/small_margin"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@id/tv_asr_time"
-                app:layout_constraintBottom_toTopOf="@id/tv_isha_time"/>
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tv_maghrib_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="04:00"
+                    android:gravity="end|center"
+                    android:textColor="@color/colorWhite"
+                    android:layout_marginEnd="@dimen/small_margin"/>
+            </TableRow>
 
             <!--Isha-->
-            <CheckBox
-                android:id="@+id/cb_isha"
-                android:layout_width="@dimen/avatar_size"
-                android:layout_height="@dimen/avatar_size"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/cb_maghrib" />
+            <TableRow>
+                <CheckBox
+                    android:id="@+id/cb_isha"
+                    android:layout_width="@dimen/avatar_size"
+                    android:layout_height="@dimen/avatar_size" />
 
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/tv_isha"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/small_margin"
-                android:text="@string/isha"
-                android:textColor="@color/colorWhite"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toStartOf="@+id/tv_isha_time"
-                app:layout_constraintStart_toEndOf="@+id/cb_isha"
-                app:layout_constraintTop_toBottomOf="@id/tv_maghrib" />
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tv_isha"
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:gravity="start|center"                    android:layout_marginStart="@dimen/smaller_margin"
+                    android:text="@string/isha"
+                    android:textColor="@color/colorWhite"/>
 
-            <com.google.android.material.textview.MaterialTextView
-                android:id="@+id/tv_isha_time"
-                android:layout_width="wrap_content"
-                android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/small_margin"
-                android:textColor="@color/colorWhite"
-                app:layout_constraintBottom_toBottomOf="parent"
-                app:layout_constraintEnd_toEndOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/tv_maghrib_time" />
+                <com.google.android.material.textview.MaterialTextView
+                    android:id="@+id/tv_isha_time"
+                    android:layout_width="wrap_content"
+                    android:layout_height="match_parent"
+                    android:text="04:00"
+                    android:gravity="end|center"
+                    android:textColor="@color/colorWhite"
+                    android:layout_marginEnd="@dimen/small_margin"/>
 
-        </androidx.constraintlayout.widget.ConstraintLayout>
+            </TableRow>
+
+        </TableLayout>
 
     </androidx.cardview.widget.CardView>
 
