@@ -2,8 +2,7 @@ package com.programmergabut.solatkuy.ui.fragmentmain.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.*
-import com.programmergabut.solatkuy.data.local.NotifiedPrayerDao
-import com.programmergabut.solatkuy.data.model.NotifiedPrayer
+import com.programmergabut.solatkuy.data.model.PrayerLocal
 import com.programmergabut.solatkuy.data.model.prayerApi.PrayerApi
 import com.programmergabut.solatkuy.data.repository.MainRepository
 import com.programmergabut.solatkuy.data.repository.RepositoryLocal
@@ -20,18 +19,18 @@ class FragmentMainViewModel(private val mainRepository: MainRepository,applicati
     private val compositeDisposable = CompositeDisposable()
     private var repository: RepositoryLocal? = null
 
-    val notifiedPrayer: LiveData<List<NotifiedPrayer>>
+    val prayerLocal: LiveData<List<PrayerLocal>>
 
     //Room
     init {
         val notifiedPrayerDao = NotifiedPrayerRoom.getDataBase(application, viewModelScope).notifiedPrayerDao()
         repository = RepositoryLocal(notifiedPrayerDao)
 
-        notifiedPrayer = repository!!.notifiedPrayer
+        prayerLocal = repository!!.prayerLocal
     }
 
-    fun insert(notifiedPrayer: NotifiedPrayer) = viewModelScope.launch {
-        repository?.insert(notifiedPrayer)
+    fun insert(prayerLocal: PrayerLocal) = viewModelScope.launch {
+        repository?.insert(prayerLocal)
     }
 
     //Live Data

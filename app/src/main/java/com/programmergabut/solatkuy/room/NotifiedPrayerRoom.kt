@@ -6,11 +6,11 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.programmergabut.solatkuy.data.local.NotifiedPrayerDao
-import com.programmergabut.solatkuy.data.model.NotifiedPrayer
+import com.programmergabut.solatkuy.data.model.PrayerLocal
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-@Database(entities = [NotifiedPrayer::class], version = 1, exportSchema = false)
+@Database(entities = [PrayerLocal::class], version = 1, exportSchema = false)
 abstract class NotifiedPrayerRoom: RoomDatabase() {
 
     abstract fun notifiedPrayerDao(): NotifiedPrayerDao
@@ -49,11 +49,11 @@ abstract class NotifiedPrayerRoom: RoomDatabase() {
             suspend fun populateDatabase(notifiedPrayerDao: NotifiedPrayerDao){
                 notifiedPrayerDao.deleteAll()
 
-                notifiedPrayerDao.insertNotifiedPrayer(NotifiedPrayer("Fajr",true))
-                notifiedPrayerDao.insertNotifiedPrayer(NotifiedPrayer("Dhuhr",true))
-                notifiedPrayerDao.insertNotifiedPrayer(NotifiedPrayer("Asr",true))
-                notifiedPrayerDao.insertNotifiedPrayer(NotifiedPrayer("Maghrib",true))
-                notifiedPrayerDao.insertNotifiedPrayer(NotifiedPrayer("Isha",true))
+                notifiedPrayerDao.insertNotifiedPrayer(PrayerLocal("Fajr",true))
+                notifiedPrayerDao.insertNotifiedPrayer(PrayerLocal("Dhuhr",true))
+                notifiedPrayerDao.insertNotifiedPrayer(PrayerLocal("Asr",true))
+                notifiedPrayerDao.insertNotifiedPrayer(PrayerLocal("Maghrib",true))
+                notifiedPrayerDao.insertNotifiedPrayer(PrayerLocal("Isha",true))
             }
 
         }

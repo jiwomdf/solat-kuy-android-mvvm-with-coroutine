@@ -10,13 +10,12 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
 import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.data.api.ApiHelper
 import com.programmergabut.solatkuy.data.api.ApiServiceImpl
-import com.programmergabut.solatkuy.data.model.NotifiedPrayer
+import com.programmergabut.solatkuy.data.model.PrayerLocal
 import com.programmergabut.solatkuy.data.model.prayerApi.Timings
 import com.programmergabut.solatkuy.ui.base.ViewModelFactory
 import com.programmergabut.solatkuy.ui.fragmentmain.viewmodel.FragmentMainViewModel
@@ -37,11 +36,26 @@ class FragmentMain : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        cbCheckFun()
-        initViewModel()
+        fragmentMainViewModel = ViewModelProviders.of(this,
+                ViewModelFactory(ApiHelper(ApiServiceImpl()), activity?.application!!)).get(FragmentMainViewModel::class.java)
 
-        fragmentMainViewModel.notifiedPrayer.observe(this, androidx.lifecycle.Observer {
-            Toast.makeText(context,"called",Toast.LENGTH_SHORT).show()
+        getPrayerTimeDataFromAPI()
+        initPrayerCbFromDb()
+
+    }
+
+    private fun initPrayerCbFromDb() {
+        fragmentMainViewModel.prayerLocal.observe(this, androidx.lifecycle.Observer { it ->
+            it.forEach {
+                when {
+                    it.prayerName.trim() == getString(R.string.fajr) -> cb_fajr.isChecked = true
+                    it.prayerName.trim() == getString(R.string.dhuhr) -> cb_dhuhr.isChecked = true
+                    it.prayerName.trim() == getString(R.string.asr) -> cb_asr.isChecked = true
+                    it.prayerName.trim() == getString(R.string.maghrib) -> cb_maghrib.isChecked = true
+                    it.prayerName.trim() == getString(R.string.isha) -> cb_isha.isChecked = true
+                }
+            }
+
         })
     }
 
@@ -49,13 +63,8 @@ class FragmentMain : Fragment() {
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
         inflater.inflate(R.layout.fragment_main, container, false)
 
-    private fun cbCheckFun(){
 
-    }
-
-    private fun initViewModel() {
-        fragmentMainViewModel = ViewModelProviders.of(this, ViewModelFactory(ApiHelper(ApiServiceImpl()), activity?.application!!))
-            .get(FragmentMainViewModel::class.java)
+    private fun getPrayerTimeDataFromAPI() {
 
         fragmentMainViewModel.getPrayer().observe(this, androidx.lifecycle.Observer { it ->
             when(it.Status){
@@ -141,6 +150,7 @@ class FragmentMain : Fragment() {
     private fun selectPrayer(timings: Timings): Int {
         var prayer: Int = -1
 
+        //prayer time
         val sdfPrayer = SimpleDateFormat("HH:mm", Locale.US)
         val fajrTime = DateTime(sdfPrayer.parse(timings.fajr.split(" ")[0].trim()))
         val dhuhrTime =  DateTime(sdfPrayer.parse(timings.dhuhr.split(" ")[0].trim()))
@@ -148,6 +158,7 @@ class FragmentMain : Fragment() {
         val maghribTime =  DateTime(sdfPrayer.parse(timings.maghrib.split(" ")[0].trim()))
         val ishaTime =  DateTime(sdfPrayer.parse(timings.isha.split(" ")[0].trim()))
 
+        //sunrise & next fajr time
         val sunriseTime =  DateTime(sdfPrayer.parse(timings.sunrise.split(" ")[0].trim()))
         val nextfajrTime = DateTime(sdfPrayer.parse(timings.fajr.split(" ")[0].trim())).plusDays(1)
 
