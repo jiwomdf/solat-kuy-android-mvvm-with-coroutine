@@ -38,7 +38,7 @@ class ActivityPrayerDetail : AppCompatActivity() {
     }
 
     private fun setupViewModel(){
-        activityPrayerViewModel = ViewModelProviders.of(this, ViewModelFactory(ApiHelper(ApiServiceImpl())))
+        activityPrayerViewModel = ViewModelProviders.of(this, ViewModelFactory(ApiHelper(ApiServiceImpl()),application))
             .get(ActivityPrayerViewModel::class.java)
     }
 

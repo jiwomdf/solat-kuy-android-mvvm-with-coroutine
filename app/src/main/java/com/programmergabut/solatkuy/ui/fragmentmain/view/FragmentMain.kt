@@ -10,11 +10,13 @@ import android.widget.Toast
 import androidx.annotation.RequiresApi
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
 import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.data.api.ApiHelper
 import com.programmergabut.solatkuy.data.api.ApiServiceImpl
+import com.programmergabut.solatkuy.data.model.NotifiedPrayer
 import com.programmergabut.solatkuy.data.model.prayerApi.Timings
 import com.programmergabut.solatkuy.ui.base.ViewModelFactory
 import com.programmergabut.solatkuy.ui.fragmentmain.viewmodel.FragmentMainViewModel
@@ -35,7 +37,25 @@ class FragmentMain : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        fragmentMainViewModel = ViewModelProviders.of(this, ViewModelFactory(ApiHelper(ApiServiceImpl()))).get(FragmentMainViewModel::class.java)
+        cbCheckFun()
+        initViewModel()
+
+        fragmentMainViewModel.notifiedPrayer.observe(this, androidx.lifecycle.Observer {
+            Toast.makeText(context,"called",Toast.LENGTH_SHORT).show()
+        })
+    }
+
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
+        inflater.inflate(R.layout.fragment_main, container, false)
+
+    private fun cbCheckFun(){
+
+    }
+
+    private fun initViewModel() {
+        fragmentMainViewModel = ViewModelProviders.of(this, ViewModelFactory(ApiHelper(ApiServiceImpl()), activity?.application!!))
+            .get(FragmentMainViewModel::class.java)
 
         fragmentMainViewModel.getPrayer().observe(this, androidx.lifecycle.Observer { it ->
             when(it.Status){
@@ -56,9 +76,6 @@ class FragmentMain : Fragment() {
 
         fragmentMainViewModel.fetchPrayer()
     }
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-        inflater.inflate(R.layout.fragment_main, container, false)
 
     @RequiresApi(Build.VERSION_CODES.O)
     private fun setupWidget(timings: Timings?) {

@@ -9,4 +9,5 @@ class MainRepository(private val apiHelper: ApiHelper) {
     fun getPrayer(): Single<PrayerApi>{
         return apiHelper.getPrayer()
     }
+
 }

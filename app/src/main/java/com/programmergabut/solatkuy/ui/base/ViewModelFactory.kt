@@ -1,5 +1,6 @@
 package com.programmergabut.solatkuy.ui.base
 
+import android.app.Application
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.programmergabut.solatkuy.data.api.ApiHelper
@@ -10,7 +11,7 @@ import com.programmergabut.solatkuy.ui.main.view.MainActivity
 import com.programmergabut.solatkuy.ui.main.viewmodel.MainActivityViewModel
 import com.programmergabut.solatkuy.ui.prayerdetail.viewmodel.ActivityPrayerViewModel
 
-class ViewModelFactory(private val apiHelper: ApiHelper): ViewModelProvider.Factory {
+class ViewModelFactory(private val apiHelper: ApiHelper,private val application: Application): ViewModelProvider.Factory {
 
     override fun <T : ViewModel?> create(modelClass: Class<T>): T {
         if(modelClass.isAssignableFrom(ActivityPrayerViewModel::class.java))
@@ -18,7 +19,7 @@ class ViewModelFactory(private val apiHelper: ApiHelper): ViewModelProvider.Fact
         else if(modelClass.isAssignableFrom(MainActivityViewModel::class.java))
             return MainActivityViewModel(MainRepository(apiHelper)) as T
         else if(modelClass.isAssignableFrom(FragmentMainViewModel::class.java))
-            return FragmentMainViewModel(MainRepository(apiHelper)) as T
+            return FragmentMainViewModel(MainRepository(apiHelper), application) as T
         else
             throw IllegalArgumentException("Class not defined")
 
