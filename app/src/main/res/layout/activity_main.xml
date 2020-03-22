@@ -10,15 +10,10 @@
     <androidx.viewpager.widget.ViewPager
         android:id="@+id/vp2_main"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="match_parent"
         app:layout_constraintBottom_toTopOf="@+id/in_bottom_bar"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent">
-
-    </androidx.viewpager.widget.ViewPager>
-
-
+        app:layout_constraintStart_toStartOf="parent" />
 
     <include
         android:id="@+id/in_bottom_bar"

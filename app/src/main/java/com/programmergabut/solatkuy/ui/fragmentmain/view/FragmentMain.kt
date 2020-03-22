@@ -42,20 +42,77 @@ class FragmentMain : Fragment() {
         getPrayerTimeDataFromAPI()
         initPrayerCbFromDb()
 
+        fragmentMainViewModel.prayerLocal.observe(this, androidx.lifecycle.Observer { it ->
+            it.forEach {
+                when {
+                    it.prayerName.trim() == getString(R.string.fajr) && it.isNotified -> cb_fajr.isChecked = true
+                    it.prayerName.trim() == getString(R.string.dhuhr) && it.isNotified -> cb_dhuhr.isChecked = true
+                    it.prayerName.trim() == getString(R.string.asr) && it.isNotified -> cb_asr.isChecked = true
+                    it.prayerName.trim() == getString(R.string.maghrib) && it.isNotified -> cb_maghrib.isChecked = true
+                    it.prayerName.trim() == getString(R.string.isha) && it.isNotified -> cb_isha.isChecked = true
+                }}
+        })
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
+        cbClickListener()
+    }
+
+    private fun cbClickListener() {
+
+        cb_fajr.setOnClickListener {
+            if(cb_fajr.isChecked)
+                insertDb(getString(R.string.fajr), true)
+            else
+                insertDb(getString(R.string.fajr), false)
+        }
+
+        cb_dhuhr.setOnClickListener {
+            if(cb_dhuhr.isChecked)
+                insertDb(getString(R.string.dhuhr), true)
+            else
+                insertDb(getString(R.string.dhuhr), false)
+        }
+
+        cb_asr.setOnClickListener {
+            if(cb_asr.isChecked)
+                insertDb(getString(R.string.asr), true)
+            else
+                insertDb(getString(R.string.asr), false)
+        }
+
+        cb_maghrib.setOnClickListener {
+            if(cb_maghrib.isChecked)
+                insertDb(getString(R.string.maghrib), true)
+            else
+                insertDb(getString(R.string.maghrib), false)
+        }
+
+        cb_isha.setOnClickListener {
+            if(cb_isha.isChecked)
+                insertDb(getString(R.string.isha), true)
+            else
+                insertDb(getString(R.string.isha), false)
+        }
+
+    }
+
+    private fun insertDb(prayer:String, isNotified:Boolean){
+        fragmentMainViewModel.update(PrayerLocal(prayer,isNotified))
     }
 
     private fun initPrayerCbFromDb() {
         fragmentMainViewModel.prayerLocal.observe(this, androidx.lifecycle.Observer { it ->
             it.forEach {
                 when {
-                    it.prayerName.trim() == getString(R.string.fajr) -> cb_fajr.isChecked = true
-                    it.prayerName.trim() == getString(R.string.dhuhr) -> cb_dhuhr.isChecked = true
-                    it.prayerName.trim() == getString(R.string.asr) -> cb_asr.isChecked = true
-                    it.prayerName.trim() == getString(R.string.maghrib) -> cb_maghrib.isChecked = true
-                    it.prayerName.trim() == getString(R.string.isha) -> cb_isha.isChecked = true
-                }
-            }
-
+                    it.prayerName.trim() == getString(R.string.fajr) && it.isNotified -> cb_fajr.isChecked = true
+                    it.prayerName.trim() == getString(R.string.dhuhr) && it.isNotified -> cb_dhuhr.isChecked = true
+                    it.prayerName.trim() == getString(R.string.asr) && it.isNotified -> cb_asr.isChecked = true
+                    it.prayerName.trim() == getString(R.string.maghrib) && it.isNotified -> cb_maghrib.isChecked = true
+                    it.prayerName.trim() == getString(R.string.isha) && it.isNotified -> cb_isha.isChecked = true
+                }}
         })
     }
 
@@ -83,7 +140,25 @@ class FragmentMain : Fragment() {
             }
         })
 
-        fragmentMainViewModel.fetchPrayer()
+        fragmentMainViewModel.fetchPrayer("35.1796","129.0756")
+    }
+
+    private fun setPrayerText(timings: Timings?) {
+
+        if(timings == null){
+            tv_fajr_time.text = getString(R.string.loading)
+            tv_dhuhr_time.text = getString(R.string.loading)
+            tv_asr_time.text = getString(R.string.loading)
+            tv_maghrib_time.text = getString(R.string.loading)
+            tv_isha_time.text = getString(R.string.loading)
+        }
+        else{
+            tv_fajr_time.text = timings.fajr
+            tv_dhuhr_time.text = timings.dhuhr
+            tv_asr_time.text = timings.asr
+            tv_maghrib_time.text = timings.maghrib
+            tv_isha_time.text = timings.isha
+        }
     }
 
     @RequiresApi(Build.VERSION_CODES.O)
@@ -112,6 +187,7 @@ class FragmentMain : Fragment() {
             3 -> period = Period(nowTime, DateTime(sdfPrayer.parse(timings.maghrib.split(" ")[0].trim())))
             4 -> period = Period(nowTime, DateTime(sdfPrayer.parse(timings.isha.split(" ")[0].trim())))
             5 -> period = Period(nowTime, DateTime(sdfPrayer.parse(timings.fajr.split(" ")[0].trim())))
+            6 -> period = Period(nowTime, DateTime(sdfPrayer.parse(timings.fajr.split(" ")[0].trim())))
         }
 
         if(period != null)
@@ -127,6 +203,7 @@ class FragmentMain : Fragment() {
             3 -> tv_widget_prayer_name.text = getString(R.string.asr)
             4 -> tv_widget_prayer_name.text = getString(R.string.maghrib)
             5 -> tv_widget_prayer_name.text = getString(R.string.isha)
+            6 -> tv_widget_prayer_name.text = getString(R.string.isha)
         }
     }
 
@@ -134,12 +211,13 @@ class FragmentMain : Fragment() {
         var widgetDrawable: Drawable? = null
 
         when(selPrayer){
-            -1 -> widgetDrawable = getDrawable(context?.applicationContext!!,R.drawable.dhuhr)
+            -1 -> widgetDrawable = getDrawable(context?.applicationContext!!,R.drawable.sunrise)
             1 -> widgetDrawable = getDrawable(context?.applicationContext!!,R.drawable.fajr)
             2 -> widgetDrawable = getDrawable(context?.applicationContext!!,R.drawable.dhuhr)
             3 -> widgetDrawable = getDrawable(context?.applicationContext!!,R.drawable.asr)
-            4 -> widgetDrawable = getDrawable(context?.applicationContext!!,R.drawable.mahgrib)
+            4 -> widgetDrawable = getDrawable(context?.applicationContext!!,R.drawable.maghrib)
             5 -> widgetDrawable = getDrawable(context?.applicationContext!!,R.drawable.isha)
+            6 -> widgetDrawable = getDrawable(context?.applicationContext!!,R.drawable.isha)
         }
 
         if(widgetDrawable != null)
@@ -161,39 +239,25 @@ class FragmentMain : Fragment() {
         //sunrise & next fajr time
         val sunriseTime =  DateTime(sdfPrayer.parse(timings.sunrise.split(" ")[0].trim()))
         val nextfajrTime = DateTime(sdfPrayer.parse(timings.fajr.split(" ")[0].trim())).plusDays(1)
+        val zerozeroTime = DateTime(sdfPrayer.parse("00:00"))
 
         val nowTime = DateTime(sdfPrayer.parse(LocalTime.now().toString()))
 
-        if(fajrTime.isBefore(nowTime) && nowTime.isBefore(sunriseTime))
+        if(nowTime.isAfter(zerozeroTime) && nowTime.isBefore(fajrTime)) //--> isha time
+            prayer = 6
+
+        if(fajrTime.isBefore(nowTime) && nowTime.isBefore(sunriseTime)) //--> fajr time
             prayer = 1
-        else if(dhuhrTime.isBefore(nowTime) && nowTime.isBefore(asrTime))
+        else if(dhuhrTime.isBefore(nowTime) && nowTime.isBefore(asrTime)) //--> dhuhr time
             prayer = 2
-        else if(asrTime.isBefore(nowTime) && nowTime.isBefore(maghribTime))
+        else if(asrTime.isBefore(nowTime) && nowTime.isBefore(maghribTime)) //--> asr time
             prayer = 3
-        else if(maghribTime.isBefore(nowTime) && nowTime.isBefore(ishaTime))
+        else if(maghribTime.isBefore(nowTime) && nowTime.isBefore(ishaTime)) //--> maghrib time
             prayer = 4
-        else if(ishaTime.isBefore(nowTime) && nowTime.isBefore(nextfajrTime))
+        else if(ishaTime.isBefore(nowTime) && nowTime.isBefore(nextfajrTime)) //--> isha time
             prayer = 5
 
         return prayer
-    }
-
-    private fun setPrayerText(timings: Timings?) {
-
-        if(timings == null){
-            tv_fajr_time.text = getString(R.string.loading)
-            tv_dhuhr_time.text = getString(R.string.loading)
-            tv_asr_time.text = getString(R.string.loading)
-            tv_maghrib_time.text = getString(R.string.loading)
-            tv_isha_time.text = getString(R.string.loading)
-        }
-        else{
-            tv_fajr_time.text = timings.fajr
-            tv_dhuhr_time.text = timings.dhuhr
-            tv_asr_time.text = timings.asr
-            tv_maghrib_time.text = timings.maghrib
-            tv_isha_time.text = timings.isha
-        }
     }
 
 

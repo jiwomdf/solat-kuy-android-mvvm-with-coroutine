@@ -13,4 +13,12 @@ class ApiServiceImpl: ApiService {
             .build()
             .getObjectSingle(PrayerApi::class.java)
     }
+
+    override fun getPrayer(latitude: String, longitude: String): Single<PrayerApi> {
+
+        return Rx2AndroidNetworking
+            .get("http://api.aladhan.com/v1/calendar?latitude=${latitude}&longitude=${longitude}&method=2&month=3&year=2020")
+            .build()
+            .getObjectSingle(PrayerApi::class.java)
+    }
 }

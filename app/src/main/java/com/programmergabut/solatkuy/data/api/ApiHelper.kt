@@ -9,4 +9,8 @@ class ApiHelper(private val apiService: ApiService) {
       return apiService.getPrayer()
     }
 
+    fun getPrayer(latitude:String, longitude: String) : Single<PrayerApi>{
+        return apiService.getPrayer(latitude,longitude)
+    }
+
 }

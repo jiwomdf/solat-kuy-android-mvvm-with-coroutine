@@ -1,10 +1,7 @@
 package com.programmergabut.solatkuy.data.local
 
 import androidx.lifecycle.LiveData
-import androidx.room.Dao
-import androidx.room.Insert
-import androidx.room.OnConflictStrategy
-import androidx.room.Query
+import androidx.room.*
 import com.programmergabut.solatkuy.data.model.PrayerLocal
 
 @Dao
@@ -18,5 +15,8 @@ interface NotifiedPrayerDao {
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertNotifiedPrayer(prayerLocal: PrayerLocal)
+
+    @Query("update notified_prayer set isNotified = :isNotified where prayerName = :prayerName")
+    suspend fun updateNotifiedPrayer(prayerName: String, isNotified: Boolean)
 
 }

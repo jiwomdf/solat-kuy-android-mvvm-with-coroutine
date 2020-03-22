@@ -1,6 +1,7 @@
 package com.programmergabut.solatkuy.room
 
 import android.content.Context
+import android.widget.Toast
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
@@ -37,8 +38,8 @@ abstract class NotifiedPrayerRoom: RoomDatabase() {
 
         private class NotifiedPrayerCallBack(private val scope: CoroutineScope): RoomDatabase.Callback(){
 
-            override fun onOpen(db: SupportSQLiteDatabase) {
-                super.onOpen(db)
+            override fun onCreate(db: SupportSQLiteDatabase) {
+                super.onCreate(db)
                 INSTANCE.let {
                     scope.launch {
                         populateDatabase(it?.notifiedPrayerDao()!!)

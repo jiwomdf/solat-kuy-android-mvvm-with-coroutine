@@ -10,9 +10,17 @@
     <string name="prayer_name">Prayer Name</string>
     <string name="time">Time</string>
 
-    <!-- TODO: Remove or change this placeholder text -->
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="prayer_time">Prayer Time</string>
     <string name="prayer_report">Prayer Report</string>
     <string name="setting">Setting</string>
+    <string name="changelocation">Change Location</string>
+    <string name="by_latitude_amp_longtitude"><![CDATA[By Latitude & Longtitude]]></string>
+    <string name="by_gps">By GPS</string>
+    <string name="by_city">By City</string>
+    <string name="latitude">Latitude</string>
+    <string name="longitude">Longitude</string>
+    <string name="proceed">Proceed</string>
+    <string name="current_location">Current Location</string>
+    <string name="city">City</string>
 </resources>
