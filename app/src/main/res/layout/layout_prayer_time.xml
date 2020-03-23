@@ -73,7 +73,7 @@
                     android:id="@+id/tv_fajr_time"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:text="04:00"
+                    android:text="@string/loading"
                     android:gravity="end|center"
                     android:layout_marginEnd="@dimen/small_margin"
                     android:textColor="@color/colorWhite"/>
@@ -100,7 +100,7 @@
                     android:id="@+id/tv_dhuhr_time"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:text="04:00"
+                    android:text="@string/loading"
                     android:gravity="end|center"
                     android:textColor="@color/colorWhite"
                     android:layout_marginEnd="@dimen/small_margin"/>
@@ -126,7 +126,7 @@
                     android:id="@+id/tv_asr_time"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:text="04:00"
+                    android:text="@string/loading"
                     android:gravity="end|center"
                     android:textColor="@color/colorWhite"
                     android:layout_marginEnd="@dimen/small_margin"/>
@@ -151,7 +151,7 @@
                     android:id="@+id/tv_maghrib_time"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:text="04:00"
+                    android:text="@string/loading"
                     android:gravity="end|center"
                     android:textColor="@color/colorWhite"
                     android:layout_marginEnd="@dimen/small_margin"/>
@@ -176,7 +176,7 @@
                     android:id="@+id/tv_isha_time"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:text="04:00"
+                    android:text="@string/loading"
                     android:gravity="end|center"
                     android:textColor="@color/colorWhite"
                     android:layout_marginEnd="@dimen/small_margin"/>

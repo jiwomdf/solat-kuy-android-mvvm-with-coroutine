@@ -125,7 +125,7 @@ class FragmentMain : Fragment() {
             }
         })
 
-        fragmentMainViewModel.fetch("35.1796","129.0756")
+        fragmentMainViewModel.fetch("-7.5755","110.8243",8,"3","2020")
     }
 
     private fun setPrayerText(timings: Timings?) {

@@ -15,5 +15,4 @@ interface CalendarApiService {
                             @Query("method") method: Int,
                             @Query("month") month: String,
                             @Query("year") year: String): PrayerApi
-
 }

@@ -8,14 +8,14 @@ import androidx.lifecycle.viewModelScope
 import com.programmergabut.solatkuy.data.model.PrayerLocal
 import com.programmergabut.solatkuy.data.model.prayerApi.PrayerApi
 import com.programmergabut.solatkuy.data.repository.Repository
-import com.programmergabut.solatkuy.room.NotifiedPrayerRoom
+import com.programmergabut.solatkuy.room.SolatKuyRoom
 import com.programmergabut.solatkuy.util.Resource
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 class FragmentMainViewModel(application: Application): AndroidViewModel(application) {
 
-    private val notifiedPrayerDao = NotifiedPrayerRoom.getDataBase(application, viewModelScope).notifiedPrayerDao()
+    private val notifiedPrayerDao = SolatKuyRoom.getDataBase(application, viewModelScope).notifiedPrayerDao()
     private var repository: Repository? = null
 
     val prayerApi = MutableLiveData<Resource<PrayerApi>>()
@@ -24,10 +24,7 @@ class FragmentMainViewModel(application: Application): AndroidViewModel(applicat
 
     //Room
     init {
-        repository = Repository(notifiedPrayerDao)
-
-        //val msApi1Dao = MsApi1Room.getDataBase(application, viewModelScope).msApi1Dao()
-        //repository = RepositoryLocal(msApi1Dao)
+        repository = Repository(application,viewModelScope)
 
         prayerLocal = repository!!.prayerLocal
     }
@@ -37,9 +34,9 @@ class FragmentMainViewModel(application: Application): AndroidViewModel(applicat
     }
 
     //Live Data
-    fun fetch(latitude: String, longitude: String){
+    fun fetch(latitude: String, longitude: String, method: Int, month: String, year: String){
         viewModelScope.launch(Dispatchers.Default){
-            prayerApi.postValue(Resource.success(Repository(notifiedPrayerDao).fetchPrayerApi(latitude,longitude)))
+            prayerApi.postValue(Resource.success(Repository(getApplication(),viewModelScope).fetchPrayerApi(latitude,longitude, method, month, year)))
         }
     }
 

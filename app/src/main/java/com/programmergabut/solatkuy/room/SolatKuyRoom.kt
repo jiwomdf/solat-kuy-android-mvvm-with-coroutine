@@ -1,7 +1,6 @@
 package com.programmergabut.solatkuy.room
 
 import android.content.Context
-import android.widget.Toast
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
@@ -12,15 +11,15 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
 @Database(entities = [PrayerLocal::class], version = 1, exportSchema = false)
-abstract class NotifiedPrayerRoom: RoomDatabase() {
+abstract class SolatKuyRoom: RoomDatabase() {
 
     abstract fun notifiedPrayerDao(): NotifiedPrayerDao
 
     companion object{
         @Volatile
-        private var INSTANCE: NotifiedPrayerRoom? = null
+        private var INSTANCE: SolatKuyRoom? = null
 
-        fun getDataBase(context: Context, scope: CoroutineScope): NotifiedPrayerRoom{
+        fun getDataBase(context: Context, scope: CoroutineScope): SolatKuyRoom{
             val tempInstance = INSTANCE
 
             if(tempInstance != null)
@@ -28,7 +27,7 @@ abstract class NotifiedPrayerRoom: RoomDatabase() {
 
             synchronized(this) {
                 val instance = Room.databaseBuilder(context.applicationContext,
-                        NotifiedPrayerRoom::class.java,"solatkuydb")
+                        SolatKuyRoom::class.java,"solatkuydb")
                     .addCallback(NotifiedPrayerCallBack(scope)).build()
 
                 INSTANCE = instance
