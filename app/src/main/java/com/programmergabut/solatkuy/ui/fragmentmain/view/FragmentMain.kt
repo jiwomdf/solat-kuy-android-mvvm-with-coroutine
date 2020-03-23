@@ -89,7 +89,7 @@ class FragmentMain : Fragment() {
     }
 
     private fun subscribeObserversDB() {
-        fragmentMainViewModel.prayerLocal.observe(this, androidx.lifecycle.Observer { it ->
+        fragmentMainViewModel.prayerLocal.observe(requireActivity(), androidx.lifecycle.Observer { it ->
             it.forEach {
                 when {
                     it.prayerName.trim() == getString(R.string.fajr) && it.isNotified -> cb_fajr.isChecked = true
@@ -108,7 +108,7 @@ class FragmentMain : Fragment() {
 
     private fun subscribeObserversAPI() {
 
-        fragmentMainViewModel.prayerApi.observe(this, androidx.lifecycle.Observer { it ->
+        fragmentMainViewModel.prayerApi.observe(requireActivity(), androidx.lifecycle.Observer { it ->
             when(it.Status){
                 EnumStatus.SUCCESS -> {
                     it.data.let {
@@ -244,7 +244,6 @@ class FragmentMain : Fragment() {
 
         return prayer
     }
-
 
 
 }
