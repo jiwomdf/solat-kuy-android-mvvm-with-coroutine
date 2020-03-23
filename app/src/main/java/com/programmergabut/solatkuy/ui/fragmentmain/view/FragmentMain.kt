@@ -13,11 +13,8 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
 import com.programmergabut.solatkuy.R
-import com.programmergabut.solatkuy.data.api.ApiHelper
-import com.programmergabut.solatkuy.data.api.ApiServiceImpl
 import com.programmergabut.solatkuy.data.model.PrayerLocal
 import com.programmergabut.solatkuy.data.model.prayerApi.Timings
-import com.programmergabut.solatkuy.ui.base.ViewModelFactory
 import com.programmergabut.solatkuy.ui.fragmentmain.viewmodel.FragmentMainViewModel
 import com.programmergabut.solatkuy.util.EnumStatus
 import kotlinx.android.synthetic.main.layout_prayer_time.*
@@ -36,22 +33,10 @@ class FragmentMain : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        fragmentMainViewModel = ViewModelProviders.of(this,
-                ViewModelFactory(ApiHelper(ApiServiceImpl()), activity?.application!!)).get(FragmentMainViewModel::class.java)
+        fragmentMainViewModel = ViewModelProviders.of(requireActivity()).get(FragmentMainViewModel::class.java)
 
-        getPrayerTimeDataFromAPI()
-        initPrayerCbFromDb()
-
-        fragmentMainViewModel.prayerLocal.observe(this, androidx.lifecycle.Observer { it ->
-            it.forEach {
-                when {
-                    it.prayerName.trim() == getString(R.string.fajr) && it.isNotified -> cb_fajr.isChecked = true
-                    it.prayerName.trim() == getString(R.string.dhuhr) && it.isNotified -> cb_dhuhr.isChecked = true
-                    it.prayerName.trim() == getString(R.string.asr) && it.isNotified -> cb_asr.isChecked = true
-                    it.prayerName.trim() == getString(R.string.maghrib) && it.isNotified -> cb_maghrib.isChecked = true
-                    it.prayerName.trim() == getString(R.string.isha) && it.isNotified -> cb_isha.isChecked = true
-                }}
-        })
+        subscribeObserversAPI()
+        subscribeObserversDB()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -103,7 +88,7 @@ class FragmentMain : Fragment() {
         fragmentMainViewModel.update(PrayerLocal(prayer,isNotified))
     }
 
-    private fun initPrayerCbFromDb() {
+    private fun subscribeObserversDB() {
         fragmentMainViewModel.prayerLocal.observe(this, androidx.lifecycle.Observer { it ->
             it.forEach {
                 when {
@@ -121,9 +106,9 @@ class FragmentMain : Fragment() {
         inflater.inflate(R.layout.fragment_main, container, false)
 
 
-    private fun getPrayerTimeDataFromAPI() {
+    private fun subscribeObserversAPI() {
 
-        fragmentMainViewModel.getPrayer().observe(this, androidx.lifecycle.Observer { it ->
+        fragmentMainViewModel.prayerApi.observe(this, androidx.lifecycle.Observer { it ->
             when(it.Status){
                 EnumStatus.SUCCESS -> {
                     it.data.let {
@@ -140,7 +125,7 @@ class FragmentMain : Fragment() {
             }
         })
 
-        fragmentMainViewModel.fetchPrayer("35.1796","129.0756")
+        fragmentMainViewModel.fetch("35.1796","129.0756")
     }
 
     private fun setPrayerText(timings: Timings?) {

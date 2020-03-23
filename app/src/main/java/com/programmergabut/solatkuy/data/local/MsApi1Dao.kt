@@ -19,7 +19,7 @@ interface MsApi1Dao {
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     fun insertMsApi1(msApi1: MsApi1)
 
-    @Query("update MsApi1 set latitude = :latitude, longitude = :longitude, method = :method, month = :month, year = :year ")
+    @Query("update MsApi1 set latitude = :latitude, longitude = :longitude, method = :method, month = :month, year = :year where api1ID = :prayerID")
     suspend fun updateMsApi1(prayerID: Int,latitude: String, longitude: String, method: String, month: String, year:String)
 
 }

@@ -8,10 +8,8 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.programmergabut.solatkuy.R
-import com.programmergabut.solatkuy.data.api.ApiHelper
 import com.programmergabut.solatkuy.data.api.ApiServiceImpl
 import com.programmergabut.solatkuy.data.model.prayerApi.PrayerApi
-import com.programmergabut.solatkuy.ui.base.ViewModelFactory
 import com.programmergabut.solatkuy.ui.prayerdetail.adapter.ActivityPrayerAdapter
 import com.programmergabut.solatkuy.ui.prayerdetail.viewmodel.ActivityPrayerViewModel
 import com.programmergabut.solatkuy.util.EnumStatus
@@ -38,32 +36,32 @@ class ActivityPrayerDetail : AppCompatActivity() {
     }
 
     private fun setupViewModel(){
-        activityPrayerViewModel = ViewModelProviders.of(this, ViewModelFactory(ApiHelper(ApiServiceImpl()),application))
-            .get(ActivityPrayerViewModel::class.java)
+//        activityPrayerViewModel = ViewModelProviders.of(this, ViewModelFactory(ApiHelper(ApiServiceImpl()),application))
+//            .get(ActivityPrayerViewModel::class.java)
     }
 
     private fun setupAPICall(){
-        activityPrayerViewModel.getPrayer().observe(this, Observer {
-
-            when(it.Status){
-                EnumStatus.SUCCESS -> {
-                    progressBar.visibility = View.GONE
-                    it.data?.let { prayer -> renderList(prayer)}
-                    recyclerView.visibility = View.VISIBLE
-                }
-                EnumStatus.LOADING -> {
-                    progressBar.visibility = View.VISIBLE
-                    recyclerView.visibility = View.GONE
-                }
-                EnumStatus.ERROR -> {
-                    progressBar.visibility = View.GONE
-                    Toast.makeText(this,it.message,Toast.LENGTH_LONG).show()
-                }
-            }
-
-        })
-
-        activityPrayerViewModel.fetchPrayer()
+//        activityPrayerViewModel.getPrayer().observe(this, Observer {
+//
+//            when(it.Status){
+//                EnumStatus.SUCCESS -> {
+//                    progressBar.visibility = View.GONE
+//                    it.data?.let { prayer -> renderList(prayer)}
+//                    recyclerView.visibility = View.VISIBLE
+//                }
+//                EnumStatus.LOADING -> {
+//                    progressBar.visibility = View.VISIBLE
+//                    recyclerView.visibility = View.GONE
+//                }
+//                EnumStatus.ERROR -> {
+//                    progressBar.visibility = View.GONE
+//                    Toast.makeText(this,it.message,Toast.LENGTH_LONG).show()
+//                }
+//            }
+//
+//        })
+//
+//        activityPrayerViewModel.fetchPrayer()
     }
 
     private fun renderList(prayer: PrayerApi) {

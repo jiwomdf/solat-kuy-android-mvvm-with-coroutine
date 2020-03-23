@@ -1,24 +1,17 @@
 package com.programmergabut.solatkuy.data.api
 
 import com.programmergabut.solatkuy.data.model.prayerApi.PrayerApi
-import com.rx2androidnetworking.Rx2AndroidNetworking
-import io.reactivex.Single
+import retrofit2.Call
+import retrofit2.http.GET
+import retrofit2.http.Path
+import retrofit2.http.Query
 
-class ApiServiceImpl: ApiService {
+interface ApiServiceImpl {
 
-    override fun getPrayer(): Single<PrayerApi> {
-
-        return Rx2AndroidNetworking
-            .get("http://api.aladhan.com/v1/calendar?latitude=-7.55611&longitude=110.83167&method=2&month=3&year=2020")
-            .build()
-            .getObjectSingle(PrayerApi::class.java)
-    }
-
-    override fun getPrayer(latitude: String, longitude: String): Single<PrayerApi> {
-
-        return Rx2AndroidNetworking
-            .get("http://api.aladhan.com/v1/calendar?latitude=${latitude}&longitude=${longitude}&method=2&month=3&year=2020")
-            .build()
-            .getObjectSingle(PrayerApi::class.java)
-    }
+    @GET("calendar?latitude={latitude}&longitude={longitude}&method={method}&month={month}&year={year}")
+    suspend fun fetchPrayer(@Path("latitude") latitude: String,
+                            @Path("longitude") longitude: String,
+                            @Path("method") method: Int,
+                            @Path("month") month: String,
+                            @Path("year") year: String): PrayerApi
 }
