@@ -12,7 +12,7 @@ interface CalendarApiService {
     @GET("calendar?")
     suspend fun fetchPrayer(@Query("latitude") latitude: String,
                             @Query("longitude") longitude: String,
-                            @Query("method") method: Int,
+                            @Query("method") method: String,
                             @Query("month") month: String,
                             @Query("year") year: String): PrayerApi
 }

@@ -5,15 +5,18 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
+import com.programmergabut.solatkuy.data.local.MsApi1Dao
 import com.programmergabut.solatkuy.data.local.NotifiedPrayerDao
+import com.programmergabut.solatkuy.data.model.MsApi1
 import com.programmergabut.solatkuy.data.model.PrayerLocal
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-@Database(entities = [PrayerLocal::class], version = 1, exportSchema = false)
+@Database(version = 3, entities = [PrayerLocal::class, MsApi1::class])
 abstract class SolatKuyRoom: RoomDatabase() {
 
     abstract fun notifiedPrayerDao(): NotifiedPrayerDao
+    abstract fun msApi1Dao(): MsApi1Dao
 
     companion object{
         @Volatile
@@ -28,7 +31,23 @@ abstract class SolatKuyRoom: RoomDatabase() {
             synchronized(this) {
                 val instance = Room.databaseBuilder(context.applicationContext,
                         SolatKuyRoom::class.java,"solatkuydb")
-                    .addCallback(NotifiedPrayerCallBack(scope)).build()
+                    //.fallbackToDestructiveMigration()
+//                    .addMigrations(object :Migration(1,2){
+//                        override fun migrate(database: SupportSQLiteDatabase) {
+//                            database.execSQL("CREATE TABLE MsApi1 (`api1ID` INTEGER, "
+//                                    + "`latitude` TEXT, "
+//                                    + "`longitude` TEXT, "
+//                                    + "`method` TEXT, "
+//                                    + "`month` TEXT"
+//                                    + "`year` TEXT"
+//                                    + "PRIMARY KEY(`id`))")
+//
+//                            //var api1ID: Int, val latitude: String, val longitude: String, val method: String, val month: String, val year: String
+//                        }
+//
+//                    })
+                    .addCallback(NotifiedPrayerCallBack(scope))
+                    .build()
 
                 INSTANCE = instance
                 return instance
@@ -39,14 +58,27 @@ abstract class SolatKuyRoom: RoomDatabase() {
 
             override fun onCreate(db: SupportSQLiteDatabase) {
                 super.onCreate(db)
+
+            }
+
+            override fun onOpen(db: SupportSQLiteDatabase) {
+                super.onOpen(db)
+
                 INSTANCE.let {
                     scope.launch {
-                        populateDatabase(it?.notifiedPrayerDao()!!)
+                        populateNotifiedPrayer(it?.notifiedPrayerDao()!!)
+                        populateMsApi1(it.msApi1Dao())
                     }
                 }
             }
 
-            suspend fun populateDatabase(notifiedPrayerDao: NotifiedPrayerDao){
+            suspend fun populateMsApi1(msApi1Dao: MsApi1Dao) {
+                msApi1Dao.deleteAll()
+
+                msApi1Dao.insertMsApi1(MsApi1(1,"-7.5755","110.8243","8","3","2020"))
+            }
+
+            suspend fun populateNotifiedPrayer(notifiedPrayerDao: NotifiedPrayerDao){
                 notifiedPrayerDao.deleteAll()
 
                 notifiedPrayerDao.insertNotifiedPrayer(PrayerLocal("Fajr",true))
@@ -55,8 +87,9 @@ abstract class SolatKuyRoom: RoomDatabase() {
                 notifiedPrayerDao.insertNotifiedPrayer(PrayerLocal("Maghrib",true))
                 notifiedPrayerDao.insertNotifiedPrayer(PrayerLocal("Isha",true))
             }
-
         }
+
+
     }
 
 }

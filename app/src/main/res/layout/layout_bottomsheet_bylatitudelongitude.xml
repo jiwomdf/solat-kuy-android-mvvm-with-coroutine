@@ -8,7 +8,7 @@
     app:layout_behavior="android.support.design.widget.BottomSheetBehavior">
 
     <TextView
-        android:id="@+id/textView3"
+        android:id="@+id/tv_llDialog_title"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
@@ -19,26 +19,24 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <EditText
-        android:id="@+id/textView4"
+        android:id="@+id/et_llDialog_latitude"
         android:layout_width="@dimen/editText_size"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:inputType="number"
         android:hint="@string/latitude"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView3" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_llDialog_title" />
 
     <EditText
-        android:id="@+id/textView5"
+        android:id="@+id/et_llDialog_longitude"
         android:layout_width="@dimen/editText_size"
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        android:inputType="number"
         android:hint="@string/longitude"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView4" />
+        app:layout_constraintTop_toBottomOf="@+id/et_llDialog_latitude" />
 
 
     <Button
@@ -50,7 +48,7 @@
         android:text="@string/proceed"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/textView5" />
+        app:layout_constraintTop_toBottomOf="@+id/et_llDialog_longitude" />
 
 
 </androidx.constraintlayout.widget.ConstraintLayout>

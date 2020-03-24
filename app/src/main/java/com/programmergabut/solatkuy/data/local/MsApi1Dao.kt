@@ -10,16 +10,16 @@ import com.programmergabut.solatkuy.data.model.MsApi1
 @Dao
 interface MsApi1Dao {
 
+    @Query("select * from MsApi1")
+    fun getMsApi1(): LiveData<MsApi1>
+
     @Query("delete from MsApi1")
     suspend fun deleteAll()
 
-    @Query("select * from MsApi1 order by api1ID asc")
-    fun getMsApi1(): LiveData<List<MsApi1>>
-
     @Insert(onConflict = OnConflictStrategy.IGNORE)
-    fun insertMsApi1(msApi1: MsApi1)
+    suspend fun insertMsApi1(msApi1: MsApi1)
 
-    @Query("update MsApi1 set latitude = :latitude, longitude = :longitude, method = :method, month = :month, year = :year where api1ID = :prayerID")
-    suspend fun updateMsApi1(prayerID: Int,latitude: String, longitude: String, method: String, month: String, year:String)
+    @Query("update MsApi1 set latitude = :latitude, longitude = :longitude, method = :method, month = :month, year = :year where api1ID = :api1ID")
+    suspend fun updateMsApi1(api1ID: Int, latitude: String, longitude: String, method: String, month: String, year:String)
 
 }

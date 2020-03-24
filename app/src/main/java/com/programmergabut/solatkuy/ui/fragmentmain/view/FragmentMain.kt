@@ -33,7 +33,7 @@ class FragmentMain : Fragment() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        fragmentMainViewModel = ViewModelProviders.of(requireActivity()).get(FragmentMainViewModel::class.java)
+        fragmentMainViewModel = ViewModelProviders.of(this).get(FragmentMainViewModel::class.java)
 
         subscribeObserversAPI()
         subscribeObserversDB()
@@ -89,7 +89,7 @@ class FragmentMain : Fragment() {
     }
 
     private fun subscribeObserversDB() {
-        fragmentMainViewModel.prayerLocal.observe(requireActivity(), androidx.lifecycle.Observer { it ->
+        fragmentMainViewModel.prayerLocal.observe(this, androidx.lifecycle.Observer { it ->
             it.forEach {
                 when {
                     it.prayerName.trim() == getString(R.string.fajr) && it.isNotified -> cb_fajr.isChecked = true
@@ -98,6 +98,18 @@ class FragmentMain : Fragment() {
                     it.prayerName.trim() == getString(R.string.maghrib) && it.isNotified -> cb_maghrib.isChecked = true
                     it.prayerName.trim() == getString(R.string.isha) && it.isNotified -> cb_isha.isChecked = true
                 }}
+        })
+
+        fragmentMainViewModel.msApi1Local.observe(this, androidx.lifecycle.Observer {
+
+            if(it != null ){
+                tv_view_latitude.text = it.latitude + " °S"
+                tv_view_longitude.text = it.longitude + " °E"
+
+                /* fetching Prayer API */
+                fragmentMainViewModel.fetchPrayerApi(it.latitude,it.longitude,"8","3","2020")
+            }
+
         })
     }
 
@@ -108,7 +120,7 @@ class FragmentMain : Fragment() {
 
     private fun subscribeObserversAPI() {
 
-        fragmentMainViewModel.prayerApi.observe(requireActivity(), androidx.lifecycle.Observer { it ->
+        fragmentMainViewModel.prayerApi.observe(this, androidx.lifecycle.Observer { it ->
             when(it.Status){
                 EnumStatus.SUCCESS -> {
                     it.data.let {
@@ -125,7 +137,6 @@ class FragmentMain : Fragment() {
             }
         })
 
-        fragmentMainViewModel.fetch("-7.5755","110.8243",8,"3","2020")
     }
 
     private fun setPrayerText(timings: Timings?) {
