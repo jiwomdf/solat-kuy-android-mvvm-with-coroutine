@@ -20,6 +20,7 @@ import com.programmergabut.solatkuy.util.EnumStatus
 import kotlinx.android.synthetic.main.layout_prayer_time.*
 import kotlinx.android.synthetic.main.layout_widget.*
 import org.joda.time.DateTime
+import org.joda.time.LocalDate
 import org.joda.time.Period
 import java.text.SimpleDateFormat
 import java.time.LocalTime
@@ -107,7 +108,9 @@ class FragmentMain : Fragment() {
                 tv_view_longitude.text = it.longitude + " °E"
 
                 /* fetching Prayer API */
-                fragmentMainViewModel.fetchPrayerApi(it.latitude,it.longitude,"8","3","2020")
+                val currDate = LocalDate()
+                fragmentMainViewModel.fetchPrayerApi(it.latitude,it.longitude,"8",
+                    currDate.monthOfYear.toString(),currDate.year.toString())
             }
 
         })

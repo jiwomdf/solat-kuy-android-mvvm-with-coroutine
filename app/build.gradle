@@ -75,4 +75,10 @@ dependencies {
     implementation 'com.google.code.gson:gson:2.8.6'
     implementation 'com.squareup.retrofit2:converter-gson:2.6.3'
 
+    //Toasty
+    implementation 'com.github.GrenderG:Toasty:1.4.2'
+
+    //GPS
+    implementation 'com.google.android.gms:play-services-location:17.0.0'
+
 }

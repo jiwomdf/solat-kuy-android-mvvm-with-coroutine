@@ -1,31 +1,43 @@
 package com.programmergabut.solatkuy.ui.fragmentsetting.view
 
+import android.Manifest
+import android.content.pm.PackageManager
+import android.location.Location
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.Toast
+import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import com.google.android.gms.location.FusedLocationProviderClient
+import com.google.android.gms.location.LocationServices
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.data.model.MsApi1
 import com.programmergabut.solatkuy.ui.fragmentsetting.viewmodel.FragmentSettingViewModel
+import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.fragment_setting.*
 import kotlinx.android.synthetic.main.layout_bottomsheet_bycity.view.*
+import kotlinx.android.synthetic.main.layout_bottomsheet_bygps.*
 import kotlinx.android.synthetic.main.layout_bottomsheet_bygps.view.*
+import kotlinx.android.synthetic.main.layout_bottomsheet_bygps.view.tv_gpsDialog_latitude
 import kotlinx.android.synthetic.main.layout_bottomsheet_bylatitudelongitude.view.*
+import org.joda.time.LocalDate
 
 class FragmentSetting : Fragment() {
 
     private lateinit var dialog: BottomSheetDialog
     lateinit var dialogView: View
     private lateinit var fragmentSettingViewModel: FragmentSettingViewModel
-
+    private lateinit var mFusedLocationClient: FusedLocationProviderClient
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
@@ -47,51 +59,68 @@ class FragmentSetting : Fragment() {
         rb_byLatitudeLongitude.setOnClickListener {
             dialogView = layoutInflater.inflate(R.layout.layout_bottomsheet_bylatitudelongitude,null)
             dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            dialog.setCancelable(false)
             dialog.setContentView(dialogView)
             dialog.show()
 
             dialogView.btn_proceedByLL.setOnClickListener{
 
-                insertLocationSettingToDb(dialogView)
+                val latitude = dialogView.et_llDialog_latitude.text.toString().trim()
+                val longitude = dialogView.et_llDialog_longitude.text.toString().trim()
+
+                if(latitude.isEmpty() || longitude.isEmpty())
+                    return@setOnClickListener
+
+                insertLocationSettingToDb(latitude, longitude)
 
                 dialog.dismiss()
+                Toasty.success(context!!,"Success change the coordinate", Toast.LENGTH_SHORT).show()
             }
         }
 
         rb_byGps.setOnClickListener{
             dialogView = layoutInflater.inflate(R.layout.layout_bottomsheet_bygps,null)
             dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            dialog.setCancelable(false)
             dialog.setContentView(dialogView)
             dialog.show()
 
+            getGPSLocation(dialogView)
+
             dialogView.btn_proceedByGps.setOnClickListener{
+
+                val latitude = dialogView.tv_gpsDialog_latitude.text.toString().split(":")[1].trim()
+                val longitude = dialogView.tv_gpsDialog_longitude.text.toString().split(":")[1].trim()
+
+                if(latitude.isEmpty() || longitude.isEmpty())
+                    return@setOnClickListener
+
+                insertLocationSettingToDb(latitude, longitude)
+
                 dialog.dismiss()
+                Toasty.success(context!!,"Success change the coordinate", Toast.LENGTH_SHORT).show()
             }
         }
 
         rb_byCity.setOnClickListener{
             dialogView = layoutInflater.inflate(R.layout.layout_bottomsheet_bycity,null)
             dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            dialog.setCancelable(false)
             dialog.setContentView(dialogView)
             dialog.show()
 
             dialogView.btn_proceedByCity.setOnClickListener{
                 dialog.dismiss()
+                Toasty.success(context!!,"Success change the coordinate", Toast.LENGTH_SHORT).show()
             }
 
             bindRbCityData(dialogView)
         }
     }
 
-    private fun insertLocationSettingToDb(dialogView: View) {
+    private fun insertLocationSettingToDb(latitude: String, longitude: String) {
 
-        val data = MsApi1(1,
-            dialogView.et_llDialog_latitude.text.toString().trim(),
-            dialogView.et_llDialog_longitude.text.toString().trim(),
-            "8","3","2020")
+        val currDate = LocalDate()
+
+        val data = MsApi1(1, latitude, longitude, "8",
+            currDate.monthOfYear.toString(),currDate.year.toString())
 
         fragmentSettingViewModel.updateMsApi1(data)
     }
@@ -113,6 +142,32 @@ class FragmentSetting : Fragment() {
 
         dialogView.s_selCountry.adapter = countryAdapter
         dialogView.s_selCity.adapter = cityAdapter
+    }
+
+
+    private fun getGPSLocation(dialogView: View){
+
+        if (ActivityCompat.checkSelfPermission(context!!, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+            || ActivityCompat.checkSelfPermission(context!!, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+
+            LocationServices.getFusedLocationProviderClient(context!!).lastLocation.addOnSuccessListener {
+                if(it == null)
+                    return@addOnSuccessListener
+
+                dialogView.tv_gpsDialog_latitude.text = getString(R.string.latitude) + ": ${it.latitude}"
+                dialogView.tv_gpsDialog_longitude.text= getString(R.string.longitude) + ": ${it.longitude}"
+            }
+        }
+        else {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return
+        }
     }
 
 
