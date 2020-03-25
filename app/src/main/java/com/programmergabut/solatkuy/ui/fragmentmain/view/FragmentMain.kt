@@ -34,7 +34,7 @@ import kotlin.math.abs
 class FragmentMain : Fragment() {
 
     private lateinit var fragmentMainViewModel: FragmentMainViewModel
-    private var timings: Timings? = null
+    private var tempTimings: Timings? = null
     private var tempMsApi1: MsApi1? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -75,6 +75,7 @@ class FragmentMain : Fragment() {
             if(it == null )
                 return@Observer
 
+            /* save temp data */
             tempMsApi1 = it
 
             bindWidgetLocation(it)
@@ -94,7 +95,10 @@ class FragmentMain : Fragment() {
             when(it.Status){
                 EnumStatus.SUCCESS -> {
                     it.data.let {
-                        timings = it?.data?.find { obj -> obj.date.gregorian.day == currentDate.toString() }?.timings
+                        val timings = it?.data?.find { obj -> obj.date.gregorian.day == currentDate.toString() }?.timings
+
+                        /* save temp data */
+                        tempTimings = timings
 
                         bindPrayerText(timings)
                         bindWidget(timings)
@@ -107,11 +111,10 @@ class FragmentMain : Fragment() {
     }
 
     private fun loadTempData() {
-        if(timings != null){
-            bindPrayerText(timings)
-            bindWidget(timings)
+        if(tempTimings != null){
+            bindPrayerText(tempTimings)
+            bindWidget(tempTimings)
         }
-
         if(tempMsApi1 != null)
             bindWidgetLocation(tempMsApi1!!)
     }
