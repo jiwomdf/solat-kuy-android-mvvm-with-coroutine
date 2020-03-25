@@ -22,6 +22,7 @@ import com.programmergabut.solatkuy.ui.fragmentmain.viewmodel.FragmentMainViewMo
 import com.programmergabut.solatkuy.util.EnumStatus
 import kotlinx.android.synthetic.main.layout_prayer_time.*
 import kotlinx.android.synthetic.main.layout_widget.*
+import kotlinx.coroutines.*
 import org.joda.time.DateTime
 import org.joda.time.LocalDate
 import org.joda.time.Period
@@ -223,8 +224,8 @@ class FragmentMain : Fragment() {
     @RequiresApi(Build.VERSION_CODES.O)
     private fun selectNextPrayerTime(selPrayer: Int, timings: Timings) {
 
-        val sdfPrayer = SimpleDateFormat("HH:mm", Locale.getDefault())
-        val nowTime = DateTime(sdfPrayer.parse(LocalTime.now().toString()))
+        val sdfPrayer = SimpleDateFormat("hh:mm", Locale.getDefault())
+        val nowTime = DateTime(SimpleDateFormat("hh:mm:ss", Locale.getDefault()).parse(LocalTime.now().toString()))
         var period: Period? = null
 
         when(selPrayer){
@@ -233,12 +234,51 @@ class FragmentMain : Fragment() {
             2 -> period = Period(nowTime, DateTime(sdfPrayer.parse(timings.asr.split(" ")[0].trim())))
             3 -> period = Period(nowTime, DateTime(sdfPrayer.parse(timings.maghrib.split(" ")[0].trim())))
             4 -> period = Period(nowTime, DateTime(sdfPrayer.parse(timings.isha.split(" ")[0].trim())))
-            5 -> period = Period(nowTime, DateTime(sdfPrayer.parse(timings.fajr.split(" ")[0].trim())))
-            6 -> period = Period(nowTime, DateTime(sdfPrayer.parse(timings.fajr.split(" ")[0].trim())))
+            5 -> period = Period(nowTime, DateTime(sdfPrayer.parse(timings.fajr.split(" ")[0].trim())).plusDays(1))
+            6 -> period = Period(nowTime, DateTime(sdfPrayer.parse(timings.fajr.split(" ")[0].trim())).plusDays(1))
         }
 
-        if(period != null)
-            tv_widget_prayer_countdown.text = "${abs(period.hours)} Hour ${abs(period.minutes)} Minute remaining"
+        if(period != null){
+            val second = 60 - nowTime.secondOfMinute
+            val freshTime = "${abs(period.hours)} : ${abs(period.minutes)} : $second"
+
+            CoroutineScope(Dispatchers.IO).launch{
+                coroutineTimer(period.hours, period.minutes, second)
+            }
+        }
+
+    }
+
+    private suspend fun coroutineTimer(hour: Int, minute: Int, second: Int){
+        
+        var tempHour = abs(hour)
+        var tempMinute = abs(minute)
+        var tempSecond = abs(second)
+
+        var onCountDown = true
+
+        while (onCountDown){
+            delay(1000)
+            tempSecond--
+
+            if(tempSecond == 0){
+                tempSecond = 60
+                tempMinute -= 1
+            }
+
+            if(tempMinute == 0){
+                tempMinute = 60
+                tempHour -= 1
+            }
+
+            if(tv_widget_prayer_countdown.text != null)
+                withContext(Dispatchers.Main){
+                        tv_widget_prayer_countdown.text = "$tempHour : $tempMinute : $tempSecond remaining"
+                }
+            else
+                onCountDown = false
+        }
+
     }
 
     private fun selectWidgetTitle(selPrayer: Int) {
@@ -290,9 +330,6 @@ class FragmentMain : Fragment() {
 
         val nowTime = DateTime(sdfPrayer.parse(LocalTime.now().toString()))
 
-        if(nowTime.isAfter(zerozeroTime) && nowTime.isBefore(fajrTime)) //--> isha time
-            prayer = 6
-
         if(fajrTime.isBefore(nowTime) && nowTime.isBefore(sunriseTime)) //--> fajr time
             prayer = 1
         else if(dhuhrTime.isBefore(nowTime) && nowTime.isBefore(asrTime)) //--> dhuhr time
@@ -303,6 +340,9 @@ class FragmentMain : Fragment() {
             prayer = 4
         else if(ishaTime.isBefore(nowTime) && nowTime.isBefore(nextfajrTime)) //--> isha time
             prayer = 5
+
+        if(nowTime.isAfter(zerozeroTime) && nowTime.isBefore(fajrTime)) //--> isha time
+            prayer = 6
 
         return prayer
     }
