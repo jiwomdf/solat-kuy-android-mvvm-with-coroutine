@@ -135,36 +135,37 @@
                 app:layout_constraintTop_toTopOf="parent"
                 app:layout_constraintVertical_bias="0.506" />
 
-            <RadioGroup
+            <LinearLayout
                 android:id="@+id/rg_lcation_setting"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/small_margin"
+                android:orientation="vertical"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent">
 
-                <RadioButton
+                <Button
                     android:id="@+id/rb_byLatitudeLongitude"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:text="@string/by_latitude_amp_longtitude"
                     android:textSize="@dimen/small_text_size" />
 
-                <RadioButton
+                <Button
                     android:id="@+id/rb_byGps"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/by_gps"
                     android:textSize="@dimen/small_text_size" />
 
-                <RadioButton
+                <Button
                     android:id="@+id/rb_byCity"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/by_city"
                     android:textSize="@dimen/small_text_size" />
 
-            </RadioGroup>
+            </LinearLayout>
 
 
         </androidx.constraintlayout.widget.ConstraintLayout>

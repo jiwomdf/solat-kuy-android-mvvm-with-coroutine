@@ -9,6 +9,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.ArrayAdapter
+import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
@@ -26,7 +27,6 @@ import kotlinx.android.synthetic.main.layout_bottomsheet_bycity.view.*
 import kotlinx.android.synthetic.main.layout_bottomsheet_bygps.view.*
 import kotlinx.android.synthetic.main.layout_bottomsheet_bylatitudelongitude.view.*
 import org.joda.time.LocalDate
-import java.lang.Exception
 import java.util.*
 
 
@@ -100,7 +100,6 @@ class FragmentSetting : Fragment() {
                     return@setOnClickListener
                 }
 
-
                 insertLocationSettingToDb(latitude, longitude)
 
                 dialog.dismiss()
@@ -127,8 +126,7 @@ class FragmentSetting : Fragment() {
 
         val currDate = LocalDate()
 
-        val data = MsApi1(1, latitude, longitude, "8",
-            currDate.monthOfYear.toString(),currDate.year.toString())
+        val data = MsApi1(1, latitude, longitude, "8", currDate.monthOfYear.toString(),currDate.year.toString())
 
         fragmentSettingViewModel.updateMsApi1(data)
     }
@@ -171,9 +169,18 @@ class FragmentSetting : Fragment() {
                 if(it == null)
                     return@addOnSuccessListener
 
+                dialogView.iv_warning.visibility = View.GONE
+                dialogView.tv_warning.visibility = View.GONE
+                dialogView.findViewById<TextView>(R.id.tv_view_latitude).visibility = View.VISIBLE
+                dialogView.findViewById<TextView>(R.id.tv_view_longitude).visibility = View.VISIBLE
+
                 dialogView.tv_gpsDialog_latitude.text = it.latitude.toString()
                 dialogView.tv_gpsDialog_longitude.text= it.longitude.toString()
             }
+
+            dialogView.findViewById<TextView>(R.id.tv_view_latitude).visibility = View.GONE
+            dialogView.findViewById<TextView>(R.id.tv_view_longitude).visibility = View.GONE
+
         }
         else {
             // TODO: Consider calling
@@ -183,6 +190,7 @@ class FragmentSetting : Fragment() {
             //                                          int[] grantResults)
             // to handle the case where the user grants the permission. See the documentation
             // for ActivityCompat#requestPermissions for more details.
+
             return
         }
     }
