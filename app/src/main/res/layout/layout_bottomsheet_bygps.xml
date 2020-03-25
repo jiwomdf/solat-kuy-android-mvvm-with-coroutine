@@ -17,25 +17,43 @@
         app:layout_constraintTop_toTopOf="parent" />
 
     <TextView
+        android:id="@+id/tv_view_latitude"
+        android:layout_width="@dimen/info_width_size"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="@string/latitude"
+        app:layout_constraintBottom_toTopOf="@id/tv_view_longitude"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_llDialog_title" />
+
+    <TextView
         android:id="@+id/tv_gpsDialog_latitude"
         android:layout_width="@dimen/editText_size"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="@string/loading"
         app:layout_constraintBottom_toTopOf="@+id/tv_gpsDialog_longitude"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/tv_view_latitude"
         app:layout_constraintTop_toBottomOf="@+id/tv_llDialog_title" />
+
+    <TextView
+        android:id="@+id/tv_view_longitude"
+        android:layout_width="@dimen/info_width_size"
+        android:layout_height="wrap_content"
+        android:layout_marginStart="16dp"
+        android:text="@string/longitude"
+        app:layout_constraintBottom_toTopOf="@+id/btn_proceedByGps"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/tv_view_latitude" />
 
     <TextView
         android:id="@+id/tv_gpsDialog_longitude"
         android:layout_width="@dimen/editText_size"
         android:layout_height="wrap_content"
         android:layout_marginTop="16dp"
-        android:text="@string/loading"
         app:layout_constraintBottom_toTopOf="@+id/btn_proceedByGps"
         app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintStart_toEndOf="@+id/tv_view_longitude"
         app:layout_constraintTop_toBottomOf="@id/tv_gpsDialog_latitude" />
 
     <Button

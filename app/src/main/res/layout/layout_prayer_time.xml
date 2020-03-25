@@ -56,8 +56,8 @@
             <TableRow>
                 <CheckBox
                     android:id="@+id/cb_fajr"
-                    android:layout_width="@dimen/avatar_size"
-                    android:layout_height="@dimen/avatar_size"
+                    android:layout_width="@dimen/list_width_size"
+                    android:layout_height="@dimen/list_width_size"
                     />
 
                 <com.google.android.material.textview.MaterialTextView
@@ -84,8 +84,8 @@
             <TableRow>
                 <CheckBox
                     android:id="@+id/cb_dhuhr"
-                    android:layout_width="@dimen/avatar_size"
-                    android:layout_height="@dimen/avatar_size"/>
+                    android:layout_width="@dimen/list_width_size"
+                    android:layout_height="@dimen/list_width_size"/>
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/tv_dhuhr"
@@ -111,8 +111,8 @@
             <TableRow>
                 <CheckBox
                     android:id="@+id/cb_asr"
-                    android:layout_width="@dimen/avatar_size"
-                    android:layout_height="@dimen/avatar_size"/>
+                    android:layout_width="@dimen/list_width_size"
+                    android:layout_height="@dimen/list_width_size"/>
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/tv_asr"
@@ -136,8 +136,8 @@
             <TableRow>
                 <CheckBox
                     android:id="@+id/cb_maghrib"
-                    android:layout_width="@dimen/avatar_size"
-                    android:layout_height="@dimen/avatar_size" />
+                    android:layout_width="@dimen/list_width_size"
+                    android:layout_height="@dimen/list_width_size" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/tv_maghrib"
@@ -161,8 +161,8 @@
             <TableRow>
                 <CheckBox
                     android:id="@+id/cb_isha"
-                    android:layout_width="@dimen/avatar_size"
-                    android:layout_height="@dimen/avatar_size" />
+                    android:layout_width="@dimen/list_width_size"
+                    android:layout_height="@dimen/list_width_size" />
 
                 <com.google.android.material.textview.MaterialTextView
                     android:id="@+id/tv_isha"

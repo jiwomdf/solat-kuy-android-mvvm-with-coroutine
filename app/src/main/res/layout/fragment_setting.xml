@@ -37,7 +37,7 @@
 
             <TextView
                 android:id="@+id/tv_text_latitude"
-                android:layout_width="wrap_content"
+                android:layout_width="@dimen/info_width_size"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
                 android:text="@string/latitude"
@@ -49,14 +49,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="16dp"
-                android:text="-7.55611"
+                android:text="@string/loading"
+                android:gravity="start"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@id/tv_text_latitude"
                 app:layout_constraintTop_toBottomOf="@+id/tv_cur_loc" />
 
             <TextView
                 android:id="@+id/tv_text_longitude"
-                android:layout_width="wrap_content"
+                android:layout_width="@dimen/info_width_size"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:text="@string/longitude"
@@ -68,14 +69,15 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="110.83167"
+                android:text="@string/loading"
+                android:gravity="start"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/tv_text_longitude"
                 app:layout_constraintTop_toBottomOf="@+id/tv_view_latitude" />
 
             <TextView
                 android:id="@+id/tv_text_city"
-                android:layout_width="wrap_content"
+                android:layout_width="@dimen/info_width_size"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
                 android:text="@string/city"
@@ -88,7 +90,8 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="8dp"
-                android:text="Solo"
+                android:text="@string/loading"
+                android:gravity="start"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toEndOf="@+id/tv_text_city"

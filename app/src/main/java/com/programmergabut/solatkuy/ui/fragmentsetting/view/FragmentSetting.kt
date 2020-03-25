@@ -2,7 +2,8 @@ package com.programmergabut.solatkuy.ui.fragmentsetting.view
 
 import android.Manifest
 import android.content.pm.PackageManager
-import android.location.Location
+import android.location.Address
+import android.location.Geocoder
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -22,11 +23,12 @@ import com.programmergabut.solatkuy.ui.fragmentsetting.viewmodel.FragmentSetting
 import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.fragment_setting.*
 import kotlinx.android.synthetic.main.layout_bottomsheet_bycity.view.*
-import kotlinx.android.synthetic.main.layout_bottomsheet_bygps.*
 import kotlinx.android.synthetic.main.layout_bottomsheet_bygps.view.*
-import kotlinx.android.synthetic.main.layout_bottomsheet_bygps.view.tv_gpsDialog_latitude
 import kotlinx.android.synthetic.main.layout_bottomsheet_bylatitudelongitude.view.*
 import org.joda.time.LocalDate
+import java.lang.Exception
+import java.util.*
+
 
 class FragmentSetting : Fragment() {
 
@@ -67,8 +69,11 @@ class FragmentSetting : Fragment() {
                 val latitude = dialogView.et_llDialog_latitude.text.toString().trim()
                 val longitude = dialogView.et_llDialog_longitude.text.toString().trim()
 
-                if(latitude.isEmpty() || longitude.isEmpty())
+                if(latitude.isEmpty() || longitude.isEmpty()){
+                    Toasty.warning(context!!,"latitude and longitude cannot be empty", Toast.LENGTH_SHORT).show()
                     return@setOnClickListener
+                }
+
 
                 insertLocationSettingToDb(latitude, longitude)
 
@@ -87,11 +92,14 @@ class FragmentSetting : Fragment() {
 
             dialogView.btn_proceedByGps.setOnClickListener{
 
-                val latitude = dialogView.tv_gpsDialog_latitude.text.toString().split(":")[1].trim()
-                val longitude = dialogView.tv_gpsDialog_longitude.text.toString().split(":")[1].trim()
+                val latitude = dialogView.tv_gpsDialog_latitude.text.toString().trim()
+                val longitude = dialogView.tv_gpsDialog_longitude.text.toString().trim()
 
-                if(latitude.isEmpty() || longitude.isEmpty())
+                if(latitude.isEmpty() || longitude.isEmpty()){
+                    Toasty.warning(context!!,"Please enable your location", Toast.LENGTH_SHORT).show()
                     return@setOnClickListener
+                }
+
 
                 insertLocationSettingToDb(latitude, longitude)
 
@@ -127,9 +135,18 @@ class FragmentSetting : Fragment() {
 
     private fun subscribeObserversDB() {
         fragmentSettingViewModel.msApi1Local.observe(this, Observer {
-            tv_view_latitude.text = it.latitude
-            tv_view_longitude.text = it.longitude
-            tv_view_city.text = "-"
+
+            val geoCoder = Geocoder(context!!, Locale.getDefault())
+            var cityName: String? = null
+            try {
+                val addresses: List<Address> = geoCoder.getFromLocation(it.latitude.toDouble(),it.longitude.toDouble(), 1)
+                cityName = addresses[0].subAdminArea
+            }
+            catch (ex: Exception){}
+
+            tv_view_latitude.text = it.latitude + " °S"
+            tv_view_longitude.text = it.longitude + " °E"
+            tv_view_city.text = cityName ?: "-"
         })
     }
 
@@ -154,8 +171,8 @@ class FragmentSetting : Fragment() {
                 if(it == null)
                     return@addOnSuccessListener
 
-                dialogView.tv_gpsDialog_latitude.text = getString(R.string.latitude) + ": ${it.latitude}"
-                dialogView.tv_gpsDialog_longitude.text= getString(R.string.longitude) + ": ${it.longitude}"
+                dialogView.tv_gpsDialog_latitude.text = it.latitude.toString()
+                dialogView.tv_gpsDialog_longitude.text= it.longitude.toString()
             }
         }
         else {

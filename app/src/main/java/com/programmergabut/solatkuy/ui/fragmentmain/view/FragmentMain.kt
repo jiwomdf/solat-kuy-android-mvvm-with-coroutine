@@ -1,6 +1,8 @@
 package com.programmergabut.solatkuy.ui.fragmentmain.view
 
 import android.graphics.drawable.Drawable
+import android.location.Address
+import android.location.Geocoder
 import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -13,6 +15,7 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
 import com.programmergabut.solatkuy.R
+import com.programmergabut.solatkuy.data.model.MsApi1
 import com.programmergabut.solatkuy.data.model.PrayerLocal
 import com.programmergabut.solatkuy.data.model.prayerApi.Timings
 import com.programmergabut.solatkuy.ui.fragmentmain.viewmodel.FragmentMainViewModel
@@ -22,6 +25,7 @@ import kotlinx.android.synthetic.main.layout_widget.*
 import org.joda.time.DateTime
 import org.joda.time.LocalDate
 import org.joda.time.Period
+import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.time.LocalTime
 import java.util.*
@@ -30,6 +34,8 @@ import kotlin.math.abs
 class FragmentMain : Fragment() {
 
     private lateinit var fragmentMainViewModel: FragmentMainViewModel
+    private var timings: Timings? = null
+    private var tempMsApi1: MsApi1? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -40,10 +46,74 @@ class FragmentMain : Fragment() {
         subscribeObserversDB()
     }
 
+    override fun onStart() {
+        super.onStart()
+
+        loadTempData()
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         cbClickListener()
+    }
+
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
+        inflater.inflate(R.layout.fragment_main, container, false)
+
+
+    private fun subscribeObserversDB() {
+
+        val currDate = LocalDate()
+
+        fragmentMainViewModel.prayerLocal.observe(this, androidx.lifecycle.Observer {
+            bindCheckBox(it)
+        })
+
+        fragmentMainViewModel.msApi1Local.observe(this, androidx.lifecycle.Observer {
+
+            if(it == null )
+                return@Observer
+
+            tempMsApi1 = it
+
+            bindWidgetLocation(it)
+
+            /* fetching Prayer API */
+            fragmentMainViewModel.fetchPrayerApi(it.latitude,it.longitude,"8",
+                currDate.monthOfYear.toString(),currDate.year.toString())
+        })
+    }
+
+    private fun subscribeObserversAPI() {
+
+        val sdf = SimpleDateFormat("dd", Locale.getDefault())
+        val currentDate = sdf.format(Date())
+
+        fragmentMainViewModel.prayerApi.observe(this, androidx.lifecycle.Observer { it ->
+            when(it.Status){
+                EnumStatus.SUCCESS -> {
+                    it.data.let {
+                        timings = it?.data?.find { obj -> obj.date.gregorian.day == currentDate.toString() }?.timings
+
+                        bindPrayerText(timings)
+                        bindWidget(timings)
+                    }}
+                EnumStatus.LOADING -> bindPrayerText(null)
+                EnumStatus.ERROR -> Toast.makeText(context,it.message.toString(), Toast.LENGTH_SHORT).show()
+            }
+        })
+
+    }
+
+    private fun loadTempData() {
+        if(timings != null){
+            bindPrayerText(timings)
+            bindWidget(timings)
+        }
+
+        if(tempMsApi1 != null)
+            bindWidgetLocation(tempMsApi1!!)
     }
 
     private fun cbClickListener() {
@@ -89,60 +159,33 @@ class FragmentMain : Fragment() {
         fragmentMainViewModel.update(PrayerLocal(prayer,isNotified))
     }
 
-    private fun subscribeObserversDB() {
-        fragmentMainViewModel.prayerLocal.observe(this, androidx.lifecycle.Observer { it ->
-            it.forEach {
-                when {
-                    it.prayerName.trim() == getString(R.string.fajr) && it.isNotified -> cb_fajr.isChecked = true
-                    it.prayerName.trim() == getString(R.string.dhuhr) && it.isNotified -> cb_dhuhr.isChecked = true
-                    it.prayerName.trim() == getString(R.string.asr) && it.isNotified -> cb_asr.isChecked = true
-                    it.prayerName.trim() == getString(R.string.maghrib) && it.isNotified -> cb_maghrib.isChecked = true
-                    it.prayerName.trim() == getString(R.string.isha) && it.isNotified -> cb_isha.isChecked = true
-                }}
-        })
+    private fun bindWidgetLocation(it: MsApi1) {
+        val geoCoder = Geocoder(context!!, Locale.getDefault())
+        var cityName: String? = null
+        try {
+            val addresses: List<Address> = geoCoder.getFromLocation(it.latitude.toDouble(),it.longitude.toDouble(), 1)
+            cityName = addresses[0].subAdminArea
+        }
+        catch (ex: Exception){}
 
-        fragmentMainViewModel.msApi1Local.observe(this, androidx.lifecycle.Observer {
 
-            if(it != null ){
-                tv_view_latitude.text = it.latitude + " °S"
-                tv_view_longitude.text = it.longitude + " °E"
-
-                /* fetching Prayer API */
-                val currDate = LocalDate()
-                fragmentMainViewModel.fetchPrayerApi(it.latitude,it.longitude,"8",
-                    currDate.monthOfYear.toString(),currDate.year.toString())
-            }
-
-        })
+        tv_view_latitude.text = it.latitude + " °S"
+        tv_view_longitude.text = it.longitude + " °E"
+        tv_view_city.text = cityName ?: "-"
     }
 
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-        inflater.inflate(R.layout.fragment_main, container, false)
-
-
-    private fun subscribeObserversAPI() {
-
-        fragmentMainViewModel.prayerApi.observe(this, androidx.lifecycle.Observer { it ->
-            when(it.Status){
-                EnumStatus.SUCCESS -> {
-                    it.data.let {
-                        val sdf = SimpleDateFormat("dd", Locale.US)
-                        val currentDate = sdf.format(Date())
-                        val timings = it?.data?.find { obj -> obj.date.gregorian.day == currentDate.toString() }?.timings
-
-                        setPrayerText(timings)
-                        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-                            setupWidget(timings)
-                    }}
-                EnumStatus.LOADING -> setPrayerText(null)
-                EnumStatus.ERROR -> Toast.makeText(context,it.message.toString(), Toast.LENGTH_SHORT).show()
-            }
-        })
-
+    private fun bindCheckBox(list: List<PrayerLocal>) {
+        list.forEach {
+            when {
+                it.prayerName.trim() == getString(R.string.fajr) && it.isNotified -> cb_fajr.isChecked = true
+                it.prayerName.trim() == getString(R.string.dhuhr) && it.isNotified -> cb_dhuhr.isChecked = true
+                it.prayerName.trim() == getString(R.string.asr) && it.isNotified -> cb_asr.isChecked = true
+                it.prayerName.trim() == getString(R.string.maghrib) && it.isNotified -> cb_maghrib.isChecked = true
+                it.prayerName.trim() == getString(R.string.isha) && it.isNotified -> cb_isha.isChecked = true
+            }}
     }
 
-    private fun setPrayerText(timings: Timings?) {
+    private fun bindPrayerText(timings: Timings?) {
 
         if(timings == null){
             tv_fajr_time.text = getString(R.string.loading)
@@ -160,10 +203,12 @@ class FragmentMain : Fragment() {
         }
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
-    private fun setupWidget(timings: Timings?) {
+    private fun bindWidget(timings: Timings?) {
 
         if(timings == null)
+            return
+
+        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O)
             return
 
         val selPrayer = selectPrayer(timings)
@@ -175,7 +220,7 @@ class FragmentMain : Fragment() {
     @RequiresApi(Build.VERSION_CODES.O)
     private fun selectNextPrayerTime(selPrayer: Int, timings: Timings) {
 
-        val sdfPrayer = SimpleDateFormat("HH:mm", Locale.US)
+        val sdfPrayer = SimpleDateFormat("HH:mm", Locale.getDefault())
         val nowTime = DateTime(sdfPrayer.parse(LocalTime.now().toString()))
         var period: Period? = null
 
@@ -190,7 +235,7 @@ class FragmentMain : Fragment() {
         }
 
         if(period != null)
-            tv_widget_prayer_countdown.text = "${abs(period.hours)} Hour ${abs(period.minutes)} Minute left"
+            tv_widget_prayer_countdown.text = "${abs(period.hours)} Hour ${abs(period.minutes)} Minute remaining"
     }
 
     private fun selectWidgetTitle(selPrayer: Int) {
@@ -228,7 +273,7 @@ class FragmentMain : Fragment() {
         var prayer: Int = -1
 
         //prayer time
-        val sdfPrayer = SimpleDateFormat("HH:mm", Locale.US)
+        val sdfPrayer = SimpleDateFormat("HH:mm", Locale.getDefault())
         val fajrTime = DateTime(sdfPrayer.parse(timings.fajr.split(" ")[0].trim()))
         val dhuhrTime =  DateTime(sdfPrayer.parse(timings.dhuhr.split(" ")[0].trim()))
         val asrTime =  DateTime(sdfPrayer.parse(timings.asr.split(" ")[0].trim()))
