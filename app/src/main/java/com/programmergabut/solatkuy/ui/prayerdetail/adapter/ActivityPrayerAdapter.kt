@@ -5,8 +5,8 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.programmergabut.solatkuy.R
-import com.programmergabut.solatkuy.data.model.prayerApi.Data
-import com.programmergabut.solatkuy.data.model.prayerApi.PrayerApi
+import com.programmergabut.solatkuy.data.model.prayerJson.Data
+import com.programmergabut.solatkuy.data.model.prayerJson.PrayerApi
 import kotlinx.android.synthetic.main.layout_prayer_time_detail.view.*
 
 class ActivityPrayerAdapter(private val prayers: MutableList<Data>): RecyclerView.Adapter<ActivityPrayerAdapter.DataViewHolder>() {

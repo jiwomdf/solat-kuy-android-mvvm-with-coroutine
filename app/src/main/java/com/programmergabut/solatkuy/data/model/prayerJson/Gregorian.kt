@@ -1,23 +1,21 @@
-package com.programmergabut.solatkuy.data.model.prayerApi
+package com.programmergabut.solatkuy.data.model.prayerJson
 
 
 import com.google.gson.annotations.SerializedName
 
-data class Hijri(
+data class Gregorian(
     @SerializedName("date")
     val date: String,
     @SerializedName("day")
     val day: String,
     @SerializedName("designation")
-    val designation: DesignationX,
+    val designation: Designation,
     @SerializedName("format")
     val format: String,
-    @SerializedName("holidays")
-    val holidays: List<Any>,
     @SerializedName("month")
-    val month: MonthX,
+    val month: Month,
     @SerializedName("weekday")
-    val weekday: WeekdayX,
+    val weekday: Weekday,
     @SerializedName("year")
     val year: String
 )

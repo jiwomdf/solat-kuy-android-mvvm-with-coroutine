@@ -1,9 +1,9 @@
-package com.programmergabut.solatkuy.data.model.prayerApi
+package com.programmergabut.solatkuy.data.model.prayerJson
 
 
 import com.google.gson.annotations.SerializedName
 
-data class Designation(
+data class DesignationX(
     @SerializedName("abbreviated")
     val abbreviated: String,
     @SerializedName("expanded")

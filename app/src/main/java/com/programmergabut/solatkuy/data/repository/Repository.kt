@@ -8,7 +8,7 @@ import com.programmergabut.solatkuy.data.local.MsApi1Dao
 import com.programmergabut.solatkuy.data.local.NotifiedPrayerDao
 import com.programmergabut.solatkuy.data.model.MsApi1
 import com.programmergabut.solatkuy.data.model.PrayerLocal
-import com.programmergabut.solatkuy.data.model.prayerApi.PrayerApi
+import com.programmergabut.solatkuy.data.model.prayerJson.PrayerApi
 import com.programmergabut.solatkuy.room.SolatKuyRoom
 import kotlinx.coroutines.CoroutineScope
 import retrofit2.Retrofit.Builder

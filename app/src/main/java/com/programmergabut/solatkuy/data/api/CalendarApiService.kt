@@ -1,8 +1,7 @@
 package com.programmergabut.solatkuy.data.api
 
-import com.programmergabut.solatkuy.data.model.prayerApi.PrayerApi
+import com.programmergabut.solatkuy.data.model.prayerJson.PrayerApi
 import retrofit2.http.GET
-import retrofit2.http.Path
 import retrofit2.http.Query
 
 interface CalendarApiService {

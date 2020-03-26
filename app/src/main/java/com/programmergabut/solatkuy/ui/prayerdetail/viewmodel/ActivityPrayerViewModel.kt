@@ -1,11 +1,6 @@
 package com.programmergabut.solatkuy.ui.prayerdetail.viewmodel
 
-import android.util.Log
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
-import com.programmergabut.solatkuy.data.model.prayerApi.PrayerApi
-import com.programmergabut.solatkuy.util.Resource
 
 class ActivityPrayerViewModel() : ViewModel() {
 

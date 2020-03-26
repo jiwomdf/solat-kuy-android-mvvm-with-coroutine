@@ -4,7 +4,7 @@ import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.programmergabut.solatkuy.R
-import com.programmergabut.solatkuy.data.model.prayerApi.PrayerApi
+import com.programmergabut.solatkuy.data.model.prayerJson.PrayerApi
 import com.programmergabut.solatkuy.ui.prayerdetail.adapter.ActivityPrayerAdapter
 import com.programmergabut.solatkuy.ui.prayerdetail.viewmodel.ActivityPrayerViewModel
 import kotlinx.android.synthetic.main.activity_prayer_detail.*
