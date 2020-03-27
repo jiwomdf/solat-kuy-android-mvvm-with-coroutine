@@ -1,5 +1,9 @@
 package com.programmergabut.solatkuy.ui.fragmentmain.view
 
+import android.app.AlarmManager
+import android.app.PendingIntent
+import android.content.Context
+import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.location.Address
 import android.location.Geocoder
@@ -19,7 +23,9 @@ import com.programmergabut.solatkuy.data.model.MsApi1
 import com.programmergabut.solatkuy.data.model.PrayerLocal
 import com.programmergabut.solatkuy.data.model.prayerJson.Timings
 import com.programmergabut.solatkuy.ui.fragmentmain.viewmodel.FragmentMainViewModel
+import com.programmergabut.solatkuy.util.Broadcaster
 import com.programmergabut.solatkuy.util.EnumStatus
+import com.programmergabut.solatkuy.util.NotificationHelper
 import kotlinx.android.synthetic.main.layout_prayer_time.*
 import kotlinx.android.synthetic.main.layout_widget.*
 import kotlinx.coroutines.*
@@ -31,7 +37,6 @@ import java.text.SimpleDateFormat
 import java.time.LocalTime
 import java.util.*
 import kotlin.math.abs
-import kotlin.math.min
 
 class FragmentMain : Fragment() {
 
@@ -84,7 +89,36 @@ class FragmentMain : Fragment() {
 
             /* fetching Prayer API */
             fetchPrayerApi(it.latitude,it.longitude,"8", currDate.monthOfYear.toString(),currDate.year.toString())
+            setAlarmManager(getListPrayer())
         })
+    }
+
+    private fun getListPrayer(): MutableList<PrayerLocal> {
+
+        val list = mutableListOf<PrayerLocal>()
+
+        fragmentMainViewModel.prayerLocal.observe(this, androidx.lifecycle.Observer {
+            it.forEach{ p ->
+                if(p.isNotified)
+                    list.add(p)
+            }
+        })
+
+        return list
+    }
+
+    private fun setAlarmManager(list: MutableList<PrayerLocal>) {
+
+        val c = Calendar.getInstance()
+        c.set(Calendar.HOUR_OF_DAY, 14)
+        c.set(Calendar.MINUTE, 0)
+        c.set(Calendar.SECOND, 0)
+
+        val alarmManager = activity?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val intent = Intent(activity, Broadcaster::class.java)
+        val pendingIntent = PendingIntent.getBroadcast(context, 1, intent, 0)
+
+        alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.timeInMillis, pendingIntent)
     }
 
     private fun fetchPrayerApi(latitude: String, longitude: String, method: String, month: String, year: String) {
@@ -239,8 +273,8 @@ class FragmentMain : Fragment() {
             2 -> period = Period(nowTime, DateTime(sdfPrayer.parse(timings.asr.split(" ")[0].trim()+ ":00")))
             3 -> period = Period(nowTime, DateTime(sdfPrayer.parse(timings.maghrib.split(" ")[0].trim()+ ":00")))
             4 -> period = Period(nowTime, DateTime(sdfPrayer.parse(timings.isha.split(" ")[0].trim()+ ":00")))
-            5 -> period = Period(nowTime, DateTime(sdfPrayer.parse(timings.fajr.split(" ")[0].trim()+ ":00")))
-            6 -> period = Period(nowTime.minusDays(1), DateTime(sdfPrayer.parse(timings.fajr.split(" ")[0].trim()+ ":00")))
+            5 -> period = Period(nowTime, DateTime(sdfPrayer.parse(timings.fajr.split(" ")[0].trim()+ ":00")).plusDays(1))
+            6 -> period = Period(nowTime, DateTime(sdfPrayer.parse(timings.fajr.split(" ")[0].trim()+ ":00")))
         }
 
         if(period == null)
