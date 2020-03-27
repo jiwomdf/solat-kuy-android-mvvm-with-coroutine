@@ -7,13 +7,11 @@ import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.location.Address
 import android.location.Geocoder
-import android.os.Build
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
-import androidx.annotation.RequiresApi
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
@@ -44,6 +42,8 @@ class FragmentMain : Fragment() {
     private lateinit var fragmentMainViewModel: FragmentMainViewModel
     private var tempTimings: Timings? = null
     private var tempMsApi1: MsApi1? = null
+    private var mCityName: String? = null
+    private var mListModelPrayer: MutableList<ModelPrayer>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -76,6 +76,8 @@ class FragmentMain : Fragment() {
 
         fragmentMainViewModel.prayerLocal.observe(this, androidx.lifecycle.Observer {
             bindCheckBox(it)
+            mListModelPrayer = createListModelPrayer(it)
+            updateAlarmManager()
         })
 
         fragmentMainViewModel.msApi1Local.observe(this, androidx.lifecycle.Observer {
@@ -93,56 +95,34 @@ class FragmentMain : Fragment() {
         })
     }
 
-    private fun createListModelPrayer(): MutableList<ModelPrayer>? {
+    private fun createListModelPrayer(it: List<PrayerLocal>): MutableList<ModelPrayer>? {
 
         val list = mutableListOf<ModelPrayer>()
 
         if(tempTimings == null)
             return null
 
-        fragmentMainViewModel.prayerLocal.observe(this, androidx.lifecycle.Observer {
-            it.forEach con@{ p ->
+        it.forEach con@{ p ->
 
-                if(!p.isNotified)
-                    return@con
+            if(!p.isNotified)
+                return@con
 
-                when (p.prayerName) {
-                    getString(R.string.fajr) -> list.add(ModelPrayer(p.prayerName, p.isNotified, tempTimings?.fajr!!))
-                    getString(R.string.dhuhr) -> list.add(ModelPrayer(p.prayerName, p.isNotified, tempTimings?.dhuhr!!))
-                    getString(R.string.asr) -> list.add(ModelPrayer(p.prayerName, p.isNotified, tempTimings?.asr!!))
-                    getString(R.string.maghrib) -> list.add(ModelPrayer(p.prayerName, p.isNotified, tempTimings?.maghrib!!))
-                    getString(R.string.isha) -> list.add(ModelPrayer(p.prayerName, p.isNotified, tempTimings?.isha!!))
-                }
-
+            when (p.prayerName) {
+                getString(R.string.fajr) -> list.add(ModelPrayer(p.prayerID, p.prayerName, p.isNotified, tempTimings?.fajr!!))
+                getString(R.string.dhuhr) -> list.add(ModelPrayer(p.prayerID, p.prayerName, p.isNotified, tempTimings?.dhuhr!!))
+                getString(R.string.asr) -> list.add(ModelPrayer(p.prayerID, p.prayerName, p.isNotified, tempTimings?.asr!!))
+                getString(R.string.maghrib) -> list.add(ModelPrayer(p.prayerID, p.prayerName, p.isNotified, tempTimings?.maghrib!!))
+                getString(R.string.isha) -> list.add(ModelPrayer(p.prayerID, p.prayerName, p.isNotified, tempTimings?.isha!!))
             }
-        })
-
+        }
 
         return list
     }
 
-    private fun setAlarmManager(list: MutableList<ModelPrayer>) {
-
-        list.forEach{
-
-            val hour = it.prayerTime.split(":")[0].trim()
-            val minute = it.prayerTime.split(":")[1].split(" ")[0].trim()
-
-            val c = Calendar.getInstance()
-            c.set(Calendar.HOUR_OF_DAY, hour.toInt())
-            c.set(Calendar.MINUTE, minute.toInt())
-            c.set(Calendar.SECOND, 0)
-
-            val alarmManager = activity?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-            val intent = Intent(activity, Broadcaster::class.java)
-            val pendingIntent = PendingIntent.getBroadcast(context, 1, intent, 0)
-
-            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, c.timeInMillis, 86400000 /* equal to 24 hour */,pendingIntent)
-        }
-
-    }
-
     private fun fetchPrayerApi(latitude: String, longitude: String, method: String, month: String, year: String) {
+
+        Toasty.info(context!!, "fetching data..", Toast.LENGTH_SHORT).show()
+
         fragmentMainViewModel.fetchPrayerApi(latitude,longitude,method, month,year)
     }
 
@@ -166,10 +146,42 @@ class FragmentMain : Fragment() {
                 EnumStatus.LOADING -> bindPrayerText(null)
                 EnumStatus.ERROR -> Toast.makeText(context,it.message.toString(), Toast.LENGTH_SHORT).show()
             }
-
-            val listPrayer= createListModelPrayer()
-            listPrayer?.let { p -> setAlarmManager(p) }
         })
+
+    }
+
+    private fun updateAlarmManager(){
+        Toasty.info(context!!, "alarm manager updated", Toast.LENGTH_SHORT).show()
+        mListModelPrayer?.let { p -> setAlarmManager(p) }
+    }
+
+    private fun setAlarmManager(list: MutableList<ModelPrayer>) {
+
+        list.forEach{
+
+            val hour = it.prayerTime.split(":")[0].trim()
+            val minute = it.prayerTime.split(":")[1].split(" ")[0].trim()
+
+            val c = Calendar.getInstance()
+            c.set(Calendar.HOUR_OF_DAY, hour.toInt())
+            c.set(Calendar.MINUTE, minute.toInt())
+            c.set(Calendar.SECOND, 0)
+
+            val alarmManager = activity?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            val intent = Intent(activity, Broadcaster::class.java)
+
+            intent.putExtra("prayer_id", it.prayerID)
+            intent.putExtra("prayer_name", it.prayerName)
+            intent.putExtra("prayer_time", it.prayerTime)
+            intent.putExtra("prayer_city", mCityName)
+
+            val pendingIntent = PendingIntent.getBroadcast(context, it.prayerID, intent, 0)
+
+            if(c.before(Calendar.getInstance()))
+                c.add(Calendar.DATE, 1)
+
+            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, c.timeInMillis, 60000, pendingIntent)
+        }
 
     }
 
@@ -233,17 +245,17 @@ class FragmentMain : Fragment() {
 
     private fun bindWidgetLocation(it: MsApi1) {
         val geoCoder = Geocoder(context!!, Locale.getDefault())
-        var cityName: String? = null
         try {
             val addresses: List<Address> = geoCoder.getFromLocation(it.latitude.toDouble(),it.longitude.toDouble(), 1)
-            cityName = addresses[0].subAdminArea
+            mCityName = addresses[0].subAdminArea
         }
-        catch (ex: Exception){}
-
+        catch (ex: Exception){
+            mCityName = "-"
+        }
 
         tv_view_latitude.text = it.latitude + " °S"
         tv_view_longitude.text = it.longitude + " °E"
-        tv_view_city.text = cityName ?: "-"
+        tv_view_city.text = mCityName
     }
 
     private fun bindCheckBox(list: List<PrayerLocal>) {
@@ -280,16 +292,12 @@ class FragmentMain : Fragment() {
         if(timings == null)
             return
 
-        if (Build.VERSION.SDK_INT < Build.VERSION_CODES.O)
-            return
-
         val selPrayer = selectPrayer(timings)
         selectWidgetTitle(selPrayer)
         selectWidgetPic(selPrayer)
         selectNextPrayerTime(selPrayer, timings)
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun selectNextPrayerTime(selPrayer: Int, timings: Timings) {
 
         val sdfPrayer = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
@@ -396,7 +404,6 @@ class FragmentMain : Fragment() {
             Glide.with(this).load(widgetDrawable).centerCrop().into(iv_prayer_widget)
     }
 
-    @RequiresApi(Build.VERSION_CODES.O)
     private fun selectPrayer(timings: Timings): Int {
         var prayer: Int = -1
 
