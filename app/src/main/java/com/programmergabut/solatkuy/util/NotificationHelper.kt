@@ -3,6 +3,7 @@ package com.programmergabut.solatkuy.util
 import android.app.Notification
 import android.app.NotificationChannel
 import android.app.NotificationManager
+import android.app.PendingIntent
 import android.content.Context
 import android.content.ContextWrapper
 import androidx.core.app.NotificationCompat
@@ -32,12 +33,15 @@ class NotificationHelper(c: Context): ContextWrapper(c) {
         return mManager
     }
 
-    fun getPrayerReminderNC(title: String, message: String): NotificationCompat.Builder {
+    fun getPrayerReminderNC(title: String, message: String, intent: PendingIntent): NotificationCompat.Builder {
 
         return NotificationCompat.Builder(applicationContext, channel1ID)
             .setContentTitle(title)
             .setContentText(message)
             .setSmallIcon(R.drawable.ic_notifications_active_24dp)
+            .setContentIntent(intent)
+            .setPriority(NotificationCompat.DEFAULT_VIBRATE)
+            .setAutoCancel(true)
     }
 
 }

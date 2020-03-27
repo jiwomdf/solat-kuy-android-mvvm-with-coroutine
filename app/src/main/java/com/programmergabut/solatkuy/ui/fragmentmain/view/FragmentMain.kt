@@ -22,6 +22,7 @@ import com.programmergabut.solatkuy.data.model.dao.MsApi1
 import com.programmergabut.solatkuy.data.model.dao.PrayerLocal
 import com.programmergabut.solatkuy.data.model.prayerJson.Timings
 import com.programmergabut.solatkuy.ui.fragmentmain.viewmodel.FragmentMainViewModel
+import com.programmergabut.solatkuy.ui.main.view.MainActivity
 import com.programmergabut.solatkuy.util.Broadcaster
 import com.programmergabut.solatkuy.util.EnumStatus
 import es.dmoral.toasty.Toasty
@@ -43,7 +44,8 @@ class FragmentMain : Fragment() {
     private var tempTimings: Timings? = null
     private var tempMsApi1: MsApi1? = null
     private var mCityName: String? = null
-    private var mListModelPrayer: MutableList<ModelPrayer>? = null
+    private var mListOfListModelPrayer: MutableList<MutableList<ModelPrayer>?>? = null
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -70,13 +72,14 @@ class FragmentMain : Fragment() {
         inflater.inflate(R.layout.fragment_main, container, false)
 
 
+    /* Subscribe live data */
     private fun subscribeObserversDB() {
 
         val currDate = LocalDate()
 
         fragmentMainViewModel.prayerLocal.observe(this, androidx.lifecycle.Observer {
             bindCheckBox(it)
-            mListModelPrayer = createListModelPrayer(it)
+            mListOfListModelPrayer = modelPrayerFactory(it)
             updateAlarmManager()
         })
 
@@ -93,37 +96,6 @@ class FragmentMain : Fragment() {
             /* fetching Prayer API */
             fetchPrayerApi(it.latitude,it.longitude,"8", currDate.monthOfYear.toString(),currDate.year.toString())
         })
-    }
-
-    private fun createListModelPrayer(it: List<PrayerLocal>): MutableList<ModelPrayer>? {
-
-        val list = mutableListOf<ModelPrayer>()
-
-        if(tempTimings == null)
-            return null
-
-        it.forEach con@{ p ->
-
-            if(!p.isNotified)
-                return@con
-
-            when (p.prayerName) {
-                getString(R.string.fajr) -> list.add(ModelPrayer(p.prayerID, p.prayerName, p.isNotified, tempTimings?.fajr!!))
-                getString(R.string.dhuhr) -> list.add(ModelPrayer(p.prayerID, p.prayerName, p.isNotified, tempTimings?.dhuhr!!))
-                getString(R.string.asr) -> list.add(ModelPrayer(p.prayerID, p.prayerName, p.isNotified, tempTimings?.asr!!))
-                getString(R.string.maghrib) -> list.add(ModelPrayer(p.prayerID, p.prayerName, p.isNotified, tempTimings?.maghrib!!))
-                getString(R.string.isha) -> list.add(ModelPrayer(p.prayerID, p.prayerName, p.isNotified, tempTimings?.isha!!))
-            }
-        }
-
-        return list
-    }
-
-    private fun fetchPrayerApi(latitude: String, longitude: String, method: String, month: String, year: String) {
-
-        Toasty.info(context!!, "fetching data..", Toast.LENGTH_SHORT).show()
-
-        fragmentMainViewModel.fetchPrayerApi(latitude,longitude,method, month,year)
     }
 
     private fun subscribeObserversAPI() {
@@ -150,39 +122,59 @@ class FragmentMain : Fragment() {
 
     }
 
-    private fun updateAlarmManager(){
-        Toasty.info(context!!, "alarm manager updated", Toast.LENGTH_SHORT).show()
-        mListModelPrayer?.let { p -> setAlarmManager(p) }
+
+    /* fetch API data */
+    private fun fetchPrayerApi(latitude: String, longitude: String, method: String, month: String, year: String) {
+
+        Toasty.info(context!!, "fetching data..", Toast.LENGTH_SHORT).show()
+
+        fragmentMainViewModel.fetchPrayerApi(latitude,longitude,method, month,year)
     }
 
-    private fun setAlarmManager(list: MutableList<ModelPrayer>) {
 
-        list.forEach{
+    /* Database Transaction */
+    private fun insertDb(prayer:String, isNotified:Boolean){
 
-            val hour = it.prayerTime.split(":")[0].trim()
-            val minute = it.prayerTime.split(":")[1].split(" ")[0].trim()
+        if(isNotified)
+            Toasty.success(context!!, "$prayer will be notified every day", Toast.LENGTH_SHORT).show()
+        else
+            Toasty.warning(context!!, "$prayer will not be notified anymore", Toast.LENGTH_SHORT).show()
 
-            val c = Calendar.getInstance()
-            c.set(Calendar.HOUR_OF_DAY, hour.toInt())
-            c.set(Calendar.MINUTE, minute.toInt())
-            c.set(Calendar.SECOND, 0)
+        fragmentMainViewModel.update(PrayerLocal(prayer, isNotified))
+    }
 
-            val alarmManager = activity?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-            val intent = Intent(activity, Broadcaster::class.java)
 
-            intent.putExtra("prayer_id", it.prayerID)
-            intent.putExtra("prayer_name", it.prayerName)
-            intent.putExtra("prayer_time", it.prayerTime)
-            intent.putExtra("prayer_city", mCityName)
+    /* init first load data */
+    private fun modelPrayerFactory(it: List<PrayerLocal>): MutableList<MutableList<ModelPrayer>?>? {
 
-            val pendingIntent = PendingIntent.getBroadcast(context, it.prayerID, intent, 0)
+        val listOfListModelPrayer = mutableListOf<MutableList<ModelPrayer>?>()
+        val notifiedList = mutableListOf<ModelPrayer>()
+        val nonNotifiedList = mutableListOf<ModelPrayer>()
+        var modelPrayer: ModelPrayer? = null
 
-            if(c.before(Calendar.getInstance()))
-                c.add(Calendar.DATE, 1)
+        if(tempTimings == null)
+            return null
 
-            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, c.timeInMillis, 60000, pendingIntent)
+        it.forEach con@{ p ->
+
+            when (p.prayerName) {
+                getString(R.string.fajr) -> modelPrayer = ModelPrayer(p.prayerID, p.prayerName, p.isNotified, tempTimings?.fajr!!)
+                getString(R.string.dhuhr) -> modelPrayer = ModelPrayer(p.prayerID, p.prayerName, p.isNotified, tempTimings?.dhuhr!!)
+                getString(R.string.asr) -> modelPrayer = ModelPrayer(p.prayerID, p.prayerName, p.isNotified, tempTimings?.asr!!)
+                getString(R.string.maghrib) -> modelPrayer = ModelPrayer(p.prayerID, p.prayerName, p.isNotified, tempTimings?.maghrib!!)
+                getString(R.string.isha) -> modelPrayer = ModelPrayer(p.prayerID, p.prayerName, p.isNotified, tempTimings?.isha!!)
+            }
+
+            if(p.isNotified)
+                notifiedList.add(modelPrayer!!)
+            else
+                nonNotifiedList.add(modelPrayer!!)
         }
 
+        listOfListModelPrayer.add(notifiedList)
+        listOfListModelPrayer.add(nonNotifiedList)
+
+        return listOfListModelPrayer
     }
 
     private fun loadTempData() {
@@ -233,16 +225,19 @@ class FragmentMain : Fragment() {
 
     }
 
-    private fun insertDb(prayer:String, isNotified:Boolean){
-
-        if(isNotified)
-            Toasty.success(context!!, "$prayer will be notified every day", Toast.LENGTH_SHORT).show()
-        else
-            Toasty.warning(context!!, "$prayer will not be notified anymore", Toast.LENGTH_SHORT).show()
-
-        fragmentMainViewModel.update(PrayerLocal(prayer, isNotified))
+    private fun bindCheckBox(list: List<PrayerLocal>) {
+        list.forEach {
+            when {
+                it.prayerName.trim() == getString(R.string.fajr) && it.isNotified -> cb_fajr.isChecked = true
+                it.prayerName.trim() == getString(R.string.dhuhr) && it.isNotified -> cb_dhuhr.isChecked = true
+                it.prayerName.trim() == getString(R.string.asr) && it.isNotified -> cb_asr.isChecked = true
+                it.prayerName.trim() == getString(R.string.maghrib) && it.isNotified -> cb_maghrib.isChecked = true
+                it.prayerName.trim() == getString(R.string.isha) && it.isNotified -> cb_isha.isChecked = true
+            }}
     }
 
+
+    /* Widget */
     private fun bindWidgetLocation(it: MsApi1) {
         val geoCoder = Geocoder(context!!, Locale.getDefault())
         try {
@@ -256,17 +251,6 @@ class FragmentMain : Fragment() {
         tv_view_latitude.text = it.latitude + " °S"
         tv_view_longitude.text = it.longitude + " °E"
         tv_view_city.text = mCityName
-    }
-
-    private fun bindCheckBox(list: List<PrayerLocal>) {
-        list.forEach {
-            when {
-                it.prayerName.trim() == getString(R.string.fajr) && it.isNotified -> cb_fajr.isChecked = true
-                it.prayerName.trim() == getString(R.string.dhuhr) && it.isNotified -> cb_dhuhr.isChecked = true
-                it.prayerName.trim() == getString(R.string.asr) && it.isNotified -> cb_asr.isChecked = true
-                it.prayerName.trim() == getString(R.string.maghrib) && it.isNotified -> cb_maghrib.isChecked = true
-                it.prayerName.trim() == getString(R.string.isha) && it.isNotified -> cb_isha.isChecked = true
-            }}
     }
 
     private fun bindPrayerText(timings: Timings?) {
@@ -301,8 +285,8 @@ class FragmentMain : Fragment() {
     private fun selectNextPrayerTime(selPrayer: Int, timings: Timings) {
 
         val sdfPrayer = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
-        val locatTime = LocalTime.now().toString()
-        val nowTime = DateTime(sdfPrayer.parse(locatTime))
+        val localTime = LocalTime.now().toString()
+        val nowTime = DateTime(sdfPrayer.parse(localTime))
         var period: Period? = null
 
         when(selPrayer){
@@ -322,56 +306,6 @@ class FragmentMain : Fragment() {
             coroutineTimer(period.hours, period.minutes, 60 - nowTime.secondOfMinute)
         }
 
-    }
-
-    private suspend fun coroutineTimer(hour: Int, minute: Int, second: Int){
-        
-        var tempHour = abs(hour)
-        var tempMinute = abs(minute)
-        var tempSecond = abs(second)
-
-        var onOffCountDown = true
-        var isMinuteZero = false
-
-        while (onOffCountDown){
-            delay(1000)
-            tempSecond--
-
-            if(tempSecond == 0){
-                tempSecond = 60
-
-                if(tempMinute != 0)
-                    tempMinute -= 1
-
-                if(tempMinute == 0)
-                    isMinuteZero = true
-
-            }
-
-            if(tempMinute == 0){
-
-                if(!isMinuteZero)
-                    tempMinute = 60
-
-                if(tempHour != 0)
-                    tempHour -= 1
-            }
-
-            /* fetching Prayer API */
-            if(tempHour == 0 && tempMinute == 0 && tempSecond == 1){
-                withContext(Dispatchers.Main){
-                    fetchPrayerApi(tempMsApi1?.latitude!!,tempMsApi1?.longitude!!, "8", tempMsApi1!!.month, tempMsApi1!!.year)
-                }
-            }
-
-            withContext(Dispatchers.Main){
-                if(tv_widget_prayer_countdown != null)
-                    tv_widget_prayer_countdown.text = "$tempHour : $tempMinute : $tempSecond remaining"
-                else
-                    onOffCountDown = false
-            }
-
-        }
     }
 
     private fun selectWidgetTitle(selPrayer: Int) {
@@ -438,6 +372,105 @@ class FragmentMain : Fragment() {
 
         return prayer
     }
+
+
+    /* Coroutine Timer */
+    private suspend fun coroutineTimer(hour: Int, minute: Int, second: Int){
+        
+        var tempHour = abs(hour)
+        var tempMinute = abs(minute)
+        var tempSecond = abs(second)
+
+        var onOffCountDown = true
+        var isMinuteZero = false
+
+        while (onOffCountDown){
+            delay(1000)
+            tempSecond--
+
+            if(tempSecond == 0){
+                tempSecond = 60
+
+                if(tempMinute != 0)
+                    tempMinute -= 1
+
+                if(tempMinute == 0)
+                    isMinuteZero = true
+
+            }
+
+            if(tempMinute == 0){
+
+                if(!isMinuteZero)
+                    tempMinute = 60
+
+                if(tempHour != 0)
+                    tempHour -= 1
+            }
+
+            /* fetching Prayer API */
+            if(tempHour == 0 && tempMinute == 0 && tempSecond == 1){
+                withContext(Dispatchers.Main){
+                    fetchPrayerApi(tempMsApi1?.latitude!!,tempMsApi1?.longitude!!, "8", tempMsApi1!!.month, tempMsApi1!!.year)
+                }
+            }
+
+            withContext(Dispatchers.Main){
+                if(tv_widget_prayer_countdown != null)
+                    tv_widget_prayer_countdown.text = "$tempHour : $tempMinute : $tempSecond remaining"
+                else
+                    onOffCountDown = false
+            }
+
+        }
+    }
+
+    /* Alarm Manager & Notification */
+    private fun updateAlarmManager(){
+        mListOfListModelPrayer?.let { listPrayer ->
+            setNotification(listPrayer[0]!! /* sel list */ ,listPrayer[1]!! /* non list */)
+            Toasty.info(context!!, "alarm manager updated", Toast.LENGTH_SHORT).show()
+        }
+    }
+
+    private fun setNotification(selList: MutableList<ModelPrayer>, nonSelList: MutableList<ModelPrayer>) {
+
+        val intent = Intent(activity, Broadcaster::class.java)
+        val alarmManager = activity?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+
+        selList.forEach{
+
+            val hour = it.prayerTime.split(":")[0].trim()
+            val minute = it.prayerTime.split(":")[1].split(" ")[0].trim()
+
+            val c = Calendar.getInstance()
+            c.set(Calendar.HOUR_OF_DAY, hour.toInt())
+            c.set(Calendar.MINUTE, minute.toInt())
+            c.set(Calendar.SECOND, 0)
+
+            intent.putExtra("prayer_id", it.prayerID)
+            intent.putExtra("prayer_name", it.prayerName)
+            intent.putExtra("prayer_time", it.prayerTime)
+            intent.putExtra("prayer_city", mCityName)
+
+            val pendingIntent = PendingIntent.getBroadcast(context, it.prayerID, intent, 0)
+
+            if(c.before(Calendar.getInstance()))
+                c.add(Calendar.DATE, 1)
+
+            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, c.timeInMillis, 60000, pendingIntent)
+        }
+
+        nonSelList.forEach{
+
+            val pendingIntent = PendingIntent.getBroadcast(context, it.prayerID, intent, 0)
+
+            alarmManager.cancel(pendingIntent)
+        }
+
+    }
+
+
 
 
 }

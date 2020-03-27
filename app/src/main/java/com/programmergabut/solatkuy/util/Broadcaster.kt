@@ -1,8 +1,10 @@
 package com.programmergabut.solatkuy.util
 
+import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import com.programmergabut.solatkuy.ui.main.view.MainActivity
 
 class Broadcaster: BroadcastReceiver() {
 
@@ -17,7 +19,12 @@ class Broadcaster: BroadcastReceiver() {
         if(pID == -1)
             return
 
-        val nb = mNotificationHelper.getPrayerReminderNC(pName!!,"now is $pTime in $pCity let's pray $pName")
+        val nextIntent = Intent(context, MainActivity::class.java)
+        nextIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        val pendingIntent = PendingIntent.getActivity(context, pID!!, nextIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+
+        val nb = mNotificationHelper.getPrayerReminderNC(pName!!,
+            "now is $pTime in $pCity let's pray $pName", pendingIntent)
         mNotificationHelper.getManager()?.notify(1, nb.build())
     }
 
