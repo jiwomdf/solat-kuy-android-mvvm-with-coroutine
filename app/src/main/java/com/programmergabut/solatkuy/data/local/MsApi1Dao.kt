@@ -5,7 +5,7 @@ import androidx.room.Dao
 import androidx.room.Insert
 import androidx.room.OnConflictStrategy
 import androidx.room.Query
-import com.programmergabut.solatkuy.data.model.MsApi1
+import com.programmergabut.solatkuy.data.model.dao.MsApi1
 
 @Dao
 interface MsApi1Dao {

@@ -6,8 +6,8 @@ import com.google.gson.GsonBuilder
 import com.programmergabut.solatkuy.data.api.CalendarApiService
 import com.programmergabut.solatkuy.data.local.MsApi1Dao
 import com.programmergabut.solatkuy.data.local.NotifiedPrayerDao
-import com.programmergabut.solatkuy.data.model.MsApi1
-import com.programmergabut.solatkuy.data.model.PrayerLocal
+import com.programmergabut.solatkuy.data.model.dao.MsApi1
+import com.programmergabut.solatkuy.data.model.dao.PrayerLocal
 import com.programmergabut.solatkuy.data.model.prayerJson.PrayerApi
 import com.programmergabut.solatkuy.room.SolatKuyRoom
 import kotlinx.coroutines.CoroutineScope

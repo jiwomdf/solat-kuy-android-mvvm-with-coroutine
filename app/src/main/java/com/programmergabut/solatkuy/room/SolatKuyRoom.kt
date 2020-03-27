@@ -7,8 +7,8 @@ import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.programmergabut.solatkuy.data.local.MsApi1Dao
 import com.programmergabut.solatkuy.data.local.NotifiedPrayerDao
-import com.programmergabut.solatkuy.data.model.MsApi1
-import com.programmergabut.solatkuy.data.model.PrayerLocal
+import com.programmergabut.solatkuy.data.model.dao.MsApi1
+import com.programmergabut.solatkuy.data.model.dao.PrayerLocal
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -59,11 +59,6 @@ abstract class SolatKuyRoom: RoomDatabase() {
             override fun onCreate(db: SupportSQLiteDatabase) {
                 super.onCreate(db)
 
-            }
-
-            override fun onOpen(db: SupportSQLiteDatabase) {
-                super.onOpen(db)
-
                 INSTANCE.let {
                     scope.launch {
                         populateNotifiedPrayer(it?.notifiedPrayerDao()!!)
@@ -72,20 +67,58 @@ abstract class SolatKuyRoom: RoomDatabase() {
                 }
             }
 
+            override fun onOpen(db: SupportSQLiteDatabase) {
+                super.onOpen(db)
+            }
+
             suspend fun populateMsApi1(msApi1Dao: MsApi1Dao) {
                 msApi1Dao.deleteAll()
 
-                msApi1Dao.insertMsApi1(MsApi1(1,"-7.5755","110.8243","8","3","2020"))
+                msApi1Dao.insertMsApi1(
+                    MsApi1(
+                        1,
+                        "-7.5755",
+                        "110.8243",
+                        "8",
+                        "3",
+                        "2020"
+                    )
+                )
             }
 
             suspend fun populateNotifiedPrayer(notifiedPrayerDao: NotifiedPrayerDao){
                 notifiedPrayerDao.deleteAll()
 
-                notifiedPrayerDao.insertNotifiedPrayer(PrayerLocal("Fajr",true))
-                notifiedPrayerDao.insertNotifiedPrayer(PrayerLocal("Dhuhr",true))
-                notifiedPrayerDao.insertNotifiedPrayer(PrayerLocal("Asr",true))
-                notifiedPrayerDao.insertNotifiedPrayer(PrayerLocal("Maghrib",true))
-                notifiedPrayerDao.insertNotifiedPrayer(PrayerLocal("Isha",true))
+                notifiedPrayerDao.insertNotifiedPrayer(
+                    PrayerLocal(
+                        "Fajr",
+                        true
+                    )
+                )
+                notifiedPrayerDao.insertNotifiedPrayer(
+                    PrayerLocal(
+                        "Dhuhr",
+                        true
+                    )
+                )
+                notifiedPrayerDao.insertNotifiedPrayer(
+                    PrayerLocal(
+                        "Asr",
+                        true
+                    )
+                )
+                notifiedPrayerDao.insertNotifiedPrayer(
+                    PrayerLocal(
+                        "Maghrib",
+                        true
+                    )
+                )
+                notifiedPrayerDao.insertNotifiedPrayer(
+                    PrayerLocal(
+                        "Isha",
+                        true
+                    )
+                )
             }
         }
 

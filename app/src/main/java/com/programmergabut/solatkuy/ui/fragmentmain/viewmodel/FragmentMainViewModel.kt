@@ -5,8 +5,8 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
-import com.programmergabut.solatkuy.data.model.MsApi1
-import com.programmergabut.solatkuy.data.model.PrayerLocal
+import com.programmergabut.solatkuy.data.model.dao.MsApi1
+import com.programmergabut.solatkuy.data.model.dao.PrayerLocal
 import com.programmergabut.solatkuy.data.model.prayerJson.PrayerApi
 import com.programmergabut.solatkuy.data.repository.Repository
 import com.programmergabut.solatkuy.util.Resource

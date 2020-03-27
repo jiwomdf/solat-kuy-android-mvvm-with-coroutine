@@ -37,7 +37,7 @@ class NotificationHelper(c: Context): ContextWrapper(c) {
         return NotificationCompat.Builder(applicationContext, channel1ID)
             .setContentTitle(title)
             .setContentText(message)
-            .setSmallIcon(R.drawable.ic_warning_24dp)
+            .setSmallIcon(R.drawable.ic_notifications_active_24dp)
     }
 
 }

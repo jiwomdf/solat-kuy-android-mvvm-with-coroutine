@@ -1,4 +1,4 @@
-package com.programmergabut.solatkuy.data.model
+package com.programmergabut.solatkuy.data.model.dao
 
 import androidx.room.Entity
 import androidx.room.PrimaryKey

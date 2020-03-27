@@ -19,13 +19,14 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
 import com.programmergabut.solatkuy.R
-import com.programmergabut.solatkuy.data.model.MsApi1
-import com.programmergabut.solatkuy.data.model.PrayerLocal
+import com.programmergabut.solatkuy.data.model.ModelPrayer
+import com.programmergabut.solatkuy.data.model.dao.MsApi1
+import com.programmergabut.solatkuy.data.model.dao.PrayerLocal
 import com.programmergabut.solatkuy.data.model.prayerJson.Timings
 import com.programmergabut.solatkuy.ui.fragmentmain.viewmodel.FragmentMainViewModel
 import com.programmergabut.solatkuy.util.Broadcaster
 import com.programmergabut.solatkuy.util.EnumStatus
-import com.programmergabut.solatkuy.util.NotificationHelper
+import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.layout_prayer_time.*
 import kotlinx.android.synthetic.main.layout_widget.*
 import kotlinx.coroutines.*
@@ -89,36 +90,56 @@ class FragmentMain : Fragment() {
 
             /* fetching Prayer API */
             fetchPrayerApi(it.latitude,it.longitude,"8", currDate.monthOfYear.toString(),currDate.year.toString())
-            setAlarmManager(getListPrayer())
         })
     }
 
-    private fun getListPrayer(): MutableList<PrayerLocal> {
+    private fun createListModelPrayer(): MutableList<ModelPrayer>? {
 
-        val list = mutableListOf<PrayerLocal>()
+        val list = mutableListOf<ModelPrayer>()
+
+        if(tempTimings == null)
+            return null
 
         fragmentMainViewModel.prayerLocal.observe(this, androidx.lifecycle.Observer {
-            it.forEach{ p ->
-                if(p.isNotified)
-                    list.add(p)
+            it.forEach con@{ p ->
+
+                if(!p.isNotified)
+                    return@con
+
+                when (p.prayerName) {
+                    getString(R.string.fajr) -> list.add(ModelPrayer(p.prayerName, p.isNotified, tempTimings?.fajr!!))
+                    getString(R.string.dhuhr) -> list.add(ModelPrayer(p.prayerName, p.isNotified, tempTimings?.dhuhr!!))
+                    getString(R.string.asr) -> list.add(ModelPrayer(p.prayerName, p.isNotified, tempTimings?.asr!!))
+                    getString(R.string.maghrib) -> list.add(ModelPrayer(p.prayerName, p.isNotified, tempTimings?.maghrib!!))
+                    getString(R.string.isha) -> list.add(ModelPrayer(p.prayerName, p.isNotified, tempTimings?.isha!!))
+                }
+
             }
         })
+
 
         return list
     }
 
-    private fun setAlarmManager(list: MutableList<PrayerLocal>) {
+    private fun setAlarmManager(list: MutableList<ModelPrayer>) {
 
-        val c = Calendar.getInstance()
-        c.set(Calendar.HOUR_OF_DAY, 14)
-        c.set(Calendar.MINUTE, 0)
-        c.set(Calendar.SECOND, 0)
+        list.forEach{
 
-        val alarmManager = activity?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val intent = Intent(activity, Broadcaster::class.java)
-        val pendingIntent = PendingIntent.getBroadcast(context, 1, intent, 0)
+            val hour = it.prayerTime.split(":")[0].trim()
+            val minute = it.prayerTime.split(":")[1].split(" ")[0].trim()
 
-        alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.timeInMillis, pendingIntent)
+            val c = Calendar.getInstance()
+            c.set(Calendar.HOUR_OF_DAY, hour.toInt())
+            c.set(Calendar.MINUTE, minute.toInt())
+            c.set(Calendar.SECOND, 0)
+
+            val alarmManager = activity?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+            val intent = Intent(activity, Broadcaster::class.java)
+            val pendingIntent = PendingIntent.getBroadcast(context, 1, intent, 0)
+
+            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, c.timeInMillis, 86400000 /* equal to 24 hour */,pendingIntent)
+        }
+
     }
 
     private fun fetchPrayerApi(latitude: String, longitude: String, method: String, month: String, year: String) {
@@ -145,6 +166,9 @@ class FragmentMain : Fragment() {
                 EnumStatus.LOADING -> bindPrayerText(null)
                 EnumStatus.ERROR -> Toast.makeText(context,it.message.toString(), Toast.LENGTH_SHORT).show()
             }
+
+            val listPrayer= createListModelPrayer()
+            listPrayer?.let { p -> setAlarmManager(p) }
         })
 
     }
@@ -198,7 +222,13 @@ class FragmentMain : Fragment() {
     }
 
     private fun insertDb(prayer:String, isNotified:Boolean){
-        fragmentMainViewModel.update(PrayerLocal(prayer,isNotified))
+
+        if(isNotified)
+            Toasty.success(context!!, "$prayer will be notified every day", Toast.LENGTH_SHORT).show()
+        else
+            Toasty.warning(context!!, "$prayer will not be notified anymore", Toast.LENGTH_SHORT).show()
+
+        fragmentMainViewModel.update(PrayerLocal(prayer, isNotified))
     }
 
     private fun bindWidgetLocation(it: MsApi1) {
