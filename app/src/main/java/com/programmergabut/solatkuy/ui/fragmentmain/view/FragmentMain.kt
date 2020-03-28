@@ -114,7 +114,7 @@ class FragmentMain : Fragment() {
                         tempTimings = timings
 
                         bindWidget(timings)
-                        tempListPrayerLocal?.let { tempData -> modelPrayerFactory(tempData)?.let {modelPrayer -> updateAlarmManager(modelPrayer) }}
+                        //tempListPrayerLocal?.let { tempData -> modelPrayerFactory(tempData)?.let {modelPrayer -> updateAlarmManager(modelPrayer) }}
                     }}
                 EnumStatus.LOADING -> Toasty.info(context!!, "fetching data..", Toast.LENGTH_SHORT).show()
                 EnumStatus.ERROR -> {
@@ -136,7 +136,7 @@ class FragmentMain : Fragment() {
                     /* save temp data */
                     tempTimings = localTimings
 
-                    bindWidget(tempTimings)
+                    bindWidget(localTimings)
                 }
             }
         })
