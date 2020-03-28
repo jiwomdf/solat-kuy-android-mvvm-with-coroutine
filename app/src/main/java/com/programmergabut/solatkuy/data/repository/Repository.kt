@@ -6,33 +6,46 @@ import com.google.gson.GsonBuilder
 import com.programmergabut.solatkuy.data.api.CalendarApiService
 import com.programmergabut.solatkuy.data.local.MsApi1Dao
 import com.programmergabut.solatkuy.data.local.NotifiedPrayerDao
-import com.programmergabut.solatkuy.data.model.dao.MsApi1
-import com.programmergabut.solatkuy.data.model.dao.PrayerLocal
+import com.programmergabut.solatkuy.data.model.entity.MsApi1
+import com.programmergabut.solatkuy.data.model.entity.PrayerLocal
 import com.programmergabut.solatkuy.data.model.prayerJson.PrayerApi
+import com.programmergabut.solatkuy.data.model.prayerJson.Timings
 import com.programmergabut.solatkuy.room.SolatKuyRoom
 import kotlinx.coroutines.CoroutineScope
 import retrofit2.Retrofit.Builder
 import retrofit2.converter.gson.GsonConverterFactory
+import java.text.SimpleDateFormat
+import java.util.*
 
 class Repository(application: Application, scope: CoroutineScope) {
 
     private var notifiedPrayerDao: NotifiedPrayerDao? = null
     private var msApi1Dao: MsApi1Dao? = null
 
-    var mPrayerLocal: LiveData<List<PrayerLocal>>
+    var mListPrayerLocal: LiveData<List<PrayerLocal>>
     var mMsApi1Local: LiveData<MsApi1>
 
     private var db: SolatKuyRoom = SolatKuyRoom.getDataBase(application, scope)
 
     init {
-        mPrayerLocal = db.notifiedPrayerDao().getNotifiedPrayer()
+        mListPrayerLocal = db.notifiedPrayerDao().getNotifiedPrayer()
         mMsApi1Local = db.msApi1Dao().getMsApi1()
     }
 
     // Room
     suspend fun updateNotifiedPrayer(prayerLocal: PrayerLocal){
         notifiedPrayerDao = db.notifiedPrayerDao()
-        notifiedPrayerDao?.updateNotifiedPrayer(prayerLocal.prayerName, prayerLocal.isNotified)
+        notifiedPrayerDao?.updateNotifiedPrayer(prayerLocal.prayerName, prayerLocal.isNotified, prayerLocal.prayerTime)
+    }
+
+    private suspend fun updatePrayerTime(prayerLocal: PrayerLocal){
+        notifiedPrayerDao = db.notifiedPrayerDao()
+        notifiedPrayerDao?.updatePrayerTime(prayerLocal.prayerName, prayerLocal.prayerTime)
+    }
+
+    suspend fun updatePrayerIsNotified(prayerLocal: PrayerLocal){
+        notifiedPrayerDao = db.notifiedPrayerDao()
+        notifiedPrayerDao?.updatePrayerIsNotified(prayerLocal.prayerName, prayerLocal.isNotified)
     }
 
     suspend fun updateMsApi1(api1ID: Int, latitude: String, longitude: String, method: String, month: String, year:String){
@@ -50,7 +63,32 @@ class Repository(application: Application, scope: CoroutineScope) {
     }
 
     suspend fun fetchPrayerApi(latitude:String, longitude:String, method: String, month: String, year: String): PrayerApi {
-        return retrofit().fetchPrayer(latitude, longitude, method, month,year)
+        val retVal =  retrofit().fetchPrayer(latitude, longitude, method, month,year)
+
+        updateDbAfterFetchingData(retVal)
+
+        return retVal
     }
+
+    private suspend fun updateDbAfterFetchingData(retVal: PrayerApi) {
+
+        val sdf = SimpleDateFormat("dd", Locale.getDefault())
+        val currentDate = sdf.format(Date())
+
+        val timings = retVal.data.find { obj -> obj.date.gregorian.day == currentDate.toString() }?.timings
+
+        val map = mutableMapOf<String,String>()
+
+        map["Fajr"] = timings?.fajr.toString()
+        map["Dhuhr"] = timings?.dhuhr.toString()
+        map["Asr"] = timings?.asr.toString()
+        map["Maghrib"] = timings?.maghrib.toString()
+        map["Isha"] = timings?.isha.toString()
+
+        map.forEach { p ->
+            updatePrayerTime(PrayerLocal(p.key,false,p.value))
+        }
+    }
+
 
 }

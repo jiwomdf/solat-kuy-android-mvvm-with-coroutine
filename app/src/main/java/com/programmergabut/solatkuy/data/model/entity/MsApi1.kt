@@ -1,7 +1,6 @@
-package com.programmergabut.solatkuy.data.model.dao
+package com.programmergabut.solatkuy.data.model.entity
 
 import androidx.room.Entity
-import androidx.room.Ignore
 import androidx.room.PrimaryKey
 
 @Entity(tableName = "MsApi1")

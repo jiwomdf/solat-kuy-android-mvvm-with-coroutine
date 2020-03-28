@@ -5,17 +5,17 @@ import com.google.gson.annotations.SerializedName
 
 data class Timings(
     @SerializedName("Asr")
-    val asr: String,
+    var asr: String,
     @SerializedName("Dhuhr")
-    val dhuhr: String,
+    var dhuhr: String,
     @SerializedName("Fajr")
-    val fajr: String,
+    var fajr: String,
     @SerializedName("Imsak")
     val imsak: String,
     @SerializedName("Isha")
-    val isha: String,
+    var isha: String,
     @SerializedName("Maghrib")
-    val maghrib: String,
+    var maghrib: String,
     @SerializedName("Midnight")
     val midnight: String,
     @SerializedName("Sunrise")

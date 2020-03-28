@@ -7,12 +7,12 @@ import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.programmergabut.solatkuy.data.local.MsApi1Dao
 import com.programmergabut.solatkuy.data.local.NotifiedPrayerDao
-import com.programmergabut.solatkuy.data.model.dao.MsApi1
-import com.programmergabut.solatkuy.data.model.dao.PrayerLocal
+import com.programmergabut.solatkuy.data.model.entity.MsApi1
+import com.programmergabut.solatkuy.data.model.entity.PrayerLocal
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
-@Database(version = 3, entities = [PrayerLocal::class, MsApi1::class])
+@Database(version = 4, entities = [PrayerLocal::class, MsApi1::class])
 abstract class SolatKuyRoom: RoomDatabase() {
 
     abstract fun notifiedPrayerDao(): NotifiedPrayerDao
@@ -31,7 +31,7 @@ abstract class SolatKuyRoom: RoomDatabase() {
             synchronized(this) {
                 val instance = Room.databaseBuilder(context.applicationContext,
                         SolatKuyRoom::class.java,"solatkuydb")
-                    //.fallbackToDestructiveMigration()
+                    .fallbackToDestructiveMigration()
 //                    .addMigrations(object :Migration(1,2){
 //                        override fun migrate(database: SupportSQLiteDatabase) {
 //                            database.execSQL("CREATE TABLE MsApi1 (`api1ID` INTEGER, "
@@ -69,6 +69,7 @@ abstract class SolatKuyRoom: RoomDatabase() {
 
             override fun onOpen(db: SupportSQLiteDatabase) {
                 super.onOpen(db)
+
             }
 
             suspend fun populateMsApi1(msApi1Dao: MsApi1Dao) {
@@ -92,31 +93,36 @@ abstract class SolatKuyRoom: RoomDatabase() {
                 notifiedPrayerDao.insertNotifiedPrayer(
                     PrayerLocal(
                         "Fajr",
-                        true
+                        true,
+                        "00:00"
                     )
                 )
                 notifiedPrayerDao.insertNotifiedPrayer(
                     PrayerLocal(
                         "Dhuhr",
-                        true
+                        true,
+                        "00:00"
                     )
                 )
                 notifiedPrayerDao.insertNotifiedPrayer(
                     PrayerLocal(
                         "Asr",
-                        true
+                        true,
+                        "00:00"
                     )
                 )
                 notifiedPrayerDao.insertNotifiedPrayer(
                     PrayerLocal(
                         "Maghrib",
-                        true
+                        true,
+                        "00:00"
                     )
                 )
                 notifiedPrayerDao.insertNotifiedPrayer(
                     PrayerLocal(
                         "Isha",
-                        true
+                        true,
+                        "00:00"
                     )
                 )
             }

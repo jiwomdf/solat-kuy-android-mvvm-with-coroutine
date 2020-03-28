@@ -18,11 +18,10 @@ import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
 import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.data.model.ModelPrayer
-import com.programmergabut.solatkuy.data.model.dao.MsApi1
-import com.programmergabut.solatkuy.data.model.dao.PrayerLocal
+import com.programmergabut.solatkuy.data.model.entity.MsApi1
+import com.programmergabut.solatkuy.data.model.entity.PrayerLocal
 import com.programmergabut.solatkuy.data.model.prayerJson.Timings
 import com.programmergabut.solatkuy.ui.fragmentmain.viewmodel.FragmentMainViewModel
-import com.programmergabut.solatkuy.ui.main.view.MainActivity
 import com.programmergabut.solatkuy.util.Broadcaster
 import com.programmergabut.solatkuy.util.EnumStatus
 import es.dmoral.toasty.Toasty
@@ -43,8 +42,8 @@ class FragmentMain : Fragment() {
     private lateinit var fragmentMainViewModel: FragmentMainViewModel
     private var tempTimings: Timings? = null
     private var tempMsApi1: MsApi1? = null
+    private var tempListPrayerLocal: List<PrayerLocal>? = null
     private var mCityName: String? = null
-    private var mListOfListModelPrayer: MutableList<MutableList<ModelPrayer>?>? = null
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -77,10 +76,13 @@ class FragmentMain : Fragment() {
 
         val currDate = LocalDate()
 
-        fragmentMainViewModel.prayerLocal.observe(this, androidx.lifecycle.Observer {
+        fragmentMainViewModel.listPrayerLocal.observe(this, androidx.lifecycle.Observer { it ->
+
+            /* save temp data */
+            tempListPrayerLocal = it
+
             bindCheckBox(it)
-            mListOfListModelPrayer = modelPrayerFactory(it)
-            updateAlarmManager()
+            modelPrayerFactory(it)?.let {data -> updateAlarmManager(data) }
         })
 
         fragmentMainViewModel.msApi1Local.observe(this, androidx.lifecycle.Observer {
@@ -114,9 +116,10 @@ class FragmentMain : Fragment() {
 
                         bindPrayerText(timings)
                         bindWidget(timings)
+                        tempListPrayerLocal?.let { tempData -> modelPrayerFactory(tempData)?.let {modelPrayer -> updateAlarmManager(modelPrayer) }}
                     }}
-                EnumStatus.LOADING -> bindPrayerText(null)
-                EnumStatus.ERROR -> Toast.makeText(context,it.message.toString(), Toast.LENGTH_SHORT).show()
+                EnumStatus.LOADING -> Toasty.info(context!!, "fetching data..", Toast.LENGTH_SHORT).show()
+                EnumStatus.ERROR -> Toasty.error(context!!,"please enable your connection", Toast.LENGTH_SHORT).show()
             }
         })
 
@@ -125,22 +128,19 @@ class FragmentMain : Fragment() {
 
     /* fetch API data */
     private fun fetchPrayerApi(latitude: String, longitude: String, method: String, month: String, year: String) {
-
-        Toasty.info(context!!, "fetching data..", Toast.LENGTH_SHORT).show()
-
         fragmentMainViewModel.fetchPrayerApi(latitude,longitude,method, month,year)
     }
 
 
     /* Database Transaction */
-    private fun insertDb(prayer:String, isNotified:Boolean){
+    private fun updateNotifiedPrayerWithoutTime(prayer:String, isNotified:Boolean){
 
         if(isNotified)
             Toasty.success(context!!, "$prayer will be notified every day", Toast.LENGTH_SHORT).show()
         else
             Toasty.warning(context!!, "$prayer will not be notified anymore", Toast.LENGTH_SHORT).show()
 
-        fragmentMainViewModel.update(PrayerLocal(prayer, isNotified))
+        fragmentMainViewModel.updateNotifiedPrayerWithoutTime(PrayerLocal(prayer, isNotified,""))
     }
 
 
@@ -154,6 +154,7 @@ class FragmentMain : Fragment() {
 
         if(tempTimings == null)
             return null
+
 
         it.forEach con@{ p ->
 
@@ -190,37 +191,37 @@ class FragmentMain : Fragment() {
 
         cb_fajr.setOnClickListener {
             if(cb_fajr.isChecked)
-                insertDb(getString(R.string.fajr), true)
+                updateNotifiedPrayerWithoutTime(getString(R.string.fajr), true)
             else
-                insertDb(getString(R.string.fajr), false)
+                updateNotifiedPrayerWithoutTime(getString(R.string.fajr), false)
         }
 
         cb_dhuhr.setOnClickListener {
             if(cb_dhuhr.isChecked)
-                insertDb(getString(R.string.dhuhr), true)
+                updateNotifiedPrayerWithoutTime(getString(R.string.dhuhr), true)
             else
-                insertDb(getString(R.string.dhuhr), false)
+                updateNotifiedPrayerWithoutTime(getString(R.string.dhuhr), false)
         }
 
         cb_asr.setOnClickListener {
             if(cb_asr.isChecked)
-                insertDb(getString(R.string.asr), true)
+                updateNotifiedPrayerWithoutTime(getString(R.string.asr), true)
             else
-                insertDb(getString(R.string.asr), false)
+                updateNotifiedPrayerWithoutTime(getString(R.string.asr), false)
         }
 
         cb_maghrib.setOnClickListener {
             if(cb_maghrib.isChecked)
-                insertDb(getString(R.string.maghrib), true)
+                updateNotifiedPrayerWithoutTime(getString(R.string.maghrib), true)
             else
-                insertDb(getString(R.string.maghrib), false)
+                updateNotifiedPrayerWithoutTime(getString(R.string.maghrib), false)
         }
 
         cb_isha.setOnClickListener {
             if(cb_isha.isChecked)
-                insertDb(getString(R.string.isha), true)
+                updateNotifiedPrayerWithoutTime(getString(R.string.isha), true)
             else
-                insertDb(getString(R.string.isha), false)
+                updateNotifiedPrayerWithoutTime(getString(R.string.isha), false)
         }
 
     }
@@ -426,11 +427,9 @@ class FragmentMain : Fragment() {
     }
 
     /* Alarm Manager & Notification */
-    private fun updateAlarmManager(){
-        mListOfListModelPrayer?.let { listPrayer ->
-            setNotification(listPrayer[0]!! /* sel list */ ,listPrayer[1]!! /* non list */)
-            Toasty.info(context!!, "alarm manager updated", Toast.LENGTH_SHORT).show()
-        }
+    private fun updateAlarmManager(listPrayer: MutableList<MutableList<ModelPrayer>?>){
+        setNotification(listPrayer[0]!! /* sel list */, listPrayer[1]!! /* non list */)
+        Toasty.info(context!!, "alarm manager updated", Toast.LENGTH_SHORT).show()
     }
 
     private fun setNotification(selList: MutableList<ModelPrayer>, nonSelList: MutableList<ModelPrayer>) {
