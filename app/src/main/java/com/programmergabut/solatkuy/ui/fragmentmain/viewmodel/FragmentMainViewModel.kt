@@ -36,12 +36,13 @@ class FragmentMainViewModel(application: Application): AndroidViewModel(applicat
         repository?.updateNotifiedPrayer(prayerLocal)
     }
 
-    fun updateNotifiedPrayerWithoutTime(prayerLocal: PrayerLocal) = viewModelScope.launch {
-        repository?.updatePrayerIsNotified(prayerLocal)
+    fun updatePrayerIsNotified(prayerName: String, isNotified: Boolean) = viewModelScope.launch {
+        repository?.updatePrayerIsNotified(prayerName, isNotified)
     }
 
     //Live Data
     fun fetchPrayerApi(latitude: String, longitude: String, method: String, month: String, year: String){
+
         viewModelScope.launch(Dispatchers.IO){
             try {
                 prayerApi.postValue(Resource.success(Repository(getApplication(),viewModelScope)
@@ -52,7 +53,6 @@ class FragmentMainViewModel(application: Application): AndroidViewModel(applicat
             }
 
         }
-
 
     }
 

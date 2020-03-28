@@ -17,7 +17,6 @@ import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
 import com.bumptech.glide.Glide
 import com.programmergabut.solatkuy.R
-import com.programmergabut.solatkuy.data.model.ModelPrayer
 import com.programmergabut.solatkuy.data.model.entity.MsApi1
 import com.programmergabut.solatkuy.data.model.entity.PrayerLocal
 import com.programmergabut.solatkuy.data.model.prayerJson.Timings
@@ -114,12 +113,31 @@ class FragmentMain : Fragment() {
                         /* save temp data */
                         tempTimings = timings
 
-                        bindPrayerText(timings)
                         bindWidget(timings)
                         tempListPrayerLocal?.let { tempData -> modelPrayerFactory(tempData)?.let {modelPrayer -> updateAlarmManager(modelPrayer) }}
                     }}
                 EnumStatus.LOADING -> Toasty.info(context!!, "fetching data..", Toast.LENGTH_SHORT).show()
-                EnumStatus.ERROR -> Toasty.error(context!!,"please enable your connection", Toast.LENGTH_SHORT).show()
+                EnumStatus.ERROR -> {
+
+                    Toasty.error(context!!,"offline mode", Toast.LENGTH_SHORT).show()
+
+                    val localTimings = Timings(
+                        tempListPrayerLocal!![2].prayerTime /* asr*/,
+                        tempListPrayerLocal!![1].prayerTime /* dhuhr */,
+                        tempListPrayerLocal!![0].prayerTime /* fajr */,
+                        "",
+                        tempListPrayerLocal!![4].prayerTime /* isha */,
+                        tempListPrayerLocal!![3].prayerTime /* mahgrib */,
+                        "",
+                        tempListPrayerLocal!![5].prayerTime /* isha */,
+                        ""
+                    )
+
+                    /* save temp data */
+                    tempTimings = localTimings
+
+                    bindWidget(tempTimings)
+                }
             }
         })
 
@@ -140,17 +158,17 @@ class FragmentMain : Fragment() {
         else
             Toasty.warning(context!!, "$prayer will not be notified anymore", Toast.LENGTH_SHORT).show()
 
-        fragmentMainViewModel.updateNotifiedPrayerWithoutTime(PrayerLocal(prayer, isNotified,""))
+        fragmentMainViewModel.updatePrayerIsNotified(prayer, isNotified)
     }
 
 
     /* init first load data */
-    private fun modelPrayerFactory(it: List<PrayerLocal>): MutableList<MutableList<ModelPrayer>?>? {
+    private fun modelPrayerFactory(it: List<PrayerLocal>): MutableList<MutableList<PrayerLocal>?>? {
 
-        val listOfListModelPrayer = mutableListOf<MutableList<ModelPrayer>?>()
-        val notifiedList = mutableListOf<ModelPrayer>()
-        val nonNotifiedList = mutableListOf<ModelPrayer>()
-        var modelPrayer: ModelPrayer? = null
+        val listOfListModelPrayer = mutableListOf<MutableList<PrayerLocal>?>()
+        val notifiedList = mutableListOf<PrayerLocal>()
+        val nonNotifiedList = mutableListOf<PrayerLocal>()
+        var modelPrayer: PrayerLocal? = null
 
         if(tempTimings == null)
             return null
@@ -159,11 +177,11 @@ class FragmentMain : Fragment() {
         it.forEach con@{ p ->
 
             when (p.prayerName) {
-                getString(R.string.fajr) -> modelPrayer = ModelPrayer(p.prayerID, p.prayerName, p.isNotified, tempTimings?.fajr!!)
-                getString(R.string.dhuhr) -> modelPrayer = ModelPrayer(p.prayerID, p.prayerName, p.isNotified, tempTimings?.dhuhr!!)
-                getString(R.string.asr) -> modelPrayer = ModelPrayer(p.prayerID, p.prayerName, p.isNotified, tempTimings?.asr!!)
-                getString(R.string.maghrib) -> modelPrayer = ModelPrayer(p.prayerID, p.prayerName, p.isNotified, tempTimings?.maghrib!!)
-                getString(R.string.isha) -> modelPrayer = ModelPrayer(p.prayerID, p.prayerName, p.isNotified, tempTimings?.isha!!)
+                getString(R.string.fajr) -> modelPrayer = PrayerLocal(p.prayerName, p.isNotified, tempTimings?.fajr!!)
+                getString(R.string.dhuhr) -> modelPrayer = PrayerLocal(p.prayerName, p.isNotified, tempTimings?.dhuhr!!)
+                getString(R.string.asr) -> modelPrayer = PrayerLocal(p.prayerName, p.isNotified, tempTimings?.asr!!)
+                getString(R.string.maghrib) -> modelPrayer = PrayerLocal(p.prayerName, p.isNotified, tempTimings?.maghrib!!)
+                getString(R.string.isha) -> modelPrayer = PrayerLocal(p.prayerName, p.isNotified, tempTimings?.isha!!)
             }
 
             if(p.isNotified)
@@ -179,10 +197,8 @@ class FragmentMain : Fragment() {
     }
 
     private fun loadTempData() {
-        if(tempTimings != null){
-            bindPrayerText(tempTimings)
+        if(tempTimings != null)
             bindWidget(tempTimings)
-        }
         if(tempMsApi1 != null)
             bindWidgetLocation(tempMsApi1!!)
     }
@@ -278,6 +294,8 @@ class FragmentMain : Fragment() {
             return
 
         val selPrayer = selectPrayer(timings)
+
+        bindPrayerText(timings)
         selectWidgetTitle(selPrayer)
         selectWidgetPic(selPrayer)
         selectNextPrayerTime(selPrayer, timings)
@@ -427,12 +445,12 @@ class FragmentMain : Fragment() {
     }
 
     /* Alarm Manager & Notification */
-    private fun updateAlarmManager(listPrayer: MutableList<MutableList<ModelPrayer>?>){
+    private fun updateAlarmManager(listPrayer: MutableList<MutableList<PrayerLocal>?>){
         setNotification(listPrayer[0]!! /* sel list */, listPrayer[1]!! /* non list */)
         Toasty.info(context!!, "alarm manager updated", Toast.LENGTH_SHORT).show()
     }
 
-    private fun setNotification(selList: MutableList<ModelPrayer>, nonSelList: MutableList<ModelPrayer>) {
+    private fun setNotification(selList: MutableList<PrayerLocal>, nonSelList: MutableList<PrayerLocal>) {
 
         val intent = Intent(activity, Broadcaster::class.java)
         val alarmManager = activity?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
@@ -447,7 +465,6 @@ class FragmentMain : Fragment() {
             c.set(Calendar.MINUTE, minute.toInt())
             c.set(Calendar.SECOND, 0)
 
-            intent.putExtra("prayer_id", it.prayerID)
             intent.putExtra("prayer_name", it.prayerName)
             intent.putExtra("prayer_time", it.prayerTime)
             intent.putExtra("prayer_city", mCityName)

@@ -38,14 +38,14 @@ class Repository(application: Application, scope: CoroutineScope) {
         notifiedPrayerDao?.updateNotifiedPrayer(prayerLocal.prayerName, prayerLocal.isNotified, prayerLocal.prayerTime)
     }
 
-    private suspend fun updatePrayerTime(prayerLocal: PrayerLocal){
+    private suspend fun updatePrayerTime(prayerName: String, prayerTime: String){
         notifiedPrayerDao = db.notifiedPrayerDao()
-        notifiedPrayerDao?.updatePrayerTime(prayerLocal.prayerName, prayerLocal.prayerTime)
+        notifiedPrayerDao?.updatePrayerTime(prayerName, prayerTime)
     }
 
-    suspend fun updatePrayerIsNotified(prayerLocal: PrayerLocal){
+    suspend fun updatePrayerIsNotified(prayerName: String, isNotified: Boolean){
         notifiedPrayerDao = db.notifiedPrayerDao()
-        notifiedPrayerDao?.updatePrayerIsNotified(prayerLocal.prayerName, prayerLocal.isNotified)
+        notifiedPrayerDao?.updatePrayerIsNotified(prayerName, isNotified)
     }
 
     suspend fun updateMsApi1(api1ID: Int, latitude: String, longitude: String, method: String, month: String, year:String){
@@ -84,9 +84,10 @@ class Repository(application: Application, scope: CoroutineScope) {
         map["Asr"] = timings?.asr.toString()
         map["Maghrib"] = timings?.maghrib.toString()
         map["Isha"] = timings?.isha.toString()
+        map["sunrise"] = timings?.sunrise.toString()
 
         map.forEach { p ->
-            updatePrayerTime(PrayerLocal(p.key,false,p.value))
+            updatePrayerTime(p.key,p.value)
         }
     }
 

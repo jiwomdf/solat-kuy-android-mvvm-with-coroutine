@@ -125,6 +125,13 @@ abstract class SolatKuyRoom: RoomDatabase() {
                         "00:00"
                     )
                 )
+                notifiedPrayerDao.insertNotifiedPrayer(
+                    PrayerLocal(
+                        "sunrise",
+                        true,
+                        "00:00"
+                    )
+                )
             }
         }
 
