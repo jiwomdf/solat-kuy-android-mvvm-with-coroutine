@@ -33,7 +33,7 @@ class MoreTimeBroadcastReceiver: BroadcastReceiver() {
 
             i.putExtra("prayer_id", 100)
             i.putExtra("prayer_name", prayerName)
-            i.putExtra("prayer_time", minute.toString())
+            i.putExtra("prayer_time", "$hour:$minute (WIB)")
             i.putExtra("prayer_city", prayerCity)
 
             val pendingIntent = PendingIntent.getBroadcast(context, 100, i, 0)
