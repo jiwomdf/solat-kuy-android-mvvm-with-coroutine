@@ -6,6 +6,7 @@
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>
+    <uses-permission android:name="android.permission.VIBRATE" />
 
     <application
         android:allowBackup="true"
@@ -22,7 +23,8 @@
             </intent-filter>
         </activity>
         <activity android:name=".ui.prayerdetail.view.ActivityPrayerDetail" />
-        <receiver android:name=".util.Broadcaster" />
+        <receiver android:name=".util.PrayerBroadcastReceiver" />
+        <receiver android:name=".util.MoreTimeBroadcastReceiver" />
     </application>
 
 </manifest>

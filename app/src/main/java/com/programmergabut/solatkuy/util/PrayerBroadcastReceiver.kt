@@ -6,7 +6,7 @@ import android.content.Context
 import android.content.Intent
 import com.programmergabut.solatkuy.ui.main.view.MainActivity
 
-class Broadcaster: BroadcastReceiver() {
+class PrayerBroadcastReceiver: BroadcastReceiver() {
 
     override fun onReceive(context: Context?, intent: Intent?) {
         val mNotificationHelper = NotificationHelper(context!!)
@@ -16,16 +16,27 @@ class Broadcaster: BroadcastReceiver() {
         val pTime = intent?.getStringExtra("prayer_time")
         val pCity = intent?.getStringExtra("prayer_city")
 
-        if(pID == -1)
+        if(pID == -1 && !pName.isNullOrEmpty() && !pTime.isNullOrEmpty())
             return
 
         val nextIntent = Intent(context, MainActivity::class.java)
         nextIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        val pendingIntent = PendingIntent.getActivity(context, pID!!, nextIntent, PendingIntent.FLAG_UPDATE_CURRENT)
 
-        val nb = mNotificationHelper.getPrayerReminderNC(pName!!,
-            "now is $pTime in $pCity let's pray $pName", pendingIntent)
-        mNotificationHelper.getManager()?.notify(1, nb.build())
+
+        if(pID != 100){
+
+            val pendingIntent = PendingIntent.getActivity(context, pID!!, nextIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+
+            val nb = mNotificationHelper.getPrayerReminderNC(pID, pTime!!, pCity!!, pName!!, pendingIntent)
+            mNotificationHelper.getManager()?.notify(1, nb.build())
+        }
+        else{
+            val pendingIntent = PendingIntent.getActivity(context, 100, nextIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+
+            val nb = mNotificationHelper.getPrayerReminderNC(100, pTime!!, pCity!!, pName!!, pendingIntent)
+            mNotificationHelper.getManager()?.notify(1, nb.build())
+        }
+
     }
 
 }

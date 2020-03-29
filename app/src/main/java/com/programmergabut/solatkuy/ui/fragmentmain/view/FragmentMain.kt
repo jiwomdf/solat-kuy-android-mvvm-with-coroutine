@@ -21,7 +21,7 @@ import com.programmergabut.solatkuy.data.model.entity.MsApi1
 import com.programmergabut.solatkuy.data.model.entity.PrayerLocal
 import com.programmergabut.solatkuy.data.model.prayerJson.Timings
 import com.programmergabut.solatkuy.ui.fragmentmain.viewmodel.FragmentMainViewModel
-import com.programmergabut.solatkuy.util.Broadcaster
+import com.programmergabut.solatkuy.util.PrayerBroadcastReceiver
 import com.programmergabut.solatkuy.util.EnumStatus
 import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.layout_prayer_time.*
@@ -163,11 +163,9 @@ class FragmentMain : Fragment() {
 
 
     /* init first load data */
-    private fun modelPrayerFactory(it: List<PrayerLocal>): MutableList<MutableList<PrayerLocal>?>? {
+    private fun modelPrayerFactory(it: List<PrayerLocal>): MutableList<PrayerLocal>? {
 
-        val listOfListModelPrayer = mutableListOf<MutableList<PrayerLocal>?>()
-        val notifiedList = mutableListOf<PrayerLocal>()
-        val nonNotifiedList = mutableListOf<PrayerLocal>()
+        val list = mutableListOf<PrayerLocal>()
         var modelPrayer: PrayerLocal? = null
 
         if(tempTimings == null)
@@ -177,23 +175,17 @@ class FragmentMain : Fragment() {
         it.forEach con@{ p ->
 
             when (p.prayerName) {
-                getString(R.string.fajr) -> modelPrayer = PrayerLocal(p.prayerName, p.isNotified, tempTimings?.fajr!!)
-                getString(R.string.dhuhr) -> modelPrayer = PrayerLocal(p.prayerName, p.isNotified, tempTimings?.dhuhr!!)
-                getString(R.string.asr) -> modelPrayer = PrayerLocal(p.prayerName, p.isNotified, tempTimings?.asr!!)
-                getString(R.string.maghrib) -> modelPrayer = PrayerLocal(p.prayerName, p.isNotified, tempTimings?.maghrib!!)
-                getString(R.string.isha) -> modelPrayer = PrayerLocal(p.prayerName, p.isNotified, tempTimings?.isha!!)
+                getString(R.string.fajr) -> modelPrayer = PrayerLocal(1 ,p.prayerName, p.isNotified, tempTimings?.fajr!!)
+                getString(R.string.dhuhr) -> modelPrayer = PrayerLocal(2 ,p.prayerName, p.isNotified, tempTimings?.dhuhr!!)
+                getString(R.string.asr) -> modelPrayer = PrayerLocal(3 ,p.prayerName, p.isNotified, tempTimings?.asr!!)
+                getString(R.string.maghrib) -> modelPrayer = PrayerLocal(4 ,p.prayerName, p.isNotified, tempTimings?.maghrib!!)
+                getString(R.string.isha) -> modelPrayer = PrayerLocal(5, p.prayerName, p.isNotified, tempTimings?.isha!!)
             }
 
-            if(p.isNotified)
-                notifiedList.add(modelPrayer!!)
-            else
-                nonNotifiedList.add(modelPrayer!!)
+            list.add(modelPrayer!!)
         }
 
-        listOfListModelPrayer.add(notifiedList)
-        listOfListModelPrayer.add(nonNotifiedList)
-
-        return listOfListModelPrayer
+        return list
     }
 
     private fun loadTempData() {
@@ -445,15 +437,18 @@ class FragmentMain : Fragment() {
     }
 
     /* Alarm Manager & Notification */
-    private fun updateAlarmManager(listPrayer: MutableList<MutableList<PrayerLocal>?>){
-        setNotification(listPrayer[0]!! /* sel list */, listPrayer[1]!! /* non list */)
+    private fun updateAlarmManager(listPrayer: MutableList<PrayerLocal>){
+        setNotification(listPrayer)
         Toasty.info(context!!, "alarm manager updated", Toast.LENGTH_SHORT).show()
     }
 
-    private fun setNotification(selList: MutableList<PrayerLocal>, nonSelList: MutableList<PrayerLocal>) {
+    private fun setNotification(selList: MutableList<PrayerLocal>) {
 
-        val intent = Intent(activity, Broadcaster::class.java)
+        val intent = Intent(activity, PrayerBroadcastReceiver::class.java)
         val alarmManager = activity?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+
+        selList.clear()
+        selList.add(PrayerLocal(1,"Isha",true,"22:47"))
 
         selList.forEach{
 
@@ -465,6 +460,7 @@ class FragmentMain : Fragment() {
             c.set(Calendar.MINUTE, minute.toInt())
             c.set(Calendar.SECOND, 0)
 
+            intent.putExtra("prayer_id", it.prayerID)
             intent.putExtra("prayer_name", it.prayerName)
             intent.putExtra("prayer_time", it.prayerTime)
             intent.putExtra("prayer_city", mCityName)
@@ -474,14 +470,10 @@ class FragmentMain : Fragment() {
             if(c.before(Calendar.getInstance()))
                 c.add(Calendar.DATE, 1)
 
-            alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, c.timeInMillis, 60000, pendingIntent)
-        }
-
-        nonSelList.forEach{
-
-            val pendingIntent = PendingIntent.getBroadcast(context, it.prayerID, intent, 0)
-
-            alarmManager.cancel(pendingIntent)
+            if(it.isNotified)
+                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, c.timeInMillis, 86400000, pendingIntent)
+            else
+                alarmManager.cancel(pendingIntent)
         }
 
     }
