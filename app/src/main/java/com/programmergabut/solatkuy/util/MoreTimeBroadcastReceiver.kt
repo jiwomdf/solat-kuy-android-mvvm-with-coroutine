@@ -11,10 +11,8 @@ import java.util.*
 
 class MoreTimeBroadcastReceiver: BroadcastReceiver() {
 
-
     override fun onReceive(context: Context?, intent: Intent?) {
 
-        var counter = 0
         val prayerID = intent?.getIntExtra("moreTime_prayerID", -1)
         val prayerTime = intent?.getStringExtra("moreTime_prayerTime")
         val prayerCity = intent?.getStringExtra("moreTime_prayerCity")
@@ -22,22 +20,20 @@ class MoreTimeBroadcastReceiver: BroadcastReceiver() {
 
         prayerTime?.let {
 
-            counter += 3
-
             val i = Intent(context, PrayerBroadcastReceiver::class.java)
             val alarmManager = context?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
             val hour = prayerTime.split(":")[0].trim()
-            val minute = prayerTime.split(":")[1].split(" ")[0].trim()
+            val minute = prayerTime.split(":")[1].split(" ")[0].trim().toInt() + 3
 
             val c = Calendar.getInstance()
             c.set(Calendar.HOUR_OF_DAY, hour.toInt())
-            c.set(Calendar.MINUTE, minute.toInt() + counter)
+            c.set(Calendar.MINUTE, minute)
             c.set(Calendar.SECOND, 0)
 
             i.putExtra("prayer_id", 100)
             i.putExtra("prayer_name", prayerName)
-            i.putExtra("prayer_time", prayerTime)
+            i.putExtra("prayer_time", minute.toString())
             i.putExtra("prayer_city", prayerCity)
 
             val pendingIntent = PendingIntent.getBroadcast(context, 100, i, 0)

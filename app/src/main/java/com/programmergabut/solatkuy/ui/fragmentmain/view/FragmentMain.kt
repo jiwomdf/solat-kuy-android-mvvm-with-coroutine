@@ -448,7 +448,7 @@ class FragmentMain : Fragment() {
         val alarmManager = activity?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
         selList.clear()
-        selList.add(PrayerLocal(1,"Isha",true,"23:32"))
+        selList.add(PrayerLocal(1,"Isha",true,"23:50"))
 
         selList.forEach{
 
