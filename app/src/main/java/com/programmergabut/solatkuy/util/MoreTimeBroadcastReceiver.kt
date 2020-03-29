@@ -11,14 +11,18 @@ import java.util.*
 
 class MoreTimeBroadcastReceiver: BroadcastReceiver() {
 
+
     override fun onReceive(context: Context?, intent: Intent?) {
 
+        var counter = 0
         val prayerID = intent?.getIntExtra("moreTime_prayerID", -1)
         val prayerTime = intent?.getStringExtra("moreTime_prayerTime")
         val prayerCity = intent?.getStringExtra("moreTime_prayerCity")
         val prayerName = intent?.getStringExtra("moreTime_prayerName")
 
         prayerTime?.let {
+
+            counter += 3
 
             val i = Intent(context, PrayerBroadcastReceiver::class.java)
             val alarmManager = context?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
@@ -28,7 +32,7 @@ class MoreTimeBroadcastReceiver: BroadcastReceiver() {
 
             val c = Calendar.getInstance()
             c.set(Calendar.HOUR_OF_DAY, hour.toInt())
-            c.set(Calendar.MINUTE, minute.toInt() + 5)
+            c.set(Calendar.MINUTE, minute.toInt() + counter)
             c.set(Calendar.SECOND, 0)
 
             i.putExtra("prayer_id", 100)
@@ -40,12 +44,16 @@ class MoreTimeBroadcastReceiver: BroadcastReceiver() {
 
             val notificationManager = context.getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager
 
+            if(prayerID == 100)
+                notificationManager.cancel(100);
+            else{
+                notificationManager.cancel(prayerID!!);
+                reloadOriginalIntent(prayerID, prayerName!!, prayerTime, prayerCity!!, context)
+            }
+
             alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.timeInMillis, pendingIntent)
-            notificationManager.cancel(prayerID!!);
 
-            reloadOriginalIntent(prayerID, prayerName!!, prayerTime, prayerCity!!, context)
         }
-
     }
 
     private fun reloadOriginalIntent(prayerID: Int, prayerName: String, prayerTime: String, prayerCity: String, context: Context? ){
