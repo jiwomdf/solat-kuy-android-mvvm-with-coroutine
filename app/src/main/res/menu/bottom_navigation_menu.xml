@@ -9,7 +9,7 @@
         android:title="@string/prayer_time"/>
     <item android:id="@+id/i_prayer_time2"
         android:icon="@drawable/ic_report_24dp"
-        android:title="@string/prayer_report"/>
+        android:title="@string/prayer_detail"/>
     <item android:id="@+id/i_prayer_time3"
         android:icon="@drawable/ic_settings_24dp"
         android:title="@string/setting"/>

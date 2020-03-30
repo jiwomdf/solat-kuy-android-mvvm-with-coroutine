@@ -12,7 +12,7 @@
 
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="prayer_time">Prayer Time</string>
-    <string name="prayer_report">Prayer Report</string>
+    <string name="prayer_detail">Prayer Detail</string>
     <string name="setting">Setting</string>
     <string name="changelocation">Change Location</string>
     <string name="by_latitude_amp_longtitude"><![CDATA[By Latitude & Longtitude]]></string>
@@ -23,6 +23,9 @@
     <string name="proceed">Proceed</string>
     <string name="current_location">Current Location</string>
     <string name="city">City</string>
-    <string name="about_developer">Thanks to all of you who has download this app \n this application is created by Katili Jiwo A.W. \n in purpose to create an open source application \n which everyone can see and contribute \n you can see the full code in github</string>
+    <string name="about_developer">Solat Kuy is a open source reminder prayer time app \n created to remind us to pray 😇. \n\n feel free to see and contribute </string>
     <string name="github_link">https://github.com/jiwomdf/Solat-Kuy-Android-MVVM-with-Coroutine</string>
+    <string name="powered_by">Powered by</string>
+    <string name="https_aladhan_com">https://aladhan.com/</string>
+    <string name="katili_jiwo_a_w">© Katili Jiwo A.W.</string>
 </resources>
