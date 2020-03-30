@@ -445,7 +445,10 @@ class FragmentMain : Fragment() {
 
         val intent = Intent(activity, PrayerBroadcastReceiver::class.java)
         val alarmManager = activity?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        
+
+//        selList.clear()
+//        selList.add(PrayerLocal(1,"Isha",true,"13:18"))
+
         selList.forEach{
 
             val hour = it.prayerTime.split(":")[0].trim()
