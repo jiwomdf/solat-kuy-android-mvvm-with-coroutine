@@ -257,8 +257,8 @@ class FragmentMain : Fragment() {
             mCityName = "-"
         }
 
-        tv_view_latitude.text = it.latitude + " °S"
-        tv_view_longitude.text = it.longitude + " °E"
+        tv_view_latitude.text = it.latitude + " °N"
+        tv_view_longitude.text = it.longitude + " °W"
         tv_view_city.text = mCityName
     }
 

@@ -145,24 +145,17 @@
                 app:layout_constraintStart_toStartOf="parent">
 
                 <Button
-                    android:id="@+id/rb_byLatitudeLongitude"
+                    android:id="@+id/btn_byLatitudeLongitude"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:text="@string/by_latitude_amp_longtitude"
                     android:textSize="@dimen/small_text_size" />
 
                 <Button
-                    android:id="@+id/rb_byGps"
+                    android:id="@+id/btn_byGps"
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:text="@string/by_gps"
-                    android:textSize="@dimen/small_text_size" />
-
-                <Button
-                    android:id="@+id/rb_byCity"
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:text="@string/by_city"
                     android:textSize="@dimen/small_text_size" />
 
             </LinearLayout>
@@ -170,6 +163,57 @@
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 
+    </com.google.android.material.card.MaterialCardView>
+
+    <com.google.android.material.card.MaterialCardView
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/small_margin">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/medium_margin"
+            android:layout_marginBottom="@dimen/medium_margin">
+
+            <ImageView
+                android:id="@+id/imageView"
+                android:layout_width="@dimen/avatar_size"
+                android:layout_height="@dimen/avatar_size"
+                android:src="@drawable/ic_person_24dp"
+                app:layout_constraintBottom_toTopOf="@id/tv_about_us"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <TextView
+                android:id="@+id/tv_about_us"
+                android:gravity="center"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/small_margin"
+                android:text="@string/about_developer"
+                app:layout_constraintBottom_toTopOf="@+id/tvl_github"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/imageView" />
+
+            <TextView
+                android:id="@+id/tvl_github"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="center"
+                android:foregroundGravity="center"
+                android:textSize="@dimen/small_text_size"
+                android:layout_margin="@dimen/small_margin"
+                android:autoLink="web"
+                android:text="@string/github_link"
+                app:layout_constraintBottom_toBottomOf="parent"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/tv_about_us" />
+
+        </androidx.constraintlayout.widget.ConstraintLayout>
     </com.google.android.material.card.MaterialCardView>
 
 

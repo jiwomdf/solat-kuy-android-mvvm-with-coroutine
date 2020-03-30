@@ -23,7 +23,6 @@ import com.programmergabut.solatkuy.data.model.entity.MsApi1
 import com.programmergabut.solatkuy.ui.fragmentsetting.viewmodel.FragmentSettingViewModel
 import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.fragment_setting.*
-import kotlinx.android.synthetic.main.layout_bottomsheet_bycity.view.*
 import kotlinx.android.synthetic.main.layout_bottomsheet_bygps.view.*
 import kotlinx.android.synthetic.main.layout_bottomsheet_bylatitudelongitude.view.*
 import org.joda.time.LocalDate
@@ -58,7 +57,7 @@ class FragmentSetting : Fragment() {
     }
 
     private fun rbSelection(){
-        rb_byLatitudeLongitude.setOnClickListener {
+        btn_byLatitudeLongitude.setOnClickListener {
             dialogView = layoutInflater.inflate(R.layout.layout_bottomsheet_bylatitudelongitude,null)
             dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             dialog.setContentView(dialogView)
@@ -82,7 +81,7 @@ class FragmentSetting : Fragment() {
             }
         }
 
-        rb_byGps.setOnClickListener{
+        btn_byGps.setOnClickListener{
             dialogView = layoutInflater.inflate(R.layout.layout_bottomsheet_bygps,null)
             dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
             dialog.setContentView(dialogView)
@@ -96,7 +95,8 @@ class FragmentSetting : Fragment() {
                 val longitude = dialogView.tv_gpsDialog_longitude.text.toString().trim()
 
                 if(latitude.isEmpty() || longitude.isEmpty()){
-                    Toasty.warning(context!!,"Please enable your location", Toast.LENGTH_SHORT).show()
+                    Toasty.error(context!!,"Action failed, please enable your location", Toast.LENGTH_SHORT).show()
+                    dialog.dismiss()
                     return@setOnClickListener
                 }
 
@@ -105,20 +105,6 @@ class FragmentSetting : Fragment() {
                 dialog.dismiss()
                 Toasty.success(context!!,"Success change the coordinate", Toast.LENGTH_SHORT).show()
             }
-        }
-
-        rb_byCity.setOnClickListener{
-            dialogView = layoutInflater.inflate(R.layout.layout_bottomsheet_bycity,null)
-            dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            dialog.setContentView(dialogView)
-            dialog.show()
-
-            dialogView.btn_proceedByCity.setOnClickListener{
-                dialog.dismiss()
-                Toasty.success(context!!,"Success change the coordinate", Toast.LENGTH_SHORT).show()
-            }
-
-            bindRbCityData(dialogView)
         }
     }
 
@@ -153,17 +139,6 @@ class FragmentSetting : Fragment() {
             tv_view_longitude.text = it.longitude + " °E"
             tv_view_city.text = cityName ?: "-"
         })
-    }
-
-    private fun bindRbCityData(dialogView: View){
-        val country = arrayOf("Indonesia", "Korea")
-        val city = arrayOf("Jakarta", "Solo", "Busan")
-
-        val countryAdapter = ArrayAdapter<Any?>(context!!, android.R.layout.simple_spinner_dropdown_item, country)
-        val cityAdapter = ArrayAdapter<Any?>(context!!, android.R.layout.simple_spinner_dropdown_item, city)
-
-        dialogView.s_selCountry.adapter = countryAdapter
-        dialogView.s_selCity.adapter = cityAdapter
     }
 
 

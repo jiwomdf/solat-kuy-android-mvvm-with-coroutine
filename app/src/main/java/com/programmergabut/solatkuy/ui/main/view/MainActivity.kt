@@ -11,7 +11,7 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.ui.main.adapter.SwipeAdapter
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.layout_bottom_bar.*
+import kotlinx.android.synthetic.main.layout_bottom_navigation_bar.*
 import kotlin.math.abs
 
 
