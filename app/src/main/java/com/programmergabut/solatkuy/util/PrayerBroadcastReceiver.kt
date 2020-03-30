@@ -23,18 +23,26 @@ class PrayerBroadcastReceiver: BroadcastReceiver() {
         nextIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
 
 
-        if(pID != 100){
+        when (pID!!) {
+            100 -> {
+                val pendingIntent = PendingIntent.getActivity(context, 100,
+                    nextIntent, PendingIntent.FLAG_UPDATE_CURRENT)
 
-            val pendingIntent = PendingIntent.getActivity(context, pID!!, nextIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+                val nb = mNotificationHelper.getPrayerReminderNC(100, pTime!!, pCity!!, pName!!, pendingIntent)
+                mNotificationHelper.getManager()?.notify(100, nb.build())
+            }
+            200 -> {
+                val pendingIntent = PendingIntent.getActivity(context, 200, nextIntent, PendingIntent.FLAG_UPDATE_CURRENT)
 
-            val nb = mNotificationHelper.getPrayerReminderNC(pID, pTime!!, pCity!!, pName!!, pendingIntent)
-            mNotificationHelper.getManager()?.notify(1, nb.build())
-        }
-        else{
-            val pendingIntent = PendingIntent.getActivity(context, 100, nextIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+                val nb = mNotificationHelper.getPrayerReminderNC(200, pTime!!, pCity!!, pName!!, pendingIntent)
+                mNotificationHelper.getManager()?.notify(200, nb.build())
+            }
+            else -> {
+                val pendingIntent = PendingIntent.getActivity(context, pID, nextIntent, PendingIntent.FLAG_UPDATE_CURRENT)
 
-            val nb = mNotificationHelper.getPrayerReminderNC(100, pTime!!, pCity!!, pName!!, pendingIntent)
-            mNotificationHelper.getManager()?.notify(1, nb.build())
+                val nb = mNotificationHelper.getPrayerReminderNC(pID, pTime!!, pCity!!, pName!!, pendingIntent)
+                mNotificationHelper.getManager()?.notify(pID, nb.build())
+            }
         }
 
     }

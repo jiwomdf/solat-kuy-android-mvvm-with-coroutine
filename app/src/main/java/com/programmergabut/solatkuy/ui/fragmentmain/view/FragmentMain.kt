@@ -296,8 +296,7 @@ class FragmentMain : Fragment() {
     private fun selectNextPrayerTime(selPrayer: Int, timings: Timings) {
 
         val sdfPrayer = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
-        val localTime = LocalTime.now().toString()
-        val nowTime = DateTime(sdfPrayer.parse(localTime))
+        val nowTime = DateTime(sdfPrayer.parse(LocalTime.now().toString()))
         var period: Period? = null
 
         when(selPrayer){
@@ -446,10 +445,7 @@ class FragmentMain : Fragment() {
 
         val intent = Intent(activity, PrayerBroadcastReceiver::class.java)
         val alarmManager = activity?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-
-        selList.clear()
-        selList.add(PrayerLocal(1,"Isha",true,"00:03"))
-
+        
         selList.forEach{
 
             val hour = it.prayerTime.split(":")[0].trim()

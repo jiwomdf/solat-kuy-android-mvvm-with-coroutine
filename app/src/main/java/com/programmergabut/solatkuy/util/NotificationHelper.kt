@@ -35,7 +35,7 @@ class NotificationHelper(c: Context): ContextWrapper(c) {
         return mManager
     }
 
-    fun getPrayerReminderNC(pID: Int, pTime: String, pCity: String, pName: String, intent: PendingIntent): NotificationCompat.Builder {
+    fun getPrayerReminderNC(pID: Int,  pTime: String, pCity: String, pName: String, intent: PendingIntent): NotificationCompat.Builder {
 
         //val v = this.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
         //v.vibrate(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE));
