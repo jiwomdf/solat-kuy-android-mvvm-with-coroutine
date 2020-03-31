@@ -17,16 +17,16 @@ class ActivityPrayerDetail : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_prayer_detail)
-
-        setupUI()
-        setupViewModel()
-        setupAPICall()
+//
+//        setupUI()
+//        setupViewModel()
+//        setupAPICall()
     }
 
     private fun setupUI(){
-        recyclerView.layoutManager = LinearLayoutManager(this)
-        adapter =  ActivityPrayerAdapter(arrayListOf())
-        recyclerView.adapter = adapter
+//        recyclerView.layoutManager = LinearLayoutManager(this)
+//        adapter =  ActivityPrayerAdapter(arrayListOf())
+//        recyclerView.adapter = adapter
     }
 
     private fun setupViewModel(){

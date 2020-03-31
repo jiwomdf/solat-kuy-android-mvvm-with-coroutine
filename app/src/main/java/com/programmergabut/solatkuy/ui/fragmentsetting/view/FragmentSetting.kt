@@ -1,6 +1,7 @@
 package com.programmergabut.solatkuy.ui.fragmentsetting.view
 
 import android.Manifest
+import android.app.Dialog
 import android.content.pm.PackageManager
 import android.location.Address
 import android.location.Geocoder
@@ -105,6 +106,14 @@ class FragmentSetting : Fragment() {
                 dialog.dismiss()
                 Toasty.success(context!!,"Success change the coordinate", Toast.LENGTH_SHORT).show()
             }
+        }
+
+        btn_seeAuthor.setOnClickListener{
+            val dialog = Dialog(context!!)
+            dialogView = layoutInflater.inflate(R.layout.layout_about_author,null)
+            dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            dialog.setContentView(dialogView)
+            dialog.show()
         }
     }
 
