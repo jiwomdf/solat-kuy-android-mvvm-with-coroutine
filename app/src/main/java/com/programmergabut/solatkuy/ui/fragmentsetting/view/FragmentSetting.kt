@@ -69,7 +69,7 @@ class FragmentSetting : Fragment() {
                 val latitude = dialogView.et_llDialog_latitude.text.toString().trim()
                 val longitude = dialogView.et_llDialog_longitude.text.toString().trim()
 
-                if(latitude.isEmpty() || longitude.isEmpty()){
+                if(latitude.isEmpty() || longitude.isEmpty() || latitude == "." || longitude == "."){
                     Toasty.warning(context!!,"latitude and longitude cannot be empty", Toast.LENGTH_SHORT).show()
                     return@setOnClickListener
                 }

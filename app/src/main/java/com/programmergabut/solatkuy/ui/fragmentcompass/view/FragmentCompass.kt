@@ -32,7 +32,6 @@ class FragmentCompass : Fragment(), SensorEventListener {
         return inflater.inflate(R.layout.fragment_prayer_report, container, false)
     }
 
-
     override fun onResume() {
         super.onResume()
 

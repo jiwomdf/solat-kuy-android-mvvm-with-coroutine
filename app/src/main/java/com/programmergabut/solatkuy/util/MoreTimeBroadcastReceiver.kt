@@ -22,7 +22,7 @@ class MoreTimeBroadcastReceiver: BroadcastReceiver() {
         // new time
         val nowTime = LocalTime.now().toString()
         val hour = nowTime.split(":")[0].trim()
-        val minute = nowTime.split(":")[1].trim().toInt() + 10
+        val minute = nowTime.split(":")[1].trim().toInt() + 6
 
         val c = Calendar.getInstance()
         c.set(Calendar.HOUR_OF_DAY, hour.toInt())
@@ -42,14 +42,14 @@ class MoreTimeBroadcastReceiver: BroadcastReceiver() {
             100 -> {
                 notificationManager.cancel(100)
                 i.putExtra("prayer_id", 200)
-                alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.timeInMillis,
+                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, c.timeInMillis,
                     PendingIntent.getBroadcast(context, 200, i, 0))
 
             }
             200 -> {
                 notificationManager.cancel(200)
                 i.putExtra("prayer_id", 100)
-                alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.timeInMillis,
+                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, c.timeInMillis,
                     PendingIntent.getBroadcast(context, 100, i, 0))
 
             }
@@ -57,7 +57,7 @@ class MoreTimeBroadcastReceiver: BroadcastReceiver() {
                 notificationManager.cancel(prayerID)
                 i.putExtra("prayer_id", 100)
                 reloadOriginalIntent(prayerID, originalPrayerName!!, originalPrayerTime!!, originalPrayerCity!!, context)
-                alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.timeInMillis,
+                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, c.timeInMillis,
                     PendingIntent.getBroadcast(context, 100, i, 0)) //first more time pID = 100
             }
         }

@@ -8,8 +8,11 @@ import android.content.Context
 import android.content.ContextWrapper
 import android.content.Intent
 import android.graphics.BitmapFactory
+import android.os.VibrationEffect
+import android.os.Vibrator
 import androidx.core.app.NotificationCompat
 import com.programmergabut.solatkuy.R
+import kotlinx.coroutines.*
 
 
 class NotificationHelper(c: Context): ContextWrapper(c) {
@@ -37,10 +40,7 @@ class NotificationHelper(c: Context): ContextWrapper(c) {
 
     fun getPrayerReminderNC(pID: Int,  pTime: String, pCity: String, pName: String, intent: PendingIntent): NotificationCompat.Builder {
 
-        //val v = this.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-        //v.vibrate(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE));
-
-        val pattern = longArrayOf(3000, 3000, 3000)
+        //val pattern = longArrayOf(5000, 5000, 5000, 5000)
         val message = "now is $pTime in $pCity let's pray $pName"
 
         val moreTimeIntent = Intent(this, MoreTimeBroadcastReceiver::class.java)
@@ -63,17 +63,26 @@ class NotificationHelper(c: Context): ContextWrapper(c) {
 
         val bitmap = BitmapFactory.decodeResource(resources, lIcon);
 
+        val v = this.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        CoroutineScope(Dispatchers.IO).launch{
+            for(i in 1 .. 4){
+                v.vibrate(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE))
+                delay(1000)
+            }
+        }
+
         return NotificationCompat.Builder(applicationContext, channel1ID)
             .setContentTitle(pName)
             .setContentText(message)
-            .setVibrate(pattern)
+            .setStyle(NotificationCompat.BigTextStyle().bigText(message))
             .setColor(getColor(R.color.colorPrimary))
             .setAutoCancel(true)
             .addAction(R.mipmap.ic_launcher, "remind me 10 more minute", actionIntent)
             .setLargeIcon(bitmap)
+            .setVibrate(longArrayOf(0))
             .setSmallIcon(R.drawable.ic_notifications_active_24dp)
             .setContentIntent(intent)
-            .setPriority(NotificationCompat.DEFAULT_VIBRATE)
+            .setPriority(NotificationCompat.DEFAULT_SOUND)
     }
 
 }

@@ -30,11 +30,14 @@ import kotlinx.coroutines.*
 import org.joda.time.DateTime
 import org.joda.time.LocalDate
 import org.joda.time.Period
+import java.io.Serializable
 import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.time.LocalTime
 import java.util.*
+import kotlin.collections.ArrayList
 import kotlin.math.abs
+import kotlin.system.measureTimeMillis
 
 class FragmentMain : Fragment() {
 
@@ -406,7 +409,6 @@ class FragmentMain : Fragment() {
 
                 if(tempMinute == 0)
                     isMinuteZero = true
-
             }
 
             if(tempMinute == 0){
@@ -420,9 +422,10 @@ class FragmentMain : Fragment() {
 
             /* fetching Prayer API */
             if(tempHour == 0 && tempMinute == 0 && tempSecond == 1){
-                withContext(Dispatchers.Main){
-                    fetchPrayerApi(tempMsApi1?.latitude!!,tempMsApi1?.longitude!!, "8", tempMsApi1!!.month, tempMsApi1!!.year)
-                }
+                tv_widget_prayer_countdown.text = ""
+                delay(1000)
+
+                fetchPrayerApi(tempMsApi1?.latitude!!,tempMsApi1?.longitude!!, "8", tempMsApi1!!.month, tempMsApi1!!.year)
             }
 
             withContext(Dispatchers.Main){
@@ -446,8 +449,11 @@ class FragmentMain : Fragment() {
         val intent = Intent(activity, PrayerBroadcastReceiver::class.java)
         val alarmManager = activity?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
-//        selList.clear()
-//        selList.add(PrayerLocal(1,"Isha",true,"13:18"))
+        selList.clear()
+        selList.add(PrayerLocal(1,"mantap 1",true,"21:30"))
+        selList.add(PrayerLocal(2,"mantap 2",true,"21:33"))
+
+        bundleCreator(selList)
 
         selList.forEach{
 
@@ -470,14 +476,23 @@ class FragmentMain : Fragment() {
                 c.add(Calendar.DATE, 1)
 
             if(it.isNotified)
-                alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, c.timeInMillis, 86400000, pendingIntent)
+                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, c.timeInMillis, pendingIntent)
             else
                 alarmManager.cancel(pendingIntent)
         }
 
     }
 
+    private fun bundleCreator(rawList: MutableList<PrayerLocal>?) : Bundle{
 
+        val b: Bundle? = null
+
+        rawList?.forEach {
+
+        }
+            ///TODO lanjutin ini 31 maret 2020
+        return b
+    }
 
 
 }
