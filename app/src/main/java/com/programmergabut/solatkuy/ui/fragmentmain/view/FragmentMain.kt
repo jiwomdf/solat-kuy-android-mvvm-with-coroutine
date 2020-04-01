@@ -422,10 +422,11 @@ class FragmentMain : Fragment() {
 
             /* fetching Prayer API */
             if(tempHour == 0 && tempMinute == 0 && tempSecond == 1){
-                tv_widget_prayer_countdown.text = ""
-                delay(1000)
 
-                fetchPrayerApi(tempMsApi1?.latitude!!,tempMsApi1?.longitude!!, "8", tempMsApi1!!.month, tempMsApi1!!.year)
+                withContext(Dispatchers.Main){
+                    tv_widget_prayer_countdown.text = ""
+                    fetchPrayerApi(tempMsApi1?.latitude!!,tempMsApi1?.longitude!!, "8", tempMsApi1!!.month, tempMsApi1!!.year)
+                }
             }
 
             withContext(Dispatchers.Main){
@@ -450,11 +451,14 @@ class FragmentMain : Fragment() {
         val alarmManager = activity?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
         selList.clear()
-        selList.add(PrayerLocal(1,"mantap 1",true,"21:30"))
-        selList.add(PrayerLocal(2,"mantap 2",true,"21:33"))
+//        selList.add(PrayerLocal(1,"mantap 1",true,"20:20"))
+//        selList.add(PrayerLocal(2,"mantap 2",true,"20:22"))
+//        selList.add(PrayerLocal(3,"mantap 3",true,"20:43"))
+//        selList.add(PrayerLocal(4,"mantap 4",true,"20:45"))
 
-        bundleCreator(selList)
+        val listPrayerBundle = bundleCreator(selList)
 
+        selList.sortBy { x -> x.prayerID }
         selList.forEach{
 
             val hour = it.prayerTime.split(":")[0].trim()
@@ -469,6 +473,7 @@ class FragmentMain : Fragment() {
             intent.putExtra("prayer_name", it.prayerName)
             intent.putExtra("prayer_time", it.prayerTime)
             intent.putExtra("prayer_city", mCityName)
+            intent.putExtra("list_prayer_bundle", listPrayerBundle)
 
             val pendingIntent = PendingIntent.getBroadcast(context, it.prayerID, intent, 0)
 
@@ -483,16 +488,38 @@ class FragmentMain : Fragment() {
 
     }
 
-    private fun bundleCreator(rawList: MutableList<PrayerLocal>?) : Bundle{
+    private fun bundleCreator(selList: MutableList<PrayerLocal>): Bundle {
 
-        val b: Bundle? = null
+        val listPID = arrayListOf<Int>()
+        val listPName = arrayListOf<String>()
+        val listPTime = arrayListOf<String>()
+        val listPIsNotified = arrayListOf<Int>()
+        val listPCity = arrayListOf<String>()
 
-        rawList?.forEach {
+        selList.forEach {
+            listPID.add(it.prayerID)
+            listPName.add(it.prayerName)
+            listPTime.add(it.prayerTime)
 
+            if(it.isNotified)
+                listPIsNotified.add(1)
+            else
+                listPIsNotified.add(0)
+
+            if(mCityName.isNullOrEmpty())
+                listPCity.add("-")
+            else
+                listPCity.add(mCityName!!)
         }
-            ///TODO lanjutin ini 31 maret 2020
+
+        val b = Bundle()
+        b.putIntegerArrayList("list_PID", listPID)
+        b.putStringArrayList("list_PName", listPName)
+        b.putStringArrayList("list_PTime", listPTime)
+        b.putIntegerArrayList("list_PIsNotified", listPIsNotified)
+        b.putStringArrayList("list_PCity", listPCity)
+
         return b
     }
-
 
 }
