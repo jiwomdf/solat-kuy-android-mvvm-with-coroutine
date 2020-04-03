@@ -1,4 +1,4 @@
-package com.programmergabut.solatkuy.util
+package com.programmergabut.solatkuy.broadcaster
 
 import android.app.AlarmManager
 import android.app.NotificationManager
@@ -22,7 +22,7 @@ class MoreTimeBroadcastReceiver: BroadcastReceiver() {
         // new time
         val nowTime = LocalTime.now().toString()
         val hour = nowTime.split(":")[0].trim()
-        val minute = nowTime.split(":")[1].trim().toInt() + 6
+        val minute = nowTime.split(":")[1].trim().toInt() + 2
 
         val c = Calendar.getInstance()
         c.set(Calendar.HOUR_OF_DAY, hour.toInt())
@@ -40,25 +40,25 @@ class MoreTimeBroadcastReceiver: BroadcastReceiver() {
 
         when(prayerID!!) {
             100 -> {
-                notificationManager.cancel(100)
                 i.putExtra("prayer_id", 200)
                 alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, c.timeInMillis,
                     PendingIntent.getBroadcast(context, 200, i, 0))
+                notificationManager.cancel(100)
 
             }
             200 -> {
-                notificationManager.cancel(200)
                 i.putExtra("prayer_id", 100)
                 alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, c.timeInMillis,
                     PendingIntent.getBroadcast(context, 100, i, 0))
+                notificationManager.cancel(200)
 
             }
             else -> {
-                notificationManager.cancel(prayerID)
                 i.putExtra("prayer_id", 100)
                 reloadOriginalIntent(prayerID, originalPrayerName!!, originalPrayerTime!!, originalPrayerCity!!, context)
                 alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, c.timeInMillis,
                     PendingIntent.getBroadcast(context, 100, i, 0)) //first more time pID = 100
+                notificationManager.cancel(prayerID)
             }
         }
 

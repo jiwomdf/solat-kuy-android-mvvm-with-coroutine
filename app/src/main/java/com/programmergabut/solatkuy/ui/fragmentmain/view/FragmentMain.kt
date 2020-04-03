@@ -1,13 +1,11 @@
 package com.programmergabut.solatkuy.ui.fragmentmain.view
 
-import android.app.AlarmManager
-import android.app.PendingIntent
-import android.content.Context
-import android.content.Intent
 import android.graphics.drawable.Drawable
 import android.location.Address
 import android.location.Geocoder
+import android.os.AsyncTask
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -20,24 +18,24 @@ import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.data.model.entity.MsApi1
 import com.programmergabut.solatkuy.data.model.entity.PrayerLocal
 import com.programmergabut.solatkuy.data.model.prayerJson.Timings
+import com.programmergabut.solatkuy.room.SolatKuyRoom
 import com.programmergabut.solatkuy.ui.fragmentmain.viewmodel.FragmentMainViewModel
-import com.programmergabut.solatkuy.util.PrayerBroadcastReceiver
 import com.programmergabut.solatkuy.util.EnumStatus
+import com.programmergabut.solatkuy.util.PushListToNotification
 import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.layout_prayer_time.*
 import kotlinx.android.synthetic.main.layout_widget.*
 import kotlinx.coroutines.*
+import okhttp3.Dispatcher
 import org.joda.time.DateTime
 import org.joda.time.LocalDate
 import org.joda.time.Period
-import java.io.Serializable
 import java.lang.Exception
+import java.lang.NullPointerException
 import java.text.SimpleDateFormat
 import java.time.LocalTime
 import java.util.*
-import kotlin.collections.ArrayList
 import kotlin.math.abs
-import kotlin.system.measureTimeMillis
 
 class FragmentMain : Fragment() {
 
@@ -447,79 +445,11 @@ class FragmentMain : Fragment() {
 
     private fun setNotification(selList: MutableList<PrayerLocal>) {
 
-        val intent = Intent(activity, PrayerBroadcastReceiver::class.java)
-        val alarmManager = activity?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        if(mCityName == null)
+            mCityName = "-"
 
-        selList.clear()
-//        selList.add(PrayerLocal(1,"mantap 1",true,"20:20"))
-//        selList.add(PrayerLocal(2,"mantap 2",true,"20:22"))
-//        selList.add(PrayerLocal(3,"mantap 3",true,"20:43"))
-//        selList.add(PrayerLocal(4,"mantap 4",true,"20:45"))
-
-        val listPrayerBundle = bundleCreator(selList)
-
-        selList.sortBy { x -> x.prayerID }
-        selList.forEach{
-
-            val hour = it.prayerTime.split(":")[0].trim()
-            val minute = it.prayerTime.split(":")[1].split(" ")[0].trim()
-
-            val c = Calendar.getInstance()
-            c.set(Calendar.HOUR_OF_DAY, hour.toInt())
-            c.set(Calendar.MINUTE, minute.toInt())
-            c.set(Calendar.SECOND, 0)
-
-            intent.putExtra("prayer_id", it.prayerID)
-            intent.putExtra("prayer_name", it.prayerName)
-            intent.putExtra("prayer_time", it.prayerTime)
-            intent.putExtra("prayer_city", mCityName)
-            intent.putExtra("list_prayer_bundle", listPrayerBundle)
-
-            val pendingIntent = PendingIntent.getBroadcast(context, it.prayerID, intent, 0)
-
-            if(c.before(Calendar.getInstance()))
-                c.add(Calendar.DATE, 1)
-
-            if(it.isNotified)
-                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, c.timeInMillis, pendingIntent)
-            else
-                alarmManager.cancel(pendingIntent)
-        }
-
+        PushListToNotification(context!!,selList,mCityName!!)
     }
 
-    private fun bundleCreator(selList: MutableList<PrayerLocal>): Bundle {
-
-        val listPID = arrayListOf<Int>()
-        val listPName = arrayListOf<String>()
-        val listPTime = arrayListOf<String>()
-        val listPIsNotified = arrayListOf<Int>()
-        val listPCity = arrayListOf<String>()
-
-        selList.forEach {
-            listPID.add(it.prayerID)
-            listPName.add(it.prayerName)
-            listPTime.add(it.prayerTime)
-
-            if(it.isNotified)
-                listPIsNotified.add(1)
-            else
-                listPIsNotified.add(0)
-
-            if(mCityName.isNullOrEmpty())
-                listPCity.add("-")
-            else
-                listPCity.add(mCityName!!)
-        }
-
-        val b = Bundle()
-        b.putIntegerArrayList("list_PID", listPID)
-        b.putStringArrayList("list_PName", listPName)
-        b.putStringArrayList("list_PTime", listPTime)
-        b.putIntegerArrayList("list_PIsNotified", listPIsNotified)
-        b.putStringArrayList("list_PCity", listPCity)
-
-        return b
-    }
 
 }

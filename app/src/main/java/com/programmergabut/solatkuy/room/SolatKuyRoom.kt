@@ -32,21 +32,37 @@ abstract class SolatKuyRoom: RoomDatabase() {
                 val instance = Room.databaseBuilder(context.applicationContext,
                         SolatKuyRoom::class.java,"solatkuydb")
                     .fallbackToDestructiveMigration()
-//                    .addMigrations(object :Migration(1,2){
-//                        override fun migrate(database: SupportSQLiteDatabase) {
-//                            database.execSQL("CREATE TABLE MsApi1 (`api1ID` INTEGER, "
-//                                    + "`latitude` TEXT, "
-//                                    + "`longitude` TEXT, "
-//                                    + "`method` TEXT, "
-//                                    + "`month` TEXT"
-//                                    + "`year` TEXT"
-//                                    + "PRIMARY KEY(`id`))")
-//
-//                            //var api1ID: Int, val latitude: String, val longitude: String, val method: String, val month: String, val year: String
-//                        }
-//
-//                    })
+                    /*.addMigrations(object :Migration(1,2){
+                        override fun migrate(database: SupportSQLiteDatabase) {
+                            database.execSQL("CREATE TABLE MsApi1 (`api1ID` INTEGER, "
+                                    + "`latitude` TEXT, "
+                                    + "`longitude` TEXT, "
+                                    + "`method` TEXT, "
+                                    + "`month` TEXT"
+                                    + "`year` TEXT"
+                                    + "PRIMARY KEY(`id`))")
+
+                            //var api1ID: Int, val latitude: String, val longitude: String, val method: String, val month: String, val year: String
+                        }
+
+                  })*/
                     .addCallback(NotifiedPrayerCallBack(scope))
+                    .build()
+
+                INSTANCE = instance
+                return instance
+            }
+        }
+
+        fun getDataBase(context: Context): SolatKuyRoom{
+            val tempInstance = INSTANCE
+
+            if(tempInstance != null)
+                return tempInstance
+
+            synchronized(this) {
+                val instance = Room.databaseBuilder(context.applicationContext,
+                    SolatKuyRoom::class.java,"solatkuydb")
                     .build()
 
                 INSTANCE = instance
@@ -59,16 +75,18 @@ abstract class SolatKuyRoom: RoomDatabase() {
             override fun onCreate(db: SupportSQLiteDatabase) {
                 super.onCreate(db)
 
+
+            }
+
+            override fun onOpen(db: SupportSQLiteDatabase) {
+                super.onOpen(db)
+
                 INSTANCE.let {
                     scope.launch {
                         populateNotifiedPrayer(it?.notifiedPrayerDao()!!)
                         populateMsApi1(it.msApi1Dao())
                     }
                 }
-            }
-
-            override fun onOpen(db: SupportSQLiteDatabase) {
-                super.onOpen(db)
 
             }
 

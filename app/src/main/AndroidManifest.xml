@@ -7,6 +7,7 @@
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION"/>
     <uses-permission android:name="android.permission.ACCESS_BACKGROUND_LOCATION"/>
     <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED"/>
 
     <application
         android:allowBackup="true"
@@ -18,13 +19,19 @@
         <activity android:name=".ui.main.view.MainActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
         <activity android:name=".ui.prayerdetail.view.ActivityPrayerDetail" />
-        <receiver android:name=".util.PrayerBroadcastReceiver" />
-        <receiver android:name=".util.MoreTimeBroadcastReceiver" />
+        <service android:name=".service.ServiceBootComplete" />
+        <receiver android:name="com.programmergabut.solatkuy.broadcaster.PrayerBroadcastReceiver" />
+        <receiver android:name="com.programmergabut.solatkuy.broadcaster.MoreTimeBroadcastReceiver" />
+        <receiver android:name="com.programmergabut.solatkuy.broadcaster.BootCompleteReceiver">
+            <intent-filter>
+                <action android:name="android.intent.action.BOOT_COMPLETED" />
+                <action android:name="android.intent.action.QUICKBOOT_POWERON" />
+            </intent-filter>
+        </receiver>
     </application>
 
 </manifest>

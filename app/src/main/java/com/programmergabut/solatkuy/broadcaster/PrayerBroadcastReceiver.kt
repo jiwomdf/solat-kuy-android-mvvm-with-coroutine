@@ -1,4 +1,4 @@
-package com.programmergabut.solatkuy.util
+package com.programmergabut.solatkuy.broadcaster
 
 import android.app.AlarmManager
 import android.app.PendingIntent
@@ -8,9 +8,8 @@ import android.content.Intent
 import android.os.Bundle
 import com.programmergabut.solatkuy.data.model.entity.PrayerLocal
 import com.programmergabut.solatkuy.ui.main.view.MainActivity
-import java.io.Serializable
+import com.programmergabut.solatkuy.util.NotificationHelper
 import java.util.*
-import kotlin.collections.ArrayList
 
 class PrayerBroadcastReceiver: BroadcastReceiver() {
 
@@ -20,7 +19,8 @@ class PrayerBroadcastReceiver: BroadcastReceiver() {
     private var pCity: String? = null
 
     override fun onReceive(context: Context?, intent: Intent?) {
-        val mNotificationHelper = NotificationHelper(context!!)
+        val mNotificationHelper =
+            NotificationHelper(context!!)
 
         pID = intent?.getIntExtra("prayer_id", -1)
         pName = intent?.getStringExtra("prayer_name")
@@ -57,10 +57,11 @@ class PrayerBroadcastReceiver: BroadcastReceiver() {
 
                 val nb = mNotificationHelper.getPrayerReminderNC(pID!!, pTime!!, pCity!!, pName!!, pendingIntent)
                 mNotificationHelper.getManager()?.notify(pID!!, nb.build())
+
+                executeNextNotification(listPrayerBundle,context, pCity!!)
             }
         }
 
-        executeNextNotification(listPrayerBundle,context, pCity!!)
     }
 
 
