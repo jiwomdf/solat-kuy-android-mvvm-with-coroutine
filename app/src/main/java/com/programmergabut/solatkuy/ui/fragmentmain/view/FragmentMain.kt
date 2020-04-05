@@ -120,7 +120,7 @@ class FragmentMain : Fragment() {
                 EnumStatus.LOADING -> Toasty.info(context!!, "fetching data..", Toast.LENGTH_SHORT).show()
                 EnumStatus.ERROR -> {
 
-                    Toasty.error(context!!,"offline mode", Toast.LENGTH_SHORT).show()
+                    Toasty.info(context!!,"offline mode", Toast.LENGTH_SHORT).show()
 
                     val localTimings = Timings(
                         tempListPrayerLocal!![2].prayerTime /* asr*/,
@@ -440,7 +440,7 @@ class FragmentMain : Fragment() {
     /* Alarm Manager & Notification */
     private fun updateAlarmManager(listPrayer: MutableList<PrayerLocal>){
         setNotification(listPrayer)
-        Toasty.info(context!!, "alarm manager updated", Toast.LENGTH_SHORT).show()
+        //Toasty.info(context!!, "alarm manager updated", Toast.LENGTH_SHORT).show()
     }
 
     private fun setNotification(selList: MutableList<PrayerLocal>) {

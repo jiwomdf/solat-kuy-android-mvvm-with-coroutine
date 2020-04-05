@@ -31,7 +31,7 @@ abstract class SolatKuyRoom: RoomDatabase() {
             synchronized(this) {
                 val instance = Room.databaseBuilder(context.applicationContext,
                         SolatKuyRoom::class.java,"solatkuydb")
-                    .fallbackToDestructiveMigration()
+                    //.fallbackToDestructiveMigration()
                     /*.addMigrations(object :Migration(1,2){
                         override fun migrate(database: SupportSQLiteDatabase) {
                             database.execSQL("CREATE TABLE MsApi1 (`api1ID` INTEGER, "
@@ -75,12 +75,6 @@ abstract class SolatKuyRoom: RoomDatabase() {
             override fun onCreate(db: SupportSQLiteDatabase) {
                 super.onCreate(db)
 
-
-            }
-
-            override fun onOpen(db: SupportSQLiteDatabase) {
-                super.onOpen(db)
-
                 INSTANCE.let {
                     scope.launch {
                         populateNotifiedPrayer(it?.notifiedPrayerDao()!!)
@@ -88,6 +82,10 @@ abstract class SolatKuyRoom: RoomDatabase() {
                     }
                 }
 
+            }
+
+            override fun onOpen(db: SupportSQLiteDatabase) {
+                super.onOpen(db)
             }
 
             suspend fun populateMsApi1(msApi1Dao: MsApi1Dao) {

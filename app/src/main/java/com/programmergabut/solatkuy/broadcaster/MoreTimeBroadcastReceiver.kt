@@ -22,7 +22,7 @@ class MoreTimeBroadcastReceiver: BroadcastReceiver() {
         // new time
         val nowTime = LocalTime.now().toString()
         val hour = nowTime.split(":")[0].trim()
-        val minute = nowTime.split(":")[1].trim().toInt() + 2
+        val minute = nowTime.split(":")[1].trim().toInt() + 10
 
         val c = Calendar.getInstance()
         c.set(Calendar.HOUR_OF_DAY, hour.toInt())

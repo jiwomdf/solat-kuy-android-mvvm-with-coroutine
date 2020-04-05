@@ -23,7 +23,7 @@
     <string name="proceed">Proceed</string>
     <string name="current_location">Current Location</string>
     <string name="city">City</string>
-    <string name="about_developer">Solat Kuy is a open source reminder prayer \n time app, created to remind us to pray 😇 \n\n feel free to see and contribute </string>
+    <string name="about_developer">Solat Kuy is an open source reminder prayer \n time app, created to remind us to pray 😇 \n\n feel free to see and contribute </string>
     <string name="github_link">https://github.com/jiwomdf/Solat-Kuy-Android-MVVM-with-Coroutine</string>
     <string name="powered_by">Powered by</string>
     <string name="https_aladhan_com">https://aladhan.com</string>

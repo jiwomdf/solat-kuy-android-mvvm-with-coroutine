@@ -11,7 +11,7 @@ interface NotifiedPrayerDao {
     fun getNotifiedPrayer(): LiveData<List<PrayerLocal>>
 
     @Query("select * from notified_prayer order by prayerID asc")
-    fun getNotifiedPrayerSync(): List<PrayerLocal>
+    suspend fun getNotifiedPrayerSync(): List<PrayerLocal>
 
     @Query("delete from notified_prayer")
     suspend fun deleteAll()
