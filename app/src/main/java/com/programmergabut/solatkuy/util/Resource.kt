@@ -1,5 +1,9 @@
 package com.programmergabut.solatkuy.util
 
+/*
+ * Created by Katili Jiwo Adi Wiyono on 25/03/20.
+ */
+
 data class Resource<out T>(val Status: EnumStatus, val data: T?, val message:String?) {
 
     companion object{

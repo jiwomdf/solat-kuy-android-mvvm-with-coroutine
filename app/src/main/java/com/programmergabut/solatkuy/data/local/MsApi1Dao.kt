@@ -7,6 +7,11 @@ import androidx.room.OnConflictStrategy
 import androidx.room.Query
 import com.programmergabut.solatkuy.data.model.entity.MsApi1
 
+/*
+ * Created by Katili Jiwo Adi Wiyono on 27/03/20.
+ */
+
+
 @Dao
 interface MsApi1Dao {
 

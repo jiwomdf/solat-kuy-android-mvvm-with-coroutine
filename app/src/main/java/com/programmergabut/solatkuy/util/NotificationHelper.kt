@@ -20,6 +20,9 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
 import kotlinx.coroutines.launch
 
+/*
+ * Created by Katili Jiwo Adi Wiyono on 27/03/20.
+ */
 
 class NotificationHelper(c: Context): ContextWrapper(c) {
 

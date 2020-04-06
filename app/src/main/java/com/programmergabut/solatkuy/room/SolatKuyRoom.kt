@@ -12,6 +12,10 @@ import com.programmergabut.solatkuy.data.model.entity.PrayerLocal
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
+/*
+ * Created by Katili Jiwo Adi Wiyono on 25/03/20.
+ */
+
 @Database(version = 4, entities = [PrayerLocal::class, MsApi1::class])
 abstract class SolatKuyRoom: RoomDatabase() {
 

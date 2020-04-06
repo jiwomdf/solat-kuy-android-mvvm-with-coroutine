@@ -23,6 +23,7 @@ import com.programmergabut.solatkuy.ui.fragmentmain.viewmodel.FragmentMainViewMo
 import com.programmergabut.solatkuy.util.EnumStatus
 import com.programmergabut.solatkuy.util.PushListToNotification
 import es.dmoral.toasty.Toasty
+import kotlinx.android.synthetic.main.fragment_main.*
 import kotlinx.android.synthetic.main.layout_prayer_time.*
 import kotlinx.android.synthetic.main.layout_widget.*
 import kotlinx.coroutines.*
@@ -36,6 +37,10 @@ import java.text.SimpleDateFormat
 import java.time.LocalTime
 import java.util.*
 import kotlin.math.abs
+
+/*
+ * Created by Katili Jiwo Adi Wiyono on 25/03/20.
+ */
 
 class FragmentMain : Fragment() {
 
@@ -65,6 +70,7 @@ class FragmentMain : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         cbClickListener()
+        refreshLayout()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
@@ -194,6 +200,18 @@ class FragmentMain : Fragment() {
             bindWidget(tempTimings)
         if(tempMsApi1 != null)
             bindWidgetLocation(tempMsApi1!!)
+    }
+
+    private fun refreshLayout() {
+        sl_main.setOnRefreshListener {
+            val currDate = LocalDate()
+
+            tempMsApi1?.let {
+                fetchPrayerApi(it.latitude, it.longitude, "8", currDate.monthOfYear.toString(),currDate.year.toString())
+            }
+
+            sl_main.isRefreshing = false
+        }
     }
 
     private fun cbClickListener() {
@@ -400,7 +418,7 @@ class FragmentMain : Fragment() {
             tempSecond--
 
             if(tempSecond == 0){
-                tempSecond = 60
+                tempSecond = 59
 
                 if(tempMinute != 0)
                     tempMinute -= 1
@@ -412,7 +430,7 @@ class FragmentMain : Fragment() {
             if(tempMinute == 0){
 
                 if(!isMinuteZero)
-                    tempMinute = 60
+                    tempMinute = 59
 
                 if(tempHour != 0)
                     tempHour -= 1
@@ -423,6 +441,7 @@ class FragmentMain : Fragment() {
 
                 withContext(Dispatchers.Main){
                     tv_widget_prayer_countdown.text = ""
+                    delay(1000)
                     fetchPrayerApi(tempMsApi1?.latitude!!,tempMsApi1?.longitude!!, "8", tempMsApi1!!.month, tempMsApi1!!.year)
                 }
             }

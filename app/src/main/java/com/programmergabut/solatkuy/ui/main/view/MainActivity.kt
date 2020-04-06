@@ -15,6 +15,9 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.layout_bottom_navigation_bar.*
 import kotlin.math.abs
 
+/*
+ * Created by Katili Jiwo Adi Wiyono on 25/03/20.
+ */
 
 class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener {
 

@@ -7,6 +7,10 @@ import com.programmergabut.solatkuy.ui.fragmentmain.view.FragmentMain
 import com.programmergabut.solatkuy.ui.fragmentcompass.view.FragmentCompass
 import com.programmergabut.solatkuy.ui.fragmentsetting.view.FragmentSetting
 
+/*
+ * Created by Katili Jiwo Adi Wiyono on 31/03/20.
+ */
+
 class SwipeAdapter(fm: FragmentManager): FragmentPagerAdapter(fm, BEHAVIOR_RESUME_ONLY_CURRENT_FRAGMENT) {
 
     override fun getItem(position: Int): Fragment {

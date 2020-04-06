@@ -11,6 +11,10 @@ import com.programmergabut.solatkuy.ui.main.view.MainActivity
 import com.programmergabut.solatkuy.util.NotificationHelper
 import java.util.*
 
+/*
+ * Created by Katili Jiwo Adi Wiyono on 27/03/20.
+ */
+
 class PrayerBroadcastReceiver: BroadcastReceiver() {
 
     private var pID: Int? = null

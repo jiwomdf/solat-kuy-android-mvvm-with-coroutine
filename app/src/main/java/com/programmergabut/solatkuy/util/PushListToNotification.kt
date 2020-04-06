@@ -10,6 +10,10 @@ import com.programmergabut.solatkuy.data.model.entity.PrayerLocal
 import com.programmergabut.solatkuy.broadcaster.PrayerBroadcastReceiver
 import java.util.*
 
+/*
+ * Created by Katili Jiwo Adi Wiyono on 02/04/20.
+ */
+
 class PushListToNotification(context: Context, selList: MutableList<PrayerLocal>, mCityName: String): ContextWrapper(context) {
 
     private var mCityName: String? = null

@@ -16,6 +16,10 @@ import retrofit2.converter.gson.GsonConverterFactory
 import java.text.SimpleDateFormat
 import java.util.*
 
+/*
+ * Created by Katili Jiwo Adi Wiyono on 26/03/20.
+ */
+
 class Repository(application: Application, scope: CoroutineScope) {
 
     private var notifiedPrayerDao: NotifiedPrayerDao? = null
@@ -27,23 +31,24 @@ class Repository(application: Application, scope: CoroutineScope) {
     private var db: SolatKuyRoom = SolatKuyRoom.getDataBase(application, scope)
 
     init {
+        /* for observable data */
         mListPrayerLocal = db.notifiedPrayerDao().getNotifiedPrayer()
         mMsApi1Local = db.msApi1Dao().getMsApi1()
+
+        /* for db transaction */
+        notifiedPrayerDao = db.notifiedPrayerDao()
     }
 
     // Room
     suspend fun updateNotifiedPrayer(prayerLocal: PrayerLocal){
-        notifiedPrayerDao = db.notifiedPrayerDao()
         notifiedPrayerDao?.updateNotifiedPrayer(prayerLocal.prayerName, prayerLocal.isNotified, prayerLocal.prayerTime)
     }
 
     private suspend fun updatePrayerTime(prayerName: String, prayerTime: String){
-        notifiedPrayerDao = db.notifiedPrayerDao()
         notifiedPrayerDao?.updatePrayerTime(prayerName, prayerTime)
     }
 
     suspend fun updatePrayerIsNotified(prayerName: String, isNotified: Boolean){
-        notifiedPrayerDao = db.notifiedPrayerDao()
         notifiedPrayerDao?.updatePrayerIsNotified(prayerName, isNotified)
     }
 

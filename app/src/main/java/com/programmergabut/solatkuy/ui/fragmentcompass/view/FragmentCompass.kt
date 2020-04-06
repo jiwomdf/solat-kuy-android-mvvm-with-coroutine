@@ -15,6 +15,9 @@ import androidx.fragment.app.Fragment
 import com.programmergabut.solatkuy.R
 import kotlinx.android.synthetic.main.fragment_prayer_report.*
 
+/*
+ * Created by Katili Jiwo Adi Wiyono on 31/03/20.
+ */
 
 class FragmentCompass : Fragment(), SensorEventListener {
 

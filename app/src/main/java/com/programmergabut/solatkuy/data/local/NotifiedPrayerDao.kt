@@ -4,6 +4,11 @@ import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.programmergabut.solatkuy.data.model.entity.PrayerLocal
 
+/*
+ * Created by Katili Jiwo Adi Wiyono on 27/03/20.
+ */
+
+
 @Dao
 interface NotifiedPrayerDao {
 

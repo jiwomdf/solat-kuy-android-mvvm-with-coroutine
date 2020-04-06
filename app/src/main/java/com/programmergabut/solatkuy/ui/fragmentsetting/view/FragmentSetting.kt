@@ -37,6 +37,9 @@ import kotlinx.android.synthetic.main.layout_bottomsheet_bylatitudelongitude.vie
 import org.joda.time.LocalDate
 import java.util.*
 
+/*
+ * Created by Katili Jiwo Adi Wiyono on 25/03/20.
+ */
 
 class FragmentSetting : Fragment() {
 
@@ -62,13 +65,50 @@ class FragmentSetting : Fragment() {
         super.onViewCreated(view, savedInstanceState)
 
         dialog = BottomSheetDialog(context!!)
-        rbSelection()
+        btnSetLatitudeLongitude()
 
         fragmentSettingViewModel = ViewModelProviders.of(requireActivity()).get(FragmentSettingViewModel::class.java)
         subscribeObserversDB()
     }
 
-    private fun rbSelection(){
+    /* Database Transaction */
+    private fun insertLocationSettingToDb(latitude: String, longitude: String) {
+
+        val currDate = LocalDate()
+
+        val data = MsApi1(
+            1,
+            latitude,
+            longitude,
+            "8",
+            currDate.monthOfYear.toString(),
+            currDate.year.toString()
+        )
+
+        fragmentSettingViewModel.updateMsApi1(data)
+    }
+
+    /* Subscribe live data */
+    private fun subscribeObserversDB() {
+        fragmentSettingViewModel.msApi1Local.observe(this, Observer {
+
+            val geoCoder = Geocoder(context!!, Locale.getDefault())
+            var cityName: String? = null
+            try {
+                val addresses: List<Address> = geoCoder.getFromLocation(it.latitude.toDouble(),it.longitude.toDouble(), 1)
+                cityName = addresses[0].subAdminArea
+            }
+            catch (ex: Exception){}
+
+            tv_view_latitude.text = it.latitude + " °S"
+            tv_view_longitude.text = it.longitude + " °E"
+            tv_view_city.text = cityName ?: "-"
+        })
+    }
+
+
+    /* init first load data */
+    private fun btnSetLatitudeLongitude(){
         btn_byLatitudeLongitude.setOnClickListener {
             dialogView = layoutInflater.inflate(R.layout.layout_bottomsheet_bylatitudelongitude,null)
             dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
@@ -119,8 +159,7 @@ class FragmentSetting : Fragment() {
                 val longitude = dialogView.tv_gpsDialog_longitude.text.toString().trim()
 
                 if(latitude.isEmpty() || longitude.isEmpty()){
-                    Toasty.error(context!!,"Action failed, please enable your location", Toast.LENGTH_SHORT).show()
-                    dialog.dismiss()
+                    Toasty.warning(context!!,"Action failed, please enable your location", Toast.LENGTH_SHORT).show()
                     return@byGps
                 }
 
@@ -140,40 +179,39 @@ class FragmentSetting : Fragment() {
         }
     }
 
-    private fun insertLocationSettingToDb(latitude: String, longitude: String) {
+    /* permission */
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
 
-        val currDate = LocalDate()
+        if(requestCode == ALL_PERMISSIONS){
+            if(grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)
+                onUpdateLocationListener()
+            else
+                Toasty.error(context!!, "All Permission Denied", Toast.LENGTH_SHORT).show()
+        }
 
-        val data = MsApi1(
-            1,
-            latitude,
-            longitude,
-            "8",
-            currDate.monthOfYear.toString(),
-            currDate.year.toString()
-        )
-
-        fragmentSettingViewModel.updateMsApi1(data)
     }
 
-    private fun subscribeObserversDB() {
-        fragmentSettingViewModel.msApi1Local.observe(this, Observer {
-
-            val geoCoder = Geocoder(context!!, Locale.getDefault())
-            var cityName: String? = null
-            try {
-                val addresses: List<Address> = geoCoder.getFromLocation(it.latitude.toDouble(),it.longitude.toDouble(), 1)
-                cityName = addresses[0].subAdminArea
+    private fun showPermissionDialog(){
+        AlertDialog.Builder(context)
+            .setTitle("Location Needed")
+            .setMessage("Permission is needed to run the Gps")
+            .setPositiveButton("ok") { _: DialogInterface, _: Int ->
+                ActivityCompat.requestPermissions(
+                    this.activity!!,
+                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION),
+                    ALL_PERMISSIONS
+                )
             }
-            catch (ex: Exception){}
-
-            tv_view_latitude.text = it.latitude + " °S"
-            tv_view_longitude.text = it.longitude + " °E"
-            tv_view_city.text = cityName ?: "-"
-        })
+            .setNegativeButton("cancel") { _: DialogInterface, _: Int ->
+                dialog.dismiss()
+            }
+            .create()
+            .show()
     }
 
 
+    /* supporting function */
     private fun getGPSLocation(dialogView: View){
 
         dialogView.findViewById<TextView>(R.id.tv_view_latitude).visibility = View.GONE
@@ -218,36 +256,6 @@ class FragmentSetting : Fragment() {
             dialogView.tv_warning.text = "Please enable your location"
         else
             dialogView.tv_warning.text = getString(R.string.loading)
-    }
-
-    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
-        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-
-        if(requestCode == ALL_PERMISSIONS){
-            if(grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)
-                onUpdateLocationListener()
-            else
-                Toasty.error(context!!, "All Permission Denied", Toast.LENGTH_SHORT).show()
-        }
-
-    }
-
-    private fun showPermissionDialog(){
-        AlertDialog.Builder(context)
-            .setTitle("Location Needed")
-            .setMessage("Permission is needed to run the Gps")
-            .setPositiveButton("ok") { _: DialogInterface, _: Int ->
-                ActivityCompat.requestPermissions(
-                    this.activity!!,
-                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION),
-                    ALL_PERMISSIONS
-                )
-            }
-            .setNegativeButton("cancel") { _: DialogInterface, _: Int ->
-                dialog.dismiss()
-            }
-            .create()
-            .show()
     }
 
     /* private fun onSuccessListener(){
