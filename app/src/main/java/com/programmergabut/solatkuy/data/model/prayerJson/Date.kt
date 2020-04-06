@@ -7,9 +7,9 @@ data class Date(
     @SerializedName("gregorian")
     val gregorian: Gregorian,
     @SerializedName("hijri")
-    val hijri: Hijri,
+    val hijri: Hijri?,
     @SerializedName("readable")
-    val readable: String,
+    val readable: String?,
     @SerializedName("timestamp")
-    val timestamp: String
+    val timestamp: String?
 )

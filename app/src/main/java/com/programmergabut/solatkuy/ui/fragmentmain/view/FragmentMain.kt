@@ -20,6 +20,8 @@ import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.data.model.entity.MsApi1
 import com.programmergabut.solatkuy.data.model.entity.PrayerLocal
 import com.programmergabut.solatkuy.data.model.prayerJson.Data
+import com.programmergabut.solatkuy.data.model.prayerJson.Gregorian
+import com.programmergabut.solatkuy.data.model.prayerJson.Month
 import com.programmergabut.solatkuy.data.model.prayerJson.Timings
 import com.programmergabut.solatkuy.ui.fragmentmain.viewmodel.FragmentMainViewModel
 import com.programmergabut.solatkuy.util.EnumStatus
@@ -34,6 +36,7 @@ import org.joda.time.LocalDate
 import org.joda.time.Period
 import java.text.SimpleDateFormat
 import java.time.LocalTime
+import java.time.format.DateTimeFormatter
 import java.util.*
 import kotlin.math.abs
 
@@ -142,7 +145,14 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                     )
 
                     /* save temp data */
-                    tempApiData?.timings = localTimings
+                    val currDate = java.time.LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
+                    val arrDate = currDate.split("/")
+
+                    val month = Month(arrDate[0], 0)
+                    val gregorian = Gregorian("", arrDate[1], null,null, month,null,null)
+                    val date = com.programmergabut.solatkuy.data.model.prayerJson.Date(gregorian, null, null, null)
+
+                    tempApiData = Data(date,null, localTimings)
 
                     bindWidget(tempApiData)
                 }
@@ -288,7 +298,7 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
             tv_asr_time.text = apiData.timings.asr
             tv_maghrib_time.text = apiData.timings.maghrib
             tv_isha_time.text = apiData.timings.isha
-            tv_year_change.text = "${apiData.date.gregorian.month.en} ${apiData.date.gregorian.day} "
+            tv_year_change.text = "${apiData.date.gregorian.month?.en} ${apiData.date.gregorian.day} "
         }
     }
 
@@ -445,7 +455,10 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                 withContext(Dispatchers.Main){
                     tv_widget_prayer_countdown.text = ""
                     delay(1000)
-                    tempMsApi1?.let { fetchPrayerApi(it.latitude, it.longitude, "8", it.month, it.year) }
+
+                    tempMsApi1?.let {
+                        fetchPrayerApi(it.latitude, it.longitude, "8", it.month, it.year)
+                    }
                 }
             }
 

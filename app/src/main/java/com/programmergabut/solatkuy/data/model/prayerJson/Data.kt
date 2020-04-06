@@ -5,9 +5,9 @@ import com.google.gson.annotations.SerializedName
 
 data class Data(
     @SerializedName("date")
-    val date: Date,
+    var date: Date,
     @SerializedName("meta")
-    val meta: Meta,
+    val meta: Meta?,
     @SerializedName("timings")
     var timings: Timings
 )

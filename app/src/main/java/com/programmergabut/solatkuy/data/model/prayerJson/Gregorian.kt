@@ -7,15 +7,15 @@ data class Gregorian(
     @SerializedName("date")
     val date: String,
     @SerializedName("day")
-    val day: String,
+    var day: String,
     @SerializedName("designation")
-    val designation: Designation,
+    val designation: Designation?,
     @SerializedName("format")
-    val format: String,
+    val format: String?,
     @SerializedName("month")
-    val month: Month,
+    val month: Month?,
     @SerializedName("weekday")
-    val weekday: Weekday,
+    val weekday: Weekday?,
     @SerializedName("year")
-    val year: String
+    val year: String?
 )
