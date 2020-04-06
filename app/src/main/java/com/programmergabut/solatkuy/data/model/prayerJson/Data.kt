@@ -9,5 +9,5 @@ data class Data(
     @SerializedName("meta")
     val meta: Meta,
     @SerializedName("timings")
-    val timings: Timings
+    var timings: Timings
 )

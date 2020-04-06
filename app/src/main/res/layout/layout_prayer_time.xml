@@ -43,12 +43,12 @@
                     android:text="@string/prayer_name"/>
 
                 <TextView
-                    android:id="@+id/textView"
+                    android:id="@+id/tv_year_change"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="end"
                     android:layout_marginEnd="@dimen/medium_margin"
-                    android:text="@string/time"/>
+                    android:text="@string/loading"/>
 
             </TableRow>
 

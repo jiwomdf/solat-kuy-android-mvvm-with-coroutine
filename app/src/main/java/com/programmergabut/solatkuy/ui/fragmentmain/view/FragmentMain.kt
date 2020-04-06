@@ -14,14 +14,12 @@ import androidx.lifecycle.ViewModelProviders
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
-import com.bumptech.glide.load.resource.bitmap.BitmapTransitionOptions
-import com.bumptech.glide.load.resource.bitmap.BitmapTransitionOptions.withCrossFade
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
-import com.bumptech.glide.request.RequestOptions
 import com.bumptech.glide.request.transition.DrawableCrossFadeFactory
 import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.data.model.entity.MsApi1
 import com.programmergabut.solatkuy.data.model.entity.PrayerLocal
+import com.programmergabut.solatkuy.data.model.prayerJson.Data
 import com.programmergabut.solatkuy.data.model.prayerJson.Timings
 import com.programmergabut.solatkuy.ui.fragmentmain.viewmodel.FragmentMainViewModel
 import com.programmergabut.solatkuy.util.EnumStatus
@@ -46,7 +44,7 @@ import kotlin.math.abs
 class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     private lateinit var fragmentMainViewModel: FragmentMainViewModel
-    private var tempTimings: Timings? = null
+    private var tempApiData: Data? = null
     private var tempMsApi1: MsApi1? = null
     private var tempListPrayerLocal: List<PrayerLocal>? = null
     private var mCityName: String? = null
@@ -116,12 +114,13 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
             when(it.Status){
                 EnumStatus.SUCCESS -> {
                     it.data.let {
-                        val timings = it?.data?.find { obj -> obj.date.gregorian.day == currentDate.toString() }?.timings
+                        val apiData = it?.data?.find { obj -> obj.date.gregorian.day == currentDate.toString() }
 
                         /* save temp data */
-                        tempTimings = timings
+                        tempApiData = apiData
 
-                        bindWidget(timings)
+                        bindWidget(apiData)
+
                         //tempListPrayerLocal?.let { tempData -> modelPrayerFactory(tempData)?.let {modelPrayer -> updateAlarmManager(modelPrayer) }}
                     }}
                 EnumStatus.LOADING -> Toasty.info(context!!, "fetching data..", Toast.LENGTH_SHORT).show()
@@ -143,9 +142,9 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                     )
 
                     /* save temp data */
-                    tempTimings = localTimings
+                    tempApiData?.timings = localTimings
 
-                    bindWidget(localTimings)
+                    bindWidget(tempApiData)
                 }
             }
         })
@@ -177,18 +176,16 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         val list = mutableListOf<PrayerLocal>()
         var modelPrayer: PrayerLocal? = null
 
-        if(tempTimings == null)
+        if(tempApiData == null || tempApiData?.timings == null)
             return null
 
-
         it.forEach con@{ p ->
-
             when (p.prayerName) {
-                getString(R.string.fajr) -> modelPrayer = PrayerLocal(1 ,p.prayerName, p.isNotified, tempTimings?.fajr!!)
-                getString(R.string.dhuhr) -> modelPrayer = PrayerLocal(2 ,p.prayerName, p.isNotified, tempTimings?.dhuhr!!)
-                getString(R.string.asr) -> modelPrayer = PrayerLocal(3 ,p.prayerName, p.isNotified, tempTimings?.asr!!)
-                getString(R.string.maghrib) -> modelPrayer = PrayerLocal(4 ,p.prayerName, p.isNotified, tempTimings?.maghrib!!)
-                getString(R.string.isha) -> modelPrayer = PrayerLocal(5, p.prayerName, p.isNotified, tempTimings?.isha!!)
+                getString(R.string.fajr) -> modelPrayer = PrayerLocal(1 ,p.prayerName, p.isNotified, tempApiData?.timings?.fajr!!)
+                getString(R.string.dhuhr) -> modelPrayer = PrayerLocal(2 ,p.prayerName, p.isNotified, tempApiData?.timings?.dhuhr!!)
+                getString(R.string.asr) -> modelPrayer = PrayerLocal(3 ,p.prayerName, p.isNotified, tempApiData?.timings?.asr!!)
+                getString(R.string.maghrib) -> modelPrayer = PrayerLocal(4 ,p.prayerName, p.isNotified, tempApiData?.timings?.maghrib!!)
+                getString(R.string.isha) -> modelPrayer = PrayerLocal(5, p.prayerName, p.isNotified, tempApiData?.timings?.isha!!)
             }
 
             list.add(modelPrayer!!)
@@ -198,24 +195,14 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     private fun loadTempData() {
-        if(tempTimings != null)
-            bindWidget(tempTimings)
+        if(tempApiData != null)
+            bindWidget(tempApiData)
         if(tempMsApi1 != null)
             bindWidgetLocation(tempMsApi1!!)
     }
 
     private fun refreshLayout() {
-
         sl_main.setOnRefreshListener(this)
-//        sl_main.setOnRefreshListener {
-//            val currDate = LocalDate()
-//
-//            tempMsApi1?.let {
-//                fetchPrayerApi(it.latitude, it.longitude, "8", currDate.monthOfYear.toString(),currDate.year.toString())
-//            }
-//
-//            sl_main.isRefreshing = false
-//        }
     }
 
     private fun cbClickListener() {
@@ -285,35 +272,37 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         tv_view_city.text = mCityName
     }
 
-    private fun bindPrayerText(timings: Timings?) {
+    private fun bindPrayerText(apiData: Data?) {
 
-        if(timings == null){
+        if(apiData == null){
             tv_fajr_time.text = getString(R.string.loading)
             tv_dhuhr_time.text = getString(R.string.loading)
             tv_asr_time.text = getString(R.string.loading)
             tv_maghrib_time.text = getString(R.string.loading)
             tv_isha_time.text = getString(R.string.loading)
+            tv_year_change.text = getString(R.string.loading)
         }
         else{
-            tv_fajr_time.text = timings.fajr
-            tv_dhuhr_time.text = timings.dhuhr
-            tv_asr_time.text = timings.asr
-            tv_maghrib_time.text = timings.maghrib
-            tv_isha_time.text = timings.isha
+            tv_fajr_time.text = apiData.timings.fajr
+            tv_dhuhr_time.text = apiData.timings.dhuhr
+            tv_asr_time.text = apiData.timings.asr
+            tv_maghrib_time.text = apiData.timings.maghrib
+            tv_isha_time.text = apiData.timings.isha
+            tv_year_change.text = "${apiData.date.gregorian.month.en} ${apiData.date.gregorian.day} "
         }
     }
 
-    private fun bindWidget(timings: Timings?) {
+    private fun bindWidget(apiData: Data?) {
 
-        if(timings == null)
+        if(apiData == null)
             return
 
-        val selPrayer = selectPrayer(timings)
+        val selPrayer = selectPrayer(apiData.timings)
 
-        bindPrayerText(timings)
+        bindPrayerText(apiData)
         selectWidgetTitle(selPrayer)
         selectWidgetPic(selPrayer)
-        selectNextPrayerTime(selPrayer, timings)
+        selectNextPrayerTime(selPrayer, apiData.timings)
     }
 
     private fun selectNextPrayerTime(selPrayer: Int, timings: Timings) {
