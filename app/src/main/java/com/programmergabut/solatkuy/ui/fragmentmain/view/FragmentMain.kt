@@ -3,9 +3,7 @@ package com.programmergabut.solatkuy.ui.fragmentmain.view
 import android.graphics.drawable.Drawable
 import android.location.Address
 import android.location.Geocoder
-import android.os.AsyncTask
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -13,12 +11,18 @@ import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProviders
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.resource.bitmap.BitmapTransitionOptions
+import com.bumptech.glide.load.resource.bitmap.BitmapTransitionOptions.withCrossFade
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.bumptech.glide.request.RequestOptions
+import com.bumptech.glide.request.transition.DrawableCrossFadeFactory
 import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.data.model.entity.MsApi1
 import com.programmergabut.solatkuy.data.model.entity.PrayerLocal
 import com.programmergabut.solatkuy.data.model.prayerJson.Timings
-import com.programmergabut.solatkuy.room.SolatKuyRoom
 import com.programmergabut.solatkuy.ui.fragmentmain.viewmodel.FragmentMainViewModel
 import com.programmergabut.solatkuy.util.EnumStatus
 import com.programmergabut.solatkuy.util.PushListToNotification
@@ -27,12 +31,9 @@ import kotlinx.android.synthetic.main.fragment_main.*
 import kotlinx.android.synthetic.main.layout_prayer_time.*
 import kotlinx.android.synthetic.main.layout_widget.*
 import kotlinx.coroutines.*
-import okhttp3.Dispatcher
 import org.joda.time.DateTime
 import org.joda.time.LocalDate
 import org.joda.time.Period
-import java.lang.Exception
-import java.lang.NullPointerException
 import java.text.SimpleDateFormat
 import java.time.LocalTime
 import java.util.*
@@ -42,7 +43,7 @@ import kotlin.math.abs
  * Created by Katili Jiwo Adi Wiyono on 25/03/20.
  */
 
-class FragmentMain : Fragment() {
+class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     private lateinit var fragmentMainViewModel: FragmentMainViewModel
     private var tempTimings: Timings? = null
@@ -128,6 +129,7 @@ class FragmentMain : Fragment() {
 
                     Toasty.info(context!!,"offline mode", Toast.LENGTH_SHORT).show()
 
+                    /* based from API data */
                     val localTimings = Timings(
                         tempListPrayerLocal!![2].prayerTime /* asr*/,
                         tempListPrayerLocal!![1].prayerTime /* dhuhr */,
@@ -203,15 +205,17 @@ class FragmentMain : Fragment() {
     }
 
     private fun refreshLayout() {
-        sl_main.setOnRefreshListener {
-            val currDate = LocalDate()
 
-            tempMsApi1?.let {
-                fetchPrayerApi(it.latitude, it.longitude, "8", currDate.monthOfYear.toString(),currDate.year.toString())
-            }
-
-            sl_main.isRefreshing = false
-        }
+        sl_main.setOnRefreshListener(this)
+//        sl_main.setOnRefreshListener {
+//            val currDate = LocalDate()
+//
+//            tempMsApi1?.let {
+//                fetchPrayerApi(it.latitude, it.longitude, "8", currDate.monthOfYear.toString(),currDate.year.toString())
+//            }
+//
+//            sl_main.isRefreshing = false
+//        }
     }
 
     private fun cbClickListener() {
@@ -363,8 +367,18 @@ class FragmentMain : Fragment() {
             6 -> widgetDrawable = getDrawable(context?.applicationContext!!,R.drawable.isha)
         }
 
-        if(widgetDrawable != null)
-            Glide.with(this).load(widgetDrawable).centerCrop().into(iv_prayer_widget)
+        if(widgetDrawable != null){
+            val factory = DrawableCrossFadeFactory.Builder().setCrossFadeEnabled(true).build()
+
+            Glide.with(this)
+                .load(widgetDrawable)
+                .centerCrop()
+                .diskCacheStrategy(DiskCacheStrategy.NONE)
+                .skipMemoryCache(true)
+                .transition(DrawableTransitionOptions.withCrossFade(factory))
+                .into(iv_prayer_widget)
+        }
+
     }
 
     private fun selectPrayer(timings: Timings): Int {
@@ -442,7 +456,7 @@ class FragmentMain : Fragment() {
                 withContext(Dispatchers.Main){
                     tv_widget_prayer_countdown.text = ""
                     delay(1000)
-                    fetchPrayerApi(tempMsApi1?.latitude!!,tempMsApi1?.longitude!!, "8", tempMsApi1!!.month, tempMsApi1!!.year)
+                    tempMsApi1?.let { fetchPrayerApi(it.latitude, it.longitude, "8", it.month, it.year) }
                 }
             }
 
@@ -468,6 +482,16 @@ class FragmentMain : Fragment() {
             mCityName = "-"
 
         PushListToNotification(context!!,selList,mCityName!!)
+    }
+
+    override fun onRefresh() {
+        val currDate = LocalDate()
+
+        tempMsApi1?.let {
+            fetchPrayerApi(it.latitude, it.longitude, "8", currDate.monthOfYear.toString(),currDate.year.toString())
+        }
+
+        sl_main.isRefreshing = false
     }
 
 
