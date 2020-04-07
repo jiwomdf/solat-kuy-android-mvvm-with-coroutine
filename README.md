@@ -14,7 +14,6 @@ created with:
 Feel free to see and contribute
 
 
-<br>
 # License
 MIT License
 
