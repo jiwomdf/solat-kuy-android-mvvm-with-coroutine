@@ -6,6 +6,7 @@ import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.os.Bundle
 import java.time.LocalTime
 import java.util.*
 
@@ -21,6 +22,8 @@ class MoreTimeBroadcastReceiver: BroadcastReceiver() {
         val originalPrayerTime = intent?.getStringExtra("moreTime_prayerTime")
         val originalPrayerCity = intent?.getStringExtra("moreTime_prayerCity")
         val originalPrayerName = intent?.getStringExtra("moreTime_prayerName")
+        val originalListPrayerBundle = intent?.extras?.getBundle("list_prayer_bundle")
+
 
         // new time
         val nowTime = LocalTime.now().toString()
@@ -47,18 +50,16 @@ class MoreTimeBroadcastReceiver: BroadcastReceiver() {
                 alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, c.timeInMillis,
                     PendingIntent.getBroadcast(context, 200, i, 0))
                 notificationManager.cancel(100)
-
             }
             200 -> {
                 i.putExtra("prayer_id", 100)
                 alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, c.timeInMillis,
                     PendingIntent.getBroadcast(context, 100, i, 0))
                 notificationManager.cancel(200)
-
             }
             else -> {
                 i.putExtra("prayer_id", 100)
-                reloadOriginalIntent(prayerID, originalPrayerName!!, originalPrayerTime!!, originalPrayerCity!!, context)
+                reloadOriginalIntent(prayerID, originalPrayerName!!, originalPrayerTime!!, originalPrayerCity!!, originalListPrayerBundle!!, context)
                 alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, c.timeInMillis,
                     PendingIntent.getBroadcast(context, 100, i, 0)) //first more time pID = 100
                 notificationManager.cancel(prayerID)
@@ -67,7 +68,8 @@ class MoreTimeBroadcastReceiver: BroadcastReceiver() {
 
     }
 
-    private fun reloadOriginalIntent(prayerID: Int, prayerName: String, prayerTime: String, prayerCity: String, context: Context? ){
+    private fun reloadOriginalIntent(prayerID: Int, prayerName: String, prayerTime: String, prayerCity: String, originalListPrayerBundle: Bundle,
+                                     context: Context? ){
 
         val iOriginal = Intent(context, PrayerBroadcastReceiver::class.java)
         val alarmManager = context?.getSystemService(Context.ALARM_SERVICE) as AlarmManager
@@ -79,6 +81,7 @@ class MoreTimeBroadcastReceiver: BroadcastReceiver() {
         iOriginal.putExtra("prayer_name", prayerName)
         iOriginal.putExtra("prayer_time", prayerTime)
         iOriginal.putExtra("prayer_city", prayerCity)
+        iOriginal.putExtra("list_prayer_bundle", originalListPrayerBundle)
 
         val c = Calendar.getInstance()
         c.set(Calendar.HOUR_OF_DAY, hour.toInt())
@@ -89,7 +92,7 @@ class MoreTimeBroadcastReceiver: BroadcastReceiver() {
             c.add(Calendar.DATE, 1)
 
         val pendingIntentReload = PendingIntent.getBroadcast(context, prayerID, iOriginal, 0)
-        alarmManager.setRepeating(AlarmManager.RTC_WAKEUP, c.timeInMillis, 86400000, pendingIntentReload)
+        alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, c.timeInMillis, pendingIntentReload)
     }
 
 }

@@ -10,6 +10,7 @@ import android.content.Intent
 import android.graphics.BitmapFactory
 import android.media.RingtoneManager
 import android.net.Uri
+import android.os.Bundle
 import android.os.VibrationEffect
 import android.os.Vibrator
 import androidx.core.app.NotificationCompat
@@ -48,9 +49,8 @@ class NotificationHelper(c: Context): ContextWrapper(c) {
         return mManager
     }
 
-    fun getPrayerReminderNC(pID: Int,  pTime: String, pCity: String, pName: String, intent: PendingIntent): NotificationCompat.Builder {
+    fun getPrayerReminderNC(pID: Int, pTime: String, pCity: String, pName: String, listPrayerBundle: Bundle, intent: PendingIntent): NotificationCompat.Builder {
 
-        //val pattern = longArrayOf(5000, 5000, 5000, 5000)
         val message = "now is $pTime in $pCity let's pray $pName"
 
         val moreTimeIntent = Intent(this, MoreTimeBroadcastReceiver::class.java)
@@ -58,6 +58,7 @@ class NotificationHelper(c: Context): ContextWrapper(c) {
         moreTimeIntent.putExtra("moreTime_prayerTime", pTime)
         moreTimeIntent.putExtra("moreTime_prayerCity", pCity)
         moreTimeIntent.putExtra("moreTime_prayerName", pName)
+        moreTimeIntent.putExtra("moreTime_listPrayerBundle", listPrayerBundle)
 
         val actionIntent = PendingIntent.getBroadcast(this, 0, moreTimeIntent,
             PendingIntent.FLAG_UPDATE_CURRENT)
@@ -71,7 +72,7 @@ class NotificationHelper(c: Context): ContextWrapper(c) {
             else -> R.drawable.fajr
         }
 
-        val bitmap = BitmapFactory.decodeResource(resources, lIcon);
+        val bitmap = BitmapFactory.decodeResource(resources, lIcon)
 
         val v = this.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
         CoroutineScope(Dispatchers.IO).launch{

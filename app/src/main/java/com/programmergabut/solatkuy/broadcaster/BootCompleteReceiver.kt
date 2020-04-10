@@ -5,7 +5,7 @@ import android.content.Context
 import android.content.Intent
 import com.programmergabut.solatkuy.data.model.entity.PrayerLocal
 import com.programmergabut.solatkuy.room.SolatKuyRoom
-import com.programmergabut.solatkuy.util.PushListToNotification
+import com.programmergabut.solatkuy.util.PushNotificationHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -31,7 +31,7 @@ class BootCompleteReceiver: BroadcastReceiver() {
                         newList.add(it)
                 }
 
-                PushListToNotification(context, newList,"-")
+                PushNotificationHelper(context, newList,"-")
             }
 
         }

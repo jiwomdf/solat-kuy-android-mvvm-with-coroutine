@@ -25,7 +25,9 @@ import com.programmergabut.solatkuy.data.model.prayerJson.Month
 import com.programmergabut.solatkuy.data.model.prayerJson.Timings
 import com.programmergabut.solatkuy.ui.fragmentmain.viewmodel.FragmentMainViewModel
 import com.programmergabut.solatkuy.util.EnumStatus
-import com.programmergabut.solatkuy.util.PushListToNotification
+import com.programmergabut.solatkuy.util.PushNotificationHelper
+import com.programmergabut.solatkuy.util.Resource
+import com.programmergabut.solatkuy.util.SelectPrayerHelper
 import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.fragment_main.*
 import kotlinx.android.synthetic.main.layout_prayer_time.*
@@ -145,7 +147,7 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                     )
 
                     /* save temp data */
-                    val currDate = java.time.LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MM/yyyy"))
+                    val currDate = java.time.LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MMM/yyyy"))
                     val arrDate = currDate.split("/")
 
                     val month = Month(arrDate[0], 0)
@@ -307,7 +309,7 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         if(apiData == null)
             return
 
-        val selPrayer = selectPrayer(apiData.timings)
+        val selPrayer = SelectPrayerHelper.selectNextPrayerToInt(apiData.timings)
 
         bindPrayerText(apiData)
         selectWidgetTitle(selPrayer)
@@ -334,7 +336,7 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         if(period == null)
             return
 
-        CoroutineScope(Dispatchers.IO).launch{
+        CoroutineScope(Dispatchers.Default).launch{
             coroutineTimer(period.hours, period.minutes, 60 - nowTime.secondOfMinute)
         }
 
@@ -343,7 +345,7 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     private fun selectWidgetTitle(selPrayer: Int) {
 
         when(selPrayer){
-            -1 -> tv_widget_prayer_name.text = "Next prayer is Dhuhr"
+            -1 -> tv_widget_prayer_name.text = getString(R.string.next_prayer_is_dhuhr)
             1 -> tv_widget_prayer_name.text = getString(R.string.fajr)
             2 -> tv_widget_prayer_name.text = getString(R.string.dhuhr)
             3 -> tv_widget_prayer_name.text = getString(R.string.asr)
@@ -380,40 +382,6 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     }
 
-    private fun selectPrayer(timings: Timings): Int {
-        var prayer: Int = -1
-
-        //prayer time
-        val sdfPrayer = SimpleDateFormat("HH:mm", Locale.getDefault())
-        val fajrTime = DateTime(sdfPrayer.parse(timings.fajr.split(" ")[0].trim()))
-        val dhuhrTime =  DateTime(sdfPrayer.parse(timings.dhuhr.split(" ")[0].trim()))
-        val asrTime =  DateTime(sdfPrayer.parse(timings.asr.split(" ")[0].trim()))
-        val maghribTime =  DateTime(sdfPrayer.parse(timings.maghrib.split(" ")[0].trim()))
-        val ishaTime =  DateTime(sdfPrayer.parse(timings.isha.split(" ")[0].trim()))
-
-        //sunrise & next fajr time
-        val sunriseTime =  DateTime(sdfPrayer.parse(timings.sunrise.split(" ")[0].trim()))
-        val nextfajrTime = DateTime(sdfPrayer.parse(timings.fajr.split(" ")[0].trim())).plusDays(1)
-        val zerozeroTime = DateTime(sdfPrayer.parse("00:00"))
-
-        val nowTime = DateTime(sdfPrayer.parse(LocalTime.now().toString()))
-
-        if(nowTime.isAfter(zerozeroTime) && nowTime.isBefore(fajrTime)) //--> isha time
-            prayer = 6
-
-        if(fajrTime.isBefore(nowTime) && nowTime.isBefore(sunriseTime)) //--> fajr time
-            prayer = 1
-        else if(dhuhrTime.isBefore(nowTime) && nowTime.isBefore(asrTime)) //--> dhuhr time
-            prayer = 2
-        else if(asrTime.isBefore(nowTime) && nowTime.isBefore(maghribTime)) //--> asr time
-            prayer = 3
-        else if(maghribTime.isBefore(nowTime) && nowTime.isBefore(ishaTime)) //--> maghrib time
-            prayer = 4
-        else if(ishaTime.isBefore(nowTime) && nowTime.isBefore(nextfajrTime)) //--> isha time
-            prayer = 5
-
-        return prayer
-    }
 
 
     /* Coroutine Timer */
@@ -483,13 +451,14 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         if(mCityName == null)
             mCityName = "-"
 
-        PushListToNotification(context!!,selList,mCityName!!)
+        PushNotificationHelper(context!!, selList, mCityName!!)
     }
 
     override fun onRefresh() {
         val currDate = LocalDate()
 
         tempMsApi1?.let {
+            fragmentMainViewModel.prayerApi.postValue(Resource.loading(null))
             fetchPrayerApi(it.latitude, it.longitude, "8", currDate.monthOfYear.toString(),currDate.year.toString())
         }
 
