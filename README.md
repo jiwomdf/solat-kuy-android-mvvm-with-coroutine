@@ -2,6 +2,8 @@
 
 Solat Kuy is an open source reminder prayer time application, created to remind us to pray 🌙
 
+link : https://play.google.com/store/apps/details?id=com.programmergabut.solatkuy
+
 created with: 
 - MVVM pattern 
 - Live Data 
