@@ -20,18 +20,12 @@ class BootCompleteReceiver: BroadcastReceiver() {
 
         if(intent?.action == Intent.ACTION_BOOT_COMPLETED) {
 
-            CoroutineScope(Dispatchers.Default).launch {
+            CoroutineScope(Dispatchers.IO).launch {
 
                 val db = SolatKuyRoom.getDataBase(context!!)
                 val data = db.notifiedPrayerDao().getNotifiedPrayerSync() as MutableList
 
-                val newList = mutableListOf<PrayerLocal>()
-                data.forEach {
-                    if(it.prayerName != "sunrise")
-                        newList.add(it)
-                }
-
-                PushNotificationHelper(context, newList,"-")
+                PushNotificationHelper(context, data,"-")
             }
 
         }

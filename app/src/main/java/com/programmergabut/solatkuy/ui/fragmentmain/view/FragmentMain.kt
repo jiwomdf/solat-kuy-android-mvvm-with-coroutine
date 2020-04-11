@@ -1,5 +1,6 @@
 package com.programmergabut.solatkuy.ui.fragmentmain.view
 
+import android.app.Dialog
 import android.graphics.drawable.Drawable
 import android.location.Address
 import android.location.Geocoder
@@ -16,6 +17,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.transition.DrawableCrossFadeFactory
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.data.model.entity.MsApi1
 import com.programmergabut.solatkuy.data.model.entity.PrayerLocal
@@ -23,13 +25,16 @@ import com.programmergabut.solatkuy.data.model.prayerJson.Data
 import com.programmergabut.solatkuy.data.model.prayerJson.Gregorian
 import com.programmergabut.solatkuy.data.model.prayerJson.Month
 import com.programmergabut.solatkuy.data.model.prayerJson.Timings
+import com.programmergabut.solatkuy.room.SolatKuyRoom
 import com.programmergabut.solatkuy.ui.fragmentmain.viewmodel.FragmentMainViewModel
 import com.programmergabut.solatkuy.util.EnumStatus
 import com.programmergabut.solatkuy.util.PushNotificationHelper
 import com.programmergabut.solatkuy.util.Resource
 import com.programmergabut.solatkuy.util.SelectPrayerHelper
 import es.dmoral.toasty.Toasty
+import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.fragment_main.*
+import kotlinx.android.synthetic.main.layout_bottomsheet_bygps.view.*
 import kotlinx.android.synthetic.main.layout_prayer_time.*
 import kotlinx.android.synthetic.main.layout_widget.*
 import kotlinx.coroutines.*
@@ -60,6 +65,7 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
         fragmentMainViewModel = ViewModelProviders.of(this).get(FragmentMainViewModel::class.java)
 
+
         subscribeObserversAPI()
         subscribeObserversDB()
     }
@@ -86,7 +92,7 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
         val currDate = LocalDate()
 
-        fragmentMainViewModel.listPrayerLocal.observe(this, androidx.lifecycle.Observer { it ->
+        fragmentMainViewModel.listPrayerLocal.observe(this, androidx.lifecycle.Observer {
 
             /* save temp data */
             tempListPrayerLocal = it
@@ -198,6 +204,7 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                 getString(R.string.asr) -> modelPrayer = PrayerLocal(3 ,p.prayerName, p.isNotified, tempApiData?.timings?.asr!!)
                 getString(R.string.maghrib) -> modelPrayer = PrayerLocal(4 ,p.prayerName, p.isNotified, tempApiData?.timings?.maghrib!!)
                 getString(R.string.isha) -> modelPrayer = PrayerLocal(5, p.prayerName, p.isNotified, tempApiData?.timings?.isha!!)
+                getString(R.string.sunrise) -> modelPrayer = PrayerLocal(6, p.prayerName, p.isNotified, tempApiData?.timings?.sunrise!!)
             }
 
             list.add(modelPrayer!!)

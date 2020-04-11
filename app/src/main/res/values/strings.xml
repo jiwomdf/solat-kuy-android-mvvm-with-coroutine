@@ -6,6 +6,8 @@
     <string name="asr">Asr</string>
     <string name="maghrib">Maghrib</string>
     <string name="isha">Isha</string>
+    <string name="sunrise">Sunrise</string>
+
     <string name="notified">Notified</string>
     <string name="prayer_name">Prayer Name</string>
     <string name="time">Time</string>
@@ -35,4 +37,5 @@
     <string name="api">Api: </string>
     <string name="qibla_w">Qibla = W</string>
     <string name="next_prayer_is_dhuhr">Next prayer is Dhuhr</string>
+    <string name="welcome_dialog">Welcome to Solat Kuy! \n Solat Kuy is a reminder prayer time application \n\n in order to start this app \nplease select your location</string>
 </resources>

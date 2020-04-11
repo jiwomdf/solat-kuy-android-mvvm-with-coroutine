@@ -31,7 +31,7 @@ class FragmentMainViewModel(application: Application): AndroidViewModel(applicat
         repository = Repository(application,viewModelScope)
 
         listPrayerLocal = repository!!.mListPrayerLocal
-        msApi1Local = repository!!.mMsApi1Local
+        msApi1Local = repository!!.mMsApi1
 
         prayerApi.postValue(Resource.loading(null))
     }

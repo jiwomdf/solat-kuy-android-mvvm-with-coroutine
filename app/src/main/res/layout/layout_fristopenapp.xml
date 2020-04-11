@@ -1,0 +1,65 @@
+<?xml version="1.0" encoding="utf-8"?>
+<androidx.constraintlayout.widget.ConstraintLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:paddingTop="@dimen/medium_margin"
+    android:paddingLeft="@dimen/larger_margin"
+    android:paddingRight="@dimen/larger_margin"
+    android:paddingBottom="@dimen/medium_margin">
+
+
+    <ImageView
+        android:id="@+id/iv_location_logo"
+        android:layout_width="@dimen/list_width_size"
+        android:layout_height="@dimen/list_width_size"
+        android:layout_marginTop="24dp"
+        android:src="@mipmap/ic_launcher"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toTopOf="parent" />
+
+
+    <TextView
+        android:id="@+id/textView2"
+        android:layout_width="match_parent"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="8dp"
+        android:text="@string/welcome_dialog"
+        android:gravity="center"
+        android:textSize="@dimen/small_text_size"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/iv_location_logo" />
+
+    <LinearLayout
+        android:id="@+id/rg_lcation_setting"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_marginTop="24dp"
+        android:layout_marginBottom="24dp"
+        android:orientation="vertical"
+        app:layout_constraintBottom_toBottomOf="parent"
+        app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintStart_toStartOf="parent"
+        app:layout_constraintTop_toBottomOf="@+id/textView2">
+
+        <Button
+            android:id="@+id/btn_byLatitudeLongitude"
+            android:layout_width="wrap_content"
+            android:layout_height="match_parent"
+            android:text="@string/by_latitude_amp_longtitude"
+            android:textSize="@dimen/small_text_size" />
+
+        <Button
+            android:id="@+id/btn_byGps"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:text="@string/by_gps"
+            android:textSize="@dimen/small_text_size" />
+
+    </LinearLayout>
+
+
+</androidx.constraintlayout.widget.ConstraintLayout>

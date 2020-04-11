@@ -6,9 +6,12 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import androidx.sqlite.db.SupportSQLiteDatabase
 import com.programmergabut.solatkuy.data.local.MsApi1Dao
+import com.programmergabut.solatkuy.data.local.MsSettingDao
 import com.programmergabut.solatkuy.data.local.NotifiedPrayerDao
 import com.programmergabut.solatkuy.data.model.entity.MsApi1
+import com.programmergabut.solatkuy.data.model.entity.MsSetting
 import com.programmergabut.solatkuy.data.model.entity.PrayerLocal
+import com.programmergabut.solatkuy.util.EnumPrayerName
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -16,11 +19,12 @@ import kotlinx.coroutines.launch
  * Created by Katili Jiwo Adi Wiyono on 25/03/20.
  */
 
-@Database(version = 4, entities = [PrayerLocal::class, MsApi1::class])
+@Database(version = 5, entities = [PrayerLocal::class, MsApi1::class, MsSetting::class])
 abstract class SolatKuyRoom: RoomDatabase() {
 
     abstract fun notifiedPrayerDao(): NotifiedPrayerDao
     abstract fun msApi1Dao(): MsApi1Dao
+    abstract fun msSettingDao(): MsSettingDao
 
     companion object{
         @Volatile
@@ -81,15 +85,26 @@ abstract class SolatKuyRoom: RoomDatabase() {
 
                 INSTANCE.let {
                     scope.launch {
-                        populateNotifiedPrayer(it?.notifiedPrayerDao()!!)
-                        populateMsApi1(it.msApi1Dao())
+                        it?.let {
+                            populateMsSetting(it.msSettingDao())
+                            populateNotifiedPrayer(it.notifiedPrayerDao())
+                            populateMsApi1(it.msApi1Dao())
+                        }
                     }
                 }
-
             }
 
             override fun onOpen(db: SupportSQLiteDatabase) {
                 super.onOpen(db)
+
+            }
+
+            suspend fun populateMsSetting(msSettingDao: MsSettingDao){
+                msSettingDao.deleteAll()
+
+                msSettingDao.insertMsSetting(
+                    MsSetting(1, false)
+                )
             }
 
             suspend fun populateMsApi1(msApi1Dao: MsApi1Dao) {
@@ -98,8 +113,8 @@ abstract class SolatKuyRoom: RoomDatabase() {
                 msApi1Dao.insertMsApi1(
                     MsApi1(
                         1,
-                        "-7.5755",
-                        "110.8243",
+                        "0",
+                        "0",
                         "8",
                         "3",
                         "2020"
@@ -112,42 +127,42 @@ abstract class SolatKuyRoom: RoomDatabase() {
 
                 notifiedPrayerDao.insertNotifiedPrayer(
                     PrayerLocal(
-                        "Fajr",
+                        EnumPrayerName.fajr,
                         true,
                         "00:00"
                     )
                 )
                 notifiedPrayerDao.insertNotifiedPrayer(
                     PrayerLocal(
-                        "Dhuhr",
+                        EnumPrayerName.dhuhr,
                         true,
                         "00:00"
                     )
                 )
                 notifiedPrayerDao.insertNotifiedPrayer(
                     PrayerLocal(
-                        "Asr",
+                        EnumPrayerName.asr,
                         true,
                         "00:00"
                     )
                 )
                 notifiedPrayerDao.insertNotifiedPrayer(
                     PrayerLocal(
-                        "Maghrib",
+                        EnumPrayerName.maghrib,
                         true,
                         "00:00"
                     )
                 )
                 notifiedPrayerDao.insertNotifiedPrayer(
                     PrayerLocal(
-                        "Isha",
+                        EnumPrayerName.isha,
                         true,
                         "00:00"
                     )
                 )
                 notifiedPrayerDao.insertNotifiedPrayer(
                     PrayerLocal(
-                        "sunrise",
+                        EnumPrayerName.sunrise,
                         true,
                         "00:00"
                     )
