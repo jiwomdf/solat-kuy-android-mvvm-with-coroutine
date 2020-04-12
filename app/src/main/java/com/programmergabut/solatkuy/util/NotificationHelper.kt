@@ -78,7 +78,7 @@ class NotificationHelper(c: Context): ContextWrapper(c) {
         CoroutineScope(Dispatchers.IO).launch{
             for(i in 1 .. 4){
                 v.vibrate(VibrationEffect.createOneShot(800, VibrationEffect.DEFAULT_AMPLITUDE))
-                delay(1000)
+                delay(1200)
             }
         }
 
