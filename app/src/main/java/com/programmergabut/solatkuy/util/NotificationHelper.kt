@@ -77,7 +77,7 @@ class NotificationHelper(c: Context): ContextWrapper(c) {
         val v = this.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
         CoroutineScope(Dispatchers.IO).launch{
             for(i in 1 .. 4){
-                v.vibrate(VibrationEffect.createOneShot(500, VibrationEffect.DEFAULT_AMPLITUDE))
+                v.vibrate(VibrationEffect.createOneShot(800, VibrationEffect.DEFAULT_AMPLITUDE))
                 delay(1000)
             }
         }

@@ -11,7 +11,7 @@ import com.programmergabut.solatkuy.data.local.NotifiedPrayerDao
 import com.programmergabut.solatkuy.data.model.entity.MsApi1
 import com.programmergabut.solatkuy.data.model.entity.MsSetting
 import com.programmergabut.solatkuy.data.model.entity.PrayerLocal
-import com.programmergabut.solatkuy.util.EnumPrayerName
+import com.programmergabut.solatkuy.util.EnumPrayer
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -127,42 +127,42 @@ abstract class SolatKuyRoom: RoomDatabase() {
 
                 notifiedPrayerDao.insertNotifiedPrayer(
                     PrayerLocal(
-                        EnumPrayerName.fajr,
+                        EnumPrayer.fajr,
                         true,
                         "00:00"
                     )
                 )
                 notifiedPrayerDao.insertNotifiedPrayer(
                     PrayerLocal(
-                        EnumPrayerName.dhuhr,
+                        EnumPrayer.dhuhr,
                         true,
                         "00:00"
                     )
                 )
                 notifiedPrayerDao.insertNotifiedPrayer(
                     PrayerLocal(
-                        EnumPrayerName.asr,
+                        EnumPrayer.asr,
                         true,
                         "00:00"
                     )
                 )
                 notifiedPrayerDao.insertNotifiedPrayer(
                     PrayerLocal(
-                        EnumPrayerName.maghrib,
+                        EnumPrayer.maghrib,
                         true,
                         "00:00"
                     )
                 )
                 notifiedPrayerDao.insertNotifiedPrayer(
                     PrayerLocal(
-                        EnumPrayerName.isha,
+                        EnumPrayer.isha,
                         true,
                         "00:00"
                     )
                 )
                 notifiedPrayerDao.insertNotifiedPrayer(
                     PrayerLocal(
-                        EnumPrayerName.sunrise,
+                        EnumPrayer.sunrise,
                         true,
                         "00:00"
                     )

@@ -27,7 +27,6 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.data.model.entity.MsApi1
 import com.programmergabut.solatkuy.data.model.entity.MsSetting
-import com.programmergabut.solatkuy.room.SolatKuyRoom
 import com.programmergabut.solatkuy.ui.main.adapter.SwipeAdapter
 import com.programmergabut.solatkuy.ui.main.viewmodel.MainActivityViewModel
 import es.dmoral.toasty.Toasty
@@ -35,9 +34,6 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.layout_bottom_navigation_bar.*
 import kotlinx.android.synthetic.main.layout_bottomsheet_bygps.view.*
 import kotlinx.android.synthetic.main.layout_bottomsheet_bylatitudelongitude.view.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import org.joda.time.LocalDate
 import kotlin.math.abs
 
@@ -47,12 +43,10 @@ import kotlin.math.abs
 
 class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener {
 
-    lateinit var subDialogView: View
-    lateinit var subDialog: Dialog
+    lateinit var mSubDialogView: View
+    lateinit var mSubDialog: Dialog
     private lateinit var mainActivityViewModel: MainActivityViewModel
-    private lateinit var mFusedLocationClient: FusedLocationProviderClient
     private val ALL_PERMISSIONS = 101
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -65,8 +59,8 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         checkFirstOpenApp()
     }
 
+    /* First load activity */
     private fun checkFirstOpenApp() {
-
 
         mainActivityViewModel.msSetting.observe(this, Observer {
 
@@ -110,24 +104,25 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         })
     }
 
+    /* Function listener */
     private fun btnSetLatitudeLongitude(dialog: Dialog){
 
         val btnByLatitudeLongitude = dialog.findViewById<Button>(R.id.btn_byLatitudeLongitude)
         val btnByGps = dialog.findViewById<Button>(R.id.btn_byGps)
 
-        subDialog = BottomSheetDialog(this)
+        mSubDialog = BottomSheetDialog(this)
 
         btnByLatitudeLongitude.setOnClickListener {
 
-            subDialogView = layoutInflater.inflate(R.layout.layout_bottomsheet_bylatitudelongitude,null)
-            subDialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            subDialog.setContentView(subDialogView)
-            subDialog.show()
+            mSubDialogView = layoutInflater.inflate(R.layout.layout_bottomsheet_bylatitudelongitude,null)
+            mSubDialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            mSubDialog.setContentView(mSubDialogView)
+            mSubDialog.show()
 
-            subDialogView.btn_proceedByLL.setOnClickListener byLl@{
+            mSubDialogView.btn_proceedByLL.setOnClickListener byLl@{
 
-                val latitude = subDialogView.et_llDialog_latitude.text.toString().trim()
-                val longitude = subDialogView.et_llDialog_longitude.text.toString().trim()
+                val latitude = mSubDialogView.et_llDialog_latitude.text.toString().trim()
+                val longitude = mSubDialogView.et_llDialog_longitude.text.toString().trim()
 
                 if(latitude.isEmpty() || longitude.isEmpty() || latitude == "." || longitude == "."){
                     Toasty.warning(this@MainActivity,"latitude and longitude cannot be empty", Toast.LENGTH_SHORT).show()
@@ -153,17 +148,17 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         }
 
         btnByGps.setOnClickListener{
-            subDialogView = layoutInflater.inflate(R.layout.layout_bottomsheet_bygps,null)
-            subDialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
-            subDialog.setContentView(subDialogView)
-            subDialog.show()
+            mSubDialogView = layoutInflater.inflate(R.layout.layout_bottomsheet_bygps,null)
+            mSubDialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            mSubDialog.setContentView(mSubDialogView)
+            mSubDialog.show()
 
-            getGPSLocation(subDialogView)
+            getGPSLocation(mSubDialogView)
 
-            subDialogView.btn_proceedByGps.setOnClickListener byGps@{
+            mSubDialogView.btn_proceedByGps.setOnClickListener byGps@{
 
-                val latitude = subDialogView.tv_gpsDialog_latitude.text.toString().trim()
-                val longitude = subDialogView.tv_gpsDialog_longitude.text.toString().trim()
+                val latitude = mSubDialogView.tv_gpsDialog_latitude.text.toString().trim()
+                val longitude = mSubDialogView.tv_gpsDialog_longitude.text.toString().trim()
 
                 if(latitude.isEmpty() || longitude.isEmpty()){
                     Toasty.warning(this@MainActivity,"Action failed, please enable your location", Toast.LENGTH_SHORT).show()
@@ -178,7 +173,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
     }
 
     private fun successIsFirstOpen(dialog: Dialog) {
-        subDialog.dismiss()
+        mSubDialog.dismiss()
         dialog.dismiss()
 
         mainActivityViewModel.updateSetting(MsSetting(1,true))
@@ -204,6 +199,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         mainActivityViewModel.updateMsApi1(data)
     }
 
+    /* Permission */
     private fun showPermissionDialog(){
         AlertDialog.Builder(this)
             .setTitle("Location Needed")
@@ -216,7 +212,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
                 )
             }
             .setNegativeButton("cancel") { _: DialogInterface, _: Int ->
-                subDialog.dismiss()
+                mSubDialog.dismiss()
             }
             .create()
             .show()
@@ -231,7 +227,6 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
             || ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 
-            mFusedLocationClient = LocationServices.getFusedLocationProviderClient(this)
 
             //onSuccessListener()
             onFailedListener()
@@ -264,9 +259,9 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         } catch (ex: java.lang.Exception) { }
 
         if (!gpsEnabled && !networkEnabled)
-            subDialogView.tv_warning.text = "Please enable your location"
+            mSubDialogView.tv_warning.text = "Please enable your location"
         else
-            subDialogView.tv_warning.text = getString(R.string.loading)
+            mSubDialogView.tv_warning.text = getString(R.string.loading)
     }
 
     private fun onUpdateLocationListener(){
@@ -289,19 +284,20 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
                     if(it == null)
                         return
 
-                    subDialogView.iv_warning.visibility = View.GONE
-                    subDialogView.tv_warning.visibility = View.GONE
-                    subDialogView.findViewById<TextView>(R.id.tv_view_latitude).visibility = View.VISIBLE
-                    subDialogView.findViewById<TextView>(R.id.tv_view_longitude).visibility = View.VISIBLE
+                    mSubDialogView.iv_warning.visibility = View.GONE
+                    mSubDialogView.tv_warning.visibility = View.GONE
+                    mSubDialogView.findViewById<TextView>(R.id.tv_view_latitude).visibility = View.VISIBLE
+                    mSubDialogView.findViewById<TextView>(R.id.tv_view_longitude).visibility = View.VISIBLE
 
-                    subDialogView.tv_gpsDialog_latitude.text = it.latitude.toString()
-                    subDialogView.tv_gpsDialog_longitude.text= it.longitude.toString()
+                    mSubDialogView.tv_gpsDialog_latitude.text = it.latitude.toString()
+                    mSubDialogView.tv_gpsDialog_longitude.text= it.longitude.toString()
 
                 }
             }, Looper.myLooper())
 
     }
 
+    /* View pager */
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when(item.itemId) {
             R.id.i_prayer_time -> vp2_main.currentItem = 0
@@ -311,7 +307,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         return true
     }
 
-
+    /* Animation */
     private inner class ZoomOutPageTransformer : ViewPager.PageTransformer {
 
         private val MIN_SCALE = 0.85f

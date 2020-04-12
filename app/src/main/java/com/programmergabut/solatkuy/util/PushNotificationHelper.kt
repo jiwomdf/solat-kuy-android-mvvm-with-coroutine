@@ -30,7 +30,7 @@ class PushNotificationHelper(context: Context, selList: MutableList<PrayerLocal>
         selList.sortBy { x -> x.prayerID }
 
         val selPrayer = SelectPrayerHelper.selectNextPrayerToLocalPrayer(selList)
-        //selPrayer = PrayerLocal(3,"mantap 3",true,"22:12") #testing purpose
+        //selPrayer = PrayerLocal(3,"mantap 3", true, "14:54") #testing purpose
 
         selPrayer?.let{
 
@@ -48,7 +48,7 @@ class PushNotificationHelper(context: Context, selList: MutableList<PrayerLocal>
             intent.putExtra("prayer_city", mCityName)
             intent.putExtra("list_prayer_bundle", listPrayerBundle)
 
-            val pendingIntent = PendingIntent.getBroadcast(context, 400, intent, 0)
+            val pendingIntent = PendingIntent.getBroadcast(context, EnumPrayer.nIdMain, intent, 0)
 
             if(c.before(Calendar.getInstance()))
                 c.add(Calendar.DATE, 1)

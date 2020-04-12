@@ -1,13 +1,8 @@
 package com.programmergabut.solatkuy.util
 
-import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.data.model.entity.PrayerLocal
 import com.programmergabut.solatkuy.data.model.prayerJson.Timings
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import org.joda.time.DateTime
-import org.joda.time.Period
 import java.text.SimpleDateFormat
 import java.time.LocalTime
 import java.util.*
@@ -92,12 +87,12 @@ class SelectPrayerHelper {
                 prayer = 1 //fajr
 
             return when(prayer){
-                6 -> PrayerLocal(5, EnumPrayerName.isha, true, strIshaTime)
-                1 -> PrayerLocal(1, EnumPrayerName.fajr, true, strFajrTime)
-                2 -> PrayerLocal(2, EnumPrayerName.dhuhr, true, strDhuhrTime)
-                3 -> PrayerLocal(3, EnumPrayerName.asr, true, strAsrTime)
-                4 -> PrayerLocal(4, EnumPrayerName.maghrib, true, strMaghribTime)
-                5 -> PrayerLocal(5, EnumPrayerName.isha, true, strIshaTime)
+                6 -> PrayerLocal(5, EnumPrayer.isha, true, strIshaTime)
+                1 -> PrayerLocal(1, EnumPrayer.fajr, true, strFajrTime)
+                2 -> PrayerLocal(2, EnumPrayer.dhuhr, true, strDhuhrTime)
+                3 -> PrayerLocal(3, EnumPrayer.asr, true, strAsrTime)
+                4 -> PrayerLocal(4, EnumPrayer.maghrib, true, strMaghribTime)
+                5 -> PrayerLocal(5, EnumPrayer.isha, true, strIshaTime)
                 else -> null
             }
         }

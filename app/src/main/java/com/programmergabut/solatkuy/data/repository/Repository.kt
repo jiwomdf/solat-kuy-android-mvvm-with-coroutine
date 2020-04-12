@@ -12,7 +12,7 @@ import com.programmergabut.solatkuy.data.model.entity.MsSetting
 import com.programmergabut.solatkuy.data.model.entity.PrayerLocal
 import com.programmergabut.solatkuy.data.model.prayerJson.PrayerApi
 import com.programmergabut.solatkuy.room.SolatKuyRoom
-import com.programmergabut.solatkuy.util.EnumPrayerName
+import com.programmergabut.solatkuy.util.EnumPrayer
 import kotlinx.coroutines.CoroutineScope
 import retrofit2.Retrofit.Builder
 import retrofit2.converter.gson.GsonConverterFactory
@@ -94,12 +94,12 @@ class Repository(application: Application, scope: CoroutineScope) {
 
         val map = mutableMapOf<String,String>()
 
-        map[EnumPrayerName.fajr] = timings?.fajr.toString()
-        map[EnumPrayerName.dhuhr] = timings?.dhuhr.toString()
-        map[EnumPrayerName.asr] = timings?.asr.toString()
-        map[EnumPrayerName.maghrib] = timings?.maghrib.toString()
-        map[EnumPrayerName.isha] = timings?.isha.toString()
-        map[EnumPrayerName.sunrise] = timings?.sunrise.toString()
+        map[EnumPrayer.fajr] = timings?.fajr.toString()
+        map[EnumPrayer.dhuhr] = timings?.dhuhr.toString()
+        map[EnumPrayer.asr] = timings?.asr.toString()
+        map[EnumPrayer.maghrib] = timings?.maghrib.toString()
+        map[EnumPrayer.isha] = timings?.isha.toString()
+        map[EnumPrayer.sunrise] = timings?.sunrise.toString()
 
         map.forEach { p ->
             updatePrayerTime(p.key,p.value)
