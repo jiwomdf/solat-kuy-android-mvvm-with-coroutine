@@ -71,7 +71,7 @@ class Repository(application: Application, scope: CoroutineScope) {
     //Retrofit
     private fun retrofit(): CalendarApiService{
         return Builder()
-            .baseUrl("http://api.aladhan.com/v1/")
+            .baseUrl("https://api.aladhan.com/v1/")
             .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
             .build()
             .create(CalendarApiService::class.java)
