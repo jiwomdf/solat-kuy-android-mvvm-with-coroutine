@@ -95,6 +95,7 @@ class SelectPrayerHelper {
                 5 -> PrayerLocal(5, EnumPrayer.isha, true, strIshaTime)
                 else -> null
             }
+
         }
     }
 

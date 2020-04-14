@@ -77,8 +77,14 @@ class PrayerBroadcastReceiver: BroadcastReceiver() {
         val intent = Intent(context, PrayerBroadcastReceiver::class.java)
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
-        val selID = selNextPrayer(listData, pID!!)
-        //selID = PrayerLocal(4,"mantap 4",true,"14:10") #testing purpose
+        val newList = mutableListOf<PrayerLocal>()
+        listData.forEach {
+            if(it.prayerName != EnumPrayer.sunrise)
+                newList.add(it)
+        }
+
+        val selID = selNextPrayer(newList, pID!!)
+        //selID = PrayerLocal(4,"mantap 4",true,"15:58") //#testing purpose
 
         selID?.let{
 
