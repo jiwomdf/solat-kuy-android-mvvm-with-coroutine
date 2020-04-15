@@ -9,6 +9,7 @@ created with:
 - Live Data 
 - Coroutine
 - Retrofit 
+- Dagger 2
 - Material Design 
 
 Feel free to see and contribute
