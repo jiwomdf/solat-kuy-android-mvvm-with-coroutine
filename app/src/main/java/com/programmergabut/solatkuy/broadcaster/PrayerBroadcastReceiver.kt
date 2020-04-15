@@ -10,6 +10,7 @@ import com.programmergabut.solatkuy.data.model.entity.PrayerLocal
 import com.programmergabut.solatkuy.ui.main.view.MainActivity
 import com.programmergabut.solatkuy.util.EnumPrayer
 import com.programmergabut.solatkuy.util.NotificationHelper
+import com.programmergabut.solatkuy.util.SelectPrayerHelper
 import java.lang.Exception
 import java.util.*
 
@@ -77,13 +78,10 @@ class PrayerBroadcastReceiver: BroadcastReceiver() {
         val intent = Intent(context, PrayerBroadcastReceiver::class.java)
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
-        val newList = mutableListOf<PrayerLocal>()
-        listData.forEach {
-            if(it.prayerName != EnumPrayer.sunrise)
-                newList.add(it)
-        }
+        /* remove sunrise */
+        val newList = listData.filter { x -> x.prayerName !=  EnumPrayer.sunrise} as MutableList<PrayerLocal>
 
-        val selID = selNextPrayer(newList, pID!!)
+        val selID = SelectPrayerHelper.selNextPrayerByLastID(newList, pID!!)
         //selID = PrayerLocal(4,"mantap 4",true,"15:58") //#testing purpose
 
         selID?.let{
@@ -135,21 +133,6 @@ class PrayerBroadcastReceiver: BroadcastReceiver() {
         }
 
         return listData
-    }
-
-    private fun selNextPrayer(listData: MutableList<PrayerLocal>, selID: Int): PrayerLocal? {
-
-        listData.sortBy { x -> x.prayerID }
-
-        val firstID = listData[0].prayerID
-        val lastID = listData[listData.count() - 1].prayerID
-
-        var nextID = selID + 1
-
-        if(nextID > lastID)
-            nextID = firstID
-
-        return listData.find { x -> x.prayerID == nextID }
     }
 
 }

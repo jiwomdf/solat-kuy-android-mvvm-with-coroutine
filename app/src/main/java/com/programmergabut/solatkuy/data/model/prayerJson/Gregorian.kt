@@ -2,10 +2,11 @@ package com.programmergabut.solatkuy.data.model.prayerJson
 
 
 import com.google.gson.annotations.SerializedName
+import javax.inject.Inject
 
-data class Gregorian(
+data class Gregorian @Inject constructor(
     @SerializedName("date")
-    val date: String,
+    val date: String?,
     @SerializedName("day")
     var day: String,
     @SerializedName("designation")

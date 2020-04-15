@@ -30,7 +30,7 @@ class PushNotificationHelper(context: Context, selList: MutableList<PrayerLocal>
         selList.sortBy { x -> x.prayerID }
 
         val selPrayer = SelectPrayerHelper.selectNextPrayerToLocalPrayer(selList)
-        //selPrayer = PrayerLocal(3,"mantap 3", true, "11:56") //#testing purpose
+        //selPrayer = PrayerLocal(3,"mantap 3", true, "14:37") //#testing purpose
 
         selPrayer?.let{
 

@@ -97,6 +97,21 @@ class SelectPrayerHelper {
             }
 
         }
+
+        fun selNextPrayerByLastID(listData: MutableList<PrayerLocal>, selID: Int): PrayerLocal? {
+
+            listData.sortBy { x -> x.prayerID }
+
+            val firstID = listData[0].prayerID
+            val lastID = listData[listData.count() - 1].prayerID
+
+            var nextID = selID + 1
+
+            if(nextID > lastID)
+                nextID = firstID
+
+            return listData.find { x -> x.prayerID == nextID }
+        }
     }
 
 }

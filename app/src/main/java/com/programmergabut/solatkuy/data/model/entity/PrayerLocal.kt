@@ -11,7 +11,7 @@ import androidx.room.PrimaryKey
 
 
 @Entity(tableName = "notified_prayer")
-class PrayerLocal(val prayerName: String,
+class PrayerLocal (val prayerName: String,
                   val isNotified: Boolean,
                   val prayerTime: String){
 

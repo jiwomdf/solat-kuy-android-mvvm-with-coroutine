@@ -10,8 +10,8 @@ android {
         applicationId "com.programmergabut.solatkuy"
         minSdkVersion 26
         targetSdkVersion 29
-        versionCode 4
-        versionName "4.0"
+        versionCode 5
+        versionName "4.1"
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
     }
@@ -80,5 +80,11 @@ dependencies {
 
     //GPS
     implementation 'com.google.android.gms:play-services-location:17.0.0'
+
+    //Dagger 2
+    api 'com.google.dagger:dagger:2.27'
+    annotationProcessor 'com.google.dagger:dagger-compiler:2.27'
+    kapt 'com.google.dagger:dagger-compiler:2.27'
+
 
 }
