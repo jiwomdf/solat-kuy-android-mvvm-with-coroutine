@@ -9,6 +9,7 @@ import com.programmergabut.solatkuy.util.PushNotificationHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.lang.Exception
 
 /*
  * Created by Katili Jiwo Adi Wiyono on 02/04/20.
@@ -22,14 +23,17 @@ class BootCompleteReceiver: BroadcastReceiver() {
 
             CoroutineScope(Dispatchers.IO).launch {
 
-                val db = SolatKuyRoom.getDataBase(context!!)
-                val data = db.notifiedPrayerDao().getNotifiedPrayerSync() as MutableList
+                if(context != null) {
+                    val db = SolatKuyRoom.getDataBase(context)
+                    val data = db.notifiedPrayerDao().getNotifiedPrayerSync() as MutableList
 
-                PushNotificationHelper(context, data,"-")
+                    PushNotificationHelper(context, data,"-")
+                }
+                else
+                    throw Exception("Context Null")
+
             }
-
         }
-
 
     }
 

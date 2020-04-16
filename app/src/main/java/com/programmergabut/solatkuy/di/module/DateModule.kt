@@ -9,10 +9,11 @@ import dagger.Module
 import dagger.Provides
 
 @Module
-class DateModule(private val gregorian: Gregorian) {
+class DateModule(private val day: String,  private val en: String, private val number: Int) {
 
     @Provides
-    fun gregorian(): Gregorian = gregorian
+    fun gregorian(): Gregorian = GregorianModule(day, en, number).provideGregorian()
+
     @Provides
     fun hijri(): Hijri? = null
     @Provides
@@ -23,7 +24,7 @@ class DateModule(private val gregorian: Gregorian) {
 
     @Provides
     fun provideDate(): Date {
-        return Date(gregorian, null, null, null)
+        return Date(gregorian(), hijri(), readable(), timestamp())
     }
 
 }

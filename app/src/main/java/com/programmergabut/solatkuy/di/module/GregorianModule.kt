@@ -9,7 +9,7 @@ import dagger.Module
 import dagger.Provides
 
 @Module
-class GregorianModule(private val day: String, private val month: Month) {
+class GregorianModule(private val day: String, private val en: String, private val number: Int) {
 
     @Provides
     fun date() = null
@@ -20,7 +20,7 @@ class GregorianModule(private val day: String, private val month: Month) {
     @Provides
     fun format() = null
     @Provides
-    fun month(): Month? = month
+    fun month(): Month? = MonthModule(en, number).provideMonth()
     @Provides
     fun weekday() = null
     @Provides
@@ -29,7 +29,7 @@ class GregorianModule(private val day: String, private val month: Month) {
 
     @Provides
     fun provideGregorian(): Gregorian {
-        return Gregorian(null, day, null, null, month, null, null)
+        return Gregorian(date(), day, designation(), format(), month(), weekday(), year())
     }
 
 }

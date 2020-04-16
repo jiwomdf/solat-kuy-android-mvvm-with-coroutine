@@ -82,12 +82,14 @@ class PrayerBroadcastReceiver: BroadcastReceiver() {
         val newList = listData.filter { x -> x.prayerName !=  EnumPrayer.sunrise} as MutableList<PrayerLocal>
 
         val selID = SelectPrayerHelper.selNextPrayerByLastID(newList, pID!!)
-        //selID = PrayerLocal(4,"mantap 4",true,"15:58") //#testing purpose
+        //selID = PrayerLocal(2,"mantap 2",true,"15:58") //#testing purpose
 
         selID?.let{
 
-            val hour = it.prayerTime.split(":")[0].trim()
-            val minute = it.prayerTime.split(":")[1].split(" ")[0].trim()
+            val arrPrayer = it.prayerTime.split(":")
+
+            val hour = arrPrayer[0].trim()
+            val minute = arrPrayer[1].split(" ")[0].trim()
 
             val c = Calendar.getInstance()
             c.set(Calendar.HOUR_OF_DAY, hour.toInt())

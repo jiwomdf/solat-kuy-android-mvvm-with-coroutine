@@ -48,7 +48,7 @@ import kotlin.math.abs
 class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener {
 
     lateinit var mSubDialogView: View
-    lateinit var mSubDialog: Dialog
+    private lateinit var mSubDialog: Dialog
     private lateinit var mainActivityViewModel: MainActivityViewModel
     private val ALL_PERMISSIONS = 101
 

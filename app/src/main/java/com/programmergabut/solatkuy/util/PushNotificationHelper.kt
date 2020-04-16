@@ -30,12 +30,14 @@ class PushNotificationHelper(context: Context, selList: MutableList<PrayerLocal>
         selList.sortBy { x -> x.prayerID }
 
         val selPrayer = SelectPrayerHelper.selectNextPrayerToLocalPrayer(selList)
-        //selPrayer = PrayerLocal(3,"mantap 3", true, "14:37") //#testing purpose
+        //selPrayer = PrayerLocal(1,"mantap 1", true, "23:13") //#testing purpose
 
         selPrayer?.let{
 
-            val hour = it.prayerTime.split(":")[0].trim()
-            val minute = it.prayerTime.split(":")[1].split(" ")[0].trim()
+            val arrPrayer = it.prayerTime.split(":")
+
+            val hour = arrPrayer[0].trim()
+            val minute = arrPrayer[1].split(" ")[0].trim()
 
             val c = Calendar.getInstance()
             c.set(Calendar.HOUR_OF_DAY, hour.toInt())

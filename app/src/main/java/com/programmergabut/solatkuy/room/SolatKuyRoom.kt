@@ -26,9 +26,11 @@ abstract class SolatKuyRoom: RoomDatabase() {
     abstract fun msApi1Dao(): MsApi1Dao
     abstract fun msSettingDao(): MsSettingDao
 
+
     companion object{
         @Volatile
         private var INSTANCE: SolatKuyRoom? = null
+        const val dbName = "solatkuydb"
 
         fun getDataBase(context: Context, scope: CoroutineScope): SolatKuyRoom{
             val tempInstance = INSTANCE
@@ -38,7 +40,7 @@ abstract class SolatKuyRoom: RoomDatabase() {
 
             synchronized(this) {
                 val instance = Room.databaseBuilder(context.applicationContext,
-                        SolatKuyRoom::class.java,"solatkuydb")
+                        SolatKuyRoom::class.java, dbName)
                     //.fallbackToDestructiveMigration()
                     /*.addMigrations(object :Migration(1,2){
                         override fun migrate(database: SupportSQLiteDatabase) {
@@ -70,7 +72,7 @@ abstract class SolatKuyRoom: RoomDatabase() {
 
             synchronized(this) {
                 val instance = Room.databaseBuilder(context.applicationContext,
-                    SolatKuyRoom::class.java,"solatkuydb")
+                    SolatKuyRoom::class.java, dbName)
                     .build()
 
                 INSTANCE = instance

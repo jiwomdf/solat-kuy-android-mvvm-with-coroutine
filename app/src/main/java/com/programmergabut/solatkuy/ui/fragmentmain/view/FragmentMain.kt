@@ -20,10 +20,9 @@ import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.data.model.entity.MsApi1
 import com.programmergabut.solatkuy.data.model.entity.PrayerLocal
 import com.programmergabut.solatkuy.data.model.prayerJson.*
-import com.programmergabut.solatkuy.di.component.DaggerIDateComponent
-import com.programmergabut.solatkuy.di.component.DaggerIGregorianComponent
-import com.programmergabut.solatkuy.di.module.DateModule
-import com.programmergabut.solatkuy.di.module.GregorianModule
+import com.programmergabut.solatkuy.di.component.DaggerIDataComponent
+import com.programmergabut.solatkuy.di.component.DaggerITimingsComponent
+import com.programmergabut.solatkuy.di.module.DataModule
 import com.programmergabut.solatkuy.ui.fragmentmain.viewmodel.FragmentMainViewModel
 import com.programmergabut.solatkuy.util.EnumStatus
 import com.programmergabut.solatkuy.util.PushNotificationHelper
@@ -53,7 +52,7 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     private lateinit var fragmentMainViewModel: FragmentMainViewModel
     private var tempApiData: Data? = null
     private var tempMsApi1: MsApi1? = null
-    private var tempListPrayerLocal: List<PrayerLocal>? = null
+    private var tempListPL: List<PrayerLocal>? = null
     private var mCityName: String? = null
 
 
@@ -91,7 +90,7 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         fragmentMainViewModel.listPrayerLocal.observe(this, androidx.lifecycle.Observer {
 
             /* save temp data */
-            tempListPrayerLocal = it
+            tempListPL = it
 
             bindCheckBox(it)
             createModelPrayer(it)?.let { data -> updateAlarmManager(data) }
@@ -125,7 +124,6 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                         /* save temp data */
                         tempApiData = createOnlineData(it, currentDate)
                         bindWidget(tempApiData)
-
                     }}
                 EnumStatus.LOADING -> Toasty.info(context!!, "fetching data..", Toast.LENGTH_SHORT).show()
                 EnumStatus.ERROR -> { Toasty.info(context!!,"offline mode", Toast.LENGTH_SHORT).show()
@@ -145,34 +143,27 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     private fun createOfflineData(): Data {
-        /* based from API data */
-        val localTimings = Timings(
-            fajr = tempListPrayerLocal!![0].prayerTime /* fajr */,
-            dhuhr = tempListPrayerLocal!![1].prayerTime /* dhuhr */,
-            asr = tempListPrayerLocal!![2].prayerTime /* asr*/,
-            maghrib = tempListPrayerLocal!![3].prayerTime /* mahgrib */,
-            isha = tempListPrayerLocal!![4].prayerTime /* isha */,
-            sunrise = tempListPrayerLocal!![5].prayerTime /* isha */,
-            imsak = "",
-            midnight = "",
-            sunset = ""
-        )
-
         /* Dagger Injection */
+        /* based from saved API data */
+        val localTimings = DaggerITimingsComponent.builder()
+            .fajr(tempListPL!![0].prayerTime /* fajr */)
+            .dhuhr(tempListPL!![1].prayerTime /* dhuhr */)
+            .asr(tempListPL!![2].prayerTime /* asr*/)
+            .maghrib(tempListPL!![3].prayerTime /* mahgrib */)
+            .isha(tempListPL!![4].prayerTime /* isha */)
+            .sunrise(tempListPL!![5].prayerTime /* isha */)
+            .imsak("")
+            .midnight("")
+            .sunset("")
+            .build()
+            .getTimings()
+
         val arrDate = java.time.LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MMM/yyyy")).split("/")
 
-        val gregorian = DaggerIGregorianComponent.builder()
-            .gregorianModule(GregorianModule(arrDate[1], Month(arrDate[0], 0)))
+        return DaggerIDataComponent.builder()
+            .dataModule(DataModule(localTimings, arrDate[1], arrDate[0],0))
             .build()
-            .getGregorian()
-
-        val date = DaggerIDateComponent.builder()
-            .dateModule(DateModule(gregorian))
-            .build()
-            .getDate()
-
-
-        return Data(date,null, localTimings)
+            .getData()
     }
 
 
