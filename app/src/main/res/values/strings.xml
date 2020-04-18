@@ -17,7 +17,7 @@
     <string name="compass">Compass</string>
     <string name="setting">Setting</string>
     <string name="changelocation">Change Location</string>
-    <string name="by_latitude_amp_longtitude"><![CDATA[By Latitude & Longtitude]]></string>
+    <string name="by_latitude_amp_longitude"><![CDATA[By Latitude & Longitude]]></string>
     <string name="by_gps">By GPS</string>
     <string name="by_city">By City</string>
     <string name="latitude">Latitude</string>

@@ -8,6 +8,10 @@ import com.programmergabut.solatkuy.data.model.prayerJson.Timings
 import dagger.Module
 import dagger.Provides
 
+/*
+ * Created by Katili Jiwo Adi Wiyono on 16/04/20.
+ */
+
 @Module
 class DataModule(private val timings: Timings,private val day: String,  private val en: String, private val number: Int) {
 

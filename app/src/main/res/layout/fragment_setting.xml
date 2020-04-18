@@ -148,7 +148,7 @@
                     android:id="@+id/btn_byLatitudeLongitude"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
-                    android:text="@string/by_latitude_amp_longtitude"
+                    android:text="@string/by_latitude_amp_longitude"
                     android:textSize="@dimen/small_text_size" />
 
                 <Button

@@ -3,8 +3,8 @@ package com.programmergabut.solatkuy.broadcaster
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import com.programmergabut.solatkuy.data.model.entity.PrayerLocal
-import com.programmergabut.solatkuy.room.SolatKuyRoom
+import com.programmergabut.solatkuy.data.room.SolatKuyRoom
+import com.programmergabut.solatkuy.service.ServiceBootComplete
 import com.programmergabut.solatkuy.util.PushNotificationHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -21,18 +21,21 @@ class BootCompleteReceiver: BroadcastReceiver() {
 
         if(intent?.action == Intent.ACTION_BOOT_COMPLETED) {
 
-            CoroutineScope(Dispatchers.IO).launch {
+            if(context != null) {
 
-                if(context != null) {
-                    val db = SolatKuyRoom.getDataBase(context)
-                    val data = db.notifiedPrayerDao().getNotifiedPrayerSync() as MutableList
+//                CoroutineScope(Dispatchers.IO).launch {
+//                    val db = SolatKuyRoom.getDataBase(context)
+//                    val data = db.notifiedPrayerDao().getNotifiedPrayerSync() as MutableList
+//
+//                    PushNotificationHelper(context, data,"-")
+//                }
 
-                    PushNotificationHelper(context, data,"-")
-                }
-                else
-                    throw Exception("Context Null")
-
+               val i = Intent(context, ServiceBootComplete::class.java)
+               context.startForegroundService(i)
             }
+            else
+                throw Exception("Context Null")
+
         }
 
     }

@@ -5,6 +5,10 @@ import dagger.BindsInstance
 import dagger.Component
 import javax.inject.Named
 
+/*
+ * Created by Katili Jiwo Adi Wiyono on 16/04/20.
+ */
+
 @Component
 interface ITimingsComponent {
 
