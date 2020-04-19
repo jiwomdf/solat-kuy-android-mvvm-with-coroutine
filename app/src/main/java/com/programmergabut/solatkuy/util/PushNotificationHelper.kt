@@ -5,6 +5,7 @@ import android.app.PendingIntent
 import android.content.Context
 import android.content.ContextWrapper
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import com.programmergabut.solatkuy.data.model.entity.PrayerLocal
 import com.programmergabut.solatkuy.broadcaster.PrayerBroadcastReceiver
@@ -30,7 +31,7 @@ class PushNotificationHelper(context: Context, selList: MutableList<PrayerLocal>
         selList.sortBy { x -> x.prayerID }
 
         val selPrayer = SelectPrayerHelper.selectNextPrayerToLocalPrayer(selList)
-        //selPrayer = PrayerLocal(1,"mantap 1", true, "16:16") //#testing purpose
+        //selPrayer = PrayerLocal(1,"mantap 1", true, "01:10") //#testing purpose
 
         selPrayer?.let{
 
@@ -56,7 +57,10 @@ class PushNotificationHelper(context: Context, selList: MutableList<PrayerLocal>
                 c.add(Calendar.DATE, 1)
 
             if(it.isNotified)
-                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, c.timeInMillis, pendingIntent)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+                    alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, c.timeInMillis, pendingIntent)
+                else
+                    alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.timeInMillis, pendingIntent)
             else
                 alarmManager.cancel(pendingIntent)
         }

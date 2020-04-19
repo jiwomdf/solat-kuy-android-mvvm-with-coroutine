@@ -3,6 +3,7 @@ package com.programmergabut.solatkuy.broadcaster
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import com.programmergabut.solatkuy.data.room.SolatKuyRoom
 import com.programmergabut.solatkuy.service.ServiceBootComplete
 import com.programmergabut.solatkuy.util.PushNotificationHelper
@@ -23,7 +24,10 @@ class BootCompleteReceiver: BroadcastReceiver() {
 
             if(context != null) {
                val i = Intent(context, ServiceBootComplete::class.java)
-               context.startForegroundService(i)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+                    context.startForegroundService(i)
+                else
+                    context.startService(i)
             }
             else
                 throw Exception("Context Null")

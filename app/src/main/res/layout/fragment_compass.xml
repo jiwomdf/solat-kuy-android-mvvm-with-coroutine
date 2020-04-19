@@ -12,9 +12,9 @@
         android:layout_height="match_parent">
 
         <com.google.android.material.card.MaterialCardView
+            android:id="@+id/cv_qiblaDegrees"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:paddingBottom="@dimen/medium_margin"
             android:layout_marginTop="@dimen/medium_margin"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -48,20 +48,20 @@
 
         <ImageView
             android:id="@+id/iv_compass"
-            android:layout_width="@dimen/compassSize"
+            android:layout_width="match_parent"
             android:layout_height="@dimen/compassSize"
             android:layout_centerInParent="true"
+            android:layout_marginTop="@dimen/large_margin"
             android:contentDescription="@string/compass"
             android:src="@drawable/degree"
-            app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent" />
+            app:layout_constraintTop_toBottomOf="@+id/cv_qiblaDegrees" />
 
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/medium_margin"
+            android:layout_marginTop="@dimen/large_margin"
             android:text="@string/please_tilt_your_phone_until_the_image_is_balanced"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"

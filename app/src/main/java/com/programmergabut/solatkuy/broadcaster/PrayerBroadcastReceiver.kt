@@ -5,6 +5,7 @@ import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import android.os.Build
 import android.os.Bundle
 import com.programmergabut.solatkuy.data.model.entity.PrayerLocal
 import com.programmergabut.solatkuy.ui.main.view.MainActivity
@@ -82,7 +83,7 @@ class PrayerBroadcastReceiver: BroadcastReceiver() {
         val newList = listData.filter { x -> x.prayerName !=  EnumPrayer.sunrise} as MutableList<PrayerLocal>
 
         val selID = SelectPrayerHelper.selNextPrayerByLastID(newList, pID!!)
-        //selID = PrayerLocal(2,"mantap 2",true,"15:58") //#testing purpose
+        //selID = PrayerLocal(2,"mantap 2",true,"01:12") //#testing purpose
 
         selID?.let{
 
@@ -108,7 +109,10 @@ class PrayerBroadcastReceiver: BroadcastReceiver() {
                 c.add(Calendar.DATE, 1)
 
             if(it.isNotified)
-                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, c.timeInMillis, pendingIntent)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+                    alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, c.timeInMillis, pendingIntent)
+                else
+                    alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.timeInMillis, pendingIntent)
             else
                 alarmManager.cancel(pendingIntent)
         }

@@ -3,8 +3,9 @@ package com.programmergabut.solatkuy.util
 import com.programmergabut.solatkuy.data.model.entity.PrayerLocal
 import com.programmergabut.solatkuy.data.model.prayerJson.Timings
 import org.joda.time.DateTime
+import org.joda.time.LocalTime
 import java.text.SimpleDateFormat
-import java.time.LocalTime
+
 import java.util.*
 
 class SelectPrayerHelper {
