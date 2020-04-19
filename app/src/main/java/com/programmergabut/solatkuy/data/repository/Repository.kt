@@ -71,9 +71,10 @@ class Repository(application: Application, scope: CoroutineScope) {
     }
 
     //Retrofit
+    val strApi = "https://api.aladhan.com/v1/"
     private fun getCalendarApi(): CalendarApiService{
         return Builder()
-            .baseUrl("https://api.aladhan.com/v1/")
+            .baseUrl(strApi)
             .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
             .build()
             .create(CalendarApiService::class.java)
@@ -81,7 +82,7 @@ class Repository(application: Application, scope: CoroutineScope) {
 
     private fun getQiblaApi(): QiblaApiService{
         return Builder()
-            .baseUrl("https://api.aladhan.com/v1/")
+            .baseUrl(strApi)
             .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
             .build()
             .create(QiblaApiService::class.java)

@@ -19,7 +19,9 @@ import com.bumptech.glide.request.transition.DrawableCrossFadeFactory
 import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.data.model.entity.MsApi1
 import com.programmergabut.solatkuy.data.model.entity.PrayerLocal
-import com.programmergabut.solatkuy.data.model.prayerJson.*
+import com.programmergabut.solatkuy.data.model.prayerJson.Data
+import com.programmergabut.solatkuy.data.model.prayerJson.PrayerApi
+import com.programmergabut.solatkuy.data.model.prayerJson.Timings
 import com.programmergabut.solatkuy.di.component.DaggerIDataComponent
 import com.programmergabut.solatkuy.di.component.DaggerITimingsComponent
 import com.programmergabut.solatkuy.di.module.DataModule
@@ -36,11 +38,11 @@ import kotlinx.coroutines.*
 import org.joda.time.DateTime
 import org.joda.time.LocalDate
 import org.joda.time.Period
+import org.joda.time.format.DateTimeFormat
 import java.text.SimpleDateFormat
 import java.time.LocalTime
 import java.time.format.DateTimeFormatter
 import java.util.*
-import java.util.Date
 import kotlin.math.abs
 
 /*
@@ -158,10 +160,12 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
             .build()
             .getTimings()
 
-        val arrDate = java.time.LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MMM/yyyy")).split("/")
+        //for api 21
+        val arrDate = LocalDate.now().toString("dd/MMM/yyyy").split("/")
+        //val arrDate = java.time.LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MMM/yyyy")).split("/")
 
         return DaggerIDataComponent.builder()
-            .dataModule(DataModule(localTimings, arrDate[1], arrDate[0],0))
+            .dataModule(DataModule(localTimings, arrDate[1], arrDate[2],0))
             .build()
             .getData()
     }
@@ -215,10 +219,6 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
             bindWidget(tempApiData)
         if(tempMsApi1 != null)
             bindWidgetLocation(tempMsApi1!!)
-    }
-
-    private fun refreshLayout() {
-        sl_main.setOnRefreshListener(this)
     }
 
     private fun cbClickListener() {
@@ -324,7 +324,10 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     private fun selectNextPrayerTime(selPrayer: Int, timings: Timings) {
 
         val sdfPrayer = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
-        val nowTime = DateTime(sdfPrayer.parse(LocalTime.now().toString()))
+
+        //for Api 21
+        val nowTime = DateTime(sdfPrayer.parse(org.joda.time.LocalTime.now().toString()))
+        //val nowTime = DateTime(sdfPrayer.parse(LocalTime.now().toString()))
         var period: Period? = null
 
         when(selPrayer){
@@ -452,6 +455,10 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     /* Refresher */
+    private fun refreshLayout() {
+        sl_main.setOnRefreshListener(this)
+    }
+
     override fun onRefresh() {
         val currDate = LocalDate()
 

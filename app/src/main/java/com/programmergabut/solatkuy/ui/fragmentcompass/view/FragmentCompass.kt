@@ -11,21 +11,29 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.RotateAnimation
+import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.programmergabut.solatkuy.R
+import com.programmergabut.solatkuy.data.model.entity.MsApi1
 import com.programmergabut.solatkuy.ui.fragmentcompass.viewmodel.FragmentCompassViewModel
 import com.programmergabut.solatkuy.util.EnumStatus
+import com.programmergabut.solatkuy.util.Resource
+import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.fragment_compass.*
+import kotlinx.android.synthetic.main.fragment_main.*
 
 /*
  * Created by Katili Jiwo Adi Wiyono on 31/03/20.
  */
 
-class FragmentCompass : Fragment(), SensorEventListener {
+class FragmentCompass : Fragment(), SensorEventListener, SwipeRefreshLayout.OnRefreshListener {
 
     lateinit var fragmentCompassViewModel: FragmentCompassViewModel
+    lateinit var mMsApi1: MsApi1
+
     private var mGravity = FloatArray(3)
     private var mGeomagnetic = FloatArray(3)
     private var azimuth = 0f
@@ -44,6 +52,9 @@ class FragmentCompass : Fragment(), SensorEventListener {
         return inflater.inflate(R.layout.fragment_compass, container, false)
     }
 
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        refreshLayout()
+    }
 
     /* fetching Prayer Compass */
     private fun fetchCompassApi(latitude: String, longitude: String) {
@@ -60,8 +71,11 @@ class FragmentCompass : Fragment(), SensorEventListener {
                     retVal.data?.data.let {
                         tv_qibla_dir.text = it?.direction.toString().substring(0,6).trim() + "°"
                     }}
-                EnumStatus.LOADING -> tv_qibla_dir.text = getString(R.string.loading)
-                EnumStatus.ERROR -> tv_qibla_dir.text = "fetching data failed"
+                EnumStatus.LOADING -> {
+                    Toasty.info(context!!, "fetching data..", Toast.LENGTH_SHORT).show()
+                    tv_qibla_dir.text = getString(R.string.loading)
+                }
+                EnumStatus.ERROR -> tv_qibla_dir.text = getString(R.string.fetch_failed)
             }
 
         })
@@ -70,6 +84,7 @@ class FragmentCompass : Fragment(), SensorEventListener {
 
     private fun subscribeObserversDB() {
         fragmentCompassViewModel.msApi1Local.observe(this, Observer {
+            mMsApi1 = it
             fetchCompassApi(it.latitude,it.longitude)
         })
     }
@@ -134,6 +149,17 @@ class FragmentCompass : Fragment(), SensorEventListener {
     }
 
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
+    }
+
+    /* Refresher */
+    private fun refreshLayout() {
+        sl_compass.setOnRefreshListener(this)
+    }
+
+    override fun onRefresh() {
+        fragmentCompassViewModel.compassApi.postValue(Resource.loading(null))
+        fetchCompassApi(mMsApi1.latitude, mMsApi1.longitude)
+        sl_compass.isRefreshing = false
     }
 
 }

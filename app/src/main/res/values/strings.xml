@@ -36,6 +36,7 @@
     <string name="images">Images: </string>
     <string name="api">Api: </string>
     <string name="qibla">Qibla Degrees</string>
+    <string name="fetch_failed">fetching data failed</string>
     <string name="next_prayer_is_dhuhr">Next prayer is Dhuhr</string>
     <string name="welcome_dialog">Welcome to Solat Kuy! \n Solat Kuy is a reminder prayer time application \n\n in order to start this app \nplease select your location</string>
     <string name="please_tilt_your_phone_until_the_image_is_balanced">Please tilt your phone until the image is balanced</string>
