@@ -20,6 +20,7 @@ class FragmentSettingViewModel(application: Application): AndroidViewModel(appli
 
     //Room
     init {
+        /* init repository */
         repository = Repository(application,viewModelScope)
 
         msApi1Local = repository!!.mMsApi1

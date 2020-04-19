@@ -12,8 +12,12 @@ import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.RotateAnimation
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProviders
 import com.programmergabut.solatkuy.R
-import kotlinx.android.synthetic.main.fragment_prayer_report.*
+import com.programmergabut.solatkuy.ui.fragmentcompass.viewmodel.FragmentCompassViewModel
+import com.programmergabut.solatkuy.util.EnumStatus
+import kotlinx.android.synthetic.main.fragment_compass.*
 
 /*
  * Created by Katili Jiwo Adi Wiyono on 31/03/20.
@@ -21,6 +25,7 @@ import kotlinx.android.synthetic.main.fragment_prayer_report.*
 
 class FragmentCompass : Fragment(), SensorEventListener {
 
+    lateinit var fragmentCompassViewModel: FragmentCompassViewModel
     private var mGravity = FloatArray(3)
     private var mGeomagnetic = FloatArray(3)
     private var azimuth = 0f
@@ -31,10 +36,46 @@ class FragmentCompass : Fragment(), SensorEventListener {
 
         mSensorManager = activity?.getSystemService(SENSOR_SERVICE) as SensorManager
 
+        fragmentCompassViewModel = ViewModelProviders.of(this).get(FragmentCompassViewModel::class.java)
 
-        return inflater.inflate(R.layout.fragment_prayer_report, container, false)
+        subscribeObserversDB()
+        subscribeObserversAPI()
+
+        return inflater.inflate(R.layout.fragment_compass, container, false)
     }
 
+
+    /* fetching Prayer Compass */
+    private fun fetchCompassApi(latitude: String, longitude: String) {
+        fragmentCompassViewModel.fetchCompassApi(latitude, longitude)
+    }
+
+    /* Subscribe live data */
+    private fun subscribeObserversAPI() {
+
+        fragmentCompassViewModel.compassApi.observe(this, Observer {retVal ->
+
+            when(retVal.Status){
+                EnumStatus.SUCCESS -> {
+                    retVal.data?.data.let {
+                        tv_qibla_dir.text = it?.direction.toString().substring(0,6).trim() + "°"
+                    }}
+                EnumStatus.LOADING -> tv_qibla_dir.text = getString(R.string.loading)
+                EnumStatus.ERROR -> tv_qibla_dir.text = "fetching data failed"
+            }
+
+        })
+
+    }
+
+    private fun subscribeObserversDB() {
+        fragmentCompassViewModel.msApi1Local.observe(this, Observer {
+            fetchCompassApi(it.latitude,it.longitude)
+        })
+    }
+
+
+    /* Compass */
     override fun onResume() {
         super.onResume()
 

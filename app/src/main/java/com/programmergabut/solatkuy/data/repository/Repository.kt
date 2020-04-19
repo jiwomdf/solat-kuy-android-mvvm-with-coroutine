@@ -4,9 +4,11 @@ import android.app.Application
 import androidx.lifecycle.LiveData
 import com.google.gson.GsonBuilder
 import com.programmergabut.solatkuy.data.api.CalendarApiService
+import com.programmergabut.solatkuy.data.api.QiblaApiService
 import com.programmergabut.solatkuy.data.local.MsApi1Dao
 import com.programmergabut.solatkuy.data.local.MsSettingDao
 import com.programmergabut.solatkuy.data.local.NotifiedPrayerDao
+import com.programmergabut.solatkuy.data.model.compassJson.CompassApi
 import com.programmergabut.solatkuy.data.model.entity.MsApi1
 import com.programmergabut.solatkuy.data.model.entity.MsSetting
 import com.programmergabut.solatkuy.data.model.entity.PrayerLocal
@@ -69,7 +71,7 @@ class Repository(application: Application, scope: CoroutineScope) {
     }
 
     //Retrofit
-    private fun retrofit(): CalendarApiService{
+    private fun getCalendarApi(): CalendarApiService{
         return Builder()
             .baseUrl("https://api.aladhan.com/v1/")
             .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
@@ -77,8 +79,16 @@ class Repository(application: Application, scope: CoroutineScope) {
             .create(CalendarApiService::class.java)
     }
 
+    private fun getQiblaApi(): QiblaApiService{
+        return Builder()
+            .baseUrl("https://api.aladhan.com/v1/")
+            .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
+            .build()
+            .create(QiblaApiService::class.java)
+    }
+
     suspend fun fetchPrayerApi(latitude:String, longitude:String, method: String, month: String, year: String): PrayerApi {
-        val retVal =  retrofit().fetchPrayer(latitude, longitude, method, month,year)
+        val retVal =  getCalendarApi().fetchPrayer(latitude, longitude, method, month,year)
 
         updateDbAfterFetchingData(retVal)
 
@@ -104,6 +114,10 @@ class Repository(application: Application, scope: CoroutineScope) {
         map.forEach { p ->
             updatePrayerTime(p.key,p.value)
         }
+    }
+
+    suspend fun fetchQiblaApi(latitude:String, longitude:String): CompassApi{
+        return  getQiblaApi().fetchQibla(latitude, longitude)
     }
 
 

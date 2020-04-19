@@ -1,4 +1,4 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <dimen name="compassSize">300dp</dimen>
+    <dimen name="compassSize">380dp</dimen>
 </resources>

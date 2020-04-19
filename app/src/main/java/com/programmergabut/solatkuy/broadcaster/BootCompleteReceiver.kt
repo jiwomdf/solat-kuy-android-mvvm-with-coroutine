@@ -22,14 +22,6 @@ class BootCompleteReceiver: BroadcastReceiver() {
         if(intent?.action == Intent.ACTION_BOOT_COMPLETED) {
 
             if(context != null) {
-
-//                CoroutineScope(Dispatchers.IO).launch {
-//                    val db = SolatKuyRoom.getDataBase(context)
-//                    val data = db.notifiedPrayerDao().getNotifiedPrayerSync() as MutableList
-//
-//                    PushNotificationHelper(context, data,"-")
-//                }
-
                val i = Intent(context, ServiceBootComplete::class.java)
                context.startForegroundService(i)
             }

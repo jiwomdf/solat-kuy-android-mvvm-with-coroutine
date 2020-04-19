@@ -9,6 +9,10 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
+/*
+ * Created by Katili Jiwo Adi Wiyono on 18/04/20.
+ */
+
 class ServiceBootComplete: Service() {
 
     override fun onBind(intent: Intent?): IBinder? {
