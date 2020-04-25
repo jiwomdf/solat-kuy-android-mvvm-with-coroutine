@@ -69,16 +69,18 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
 
         mainActivityViewModel.msSetting.observe(this, Observer {
 
-            it?.let {
+            if(it != null)
                 if(it.isHasOpenApp)
                     initViewPager()
                 else
                     initDialog()
-            }
+            else
+                throw Exception("null observe")
         })
 
     }
 
+    /* DIALOG */
     private fun initDialog() {
         val dialogView = layoutInflater.inflate(R.layout.layout_fristopenapp,null)
         val dialog =  Dialog(this@MainActivity)
@@ -103,6 +105,8 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
                     0 -> bottom_navigation.menu.findItem(R.id.i_prayer_time).isChecked  = true
                     1 -> bottom_navigation.menu.findItem(R.id.i_prayer_time2).isChecked = true
                     2 -> bottom_navigation.menu.findItem(R.id.i_prayer_time3).isChecked = true
+                    3 -> bottom_navigation.menu.findItem(R.id.i_prayer_time4).isChecked = true
+                    else -> bottom_navigation.menu.findItem(R.id.i_prayer_time4).isChecked = true
                 }
             }
 
@@ -302,12 +306,13 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
 
     }
 
-    /* View pager */
+    /* VIEW PAGER */
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when(item.itemId) {
             R.id.i_prayer_time -> vp2_main.currentItem = 0
             R.id.i_prayer_time2 -> vp2_main.currentItem = 1
             R.id.i_prayer_time3 -> vp2_main.currentItem = 2
+            R.id.i_prayer_time4 -> vp2_main.currentItem = 3
         }
         return true
     }

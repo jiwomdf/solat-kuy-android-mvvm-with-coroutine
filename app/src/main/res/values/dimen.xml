@@ -9,6 +9,7 @@
     <dimen name="small_text_size">12sp</dimen>
     <dimen name="medium_text_size">16sp</dimen>
     <dimen name="large_text_size">20sp</dimen>
+    <dimen name="large2_text_size">30sp</dimen>
     <dimen name="larger_text_size">40sp</dimen>
 
     <dimen name="info_width_size">80dp</dimen>

@@ -5,6 +5,7 @@ import androidx.fragment.app.FragmentManager
 import androidx.fragment.app.FragmentPagerAdapter
 import com.programmergabut.solatkuy.ui.fragmentmain.view.FragmentMain
 import com.programmergabut.solatkuy.ui.fragmentcompass.view.FragmentCompass
+import com.programmergabut.solatkuy.ui.fragmentinfo.view.FragmentInfo
 import com.programmergabut.solatkuy.ui.fragmentsetting.view.FragmentSetting
 
 /*
@@ -17,10 +18,11 @@ class SwipeAdapter(fm: FragmentManager): FragmentPagerAdapter(fm, BEHAVIOR_RESUM
         return when(position){
             0 -> FragmentMain()
             1 -> FragmentCompass()
+            2 -> FragmentInfo()
             else -> FragmentSetting()
         }
     }
 
-    override fun getCount(): Int = 3
+    override fun getCount(): Int = 4
 
 }

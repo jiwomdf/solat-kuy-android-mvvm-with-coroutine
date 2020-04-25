@@ -71,7 +71,7 @@ class Repository(application: Application, scope: CoroutineScope) {
     }
 
     //Retrofit
-    val strApi = "https://api.aladhan.com/v1/"
+    private val strApi = "https://api.aladhan.com/v1/"
     private fun getCalendarApi(): CalendarApiService{
         return Builder()
             .baseUrl(strApi)

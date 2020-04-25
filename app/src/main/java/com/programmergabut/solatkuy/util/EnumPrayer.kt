@@ -13,6 +13,7 @@ class EnumPrayer {
         const val maghrib = "Maghrib"
         const val isha = "Isha"
         const val sunrise = "Sunrise"
+        const val imsak = "Imsak"
 
         /* Notification */
         const val nIdMain = 400

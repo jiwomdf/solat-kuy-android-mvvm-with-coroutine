@@ -425,13 +425,13 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
             if(tempHour == 0 && tempMinute == 0 && tempSecond == 1){
 
                 withContext(Dispatchers.Main){
-                    tv_widget_prayer_countdown.text = ""
-                    delay(1000)
-
                     tempMsApi1?.let {
                         fetchPrayerApi(it.latitude, it.longitude, "8", it.month, it.year)
+
                     }
                 }
+
+                return
             }
 
             withContext(Dispatchers.Main){

@@ -11,7 +11,6 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.RotateAnimation
-import android.widget.Toast
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
@@ -21,9 +20,7 @@ import com.programmergabut.solatkuy.data.model.entity.MsApi1
 import com.programmergabut.solatkuy.ui.fragmentcompass.viewmodel.FragmentCompassViewModel
 import com.programmergabut.solatkuy.util.EnumStatus
 import com.programmergabut.solatkuy.util.Resource
-import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.fragment_compass.*
-import kotlinx.android.synthetic.main.fragment_main.*
 
 /*
  * Created by Katili Jiwo Adi Wiyono on 31/03/20.
@@ -72,7 +69,6 @@ class FragmentCompass : Fragment(), SensorEventListener, SwipeRefreshLayout.OnRe
                         tv_qibla_dir.text = it?.direction.toString().substring(0,6).trim() + "°"
                     }}
                 EnumStatus.LOADING -> {
-                    Toasty.info(context!!, "fetching data..", Toast.LENGTH_SHORT).show()
                     tv_qibla_dir.text = getString(R.string.loading)
                 }
                 EnumStatus.ERROR -> tv_qibla_dir.text = getString(R.string.fetch_failed)

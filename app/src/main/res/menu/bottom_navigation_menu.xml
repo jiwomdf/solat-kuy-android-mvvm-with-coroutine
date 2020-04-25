@@ -11,6 +11,9 @@
         android:icon="@drawable/ic_navigation_24dp"
         android:title="@string/compass"/>
     <item android:id="@+id/i_prayer_time3"
+        android:icon="@drawable/ic_info_24dp"
+        android:title="@string/info"/>
+    <item android:id="@+id/i_prayer_time4"
         android:icon="@drawable/ic_settings_24dp"
         android:title="@string/setting"/>
 </menu>

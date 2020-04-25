@@ -39,8 +39,7 @@ abstract class SolatKuyRoom: RoomDatabase() {
                 return tempInstance
 
             synchronized(this) {
-                val instance = Room.databaseBuilder(context.applicationContext,
-                        SolatKuyRoom::class.java, dbName)
+                val instance = Room.databaseBuilder(context.applicationContext, SolatKuyRoom::class.java, dbName)
                     //.fallbackToDestructiveMigration()
                     /*.addMigrations(object :Migration(1,2){
                         override fun migrate(database: SupportSQLiteDatabase) {

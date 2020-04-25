@@ -16,6 +16,7 @@
     <string name="prayer_time">Prayer Time</string>
     <string name="compass">Compass</string>
     <string name="setting">Setting</string>
+    <string name="info">Info</string>
     <string name="changelocation">Change Location</string>
     <string name="by_latitude_amp_longitude"><![CDATA[By Latitude & Longitude]]></string>
     <string name="by_gps">By GPS</string>
@@ -37,7 +38,14 @@
     <string name="api">Api: </string>
     <string name="qibla">Qibla Degrees</string>
     <string name="fetch_failed">fetching data failed</string>
+    <string name="fetch_failed_sort">N/A</string>
     <string name="next_prayer_is_dhuhr">Next prayer is Dhuhr</string>
     <string name="welcome_dialog">Welcome to Solat Kuy! \n Solat Kuy is a reminder prayer time application \n\n in order to start this app \nplease select your location</string>
     <string name="please_tilt_your_phone_until_the_image_is_balanced">Please tilt your phone until the image is balanced</string>
+    <string name="imsak_info">Imsak Info</string>
+    <string name="gregorian_to_hijri">Gregorian to Hijri</string>
+    <string name="type">Type</string>
+    <string name="gregorian">Gregorian</string>
+    <string name="hijri">Hijri</string>
+    <string name="date">Date</string>
 </resources>
