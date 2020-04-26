@@ -5,7 +5,6 @@ import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
-import android.content.pm.ActivityInfo
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationManager

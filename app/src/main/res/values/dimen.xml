@@ -1,5 +1,7 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
+    <dimen name="elevation">16dp</dimen>
+
     <dimen name="smaller_margin">4dp</dimen>
     <dimen name="small_margin">8dp</dimen>
     <dimen name="medium_margin">12dp</dimen>

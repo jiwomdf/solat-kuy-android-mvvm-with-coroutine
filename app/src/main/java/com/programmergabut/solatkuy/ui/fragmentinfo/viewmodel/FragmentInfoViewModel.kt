@@ -14,6 +14,10 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.lang.Exception
 
+/*
+ * Created by Katili Jiwo Adi Wiyono on 25/04/20.
+ */
+
 class FragmentInfoViewModel(application: Application): AndroidViewModel(application) {
 
     private var repository: Repository? = null

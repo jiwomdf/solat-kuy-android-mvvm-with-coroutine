@@ -22,12 +22,14 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
+                android:background="@color/colorPrimary"
                 android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/tv_imsak_info_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/colorWhite"
                     android:layout_marginStart="@dimen/small_margin"
                     android:layout_marginTop="@dimen/small_margin"
                     android:text="@string/imsak_info"
@@ -39,6 +41,7 @@
                     android:id="@+id/tv_imsak_date"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/colorWhite"
                     android:layout_marginStart="@dimen/small_margin"
                     android:layout_marginTop="@dimen/small_margin"
                     android:layout_marginBottom="@dimen/small_margin"
@@ -50,6 +53,7 @@
                     android:id="@+id/tv_city"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/colorWhite"
                     tools:text="Surakarta"
                     android:layout_marginStart="@dimen/small_margin"
                     android:layout_marginTop="@dimen/small_margin"
@@ -62,6 +66,7 @@
                     android:id="@+id/tv_imsak_time"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/colorWhite"
                     tools:text="04:34 (WIB)"
                     android:textSize="@dimen/large2_text_size"
                     android:layout_marginEnd="@dimen/medium_margin"
@@ -80,15 +85,15 @@
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="@dimen/small_margin"
-                android:layout_marginTop="@dimen/small_margin"
-                android:layout_marginStart="@dimen/small_margin"
+                android:background="@color/colorPrimaryLight"
                 android:orientation="vertical">
 
                 <TextView
                     android:id="@+id/textView3"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/smaller_margin"
+                    android:textColor="@color/colorWhite"
                     android:text="@string/gregorian_to_hijri"
                     android:textSize="@dimen/large_text_size"
                     app:layout_constraintStart_toStartOf="parent"
@@ -98,6 +103,7 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:stretchColumns="*"
+                    android:layout_marginStart="@dimen/smaller_margin"
                     android:layout_marginTop="@dimen/small_margin"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -110,16 +116,19 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_margin="@dimen/smaller_margin"
+                            android:textColor="@color/colorWhite"
                             android:text="@string/type"/>
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_margin="@dimen/smaller_margin"
+                            android:textColor="@color/colorWhite"
                             android:text="@string/gregorian"/>
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_margin="@dimen/smaller_margin"
+                            android:textColor="@color/colorWhite"
                             android:text="@string/hijri"/>
                     </TableRow>
                     <TableRow
@@ -129,38 +138,45 @@
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_margin="@dimen/smaller_margin"
+                            android:textColor="@color/colorWhite"
                             android:text="@string/date"/>
                         <TextView
                             android:id="@+id/tv_gregorian_date"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
+                            android:textColor="@color/colorWhite"
                             android:layout_margin="@dimen/smaller_margin"
                             tools:text="01-03-2020"/>
                         <TextView
                             android:id="@+id/tv_hijri_date"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
+                            android:textColor="@color/colorWhite"
                             android:layout_margin="@dimen/smaller_margin"
                             tools:text="06-07-1441"/>
                     </TableRow>
                     <TableRow
                         android:layout_width="match_parent"
-                        android:layout_height="match_parent">
+                        android:layout_height="match_parent"
+                        android:layout_marginBottom="@dimen/small_margin">
                         <TextView
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_margin="@dimen/smaller_margin"
+                            android:textColor="@color/colorWhite"
                             android:text="Day"/>
                         <TextView
                             android:id="@+id/tv_gregorian_day"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
+                            android:textColor="@color/colorWhite"
                             android:layout_margin="@dimen/smaller_margin"
                             tools:text="Sunday"/>
                         <TextView
                             android:id="@+id/tv_hijri_day"
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
+                            android:textColor="@color/colorWhite"
                             android:layout_margin="@dimen/smaller_margin"
                             tools:text="Al Ahad / الاحد"/>
                     </TableRow>
