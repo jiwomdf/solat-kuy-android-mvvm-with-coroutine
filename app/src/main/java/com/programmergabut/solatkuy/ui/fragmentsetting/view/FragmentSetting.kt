@@ -6,8 +6,6 @@ import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
 import android.content.pm.PackageManager
-import android.location.Address
-import android.location.Geocoder
 import android.location.Location
 import android.location.LocationManager
 import android.os.Bundle
@@ -30,12 +28,12 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.data.model.entity.MsApi1
 import com.programmergabut.solatkuy.ui.fragmentsetting.viewmodel.FragmentSettingViewModel
+import com.programmergabut.solatkuy.util.LocationHelper
 import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.fragment_setting.*
 import kotlinx.android.synthetic.main.layout_bottomsheet_bygps.view.*
 import kotlinx.android.synthetic.main.layout_bottomsheet_bylatitudelongitude.view.*
 import org.joda.time.LocalDate
-import java.util.*
 
 /*
  * Created by Katili Jiwo Adi Wiyono on 25/03/20.
@@ -92,17 +90,9 @@ class FragmentSetting : Fragment() {
     private fun subscribeObserversDB() {
         fragmentSettingViewModel.msApi1Local.observe(this, Observer {
 
-            val geoCoder = Geocoder(context!!, Locale.getDefault())
-            var cityName: String? = null
-            try {
-                val addresses: List<Address> = geoCoder.getFromLocation(it.latitude.toDouble(),it.longitude.toDouble(), 1)
-                cityName = addresses[0].subAdminArea
-            }
-            catch (ex: Exception){}
-
             tv_view_latitude.text = it.latitude + " °S"
             tv_view_longitude.text = it.longitude + " °E"
-            tv_view_city.text = cityName ?: "-"
+            tv_view_city.text = LocationHelper.getCity(context!!, it.latitude.toDouble(), it.longitude.toDouble())
         })
     }
 

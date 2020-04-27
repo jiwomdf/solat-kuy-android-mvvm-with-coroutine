@@ -5,12 +5,13 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.viewModelScope
+import com.programmergabut.solatkuy.data.model.asmaalhusnaJson.AsmaAlHusnaApi
 import com.programmergabut.solatkuy.data.model.entity.MsApi1
-import com.programmergabut.solatkuy.data.model.entity.PrayerLocal
 import com.programmergabut.solatkuy.data.model.prayerJson.PrayerApi
 import com.programmergabut.solatkuy.data.repository.Repository
 import com.programmergabut.solatkuy.util.Resource
 import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Job
 import kotlinx.coroutines.launch
 import java.lang.Exception
 
@@ -23,6 +24,7 @@ class FragmentInfoViewModel(application: Application): AndroidViewModel(applicat
     private var repository: Repository? = null
 
     val prayerApi = MutableLiveData<Resource<PrayerApi>>()
+    val asmaAlHusnaApi = MutableLiveData<Resource<AsmaAlHusnaApi>>()
     val msApi1Local: LiveData<MsApi1>
 
     //Room
@@ -32,6 +34,7 @@ class FragmentInfoViewModel(application: Application): AndroidViewModel(applicat
         msApi1Local = repository!!.mMsApi1
 
         prayerApi.postValue(Resource.loading(null))
+        asmaAlHusnaApi.postValue(Resource.loading(null))
     }
 
     //Live Data
@@ -48,4 +51,15 @@ class FragmentInfoViewModel(application: Application): AndroidViewModel(applicat
         }
     }
 
+    fun fetchAsmaAlHusnaApi() {
+
+        viewModelScope.launch(Dispatchers.IO){
+            try {
+                asmaAlHusnaApi.postValue(Resource.success(Repository(getApplication(),viewModelScope).fetchAsmaAlHusnaApi()))
+            }
+            catch (ex: Exception){
+                asmaAlHusnaApi.postValue(Resource.error(ex.message.toString(), null))
+            }
+        }
+    }
 }

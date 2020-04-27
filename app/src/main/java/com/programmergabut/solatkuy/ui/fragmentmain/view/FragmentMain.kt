@@ -1,8 +1,6 @@
 package com.programmergabut.solatkuy.ui.fragmentmain.view
 
 import android.graphics.drawable.Drawable
-import android.location.Address
-import android.location.Geocoder
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -26,11 +24,9 @@ import com.programmergabut.solatkuy.di.component.DaggerIDataComponent
 import com.programmergabut.solatkuy.di.component.DaggerITimingsComponent
 import com.programmergabut.solatkuy.di.module.DataModule
 import com.programmergabut.solatkuy.ui.fragmentmain.viewmodel.FragmentMainViewModel
-import com.programmergabut.solatkuy.util.EnumStatus
-import com.programmergabut.solatkuy.util.PushNotificationHelper
-import com.programmergabut.solatkuy.util.Resource
-import com.programmergabut.solatkuy.util.SelectPrayerHelper
+import com.programmergabut.solatkuy.util.*
 import es.dmoral.toasty.Toasty
+import kotlinx.android.synthetic.main.fragment_info.*
 import kotlinx.android.synthetic.main.fragment_main.*
 import kotlinx.android.synthetic.main.layout_prayer_time.*
 import kotlinx.android.synthetic.main.layout_widget.*
@@ -38,10 +34,7 @@ import kotlinx.coroutines.*
 import org.joda.time.DateTime
 import org.joda.time.LocalDate
 import org.joda.time.Period
-import org.joda.time.format.DateTimeFormat
 import java.text.SimpleDateFormat
-import java.time.LocalTime
-import java.time.format.DateTimeFormatter
 import java.util.*
 import kotlin.math.abs
 
@@ -67,8 +60,25 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         subscribeObserversDB()
     }
 
+    override fun onPause() {
+        super.onPause()
+
+        if(CoroutineScope(Dispatchers.Default).isActive)
+            CoroutineScope(Dispatchers.Default).ensureActive()
+
+        if(CoroutineScope(Dispatchers.Main).isActive)
+            CoroutineScope(Dispatchers.Main).ensureActive()
+
+        CoroutineScope(Dispatchers.Default).cancel()
+        CoroutineScope(Dispatchers.Main).cancel()
+    }
+
+
     override fun onStart() {
         super.onStart()
+
+        if(tv_widget_prayer_countdown != null)
+            tv_widget_prayer_countdown.text = getString(R.string.loading)
 
         loadTempData()
     }
@@ -274,14 +284,7 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     /* Widget */
     private fun bindWidgetLocation(it: MsApi1) {
-        val geoCoder = Geocoder(context!!, Locale.getDefault())
-        try {
-            val addresses: List<Address> = geoCoder.getFromLocation(it.latitude.toDouble(),it.longitude.toDouble(), 1)
-            mCityName = addresses[0].subAdminArea
-        }
-        catch (ex: Exception){
-            mCityName = "-"
-        }
+        mCityName = LocationHelper.getCity(context!!, it.latitude.toDouble(), it.longitude.toDouble())
 
         tv_view_latitude.text = it.latitude + " °N"
         tv_view_longitude.text = it.longitude + " °W"
@@ -403,7 +406,7 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
             tempSecond--
 
             if(tempSecond == 0){
-                tempSecond = 59
+                tempSecond = 60
 
                 if(tempMinute != 0)
                     tempMinute -= 1
@@ -424,14 +427,13 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
             /* fetching Prayer API */
             if(tempHour == 0 && tempMinute == 0 && tempSecond == 1){
 
+                CoroutineScope(Dispatchers.Default).cancel()
+
                 withContext(Dispatchers.Main){
                     tempMsApi1?.let {
                         fetchPrayerApi(it.latitude, it.longitude, "8", it.month, it.year)
-
                     }
                 }
-
-                return
             }
 
             withContext(Dispatchers.Main){

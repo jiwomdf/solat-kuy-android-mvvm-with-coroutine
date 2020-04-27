@@ -1,18 +1,26 @@
-<FrameLayout
+<RelativeLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
-    android:layout_height="match_parent">
+    android:layout_height="match_parent"
+    android:fitsSystemWindows="true">
+
+    <View
+        android:layout_width="match_parent"
+        android:layout_height="3dp"
+        android:layout_above="@+id/bottom_navigation"
+        android:background="@drawable/shadow"/>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="50dp"
+        android:layout_alignParentBottom="true"
         android:layout_gravity="bottom"
-        android:elevation="@dimen/elevation"
+        app:elevation="@dimen/elevation"
         app:labelVisibilityMode="unlabeled"
         app:menu="@menu/bottom_navigation_menu"
         tools:targetApi="lollipop" />
 
-</FrameLayout>
+</RelativeLayout>

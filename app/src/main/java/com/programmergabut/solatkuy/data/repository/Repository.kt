@@ -3,11 +3,13 @@ package com.programmergabut.solatkuy.data.repository
 import android.app.Application
 import androidx.lifecycle.LiveData
 import com.google.gson.GsonBuilder
+import com.programmergabut.solatkuy.data.api.AsmaAlHusnaService
 import com.programmergabut.solatkuy.data.api.CalendarApiService
 import com.programmergabut.solatkuy.data.api.QiblaApiService
 import com.programmergabut.solatkuy.data.local.MsApi1Dao
 import com.programmergabut.solatkuy.data.local.MsSettingDao
 import com.programmergabut.solatkuy.data.local.NotifiedPrayerDao
+import com.programmergabut.solatkuy.data.model.asmaalhusnaJson.AsmaAlHusnaApi
 import com.programmergabut.solatkuy.data.model.compassJson.CompassApi
 import com.programmergabut.solatkuy.data.model.entity.MsApi1
 import com.programmergabut.solatkuy.data.model.entity.MsSetting
@@ -88,6 +90,14 @@ class Repository(application: Application, scope: CoroutineScope) {
             .create(QiblaApiService::class.java)
     }
 
+    private fun getAsmaAlHusnaApi(): AsmaAlHusnaService{
+        return Builder()
+            .baseUrl(strApi)
+            .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
+            .build()
+            .create(AsmaAlHusnaService::class.java)
+    }
+
     suspend fun fetchPrayerApi(latitude:String, longitude:String, method: String, month: String, year: String): PrayerApi {
         val retVal =  getCalendarApi().fetchPrayer(latitude, longitude, method, month,year)
 
@@ -119,6 +129,10 @@ class Repository(application: Application, scope: CoroutineScope) {
 
     suspend fun fetchQiblaApi(latitude:String, longitude:String): CompassApi{
         return  getQiblaApi().fetchQibla(latitude, longitude)
+    }
+
+    suspend fun fetchAsmaAlHusnaApi(): AsmaAlHusnaApi {
+        return  getAsmaAlHusnaApi().fetchAsmaAlHusnaApi()
     }
 
 

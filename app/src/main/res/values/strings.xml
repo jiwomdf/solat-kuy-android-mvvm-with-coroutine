@@ -48,4 +48,6 @@
     <string name="gregorian">Gregorian</string>
     <string name="hijri">Hijri</string>
     <string name="date">Date</string>
+    <string name="month">Month</string>
+    <string name="asma_al_husna">Asma Al Husna</string>
 </resources>
