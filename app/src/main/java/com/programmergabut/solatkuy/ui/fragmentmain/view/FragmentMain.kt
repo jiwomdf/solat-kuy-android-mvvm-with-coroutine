@@ -63,12 +63,6 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     override fun onPause() {
         super.onPause()
 
-        if(CoroutineScope(Dispatchers.Default).isActive)
-            CoroutineScope(Dispatchers.Default).ensureActive()
-
-        if(CoroutineScope(Dispatchers.Main).isActive)
-            CoroutineScope(Dispatchers.Main).ensureActive()
-
         CoroutineScope(Dispatchers.Default).cancel()
         CoroutineScope(Dispatchers.Main).cancel()
     }
@@ -328,9 +322,7 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
         val sdfPrayer = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
 
-        //for Api 21
         val nowTime = DateTime(sdfPrayer.parse(org.joda.time.LocalTime.now().toString()))
-        //val nowTime = DateTime(sdfPrayer.parse(LocalTime.now().toString()))
         var period: Period? = null
 
         when(selPrayer){

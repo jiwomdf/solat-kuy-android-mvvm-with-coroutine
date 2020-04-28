@@ -1,12 +1,16 @@
 package com.programmergabut.solatkuy.ui.fragmentinfo.view
 
+import android.opengl.Visibility
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
+import androidx.recyclerview.widget.GridLayoutManager
+import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.data.model.asmaalhusnaJson.AsmaAlHusnaApi
@@ -14,10 +18,12 @@ import com.programmergabut.solatkuy.data.model.entity.MsApi1
 import com.programmergabut.solatkuy.data.model.prayerJson.Data
 import com.programmergabut.solatkuy.data.model.prayerJson.PrayerApi
 import com.programmergabut.solatkuy.ui.fragmentinfo.viewmodel.FragmentInfoViewModel
+import com.programmergabut.solatkuy.ui.fragmentmain.adapter.FragmentInfoAdapter
 import com.programmergabut.solatkuy.util.EnumStatus
 import com.programmergabut.solatkuy.util.LocationHelper
 import com.programmergabut.solatkuy.util.Resource
 import kotlinx.android.synthetic.main.fragment_info.*
+import kotlinx.android.synthetic.main.layout_ah_viewholder.*
 import kotlinx.coroutines.*
 import org.joda.time.LocalDate
 import java.text.SimpleDateFormat
@@ -49,27 +55,6 @@ class FragmentInfo : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         subscribeObserversAPI()
     }
 
-    override fun onPause() {
-        super.onPause()
-
-        if(CoroutineScope(Dispatchers.Default).isActive)
-            CoroutineScope(Dispatchers.Default).ensureActive()
-
-        if(CoroutineScope(Dispatchers.Main).isActive)
-            CoroutineScope(Dispatchers.Main).ensureActive()
-
-        CoroutineScope(Dispatchers.Default).cancel()
-        CoroutineScope(Dispatchers.Main).cancel()
-    }
-
-    override fun onStart() {
-        super.onStart()
-
-        if(tv_ah_ar != null && tv_ah_en != null){
-            tv_ah_ar.text = getString(R.string.loading)
-            tv_ah_en.text = getString(R.string.loading)
-        }
-    }
 
     /* Subscribe live data */
     private fun subscribeObserversDB() {
@@ -89,18 +74,23 @@ class FragmentInfo : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         fragmentInfoViewModel.asmaAlHusnaApi.observe(this, Observer {
             when(it.Status) {
                 EnumStatus.SUCCESS -> {
-                    runAhCoroutine(it.data?.data!!)
+                    tv_ah_loading.visibility = View.GONE
+                    rv_ah.visibility = View.VISIBLE
+                    initAHAdapter(it?.data?.data!!)
                 }
-                EnumStatus.LOADING -> {
-                    tv_ah_ar.text = getString(R.string.loading)
-                    tv_ah_en.text = getString(R.string.loading)
+                EnumStatus.LOADING ->{
+                    tv_ah_loading.visibility = View.VISIBLE
+                    rv_ah.visibility = View.GONE
+                    tv_ah_loading.text = getString(R.string.loading)
                 }
                 EnumStatus.ERROR -> {
-                    tv_ah_ar.text = getString(R.string.fetch_failed_sort)
-                    tv_ah_en.text = getString(R.string.fetch_failed_sort)
+                    tv_ah_loading.visibility = View.VISIBLE
+                    rv_ah.visibility = View.GONE
+                    tv_ah_loading.text = getString(R.string.fetch_failed)
                 }
             }
         })
+
 
         fragmentInfoViewModel.prayerApi.observe(this, Observer {
 
@@ -150,21 +140,12 @@ class FragmentInfo : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         })
     }
 
-    private fun runAhCoroutine(listAh: List<com.programmergabut.solatkuy.data.model.asmaalhusnaJson.Data>) {
+    private fun initAHAdapter(datas: List<com.programmergabut.solatkuy.data.model.asmaalhusnaJson.Data>) {
 
-        CoroutineScope(Dispatchers.Default).launch {
-
-            listAh.forEach{ x ->
-                delay(2000)
-                withContext(Dispatchers.Main){
-                    if(tv_ah_ar != null && tv_ah_en != null){
-                        tv_ah_ar.text = x.name
-                        tv_ah_en.text = x.en.meaning
-                    }
-                    else
-                        this.cancel()
-                }
-            }
+        rv_ah.apply {
+            adapter = FragmentInfoAdapter(datas)
+            layoutManager = GridLayoutManager(this@FragmentInfo.context, 2, LinearLayoutManager.HORIZONTAL, false)
+            setHasFixedSize(true)
         }
 
     }
@@ -190,14 +171,18 @@ class FragmentInfo : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     override fun onRefresh() {
-        fragmentInfoViewModel.prayerApi.postValue(Resource.loading(null))
         val currDate = LocalDate()
 
         //fetch Prayer Api
+        fragmentInfoViewModel.prayerApi.postValue(Resource.loading(null))
         if(mMsApi1 != null)
             fetchPrayerApi(mMsApi1?.latitude!!, mMsApi1?.longitude!!, "8", currDate.monthOfYear.toString(),currDate.year.toString())
         else
             fragmentInfoViewModel.prayerApi.postValue(Resource.error(getString(R.string.fetch_failed), null))
+
+        //fetch Asma Al Husna
+        fragmentInfoViewModel.asmaAlHusnaApi.postValue(Resource.loading(null))
+        fetchAsmaAlHusnaApi()
 
         sl_info.isRefreshing = false
     }

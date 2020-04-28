@@ -1,0 +1,31 @@
+<?xml version="1.0" encoding="utf-8"?>
+
+<LinearLayout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content"
+    android:layout_margin="@dimen/small_margin"
+    android:orientation="vertical">
+
+    <TextView
+        android:id="@+id/tv_ah_ar"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:textSize="@dimen/large_text_size"
+        android:textColor="@color/colorBlack"
+        android:layout_marginTop="@dimen/small_margin"
+        tools:text="الْوَالِي"/>
+    <TextView
+        android:id="@+id/tv_ah_en"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:layout_marginTop="@dimen/small_margin"
+        android:layout_marginBottom="@dimen/medium_margin"
+        android:textColor="@color/colorBlack"
+        android:textSize="@dimen/small_text_size"
+        tools:text="Al Waali"/>
+
+</LinearLayout>
