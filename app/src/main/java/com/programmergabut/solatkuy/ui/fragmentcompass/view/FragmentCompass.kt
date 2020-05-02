@@ -1,5 +1,6 @@
 package com.programmergabut.solatkuy.ui.fragmentcompass.view
 
+import android.app.Dialog
 import android.content.Context.SENSOR_SERVICE
 import android.hardware.Sensor
 import android.hardware.SensorEvent
@@ -21,6 +22,7 @@ import com.programmergabut.solatkuy.ui.fragmentcompass.viewmodel.FragmentCompass
 import com.programmergabut.solatkuy.util.EnumStatus
 import com.programmergabut.solatkuy.util.Resource
 import kotlinx.android.synthetic.main.fragment_compass.*
+import kotlinx.android.synthetic.main.layout_phone_tilt.*
 
 /*
  * Created by Katili Jiwo Adi Wiyono on 31/03/20.
@@ -28,20 +30,23 @@ import kotlinx.android.synthetic.main.fragment_compass.*
 
 class FragmentCompass : Fragment(), SensorEventListener, SwipeRefreshLayout.OnRefreshListener {
 
-    lateinit var fragmentCompassViewModel: FragmentCompassViewModel
-    lateinit var mMsApi1: MsApi1
+    private lateinit var fragmentCompassViewModel: FragmentCompassViewModel
+    private lateinit var mMsApi1: MsApi1
 
     private var mGravity = FloatArray(3)
     private var mGeomagnetic = FloatArray(3)
     private var azimuth = 0f
     private var currentAzimuth = 0f
-    lateinit var mSensorManager: SensorManager
+    private lateinit var mSensorManager: SensorManager
+
+    private var animationHasOpen: Boolean = false
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
         mSensorManager = activity?.getSystemService(SENSOR_SERVICE) as SensorManager
 
         fragmentCompassViewModel = ViewModelProviders.of(this).get(FragmentCompassViewModel::class.java)
+
 
         subscribeObserversDB()
         subscribeObserversAPI()
@@ -50,6 +55,7 @@ class FragmentCompass : Fragment(), SensorEventListener, SwipeRefreshLayout.OnRe
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+
         refreshLayout()
     }
 
@@ -85,7 +91,6 @@ class FragmentCompass : Fragment(), SensorEventListener, SwipeRefreshLayout.OnRe
         })
     }
 
-
     /* Compass */
     override fun onResume() {
         super.onResume()
@@ -102,6 +107,12 @@ class FragmentCompass : Fragment(), SensorEventListener, SwipeRefreshLayout.OnRe
     }
 
     override fun onSensorChanged(event: SensorEvent?) {
+
+        if(!animationHasOpen){
+            createLottieAnimation()
+            animationHasOpen = true
+        }
+
 
         val alpha = 0.97f
         synchronized(this){
@@ -156,6 +167,20 @@ class FragmentCompass : Fragment(), SensorEventListener, SwipeRefreshLayout.OnRe
         fragmentCompassViewModel.compassApi.postValue(Resource.loading(null))
         fetchCompassApi(mMsApi1.latitude, mMsApi1.longitude)
         sl_compass.isRefreshing = false
+    }
+
+    /* Lottie Animation */
+    private fun createLottieAnimation() {
+        val dialogView = layoutInflater.inflate(R.layout.layout_phone_tilt, null)
+        val dialog =  Dialog(context!!)
+        dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        dialog.setCancelable(false)
+        dialog.setContentView(dialogView)
+        dialog.show()
+
+        dialog.btn_hideAnimation.setOnClickListener {
+            dialog.hide()
+        }
     }
 
 }

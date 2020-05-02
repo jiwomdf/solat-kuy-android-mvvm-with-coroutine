@@ -41,7 +41,7 @@
     <string name="fetch_failed_sort">N/A</string>
     <string name="next_prayer_is_dhuhr">Next prayer is Dhuhr</string>
     <string name="welcome_dialog">Welcome to Solat Kuy! \n Solat Kuy is a reminder prayer time application \n\n in order to start this app \nplease select your location</string>
-    <string name="please_tilt_your_phone_until_the_image_is_balanced">Please tilt your phone until the image is balanced</string>
+    <string name="please_tilt_your_phone_until_the_image_is_balanced">Please calibrate your phone compass before using this feature</string>
     <string name="imsak_info">Imsak Info</string>
     <string name="gregorian_to_hijri">Gregorian to Hijri</string>
     <string name="type">Type</string>
@@ -50,4 +50,9 @@
     <string name="date">Date</string>
     <string name="month">Month</string>
     <string name="asma_al_husna">Asma Al Husna</string>
+    <string name="please_do_this_move_before_using_the_compass_to_calibrate_the_compass">Please do this move before using the compass inorder to calibrate the compass</string>
+    <string name="hide">Hide</string>
+    <string name="don_t_show_again">Don\'t \n show again</string>
+    <string name="see_author_and_credit">see author and credit</string>
+    <string name="day">Day</string>
 </resources>

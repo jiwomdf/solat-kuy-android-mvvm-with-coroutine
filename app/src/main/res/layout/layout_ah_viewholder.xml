@@ -1,7 +1,6 @@
 <?xml version="1.0" encoding="utf-8"?>
 
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
@@ -13,19 +12,32 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:textSize="@dimen/large_text_size"
-        android:textColor="@color/colorBlack"
         android:layout_marginTop="@dimen/small_margin"
-        tools:text="الْوَالِي"/>
+        android:textColor="@color/colorBlack"
+        android:textSize="@dimen/large_text_size"
+        tools:text="الْوَالِي" />
+
     <TextView
         android:id="@+id/tv_ah_en"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
+        android:textStyle="bold"
         android:layout_marginTop="@dimen/small_margin"
-        android:layout_marginBottom="@dimen/medium_margin"
+        android:layout_marginBottom="@dimen/small_margin"
         android:textColor="@color/colorBlack"
         android:textSize="@dimen/small_text_size"
-        tools:text="Al Waali"/>
+        tools:text="Al Waali" />
+
+    <TextView
+        android:id="@+id/tv_ah_num"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_gravity="center"
+        android:textStyle="bold"
+        android:layout_marginBottom="@dimen/small_margin"
+        android:textColor="@color/colorBlack"
+        android:textSize="@dimen/small_text_size"
+        tools:text="1" />
 
 </LinearLayout>

@@ -25,6 +25,7 @@ class FragmentInfoAdapter(private val datas: List<Data>): RecyclerView.Adapter<F
         fun bind(data: Data){
             itemView.tv_ah_ar.text = data.name
             itemView.tv_ah_en.text = data.en.meaning
+            itemView.tv_ah_num.text = data.number.toString()
         }
     }
 }

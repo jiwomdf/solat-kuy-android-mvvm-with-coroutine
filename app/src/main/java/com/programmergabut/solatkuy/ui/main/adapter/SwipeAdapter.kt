@@ -19,7 +19,8 @@ class SwipeAdapter(fm: FragmentManager): FragmentPagerAdapter(fm, BEHAVIOR_RESUM
             0 -> FragmentMain()
             1 -> FragmentCompass()
             2 -> FragmentInfo()
-            else -> FragmentSetting()
+            3-> FragmentSetting()
+            else -> FragmentMain()
         }
     }
 

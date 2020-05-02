@@ -144,7 +144,7 @@ class FragmentInfo : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
         rv_ah.apply {
             adapter = FragmentInfoAdapter(datas)
-            layoutManager = GridLayoutManager(this@FragmentInfo.context, 2, LinearLayoutManager.HORIZONTAL, false)
+            layoutManager = LinearLayoutManager(this@FragmentInfo.context, LinearLayoutManager.HORIZONTAL, false)
             setHasFixedSize(true)
         }
 

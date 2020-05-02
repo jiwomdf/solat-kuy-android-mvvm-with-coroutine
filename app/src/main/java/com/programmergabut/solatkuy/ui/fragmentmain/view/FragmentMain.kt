@@ -1,5 +1,6 @@
 package com.programmergabut.solatkuy.ui.fragmentmain.view
 
+import android.app.Dialog
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater

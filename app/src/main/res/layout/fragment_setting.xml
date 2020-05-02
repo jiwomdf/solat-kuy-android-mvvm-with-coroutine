@@ -207,7 +207,7 @@
                 android:layout_marginTop="16dp"
                 android:backgroundTint="@color/colorWhite"
                 android:textColor="@color/colorPrimary"
-                android:text="see author and credit"
+                android:text="@string/see_author_and_credit"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_authorCredit" />
 
