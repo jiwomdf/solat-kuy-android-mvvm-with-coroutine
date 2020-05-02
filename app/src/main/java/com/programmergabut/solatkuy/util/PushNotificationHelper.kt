@@ -9,7 +9,6 @@ import android.os.Build
 import android.os.Bundle
 import com.programmergabut.solatkuy.data.model.entity.PrayerLocal
 import com.programmergabut.solatkuy.broadcaster.PrayerBroadcastReceiver
-import com.programmergabut.solatkuy.data.model.prayerJson.Timings
 import java.util.*
 
 /*
@@ -51,7 +50,7 @@ class PushNotificationHelper(context: Context, selList: MutableList<PrayerLocal>
             intent.putExtra("prayer_city", mCityName)
             intent.putExtra("list_prayer_bundle", listPrayerBundle)
 
-            val pendingIntent = PendingIntent.getBroadcast(context, EnumPrayer.nIdMain, intent, 0)
+            val pendingIntent = PendingIntent.getBroadcast(context, EnumConfig.nIdMain, intent, 0)
 
             if(c.before(Calendar.getInstance()))
                 c.add(Calendar.DATE, 1)

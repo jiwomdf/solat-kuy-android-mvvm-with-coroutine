@@ -50,7 +50,7 @@
     <string name="date">Date</string>
     <string name="month">Month</string>
     <string name="asma_al_husna">Asma Al Husna</string>
-    <string name="please_do_this_move_before_using_the_compass_to_calibrate_the_compass">Please do this move before using the compass inorder to calibrate the compass</string>
+    <string name="please_do_this_move_before_using_the_compass_to_calibrate_the_compass">Please do this move before using the compass, in order to calibrate the compass</string>
     <string name="hide">Hide</string>
     <string name="don_t_show_again">Don\'t \n show again</string>
     <string name="see_author_and_credit">see author and credit</string>

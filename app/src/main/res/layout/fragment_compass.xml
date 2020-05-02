@@ -61,6 +61,7 @@
         <TextView
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
+            android:gravity="center"
             android:layout_marginTop="@dimen/large_margin"
             android:text="@string/please_tilt_your_phone_until_the_image_is_balanced"
             app:layout_constraintEnd_toEndOf="parent"

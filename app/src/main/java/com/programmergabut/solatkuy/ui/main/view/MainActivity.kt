@@ -199,7 +199,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
             1,
             latitude,
             longitude,
-            "8",
+            "3",
             currDate.monthOfYear.toString(),
             currDate.year.toString()
         )

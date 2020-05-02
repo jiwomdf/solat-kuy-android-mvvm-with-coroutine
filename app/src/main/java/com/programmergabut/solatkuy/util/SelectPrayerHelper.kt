@@ -88,12 +88,12 @@ class SelectPrayerHelper {
                 prayer = 1 //fajr
 
             return when(prayer){
-                6 -> PrayerLocal(5, EnumPrayer.isha, true, strIshaTime)
-                1 -> PrayerLocal(1, EnumPrayer.fajr, true, strFajrTime)
-                2 -> PrayerLocal(2, EnumPrayer.dhuhr, true, strDhuhrTime)
-                3 -> PrayerLocal(3, EnumPrayer.asr, true, strAsrTime)
-                4 -> PrayerLocal(4, EnumPrayer.maghrib, true, strMaghribTime)
-                5 -> PrayerLocal(5, EnumPrayer.isha, true, strIshaTime)
+                6 -> PrayerLocal(5, EnumConfig.isha, true, strIshaTime)
+                1 -> PrayerLocal(1, EnumConfig.fajr, true, strFajrTime)
+                2 -> PrayerLocal(2, EnumConfig.dhuhr, true, strDhuhrTime)
+                3 -> PrayerLocal(3, EnumConfig.asr, true, strAsrTime)
+                4 -> PrayerLocal(4, EnumConfig.maghrib, true, strMaghribTime)
+                5 -> PrayerLocal(5, EnumConfig.isha, true, strIshaTime)
                 else -> null
             }
 

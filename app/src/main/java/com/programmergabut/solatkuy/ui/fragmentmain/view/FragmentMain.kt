@@ -1,6 +1,5 @@
 package com.programmergabut.solatkuy.ui.fragmentmain.view
 
-import android.app.Dialog
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -27,7 +26,6 @@ import com.programmergabut.solatkuy.di.module.DataModule
 import com.programmergabut.solatkuy.ui.fragmentmain.viewmodel.FragmentMainViewModel
 import com.programmergabut.solatkuy.util.*
 import es.dmoral.toasty.Toasty
-import kotlinx.android.synthetic.main.fragment_info.*
 import kotlinx.android.synthetic.main.fragment_main.*
 import kotlinx.android.synthetic.main.layout_prayer_time.*
 import kotlinx.android.synthetic.main.layout_widget.*
@@ -114,7 +112,7 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
             bindWidgetLocation(it)
 
             /* fetching Prayer API */
-            fetchPrayerApi(it.latitude,it.longitude,"8", currDate.monthOfYear.toString(),currDate.year.toString())
+            fetchPrayerApi(it.latitude,it.longitude, EnumConfig.pMethod, currDate.monthOfYear.toString(),currDate.year.toString())
         })
     }
 
@@ -283,7 +281,7 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
         tv_view_latitude.text = it.latitude + " °N"
         tv_view_longitude.text = it.longitude + " °W"
-        tv_view_city.text = mCityName
+        tv_view_city.text = mCityName ?: EnumConfig.lCity
     }
 
     private fun bindPrayerText(apiData: Data?) {
@@ -424,7 +422,7 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
                 withContext(Dispatchers.Main){
                     tempMsApi1?.let {
-                        fetchPrayerApi(it.latitude, it.longitude, "8", it.month, it.year)
+                        fetchPrayerApi(it.latitude, it.longitude, EnumConfig.pMethod, it.month, it.year)
                     }
                 }
             }
@@ -459,7 +457,7 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
         tempMsApi1?.let {
             fragmentMainViewModel.prayerApi.postValue(Resource.loading(null))
-            fetchPrayerApi(it.latitude, it.longitude, "8", currDate.monthOfYear.toString(),currDate.year.toString())
+            fetchPrayerApi(it.latitude, it.longitude, EnumConfig.pMethod, currDate.monthOfYear.toString(),currDate.year.toString())
         }
 
         sl_main.isRefreshing = false

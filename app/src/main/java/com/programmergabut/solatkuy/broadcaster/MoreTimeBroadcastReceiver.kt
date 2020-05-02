@@ -8,7 +8,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import com.programmergabut.solatkuy.util.EnumPrayer
+import com.programmergabut.solatkuy.util.EnumConfig
 import org.joda.time.LocalTime
 import java.util.*
 
@@ -30,7 +30,7 @@ class MoreTimeBroadcastReceiver: BroadcastReceiver() {
         // new time
         val nowTime = LocalTime.now().toString()
         val hour = nowTime.split(":")[0].trim()
-        val minute = nowTime.split(":")[1].trim().toInt() + EnumPrayer.mTime
+        val minute = nowTime.split(":")[1].trim().toInt() + EnumConfig.mTime
 
         val c = Calendar.getInstance()
         c.set(Calendar.HOUR_OF_DAY, hour.toInt())
@@ -49,39 +49,39 @@ class MoreTimeBroadcastReceiver: BroadcastReceiver() {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
         when(prayerID!!) {
-            EnumPrayer.nId1 -> {
-                i.putExtra("prayer_id", EnumPrayer.nId2)
+            EnumConfig.nId1 -> {
+                i.putExtra("prayer_id", EnumConfig.nId2)
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
                     alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, c.timeInMillis,
-                        PendingIntent.getBroadcast(context, EnumPrayer.nId2, i, 0))
+                        PendingIntent.getBroadcast(context, EnumConfig.nId2, i, 0))
                 else
                     alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.timeInMillis,
-                        PendingIntent.getBroadcast(context, EnumPrayer.nId2, i, 0))
+                        PendingIntent.getBroadcast(context, EnumConfig.nId2, i, 0))
 
-                notificationManager.cancel(EnumPrayer.nId1)
+                notificationManager.cancel(EnumConfig.nId1)
             }
-            EnumPrayer.nId2 -> {
-                i.putExtra("prayer_id", EnumPrayer.nId1)
+            EnumConfig.nId2 -> {
+                i.putExtra("prayer_id", EnumConfig.nId1)
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
                     alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, c.timeInMillis,
-                        PendingIntent.getBroadcast(context, EnumPrayer.nId1, i, 0))
+                        PendingIntent.getBroadcast(context, EnumConfig.nId1, i, 0))
                 else
                     alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.timeInMillis,
-                        PendingIntent.getBroadcast(context, EnumPrayer.nId1, i, 0))
+                        PendingIntent.getBroadcast(context, EnumConfig.nId1, i, 0))
 
-                notificationManager.cancel(EnumPrayer.nId2)
+                notificationManager.cancel(EnumConfig.nId2)
             }
             else -> {
-                i.putExtra("prayer_id", EnumPrayer.nId1)
+                i.putExtra("prayer_id", EnumConfig.nId1)
                 reloadOriginalIntent(prayerID, originalPrayerName!!, originalPrayerTime!!, originalPrayerCity!!, originalListPrayerBundle!!, context)
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
                     alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, c.timeInMillis,
-                        PendingIntent.getBroadcast(context, EnumPrayer.nId1, i, 0)) //first more time pID = 100
+                        PendingIntent.getBroadcast(context, EnumConfig.nId1, i, 0)) //first more time pID = 100
                 else
                     alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.timeInMillis,
-                        PendingIntent.getBroadcast(context, EnumPrayer.nId1, i, 0)) //first more time pID = 100
+                        PendingIntent.getBroadcast(context, EnumConfig.nId1, i, 0)) //first more time pID = 100
 
-                notificationManager.cancel(EnumPrayer.nIdMain)
+                notificationManager.cancel(EnumConfig.nIdMain)
             }
         }
 

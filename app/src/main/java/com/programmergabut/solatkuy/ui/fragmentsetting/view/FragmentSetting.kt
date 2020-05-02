@@ -28,6 +28,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.data.model.entity.MsApi1
 import com.programmergabut.solatkuy.ui.fragmentsetting.viewmodel.FragmentSettingViewModel
+import com.programmergabut.solatkuy.util.EnumConfig
 import com.programmergabut.solatkuy.util.LocationHelper
 import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.fragment_setting.*
@@ -78,7 +79,7 @@ class FragmentSetting : Fragment() {
             1,
             latitude,
             longitude,
-            "8",
+            "3",
             currDate.monthOfYear.toString(),
             currDate.year.toString()
         )
@@ -90,9 +91,11 @@ class FragmentSetting : Fragment() {
     private fun subscribeObserversDB() {
         fragmentSettingViewModel.msApi1Local.observe(this, Observer {
 
+            val city = LocationHelper.getCity(context!!, it.latitude.toDouble(), it.longitude.toDouble())
+
             tv_view_latitude.text = it.latitude + " °S"
             tv_view_longitude.text = it.longitude + " °E"
-            tv_view_city.text = LocationHelper.getCity(context!!, it.latitude.toDouble(), it.longitude.toDouble())
+            tv_view_city.text = city ?: EnumConfig.lCity
         })
     }
 

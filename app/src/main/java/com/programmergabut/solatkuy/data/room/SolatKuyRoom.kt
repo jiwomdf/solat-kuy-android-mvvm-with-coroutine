@@ -11,7 +11,7 @@ import com.programmergabut.solatkuy.data.local.NotifiedPrayerDao
 import com.programmergabut.solatkuy.data.model.entity.MsApi1
 import com.programmergabut.solatkuy.data.model.entity.MsSetting
 import com.programmergabut.solatkuy.data.model.entity.PrayerLocal
-import com.programmergabut.solatkuy.util.EnumPrayer
+import com.programmergabut.solatkuy.util.EnumConfig
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.launch
 
@@ -116,7 +116,7 @@ abstract class SolatKuyRoom: RoomDatabase() {
                         1,
                         "0",
                         "0",
-                        "8",
+                        "3",
                         "3",
                         "2020"
                     )
@@ -128,42 +128,42 @@ abstract class SolatKuyRoom: RoomDatabase() {
 
                 notifiedPrayerDao.insertNotifiedPrayer(
                     PrayerLocal(
-                        EnumPrayer.fajr,
+                        EnumConfig.fajr,
                         true,
                         "00:00"
                     )
                 )
                 notifiedPrayerDao.insertNotifiedPrayer(
                     PrayerLocal(
-                        EnumPrayer.dhuhr,
+                        EnumConfig.dhuhr,
                         true,
                         "00:00"
                     )
                 )
                 notifiedPrayerDao.insertNotifiedPrayer(
                     PrayerLocal(
-                        EnumPrayer.asr,
+                        EnumConfig.asr,
                         true,
                         "00:00"
                     )
                 )
                 notifiedPrayerDao.insertNotifiedPrayer(
                     PrayerLocal(
-                        EnumPrayer.maghrib,
+                        EnumConfig.maghrib,
                         true,
                         "00:00"
                     )
                 )
                 notifiedPrayerDao.insertNotifiedPrayer(
                     PrayerLocal(
-                        EnumPrayer.isha,
+                        EnumConfig.isha,
                         true,
                         "00:00"
                     )
                 )
                 notifiedPrayerDao.insertNotifiedPrayer(
                     PrayerLocal(
-                        EnumPrayer.sunrise,
+                        EnumConfig.sunrise,
                         true,
                         "00:00"
                     )

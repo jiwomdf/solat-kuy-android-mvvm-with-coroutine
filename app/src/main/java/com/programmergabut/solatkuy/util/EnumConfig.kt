@@ -5,7 +5,7 @@ package com.programmergabut.solatkuy.util
  */
 
 
-class EnumPrayer {
+class EnumConfig {
     companion object{
         const val fajr = "Fajr"
         const val dhuhr = "Dhuhr"
@@ -22,5 +22,11 @@ class EnumPrayer {
 
         /* more time */
         const val mTime = 10
+
+        /* Prayer Method */
+        const val pMethod = "3"
+
+        /* City not found */
+        const val lCity = "City not found"
     }
 }

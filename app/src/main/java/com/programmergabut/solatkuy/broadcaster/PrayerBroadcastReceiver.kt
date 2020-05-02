@@ -9,7 +9,7 @@ import android.os.Build
 import android.os.Bundle
 import com.programmergabut.solatkuy.data.model.entity.PrayerLocal
 import com.programmergabut.solatkuy.ui.main.view.MainActivity
-import com.programmergabut.solatkuy.util.EnumPrayer
+import com.programmergabut.solatkuy.util.EnumConfig
 import com.programmergabut.solatkuy.util.NotificationHelper
 import com.programmergabut.solatkuy.util.SelectPrayerHelper
 import java.lang.Exception
@@ -47,23 +47,23 @@ class PrayerBroadcastReceiver: BroadcastReceiver() {
 
 
         when (pID!!) {
-            EnumPrayer.nId1 -> {
-                val pendingIntent = PendingIntent.getActivity(context, EnumPrayer.nId1, nextIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+            EnumConfig.nId1 -> {
+                val pendingIntent = PendingIntent.getActivity(context, EnumConfig.nId1, nextIntent, PendingIntent.FLAG_UPDATE_CURRENT)
 
-                val nb = mNotificationHelper.getPrayerReminderNC(EnumPrayer.nId1, pTime!!, pCity!!, pName!!, listPrayerBundle, pendingIntent)
-                mNotificationHelper.getManager()?.notify(EnumPrayer.nId1, nb.build())
+                val nb = mNotificationHelper.getPrayerReminderNC(EnumConfig.nId1, pTime!!, pCity!!, pName!!, listPrayerBundle, pendingIntent)
+                mNotificationHelper.getManager()?.notify(EnumConfig.nId1, nb.build())
             }
-            EnumPrayer.nId2 -> {
-                val pendingIntent = PendingIntent.getActivity(context, EnumPrayer.nId2, nextIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+            EnumConfig.nId2 -> {
+                val pendingIntent = PendingIntent.getActivity(context, EnumConfig.nId2, nextIntent, PendingIntent.FLAG_UPDATE_CURRENT)
 
-                val nb = mNotificationHelper.getPrayerReminderNC(EnumPrayer.nId2, pTime!!, pCity!!, pName!!, listPrayerBundle, pendingIntent)
-                mNotificationHelper.getManager()?.notify(EnumPrayer.nId2, nb.build())
+                val nb = mNotificationHelper.getPrayerReminderNC(EnumConfig.nId2, pTime!!, pCity!!, pName!!, listPrayerBundle, pendingIntent)
+                mNotificationHelper.getManager()?.notify(EnumConfig.nId2, nb.build())
             }
             else -> {
-                val pendingIntent = PendingIntent.getActivity(context, EnumPrayer.nIdMain, nextIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+                val pendingIntent = PendingIntent.getActivity(context, EnumConfig.nIdMain, nextIntent, PendingIntent.FLAG_UPDATE_CURRENT)
 
                 val nb = mNotificationHelper.getPrayerReminderNC(pID!!, pTime!!, pCity!!, pName!!, listPrayerBundle, pendingIntent)
-                mNotificationHelper.getManager()?.notify(EnumPrayer.nIdMain, nb.build())
+                mNotificationHelper.getManager()?.notify(EnumConfig.nIdMain, nb.build())
 
                 executeNextNotification(listPrayerBundle,context, pCity!!)
             }
@@ -80,7 +80,7 @@ class PrayerBroadcastReceiver: BroadcastReceiver() {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
         /* remove sunrise */
-        val newList = listData.filter { x -> x.prayerName !=  EnumPrayer.sunrise} as MutableList<PrayerLocal>
+        val newList = listData.filter { x -> x.prayerName !=  EnumConfig.sunrise} as MutableList<PrayerLocal>
 
         val selID = SelectPrayerHelper.selNextPrayerByLastID(newList, pID!!)
         //selID = PrayerLocal(2,"mantap 2",true,"01:12") //#testing purpose

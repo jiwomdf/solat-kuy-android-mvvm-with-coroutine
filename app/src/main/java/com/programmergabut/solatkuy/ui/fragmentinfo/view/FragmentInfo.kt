@@ -1,30 +1,25 @@
 package com.programmergabut.solatkuy.ui.fragmentinfo.view
 
-import android.opengl.Visibility
 import android.os.Bundle
-import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProviders
-import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.programmergabut.solatkuy.R
-import com.programmergabut.solatkuy.data.model.asmaalhusnaJson.AsmaAlHusnaApi
 import com.programmergabut.solatkuy.data.model.entity.MsApi1
 import com.programmergabut.solatkuy.data.model.prayerJson.Data
 import com.programmergabut.solatkuy.data.model.prayerJson.PrayerApi
 import com.programmergabut.solatkuy.ui.fragmentinfo.viewmodel.FragmentInfoViewModel
-import com.programmergabut.solatkuy.ui.fragmentmain.adapter.FragmentInfoAdapter
+import com.programmergabut.solatkuy.ui.fragmentinfo.adapter.FragmentInfoAdapter
+import com.programmergabut.solatkuy.util.EnumConfig
 import com.programmergabut.solatkuy.util.EnumStatus
 import com.programmergabut.solatkuy.util.LocationHelper
 import com.programmergabut.solatkuy.util.Resource
 import kotlinx.android.synthetic.main.fragment_info.*
-import kotlinx.android.synthetic.main.layout_ah_viewholder.*
-import kotlinx.coroutines.*
 import org.joda.time.LocalDate
 import java.text.SimpleDateFormat
 import java.util.*
@@ -63,9 +58,11 @@ class FragmentInfo : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         fragmentInfoViewModel.msApi1Local.observe(this, Observer {
             mMsApi1 = it
 
-            tv_city.text = LocationHelper.getCity(context!!, it.latitude.toDouble(), it.longitude.toDouble())
+            val city = LocationHelper.getCity(context!!, it.latitude.toDouble(), it.longitude.toDouble())
 
-            fetchPrayerApi(it.latitude, it.longitude,"8", currDate.monthOfYear.toString(),currDate.year.toString())
+            tv_city.text = city ?: EnumConfig.lCity
+
+            fetchPrayerApi(it.latitude, it.longitude, EnumConfig.pMethod, currDate.monthOfYear.toString(),currDate.year.toString())
         })
     }
 
@@ -143,7 +140,10 @@ class FragmentInfo : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     private fun initAHAdapter(datas: List<com.programmergabut.solatkuy.data.model.asmaalhusnaJson.Data>) {
 
         rv_ah.apply {
-            adapter = FragmentInfoAdapter(datas)
+            adapter =
+                FragmentInfoAdapter(
+                    datas
+                )
             layoutManager = LinearLayoutManager(this@FragmentInfo.context, LinearLayoutManager.HORIZONTAL, false)
             setHasFixedSize(true)
         }
@@ -176,7 +176,7 @@ class FragmentInfo : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         //fetch Prayer Api
         fragmentInfoViewModel.prayerApi.postValue(Resource.loading(null))
         if(mMsApi1 != null)
-            fetchPrayerApi(mMsApi1?.latitude!!, mMsApi1?.longitude!!, "8", currDate.monthOfYear.toString(),currDate.year.toString())
+            fetchPrayerApi(mMsApi1?.latitude!!, mMsApi1?.longitude!!, EnumConfig.pMethod, currDate.monthOfYear.toString(),currDate.year.toString())
         else
             fragmentInfoViewModel.prayerApi.postValue(Resource.error(getString(R.string.fetch_failed), null))
 
