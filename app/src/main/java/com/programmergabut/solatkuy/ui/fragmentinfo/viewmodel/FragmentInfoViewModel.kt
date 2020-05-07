@@ -19,47 +19,24 @@ import java.lang.Exception
  * Created by Katili Jiwo Adi Wiyono on 25/04/20.
  */
 
-class FragmentInfoViewModel(application: Application): AndroidViewModel(application) {
+class FragmentInfoViewModel(application: Application,  private val repository: Repository): AndroidViewModel(application) {
 
-    private var repository: Repository? = null
-
-    val prayerApi = MutableLiveData<Resource<PrayerApi>>()
-    val asmaAlHusnaApi = MutableLiveData<Resource<AsmaAlHusnaApi>>()
-    val msApi1Local: LiveData<MsApi1>
+    var prayerApi = MutableLiveData<Resource<PrayerApi>>()
+    var asmaAlHusnaApi = MutableLiveData<Resource<AsmaAlHusnaApi>>()
+    val msApi1Local: LiveData<MsApi1> = repository.mMsApi1
 
     //Room
     init {
-        repository = Repository(application,viewModelScope)
-
-        msApi1Local = repository!!.mMsApi1
-
         prayerApi.postValue(Resource.loading(null))
         asmaAlHusnaApi.postValue(Resource.loading(null))
     }
 
     //Live Data
     fun fetchPrayerApi(latitude: String, longitude: String, method: String, month: String, year: String){
-
-        viewModelScope.launch(Dispatchers.IO){
-            try {
-                prayerApi.postValue(Resource.success(Repository(getApplication(),viewModelScope)
-                    .fetchPrayerApi(latitude,longitude, method, month, year)))
-            }
-            catch (ex: Exception){
-                prayerApi.postValue(Resource.error(ex.message.toString(), null))
-            }
-        }
+        prayerApi = repository.fetchPrayerApi(latitude, longitude, method, month, year)
     }
 
     fun fetchAsmaAlHusnaApi() {
-
-        viewModelScope.launch(Dispatchers.IO){
-            try {
-                asmaAlHusnaApi.postValue(Resource.success(Repository(getApplication(),viewModelScope).fetchAsmaAlHusnaApi()))
-            }
-            catch (ex: Exception){
-                asmaAlHusnaApi.postValue(Resource.error(ex.message.toString(), null))
-            }
-        }
+        asmaAlHusnaApi = repository.getAsmaAlHusna()
     }
 }

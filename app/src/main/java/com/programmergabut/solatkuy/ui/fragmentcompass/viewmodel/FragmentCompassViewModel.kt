@@ -14,37 +14,19 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.lang.Exception
 
-class FragmentCompassViewModel(a: Application): AndroidViewModel(a) {
+class FragmentCompassViewModel(a: Application, private val repository: Repository): AndroidViewModel(a) {
 
-    val compassApi = MutableLiveData<Resource<CompassApi>>()
+    var compassApi = MutableLiveData<Resource<CompassApi>>()
     val msApi1Local: LiveData<MsApi1>
-
-    private var repository: Repository? = null
 
     init {
         compassApi.postValue(Resource.loading(null))
-
-        /* init repository */
-        repository = Repository(a,viewModelScope)
-
-        msApi1Local = repository?.mMsApi1!!
+        msApi1Local = repository.mMsApi1
     }
 
     //Live Data
     fun fetchCompassApi(latitude: String, longitude: String){
-
-        viewModelScope.launch(Dispatchers.IO){
-            try {
-                compassApi.postValue(Resource.success(
-                    Repository(getApplication(), viewModelScope)
-                    .fetchQiblaApi(latitude,longitude)))
-            }
-            catch (ex: Exception){
-                compassApi.postValue(Resource.error(ex.message.toString(), null))
-            }
-
-        }
-
+        compassApi = repository.getCompass(latitude, longitude)
     }
 
 }

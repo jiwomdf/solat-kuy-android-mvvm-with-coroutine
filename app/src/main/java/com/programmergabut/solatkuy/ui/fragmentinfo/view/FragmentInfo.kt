@@ -6,6 +6,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -13,13 +14,17 @@ import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.data.model.entity.MsApi1
 import com.programmergabut.solatkuy.data.model.prayerJson.Data
 import com.programmergabut.solatkuy.data.model.prayerJson.PrayerApi
+import com.programmergabut.solatkuy.ui.fragmentcompass.viewmodel.FragmentCompassViewModel
 import com.programmergabut.solatkuy.ui.fragmentinfo.viewmodel.FragmentInfoViewModel
 import com.programmergabut.solatkuy.ui.fragmentinfo.adapter.FragmentInfoAdapter
 import com.programmergabut.solatkuy.util.EnumConfig
 import com.programmergabut.solatkuy.util.EnumStatus
 import com.programmergabut.solatkuy.util.LocationHelper
 import com.programmergabut.solatkuy.util.Resource
+import com.programmergabut.solatkuy.viewmodel.ViewModelFactory
 import kotlinx.android.synthetic.main.fragment_info.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import org.joda.time.LocalDate
 import java.text.SimpleDateFormat
 import java.util.*
@@ -35,7 +40,8 @@ class FragmentInfo : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
-        fragmentInfoViewModel = ViewModelProviders.of(this).get(FragmentInfoViewModel::class.java)
+        fragmentInfoViewModel = ViewModelProvider(this, ViewModelFactory.getInstance(activity?.application!!,
+            CoroutineScope(Dispatchers.IO)))[FragmentInfoViewModel::class.java]
 
         subscribeObserversDB()
         fetchAsmaAlHusnaApi()

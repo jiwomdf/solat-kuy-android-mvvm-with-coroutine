@@ -8,6 +8,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.fragment.app.Fragment
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.Glide
@@ -23,8 +24,10 @@ import com.programmergabut.solatkuy.data.model.prayerJson.Timings
 import com.programmergabut.solatkuy.di.component.DaggerIDataComponent
 import com.programmergabut.solatkuy.di.component.DaggerITimingsComponent
 import com.programmergabut.solatkuy.di.module.DataModule
+import com.programmergabut.solatkuy.ui.fragmentcompass.viewmodel.FragmentCompassViewModel
 import com.programmergabut.solatkuy.ui.fragmentmain.viewmodel.FragmentMainViewModel
 import com.programmergabut.solatkuy.util.*
+import com.programmergabut.solatkuy.viewmodel.ViewModelFactory
 import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.fragment_main.*
 import kotlinx.android.synthetic.main.layout_prayer_time.*
@@ -53,7 +56,8 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        fragmentMainViewModel = ViewModelProviders.of(this).get(FragmentMainViewModel::class.java)
+        fragmentMainViewModel = ViewModelProvider(this, ViewModelFactory.getInstance(activity?.application!!,
+            CoroutineScope(Dispatchers.IO)))[FragmentMainViewModel::class.java]
 
         subscribeObserversAPI()
         subscribeObserversDB()

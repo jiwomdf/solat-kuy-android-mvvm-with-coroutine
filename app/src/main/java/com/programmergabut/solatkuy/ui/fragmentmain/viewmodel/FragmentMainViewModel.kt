@@ -18,46 +18,27 @@ import java.lang.Exception
  * Created by Katili Jiwo Adi Wiyono on 25/03/20.
  */
 
-class FragmentMainViewModel(application: Application): AndroidViewModel(application) {
+class FragmentMainViewModel(application: Application, private val repository: Repository): AndroidViewModel(application) {
 
-    private var repository: Repository? = null
+    var prayerApi = MutableLiveData<Resource<PrayerApi>>()
+    val listPrayerLocal: LiveData<List<PrayerLocal>> = repository.mListPrayerLocal
+    val msApi1Local: LiveData<MsApi1> = repository.mMsApi1
 
-    val prayerApi = MutableLiveData<Resource<PrayerApi>>()
-    val listPrayerLocal: LiveData<List<PrayerLocal>>
-    val msApi1Local: LiveData<MsApi1>
-
-    //Room
     init {
-        repository = Repository(application,viewModelScope)
-
-        listPrayerLocal = repository!!.mListPrayerLocal
-        msApi1Local = repository!!.mMsApi1
-
         prayerApi.postValue(Resource.loading(null))
     }
 
     fun updateNotifiedPrayer(prayerLocal: PrayerLocal) = viewModelScope.launch {
-        repository?.updateNotifiedPrayer(prayerLocal)
+        repository.updateNotifiedPrayer(prayerLocal)
     }
 
     fun updatePrayerIsNotified(prayerName: String, isNotified: Boolean) = viewModelScope.launch {
-        repository?.updatePrayerIsNotified(prayerName, isNotified)
+        repository.updatePrayerIsNotified(prayerName, isNotified)
     }
 
     //Live Data
     fun fetchPrayerApi(latitude: String, longitude: String, method: String, month: String, year: String){
-
-        viewModelScope.launch(Dispatchers.IO){
-            try {
-                prayerApi.postValue(Resource.success(Repository(getApplication(),viewModelScope)
-                    .fetchPrayerApi(latitude,longitude, method, month, year)))
-            }
-            catch (ex: Exception){
-                prayerApi.postValue(Resource.error(ex.message.toString(), null))
-            }
-
-        }
-
+        prayerApi = repository.fetchPrayerApi(latitude, longitude, method, month, year)
     }
 
 

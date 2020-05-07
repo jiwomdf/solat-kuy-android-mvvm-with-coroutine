@@ -14,6 +14,7 @@ import android.view.animation.Animation
 import android.view.animation.RotateAnimation
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.ViewModelProviders
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.programmergabut.solatkuy.R
@@ -21,8 +22,11 @@ import com.programmergabut.solatkuy.data.model.entity.MsApi1
 import com.programmergabut.solatkuy.ui.fragmentcompass.viewmodel.FragmentCompassViewModel
 import com.programmergabut.solatkuy.util.EnumStatus
 import com.programmergabut.solatkuy.util.Resource
+import com.programmergabut.solatkuy.viewmodel.ViewModelFactory
 import kotlinx.android.synthetic.main.fragment_compass.*
 import kotlinx.android.synthetic.main.layout_phone_tilt.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 
 /*
  * Created by Katili Jiwo Adi Wiyono on 31/03/20.
@@ -45,7 +49,8 @@ class FragmentCompass : Fragment(), SensorEventListener, SwipeRefreshLayout.OnRe
 
         mSensorManager = activity?.getSystemService(SENSOR_SERVICE) as SensorManager
 
-        fragmentCompassViewModel = ViewModelProviders.of(this).get(FragmentCompassViewModel::class.java)
+        fragmentCompassViewModel = ViewModelProvider(this, ViewModelFactory.getInstance(activity?.application!!,
+            CoroutineScope(Dispatchers.IO)))[FragmentCompassViewModel::class.java]
 
 
         subscribeObserversDB()

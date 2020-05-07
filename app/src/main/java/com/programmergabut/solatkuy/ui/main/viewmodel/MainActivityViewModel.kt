@@ -9,16 +9,14 @@ import com.programmergabut.solatkuy.data.model.entity.MsSetting
 import com.programmergabut.solatkuy.data.repository.Repository
 import kotlinx.coroutines.launch
 
-class MainActivityViewModel(application: Application) : AndroidViewModel(application){
+class MainActivityViewModel(application: Application, repository: Repository) : AndroidViewModel(application){
 
     val msSetting: LiveData<MsSetting>
     private var repository: Repository? = null
 
     //Room
     init {
-        repository = Repository(application,viewModelScope)
-
-        msSetting = repository!!.mMsSetting
+        msSetting = repository.mMsSetting
     }
 
     fun updateMsApi1(msApi1: MsApi1) = viewModelScope.launch {
