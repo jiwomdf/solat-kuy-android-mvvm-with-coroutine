@@ -4,13 +4,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import com.programmergabut.solatkuy.data.room.SolatKuyRoom
 import com.programmergabut.solatkuy.service.ServiceBootComplete
-import com.programmergabut.solatkuy.util.PushNotificationHelper
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import java.lang.Exception
 
 /*
  * Created by Katili Jiwo Adi Wiyono on 02/04/20.

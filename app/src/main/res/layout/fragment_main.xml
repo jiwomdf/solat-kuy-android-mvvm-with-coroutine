@@ -22,7 +22,6 @@
             app:layout_constraintTop_toTopOf="parent" />
 
         <include
-            android:id="@+id/in_prayer_time"
             layout="@layout/layout_prayer_time"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"

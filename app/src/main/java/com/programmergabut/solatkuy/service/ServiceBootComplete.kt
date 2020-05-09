@@ -30,6 +30,6 @@ class ServiceBootComplete: Service() {
             PushNotificationHelper(this@ServiceBootComplete, data,"-")
         }
 
-        return START_REDELIVER_INTENT;
+        return START_REDELIVER_INTENT
     }
 }

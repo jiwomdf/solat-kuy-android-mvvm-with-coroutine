@@ -19,7 +19,7 @@ import android.widget.Toast
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager.widget.ViewPager
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
@@ -32,11 +32,14 @@ import com.programmergabut.solatkuy.data.model.entity.MsApi1
 import com.programmergabut.solatkuy.data.model.entity.MsSetting
 import com.programmergabut.solatkuy.ui.main.adapter.SwipeAdapter
 import com.programmergabut.solatkuy.ui.main.viewmodel.MainActivityViewModel
+import com.programmergabut.solatkuy.viewmodel.ViewModelFactory
 import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.layout_bottom_navigation_bar.*
 import kotlinx.android.synthetic.main.layout_bottomsheet_bygps.view.*
 import kotlinx.android.synthetic.main.layout_bottomsheet_bylatitudelongitude.view.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 import org.joda.time.LocalDate
 import kotlin.math.abs
 
@@ -56,7 +59,8 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        mainActivityViewModel = ViewModelProviders.of(this).get(MainActivityViewModel::class.java)
+        mainActivityViewModel = ViewModelProvider(this, ViewModelFactory.getInstance(application,
+            CoroutineScope(Dispatchers.IO)))[MainActivityViewModel::class.java]
 
         bottom_navigation.setOnNavigationItemSelectedListener(this)
 
@@ -83,7 +87,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
     private fun initDialog() {
         val dialogView = layoutInflater.inflate(R.layout.layout_fristopenapp,null)
         val dialog =  Dialog(this@MainActivity)
-        dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
         dialog.setCancelable(false)
         dialog.setContentView(dialogView)
         dialog.show()
@@ -123,7 +127,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         btnByLatitudeLongitude.setOnClickListener {
 
             mSubDialogView = layoutInflater.inflate(R.layout.layout_bottomsheet_bylatitudelongitude,null)
-            mSubDialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            mSubDialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
             mSubDialog.setContentView(mSubDialogView)
             mSubDialog.show()
 
@@ -157,7 +161,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
 
         btnByGps.setOnClickListener{
             mSubDialogView = layoutInflater.inflate(R.layout.layout_bottomsheet_bygps,null)
-            mSubDialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            mSubDialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
             mSubDialog.setContentView(mSubDialogView)
             mSubDialog.show()
 

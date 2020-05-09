@@ -30,7 +30,7 @@ abstract class SolatKuyRoom: RoomDatabase() {
     companion object{
         @Volatile
         private var INSTANCE: SolatKuyRoom? = null
-        const val dbName = "solatkuydb"
+        private const val dbName = "solatkuydb"
 
         fun getDataBase(context: Context, scope: CoroutineScope): SolatKuyRoom{
             val tempInstance = INSTANCE
@@ -93,11 +93,6 @@ abstract class SolatKuyRoom: RoomDatabase() {
                         }
                     }
                 }
-            }
-
-            override fun onOpen(db: SupportSQLiteDatabase) {
-                super.onOpen(db)
-
             }
 
             suspend fun populateMsSetting(msSettingDao: MsSettingDao){

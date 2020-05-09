@@ -2,24 +2,20 @@ package com.programmergabut.solatkuy.data.repository
 
 import android.app.Application
 import androidx.lifecycle.LiveData
-import com.google.gson.GsonBuilder
-import com.programmergabut.solatkuy.data.api.AsmaAlHusnaService
-import com.programmergabut.solatkuy.data.api.CalendarApiService
-import com.programmergabut.solatkuy.data.api.QiblaApiService
-import com.programmergabut.solatkuy.data.local.MsApi1Dao
+import androidx.lifecycle.MutableLiveData
+import com.programmergabut.solatkuy.data.RemoteDataSource
 import com.programmergabut.solatkuy.data.local.MsSettingDao
-import com.programmergabut.solatkuy.data.local.NotifiedPrayerDao
 import com.programmergabut.solatkuy.data.model.asmaalhusnaJson.AsmaAlHusnaApi
 import com.programmergabut.solatkuy.data.model.compassJson.CompassApi
 import com.programmergabut.solatkuy.data.model.entity.MsApi1
-import com.programmergabut.solatkuy.data.model.entity.MsSetting
 import com.programmergabut.solatkuy.data.model.entity.PrayerLocal
 import com.programmergabut.solatkuy.data.model.prayerJson.PrayerApi
 import com.programmergabut.solatkuy.data.room.SolatKuyRoom
 import com.programmergabut.solatkuy.util.EnumConfig
+import com.programmergabut.solatkuy.util.Resource
 import kotlinx.coroutines.CoroutineScope
-import retrofit2.Retrofit.Builder
-import retrofit2.converter.gson.GsonConverterFactory
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -27,93 +23,98 @@ import java.util.*
  * Created by Katili Jiwo Adi Wiyono on 26/03/20.
  */
 
-class Repository(application: Application, scope: CoroutineScope) {
-
-    private var notifiedPrayerDao: NotifiedPrayerDao? = null
-    private var msApi1Dao: MsApi1Dao? = null
-    private var msSettingDao: MsSettingDao? = null
-
-    var mListPrayerLocal: LiveData<List<PrayerLocal>>
-    var mMsApi1: LiveData<MsApi1>
-    var mMsSetting: LiveData<MsSetting>
+class Repository(application: Application, scope: CoroutineScope, private val remoteDataSource: RemoteDataSource) {
 
     private var db: SolatKuyRoom = SolatKuyRoom.getDataBase(application, scope)
 
-    init {
-        /* for observable data */
-        mListPrayerLocal = db.notifiedPrayerDao().getNotifiedPrayer()
-        mMsApi1 = db.msApi1Dao().getMsApi1()
-        mMsSetting = db.msSettingDao().getMsSetting()
+    private var notifiedPrayerDao = db.notifiedPrayerDao()
+    private var msApi1Dao =db.msApi1Dao()
+    private var msSettingDao: MsSettingDao = db.msSettingDao()
 
-        /* for db transaction */
-        notifiedPrayerDao = db.notifiedPrayerDao()
-        msApi1Dao = db.msApi1Dao()
-        msSettingDao = db.msSettingDao()
+    var mListPrayerLocal = db.notifiedPrayerDao().getNotifiedPrayer()
+    var mMsApi1 = db.msApi1Dao().getMsApi1()
+    var mMsSetting = db.msSettingDao().getMsSetting()
+
+    companion object{
+        @Volatile
+        private var instance: Repository? = null
+
+        fun getInstance(application: Application ,scope: CoroutineScope, remoteDataSource: RemoteDataSource) =
+            instance ?: synchronized(this){
+                instance ?: Repository(application, scope, remoteDataSource)
+            }
     }
 
     // Room
     suspend fun updateNotifiedPrayer(prayerLocal: PrayerLocal){
-        notifiedPrayerDao?.updateNotifiedPrayer(prayerLocal.prayerName, prayerLocal.isNotified, prayerLocal.prayerTime)
+        notifiedPrayerDao.updateNotifiedPrayer(prayerLocal.prayerName, prayerLocal.isNotified, prayerLocal.prayerTime)
     }
 
     private suspend fun updatePrayerTime(prayerName: String, prayerTime: String){
-        notifiedPrayerDao?.updatePrayerTime(prayerName, prayerTime)
+        notifiedPrayerDao.updatePrayerTime(prayerName, prayerTime)
     }
 
     suspend fun updatePrayerIsNotified(prayerName: String, isNotified: Boolean){
-        notifiedPrayerDao?.updatePrayerIsNotified(prayerName, isNotified)
+        notifiedPrayerDao.updatePrayerIsNotified(prayerName, isNotified)
     }
 
-    suspend fun updateMsApi1(api1ID: Int, latitude: String, longitude: String, method: String, month: String, year:String){
-        msApi1Dao?.updateMsApi1(api1ID, latitude,longitude,method,month,year)
+    suspend fun updateMsApi1(msApi1: MsApi1){
+        msApi1Dao.updateMsApi1(msApi1.api1ID, msApi1.latitude, msApi1.longitude, msApi1.method, msApi1.month, msApi1.year)
     }
 
     suspend fun updateMsSetting(isHasOpen: Boolean){
-        msSettingDao?.updateMsSetting(isHasOpen)
+        msSettingDao.updateMsSetting(isHasOpen)
     }
+
 
     //Retrofit
-    private val strApi = "https://api.aladhan.com/v1/"
-    private fun getCalendarApi(): CalendarApiService{
-        return Builder()
-            .baseUrl(strApi)
-            .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
-            .build()
-            .create(CalendarApiService::class.java)
+    fun getCompass(msApi1: MsApi1): LiveData<Resource<CompassApi>>{
+        val result = MutableLiveData<Resource<CompassApi>>()
+
+        remoteDataSource.fetchCompassApi(object : RemoteDataSource.LoadCompassCallback{
+            override fun onReceived(response: Resource<CompassApi>) {
+                result.postValue(response)
+            }
+        }, msApi1)
+
+        return result
     }
 
-    private fun getQiblaApi(): QiblaApiService{
-        return Builder()
-            .baseUrl(strApi)
-            .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
-            .build()
-            .create(QiblaApiService::class.java)
+    fun fetchAsmaAlHusna(): LiveData<Resource<AsmaAlHusnaApi>>{
+        val result = MutableLiveData<Resource<AsmaAlHusnaApi>>()
+
+        remoteDataSource.fetchAsmaAlHusnaApi(object : RemoteDataSource.LoadAsmaAlHusnaCallback{
+            override fun onReceived(response: Resource<AsmaAlHusnaApi>) {
+                result.postValue(response)
+            }
+        })
+
+        return result
     }
 
-    private fun getAsmaAlHusnaApi(): AsmaAlHusnaService{
-        return Builder()
-            .baseUrl(strApi)
-            .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
-            .build()
-            .create(AsmaAlHusnaService::class.java)
+    fun fetchPrayerApi(msApi1: MsApi1): LiveData<Resource<PrayerApi>> {
+        val result = MutableLiveData<Resource<PrayerApi>>()
+
+        remoteDataSource.fetchPrayerApi(object : RemoteDataSource.LoadPrayerCallback{
+            override fun onReceived(response: Resource<PrayerApi>) {
+                result.postValue(response)
+                updateDbAfterFetchingData(response.data!!)
+            }
+        }, msApi1)
+
+        return result
     }
 
-    suspend fun fetchPrayerApi(latitude:String, longitude:String, method: String, month: String, year: String): PrayerApi {
-        val retVal =  getCalendarApi().fetchPrayer(latitude, longitude, method, month,year)
-
-        updateDbAfterFetchingData(retVal)
-
-        return retVal
-    }
-
-    private suspend fun updateDbAfterFetchingData(retVal: PrayerApi) {
+    /* supporting fuction */
+    private fun updateDbAfterFetchingData(retVal: PrayerApi) {
 
         val sdf = SimpleDateFormat("dd", Locale.getDefault())
         val currentDate = sdf.format(Date())
 
-        val timings = retVal.data.find { obj -> obj.date.gregorian.day == currentDate.toString() }?.timings
+        val timings =
+            retVal.data.find { obj -> obj.date.gregorian.day == currentDate.toString() }?.timings
 
-        val map = mutableMapOf<String,String>()
+        val map = mutableMapOf<String, String>()
 
         map[EnumConfig.fajr] = timings?.fajr.toString()
         map[EnumConfig.dhuhr] = timings?.dhuhr.toString()
@@ -122,18 +123,11 @@ class Repository(application: Application, scope: CoroutineScope) {
         map[EnumConfig.isha] = timings?.isha.toString()
         map[EnumConfig.sunrise] = timings?.sunrise.toString()
 
-        map.forEach { p ->
-            updatePrayerTime(p.key,p.value)
+        CoroutineScope(Dispatchers.IO).launch {
+            map.forEach { p ->
+                updatePrayerTime(p.key, p.value)
+            }
         }
     }
-
-    suspend fun fetchQiblaApi(latitude:String, longitude:String): CompassApi{
-        return  getQiblaApi().fetchQibla(latitude, longitude)
-    }
-
-    suspend fun fetchAsmaAlHusnaApi(): AsmaAlHusnaApi {
-        return  getAsmaAlHusnaApi().fetchAsmaAlHusnaApi()
-    }
-
 
 }

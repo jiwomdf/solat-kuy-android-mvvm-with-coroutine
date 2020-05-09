@@ -14,15 +14,18 @@ import android.view.animation.Animation
 import android.view.animation.RotateAnimation
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProviders
+import androidx.lifecycle.ViewModelProvider
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.data.model.entity.MsApi1
 import com.programmergabut.solatkuy.ui.fragmentcompass.viewmodel.FragmentCompassViewModel
 import com.programmergabut.solatkuy.util.EnumStatus
 import com.programmergabut.solatkuy.util.Resource
+import com.programmergabut.solatkuy.viewmodel.ViewModelFactory
 import kotlinx.android.synthetic.main.fragment_compass.*
 import kotlinx.android.synthetic.main.layout_phone_tilt.*
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
 
 /*
  * Created by Katili Jiwo Adi Wiyono on 31/03/20.
@@ -45,7 +48,8 @@ class FragmentCompass : Fragment(), SensorEventListener, SwipeRefreshLayout.OnRe
 
         mSensorManager = activity?.getSystemService(SENSOR_SERVICE) as SensorManager
 
-        fragmentCompassViewModel = ViewModelProviders.of(this).get(FragmentCompassViewModel::class.java)
+        fragmentCompassViewModel = ViewModelProvider(this, ViewModelFactory.getInstance(activity?.application!!,
+            CoroutineScope(Dispatchers.IO)))[FragmentCompassViewModel::class.java]
 
 
         subscribeObserversDB()
@@ -60,8 +64,9 @@ class FragmentCompass : Fragment(), SensorEventListener, SwipeRefreshLayout.OnRe
     }
 
     /* fetching Prayer Compass */
-    private fun fetchCompassApi(latitude: String, longitude: String) {
-        fragmentCompassViewModel.fetchCompassApi(latitude, longitude)
+    private fun fetchCompassApi(msApi1: MsApi1) {
+        fragmentCompassViewModel.compassApi.postValue(Resource.loading(null))
+        fragmentCompassViewModel.fetchCompassApi(msApi1)
     }
 
     /* Subscribe live data */
@@ -87,7 +92,7 @@ class FragmentCompass : Fragment(), SensorEventListener, SwipeRefreshLayout.OnRe
     private fun subscribeObserversDB() {
         fragmentCompassViewModel.msApi1Local.observe(this, Observer {
             mMsApi1 = it
-            fetchCompassApi(it.latitude,it.longitude)
+            fetchCompassApi(mMsApi1)
         })
     }
 
@@ -155,8 +160,7 @@ class FragmentCompass : Fragment(), SensorEventListener, SwipeRefreshLayout.OnRe
 
     }
 
-    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
-    }
+    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
 
     /* Refresher */
     private fun refreshLayout() {
@@ -164,8 +168,7 @@ class FragmentCompass : Fragment(), SensorEventListener, SwipeRefreshLayout.OnRe
     }
 
     override fun onRefresh() {
-        fragmentCompassViewModel.compassApi.postValue(Resource.loading(null))
-        fetchCompassApi(mMsApi1.latitude, mMsApi1.longitude)
+        fetchCompassApi(mMsApi1)
         sl_compass.isRefreshing = false
     }
 
@@ -173,7 +176,7 @@ class FragmentCompass : Fragment(), SensorEventListener, SwipeRefreshLayout.OnRe
     private fun createLottieAnimation() {
         val dialogView = layoutInflater.inflate(R.layout.layout_phone_tilt, null)
         val dialog =  Dialog(context!!)
-        dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
         dialog.setCancelable(false)
         dialog.setContentView(dialogView)
         dialog.show()

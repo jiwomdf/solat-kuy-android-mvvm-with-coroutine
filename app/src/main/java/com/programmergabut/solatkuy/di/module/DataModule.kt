@@ -1,6 +1,5 @@
 package com.programmergabut.solatkuy.di.module
 
-import com.google.gson.annotations.SerializedName
 import com.programmergabut.solatkuy.data.model.prayerJson.Data
 import com.programmergabut.solatkuy.data.model.prayerJson.Date
 import com.programmergabut.solatkuy.data.model.prayerJson.Meta

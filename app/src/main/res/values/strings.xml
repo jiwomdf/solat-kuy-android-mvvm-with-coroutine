@@ -8,11 +8,8 @@
     <string name="isha">Isha</string>
     <string name="sunrise">Sunrise</string>
 
-    <string name="notified">Notified</string>
     <string name="prayer_name">Prayer Name</string>
-    <string name="time">Time</string>
 
-    <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="prayer_time">Prayer Time</string>
     <string name="compass">Compass</string>
     <string name="setting">Setting</string>
@@ -20,10 +17,8 @@
     <string name="changelocation">Change Location</string>
     <string name="by_latitude_amp_longitude"><![CDATA[By Latitude & Longitude]]></string>
     <string name="by_gps">By GPS</string>
-    <string name="by_city">By City</string>
     <string name="latitude">Latitude</string>
     <string name="longitude">Longitude</string>
-    <string name="proceed">Proceed</string>
     <string name="current_location">Current Location</string>
     <string name="city">City</string>
     <string name="about_developer">Solat Kuy is an open source reminder prayer \n time app, created to remind us to pray 🌙 \n\n feel free to see and contribute </string>
@@ -52,7 +47,9 @@
     <string name="asma_al_husna">Asma Al Husna</string>
     <string name="please_do_this_move_before_using_the_compass_to_calibrate_the_compass">Please do this move before using the compass, in order to calibrate the compass</string>
     <string name="hide">Hide</string>
-    <string name="don_t_show_again">Don\'t \n show again</string>
     <string name="see_author_and_credit">see author and credit</string>
     <string name="day">Day</string>
+    <string name="compass_art">Compass Art:</string>
+    <string name="please_enable_your_location">please enable your location</string>
+    <string name="proceeded">Proceed</string>
 </resources>

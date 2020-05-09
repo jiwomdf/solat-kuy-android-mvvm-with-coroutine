@@ -27,7 +27,6 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.prayerdetail.view.ActivityPrayerDetail" />
         <service android:name=".service.ServiceBootComplete" />
         <receiver android:name="com.programmergabut.solatkuy.broadcaster.PrayerBroadcastReceiver" />
         <receiver android:name="com.programmergabut.solatkuy.broadcaster.MoreTimeBroadcastReceiver" />

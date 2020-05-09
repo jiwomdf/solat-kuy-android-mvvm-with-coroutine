@@ -3,7 +3,6 @@ package com.programmergabut.solatkuy.di.module
 import com.programmergabut.solatkuy.data.model.prayerJson.Month
 import dagger.Module
 import dagger.Provides
-import javax.inject.Inject
 
 /*
  * Created by Katili Jiwo Adi Wiyono on 16/04/20.
