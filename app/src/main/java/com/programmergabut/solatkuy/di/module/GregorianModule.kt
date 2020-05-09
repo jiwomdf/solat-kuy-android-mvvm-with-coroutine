@@ -1,9 +1,6 @@
 package com.programmergabut.solatkuy.di.module
 
-import com.google.gson.annotations.SerializedName
-import com.programmergabut.solatkuy.data.model.prayerJson.Date
 import com.programmergabut.solatkuy.data.model.prayerJson.Gregorian
-import com.programmergabut.solatkuy.data.model.prayerJson.Hijri
 import com.programmergabut.solatkuy.data.model.prayerJson.Month
 import dagger.Module
 import dagger.Provides

@@ -7,14 +7,12 @@ import android.view.ViewGroup
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.data.model.entity.MsApi1
 import com.programmergabut.solatkuy.data.model.prayerJson.Data
 import com.programmergabut.solatkuy.data.model.prayerJson.PrayerApi
-import com.programmergabut.solatkuy.ui.fragmentcompass.viewmodel.FragmentCompassViewModel
 import com.programmergabut.solatkuy.ui.fragmentinfo.viewmodel.FragmentInfoViewModel
 import com.programmergabut.solatkuy.ui.fragmentinfo.adapter.FragmentInfoAdapter
 import com.programmergabut.solatkuy.util.EnumConfig
@@ -25,7 +23,7 @@ import com.programmergabut.solatkuy.viewmodel.ViewModelFactory
 import kotlinx.android.synthetic.main.fragment_info.*
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
-import org.joda.time.LocalDate
+import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -44,7 +42,6 @@ class FragmentInfo : Fragment(), SwipeRefreshLayout.OnRefreshListener {
             CoroutineScope(Dispatchers.IO)))[FragmentInfoViewModel::class.java]
 
         subscribeObserversDB()
-        fetchAsmaAlHusnaApi()
 
         return inflater.inflate(R.layout.fragment_info, container, false)
     }
@@ -59,8 +56,6 @@ class FragmentInfo : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     /* Subscribe live data */
     private fun subscribeObserversDB() {
-        val currDate = LocalDate()
-
         fragmentInfoViewModel.msApi1Local.observe(this, Observer {
             mMsApi1 = it
 
@@ -68,7 +63,7 @@ class FragmentInfo : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
             tv_city.text = city ?: EnumConfig.lCity
 
-            fetchPrayerApi(it.latitude, it.longitude, EnumConfig.pMethod, currDate.monthOfYear.toString(),currDate.year.toString())
+            fetchAsmaAlHusnaApi(it)
         })
     }
 
@@ -163,12 +158,15 @@ class FragmentInfo : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     /* Fetch API Data */
-    private fun fetchPrayerApi(latitude: String, longitude: String, method: String, month: String, year: String) {
-        fragmentInfoViewModel.fetchPrayerApi(latitude,longitude,method, month,year)
+
+    private fun fetchAsmaAlHusnaApi(mMsApi1: MsApi1) {
+        fragmentInfoViewModel.asmaAlHusnaApi.postValue(Resource.loading(null))
+        fragmentInfoViewModel.fetchAsmaAlHusna(mMsApi1)
     }
 
-    private fun fetchAsmaAlHusnaApi() {
-        fragmentInfoViewModel.fetchAsmaAlHusnaApi()
+    private fun fetchPrayerApi(mMsApi1: MsApi1) {
+        fragmentInfoViewModel.prayerApi.postValue(Resource.loading(null))
+        fragmentInfoViewModel.fetchPrayerApi(mMsApi1)
     }
 
     /* Refresher */
@@ -177,18 +175,15 @@ class FragmentInfo : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     override fun onRefresh() {
-        val currDate = LocalDate()
+
+        if(mMsApi1 == null)
+            throw Exception("null mMsApi1")
 
         //fetch Prayer Api
-        fragmentInfoViewModel.prayerApi.postValue(Resource.loading(null))
-        if(mMsApi1 != null)
-            fetchPrayerApi(mMsApi1?.latitude!!, mMsApi1?.longitude!!, EnumConfig.pMethod, currDate.monthOfYear.toString(),currDate.year.toString())
-        else
-            fragmentInfoViewModel.prayerApi.postValue(Resource.error(getString(R.string.fetch_failed), null))
+        fetchPrayerApi(mMsApi1!!)
 
         //fetch Asma Al Husna
-        fragmentInfoViewModel.asmaAlHusnaApi.postValue(Resource.loading(null))
-        fetchAsmaAlHusnaApi()
+        fetchAsmaAlHusnaApi(mMsApi1!!)
 
         sl_info.isRefreshing = false
     }

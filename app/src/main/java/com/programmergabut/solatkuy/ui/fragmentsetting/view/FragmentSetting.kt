@@ -19,7 +19,6 @@ import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
@@ -28,7 +27,6 @@ import com.google.android.gms.location.LocationServices.getFusedLocationProvider
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.data.model.entity.MsApi1
-import com.programmergabut.solatkuy.ui.fragmentcompass.viewmodel.FragmentCompassViewModel
 import com.programmergabut.solatkuy.ui.fragmentsetting.viewmodel.FragmentSettingViewModel
 import com.programmergabut.solatkuy.util.EnumConfig
 import com.programmergabut.solatkuy.util.LocationHelper
@@ -54,11 +52,6 @@ class FragmentSetting : Fragment() {
 
     private val ALL_PERMISSIONS = 101
 
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-    }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
@@ -111,7 +104,7 @@ class FragmentSetting : Fragment() {
     private fun btnSetLatitudeLongitude(){
         btn_byLatitudeLongitude.setOnClickListener {
             dialogView = layoutInflater.inflate(R.layout.layout_bottomsheet_bylatitudelongitude,null)
-            dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
             dialog.setContentView(dialogView)
             dialog.show()
 
@@ -147,7 +140,7 @@ class FragmentSetting : Fragment() {
 
         btn_byGps.setOnClickListener{
             dialogView = layoutInflater.inflate(R.layout.layout_bottomsheet_bygps,null)
-            dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
             dialog.setContentView(dialogView)
             dialog.show()
 
@@ -173,7 +166,7 @@ class FragmentSetting : Fragment() {
         btn_seeAuthor.setOnClickListener{
             val dialog = Dialog(context!!)
             dialogView = layoutInflater.inflate(R.layout.layout_about_author,null)
-            dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+            dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
             dialog.setContentView(dialogView)
             dialog.show()
         }

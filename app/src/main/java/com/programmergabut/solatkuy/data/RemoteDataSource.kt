@@ -6,6 +6,7 @@ import com.programmergabut.solatkuy.data.api.CalendarApiService
 import com.programmergabut.solatkuy.data.api.QiblaApiService
 import com.programmergabut.solatkuy.data.model.asmaalhusnaJson.AsmaAlHusnaApi
 import com.programmergabut.solatkuy.data.model.compassJson.CompassApi
+import com.programmergabut.solatkuy.data.model.entity.MsApi1
 import com.programmergabut.solatkuy.data.model.prayerJson.PrayerApi
 import com.programmergabut.solatkuy.util.Resource
 import kotlinx.coroutines.CoroutineScope
@@ -54,13 +55,13 @@ class RemoteDataSource {
     }
 
     //Coroutine
-    fun fetchCompassApi(callback: LoadCompassCallback, latitude:String, longitude:String){
+    fun fetchCompassApi(callback: LoadCompassCallback, msApi1: MsApi1){
 
         CoroutineScope(Dispatchers.IO).launch{
             try {
                 callback.onReceived(
-                    Resource.success(getQiblaApi().fetchQibla(latitude, longitude)
-                ))
+                    Resource.success(getQiblaApi().fetchQibla(msApi1.latitude, msApi1.longitude))
+                )
             }
             catch (ex: Exception){
                 callback.onReceived(Resource.error(ex.message.toString(), null))
@@ -79,12 +80,12 @@ class RemoteDataSource {
         }
     }
 
-    fun fetchPrayerApi(callback: LoadPrayerCallback, latitude: String, longitude: String, method: String, month: String, year: String){
+    fun fetchPrayerApi(callback: LoadPrayerCallback, msApi1: MsApi1){
 
         CoroutineScope(Dispatchers.IO).launch{
             try {
                 callback.onReceived(Resource.success(getCalendarApi()
-                    .fetchPrayer(latitude, longitude, method, month, year)))
+                    .fetchPrayer( msApi1.latitude, msApi1.longitude, msApi1.method, msApi1.month, msApi1.year)))
             }
             catch (ex: Exception){
                 callback.onReceived(Resource.error(ex.message.toString(), null))

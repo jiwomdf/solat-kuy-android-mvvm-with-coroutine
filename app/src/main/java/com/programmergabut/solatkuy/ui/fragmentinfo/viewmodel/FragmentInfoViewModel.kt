@@ -1,19 +1,12 @@
 package com.programmergabut.solatkuy.ui.fragmentinfo.viewmodel
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.viewModelScope
+import androidx.lifecycle.*
 import com.programmergabut.solatkuy.data.model.asmaalhusnaJson.AsmaAlHusnaApi
 import com.programmergabut.solatkuy.data.model.entity.MsApi1
 import com.programmergabut.solatkuy.data.model.prayerJson.PrayerApi
 import com.programmergabut.solatkuy.data.repository.Repository
 import com.programmergabut.solatkuy.util.Resource
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.Job
-import kotlinx.coroutines.launch
-import java.lang.Exception
 
 /*
  * Created by Katili Jiwo Adi Wiyono on 25/04/20.
@@ -21,8 +14,15 @@ import java.lang.Exception
 
 class FragmentInfoViewModel(application: Application,  private val repository: Repository): AndroidViewModel(application) {
 
-    var prayerApi = MutableLiveData<Resource<PrayerApi>>()
-    var asmaAlHusnaApi = MutableLiveData<Resource<AsmaAlHusnaApi>>()
+    private var idMsApi1 = MutableLiveData<MsApi1>()
+    val prayerApi : MutableLiveData<Resource<PrayerApi>> = Transformations.switchMap(idMsApi1){
+        repository.fetchPrayerApi(it)
+    } as MutableLiveData<Resource<PrayerApi>>
+
+    var asmaAlHusnaApi : MutableLiveData<Resource<AsmaAlHusnaApi>> = Transformations.switchMap(idMsApi1){
+        repository.fetchAsmaAlHusna()
+    } as MutableLiveData<Resource<AsmaAlHusnaApi>>
+
     val msApi1Local: LiveData<MsApi1> = repository.mMsApi1
 
     //Room
@@ -31,12 +31,12 @@ class FragmentInfoViewModel(application: Application,  private val repository: R
         asmaAlHusnaApi.postValue(Resource.loading(null))
     }
 
-    //Live Data
-    fun fetchPrayerApi(latitude: String, longitude: String, method: String, month: String, year: String){
-        prayerApi = repository.fetchPrayerApi(latitude, longitude, method, month, year)
+    fun fetchAsmaAlHusna(msApi1: MsApi1){
+        this.idMsApi1.value = msApi1
     }
 
-    fun fetchAsmaAlHusnaApi() {
-        asmaAlHusnaApi = repository.getAsmaAlHusna()
+    fun fetchPrayerApi(msApi1: MsApi1){
+        this.idMsApi1.value = msApi1
     }
+
 }

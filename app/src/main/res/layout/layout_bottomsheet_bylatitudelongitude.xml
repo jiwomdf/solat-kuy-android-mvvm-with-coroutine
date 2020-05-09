@@ -3,8 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:id="@+id/cc_bs_bylatitudelongitude">
+    android:layout_height="wrap_content">
 
     <TextView
         android:id="@+id/tv_llDialog_title"
@@ -26,7 +25,8 @@
         android:inputType="numberDecimal"
         android:hint="@string/latitude"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_llDialog_title" />
+        app:layout_constraintTop_toBottomOf="@+id/tv_llDialog_title"
+        android:importantForAutofill="no" />
 
     <EditText
         android:id="@+id/et_llDialog_longitude"
@@ -37,7 +37,8 @@
         android:inputType="numberDecimal"
         android:hint="@string/longitude"
         app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/et_llDialog_latitude" />
+        app:layout_constraintTop_toBottomOf="@+id/et_llDialog_latitude"
+        android:importantForAutofill="no" />
 
 
     <Button
@@ -46,7 +47,7 @@
         android:layout_height="wrap_content"
         android:layout_marginEnd="@dimen/medium_margin"
         android:layout_marginBottom="@dimen/medium_margin"
-        android:text="@string/proceed"
+        android:text="@string/proceeded"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/et_llDialog_longitude" />

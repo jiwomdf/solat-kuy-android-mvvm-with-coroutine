@@ -1,16 +1,12 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    xmlns:tools="http://schemas.android.com/tools"
-    android:id="@+id/ll_prayer_time"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
     app:cardBackgroundColor="@color/colorPrimary">
 
     <androidx.cardview.widget.CardView
-        android:id="@+id/cv_prayer_time"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">
 
@@ -29,7 +25,6 @@
                 android:background="@color/colorWhite">
 
                 <ImageView
-                    android:id="@+id/iv_notified"
                     android:layout_width="wrap_content"
                     android:layout_height="match_parent"
                     android:layout_gravity="start"
@@ -37,7 +32,6 @@
                     android:src="@drawable/ic_notifications_active_24dp" />
 
                 <TextView
-                    android:id="@+id/tv_prayer_name"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:text="@string/prayer_name"/>
@@ -61,7 +55,6 @@
                     />
 
                 <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/tv_fajr"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="start|center"
@@ -90,7 +83,6 @@
                     android:layout_height="@dimen/list_width_size"/>
 
                 <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/tv_dhuhr"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="start|center"
@@ -119,7 +111,6 @@
                     android:layout_height="@dimen/list_width_size"/>
 
                 <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/tv_asr"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="start|center"                    android:layout_marginStart="@dimen/smaller_margin"
@@ -146,7 +137,6 @@
                     android:layout_height="@dimen/list_width_size" />
 
                 <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/tv_maghrib"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="start|center"                    android:layout_marginStart="@dimen/smaller_margin"
@@ -173,7 +163,6 @@
                     android:layout_height="@dimen/list_width_size" />
 
                 <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/tv_isha"
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
                     android:gravity="start|center"                    android:layout_marginStart="@dimen/smaller_margin"

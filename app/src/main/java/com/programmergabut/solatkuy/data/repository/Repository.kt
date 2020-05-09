@@ -4,19 +4,18 @@ import android.app.Application
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.programmergabut.solatkuy.data.RemoteDataSource
-import com.programmergabut.solatkuy.data.local.MsApi1Dao
 import com.programmergabut.solatkuy.data.local.MsSettingDao
-import com.programmergabut.solatkuy.data.local.NotifiedPrayerDao
 import com.programmergabut.solatkuy.data.model.asmaalhusnaJson.AsmaAlHusnaApi
 import com.programmergabut.solatkuy.data.model.compassJson.CompassApi
 import com.programmergabut.solatkuy.data.model.entity.MsApi1
-import com.programmergabut.solatkuy.data.model.entity.MsSetting
 import com.programmergabut.solatkuy.data.model.entity.PrayerLocal
 import com.programmergabut.solatkuy.data.model.prayerJson.PrayerApi
 import com.programmergabut.solatkuy.data.room.SolatKuyRoom
 import com.programmergabut.solatkuy.util.EnumConfig
 import com.programmergabut.solatkuy.util.Resource
 import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -59,8 +58,8 @@ class Repository(application: Application, scope: CoroutineScope, private val re
         notifiedPrayerDao.updatePrayerIsNotified(prayerName, isNotified)
     }
 
-    suspend fun updateMsApi1(api1ID: Int, latitude: String, longitude: String, method: String, month: String, year:String){
-        msApi1Dao.updateMsApi1(api1ID, latitude,longitude,method,month,year)
+    suspend fun updateMsApi1(msApi1: MsApi1){
+        msApi1Dao.updateMsApi1(msApi1.api1ID, msApi1.latitude, msApi1.longitude, msApi1.method, msApi1.month, msApi1.year)
     }
 
     suspend fun updateMsSetting(isHasOpen: Boolean){
@@ -69,19 +68,19 @@ class Repository(application: Application, scope: CoroutineScope, private val re
 
 
     //Retrofit
-    fun getCompass(latitude:String, longitude:String): MutableLiveData<Resource<CompassApi>>{
+    fun getCompass(msApi1: MsApi1): LiveData<Resource<CompassApi>>{
         val result = MutableLiveData<Resource<CompassApi>>()
 
         remoteDataSource.fetchCompassApi(object : RemoteDataSource.LoadCompassCallback{
             override fun onReceived(response: Resource<CompassApi>) {
                 result.postValue(response)
             }
-        }, latitude, longitude)
+        }, msApi1)
 
         return result
     }
 
-    fun getAsmaAlHusna(): MutableLiveData<Resource<AsmaAlHusnaApi>>{
+    fun fetchAsmaAlHusna(): LiveData<Resource<AsmaAlHusnaApi>>{
         val result = MutableLiveData<Resource<AsmaAlHusnaApi>>()
 
         remoteDataSource.fetchAsmaAlHusnaApi(object : RemoteDataSource.LoadAsmaAlHusnaCallback{
@@ -93,38 +92,42 @@ class Repository(application: Application, scope: CoroutineScope, private val re
         return result
     }
 
-    fun fetchPrayerApi(latitude:String, longitude:String, method: String,
-                       month: String, year: String): MutableLiveData<Resource<PrayerApi>> {
+    fun fetchPrayerApi(msApi1: MsApi1): LiveData<Resource<PrayerApi>> {
         val result = MutableLiveData<Resource<PrayerApi>>()
 
         remoteDataSource.fetchPrayerApi(object : RemoteDataSource.LoadPrayerCallback{
             override fun onReceived(response: Resource<PrayerApi>) {
                 result.postValue(response)
-                //updateDbAfterFetchingData(result)
+                updateDbAfterFetchingData(response.data!!)
             }
-        }, latitude, longitude, method, month, year)
+        }, msApi1)
 
         return result
     }
 
-    /* private suspend fun updateDbAfterFetchingData(retVal: PrayerApi) {
+    /* supporting fuction */
+    private fun updateDbAfterFetchingData(retVal: PrayerApi) {
 
-    val sdf = SimpleDateFormat("dd", Locale.getDefault())
-    val currentDate = sdf.format(Date())
+        val sdf = SimpleDateFormat("dd", Locale.getDefault())
+        val currentDate = sdf.format(Date())
 
-    val timings = retVal.data.find { obj -> obj.date.gregorian.day == currentDate.toString() }?.timings
+        val timings =
+            retVal.data.find { obj -> obj.date.gregorian.day == currentDate.toString() }?.timings
 
-    val map = mutableMapOf<String,String>()
+        val map = mutableMapOf<String, String>()
 
-    map[EnumConfig.fajr] = timings?.fajr.toString()
-    map[EnumConfig.dhuhr] = timings?.dhuhr.toString()
-    map[EnumConfig.asr] = timings?.asr.toString()
-    map[EnumConfig.maghrib] = timings?.maghrib.toString()
-    map[EnumConfig.isha] = timings?.isha.toString()
-    map[EnumConfig.sunrise] = timings?.sunrise.toString()
+        map[EnumConfig.fajr] = timings?.fajr.toString()
+        map[EnumConfig.dhuhr] = timings?.dhuhr.toString()
+        map[EnumConfig.asr] = timings?.asr.toString()
+        map[EnumConfig.maghrib] = timings?.maghrib.toString()
+        map[EnumConfig.isha] = timings?.isha.toString()
+        map[EnumConfig.sunrise] = timings?.sunrise.toString()
 
-    map.forEach { p ->
-        updatePrayerTime(p.key,p.value)
-    }*/
+        CoroutineScope(Dispatchers.IO).launch {
+            map.forEach { p ->
+                updatePrayerTime(p.key, p.value)
+            }
+        }
+    }
 
 }

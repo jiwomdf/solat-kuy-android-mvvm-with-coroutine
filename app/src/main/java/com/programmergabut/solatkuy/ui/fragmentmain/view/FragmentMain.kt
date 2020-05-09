@@ -9,7 +9,6 @@ import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -24,7 +23,6 @@ import com.programmergabut.solatkuy.data.model.prayerJson.Timings
 import com.programmergabut.solatkuy.di.component.DaggerIDataComponent
 import com.programmergabut.solatkuy.di.component.DaggerITimingsComponent
 import com.programmergabut.solatkuy.di.module.DataModule
-import com.programmergabut.solatkuy.ui.fragmentcompass.viewmodel.FragmentCompassViewModel
 import com.programmergabut.solatkuy.ui.fragmentmain.viewmodel.FragmentMainViewModel
 import com.programmergabut.solatkuy.util.*
 import com.programmergabut.solatkuy.viewmodel.ViewModelFactory
@@ -92,9 +90,36 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
 
     /* Subscribe live data */
-    private fun subscribeObserversDB() {
+    private fun subscribeObserversAPI() {
 
-        val currDate = LocalDate()
+        val sdf = SimpleDateFormat("dd", Locale.getDefault())
+        val currentDate = sdf.format(Date())
+
+        fragmentMainViewModel.prayerApi.observe(this, androidx.lifecycle.Observer { it ->
+            when(it.Status){
+                EnumStatus.SUCCESS -> {
+                    it.data.let {
+
+                        /* save temp data */
+                        tempApiData = createOnlineData(it, currentDate)
+                        bindWidget(tempApiData)
+                    }}
+                EnumStatus.LOADING -> {
+                    Toasty.info(context!!, "fetching data..", Toast.LENGTH_SHORT).show()
+                    bindPrayerText(null)
+                }
+                EnumStatus.ERROR -> { Toasty.info(context!!,"offline mode", Toast.LENGTH_SHORT).show()
+
+                    /* save temp data */
+                    tempApiData = createOfflineData()
+                    bindWidget(tempApiData)
+                }
+            }
+        })
+
+    }
+
+    private fun subscribeObserversDB() {
 
         fragmentMainViewModel.listPrayerLocal.observe(this, androidx.lifecycle.Observer {
 
@@ -116,34 +141,8 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
             bindWidgetLocation(it)
 
             /* fetching Prayer API */
-            fetchPrayerApi(it.latitude,it.longitude, EnumConfig.pMethod, currDate.monthOfYear.toString(),currDate.year.toString())
+            fragmentMainViewModel.fetchPrayerApi(it)
         })
-    }
-
-    private fun subscribeObserversAPI() {
-
-        val sdf = SimpleDateFormat("dd", Locale.getDefault())
-        val currentDate = sdf.format(Date())
-
-        fragmentMainViewModel.prayerApi.observe(this, androidx.lifecycle.Observer { it ->
-            when(it.Status){
-                EnumStatus.SUCCESS -> {
-                    it.data.let {
-
-                        /* save temp data */
-                        tempApiData = createOnlineData(it, currentDate)
-                        bindWidget(tempApiData)
-                    }}
-                EnumStatus.LOADING -> Toasty.info(context!!, "fetching data..", Toast.LENGTH_SHORT).show()
-                EnumStatus.ERROR -> { Toasty.info(context!!,"offline mode", Toast.LENGTH_SHORT).show()
-
-                    /* save temp data */
-                    tempApiData = createOfflineData()
-                    bindWidget(tempApiData)
-                }
-            }
-        })
-
     }
 
     /* Create data from API */
@@ -179,8 +178,9 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
 
     /* fetch API data */
-    private fun fetchPrayerApi(latitude: String, longitude: String, method: String, month: String, year: String) {
-        fragmentMainViewModel.fetchPrayerApi(latitude,longitude,method, month,year)
+    private fun fetchPrayerApi(msApi1: MsApi1) {
+        fragmentMainViewModel.prayerApi.postValue(Resource.loading(null))
+        fragmentMainViewModel.fetchPrayerApi(msApi1)
     }
 
 
@@ -426,7 +426,7 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
                 withContext(Dispatchers.Main){
                     tempMsApi1?.let {
-                        fetchPrayerApi(it.latitude, it.longitude, EnumConfig.pMethod, it.month, it.year)
+                        //fetchPrayerApi(it.latitude, it.longitude, EnumConfig.pMethod, it.month, it.year)
                     }
                 }
             }
@@ -457,11 +457,9 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     override fun onRefresh() {
-        val currDate = LocalDate()
 
         tempMsApi1?.let {
-            fragmentMainViewModel.prayerApi.postValue(Resource.loading(null))
-            fetchPrayerApi(it.latitude, it.longitude, EnumConfig.pMethod, currDate.monthOfYear.toString(),currDate.year.toString())
+            fetchPrayerApi(it)
         }
 
         sl_main.isRefreshing = false

@@ -1,10 +1,8 @@
 package com.programmergabut.solatkuy.data.api
 
 import com.programmergabut.solatkuy.data.model.compassJson.CompassApi
-import com.programmergabut.solatkuy.data.model.prayerJson.PrayerApi
 import retrofit2.http.GET
 import retrofit2.http.Path
-import retrofit2.http.Query
 
 /*
  * Created by Katili Jiwo Adi Wiyono on 18/04/20.

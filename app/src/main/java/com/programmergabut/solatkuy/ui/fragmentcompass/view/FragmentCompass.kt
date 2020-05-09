@@ -15,7 +15,6 @@ import android.view.animation.RotateAnimation
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
-import androidx.lifecycle.ViewModelProviders
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.data.model.entity.MsApi1
@@ -65,8 +64,9 @@ class FragmentCompass : Fragment(), SensorEventListener, SwipeRefreshLayout.OnRe
     }
 
     /* fetching Prayer Compass */
-    private fun fetchCompassApi(latitude: String, longitude: String) {
-        fragmentCompassViewModel.fetchCompassApi(latitude, longitude)
+    private fun fetchCompassApi(msApi1: MsApi1) {
+        fragmentCompassViewModel.compassApi.postValue(Resource.loading(null))
+        fragmentCompassViewModel.fetchCompassApi(msApi1)
     }
 
     /* Subscribe live data */
@@ -92,7 +92,7 @@ class FragmentCompass : Fragment(), SensorEventListener, SwipeRefreshLayout.OnRe
     private fun subscribeObserversDB() {
         fragmentCompassViewModel.msApi1Local.observe(this, Observer {
             mMsApi1 = it
-            fetchCompassApi(it.latitude,it.longitude)
+            fetchCompassApi(mMsApi1)
         })
     }
 
@@ -160,8 +160,7 @@ class FragmentCompass : Fragment(), SensorEventListener, SwipeRefreshLayout.OnRe
 
     }
 
-    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
-    }
+    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
 
     /* Refresher */
     private fun refreshLayout() {
@@ -169,8 +168,7 @@ class FragmentCompass : Fragment(), SensorEventListener, SwipeRefreshLayout.OnRe
     }
 
     override fun onRefresh() {
-        fragmentCompassViewModel.compassApi.postValue(Resource.loading(null))
-        fetchCompassApi(mMsApi1.latitude, mMsApi1.longitude)
+        fetchCompassApi(mMsApi1)
         sl_compass.isRefreshing = false
     }
 
@@ -178,7 +176,7 @@ class FragmentCompass : Fragment(), SensorEventListener, SwipeRefreshLayout.OnRe
     private fun createLottieAnimation() {
         val dialogView = layoutInflater.inflate(R.layout.layout_phone_tilt, null)
         val dialog =  Dialog(context!!)
-        dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT);
+        dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
         dialog.setCancelable(false)
         dialog.setContentView(dialogView)
         dialog.show()
