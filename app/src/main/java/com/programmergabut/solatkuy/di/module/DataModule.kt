@@ -1,9 +1,9 @@
 package com.programmergabut.solatkuy.di.module
 
-import com.programmergabut.solatkuy.data.model.prayerJson.Data
-import com.programmergabut.solatkuy.data.model.prayerJson.Date
-import com.programmergabut.solatkuy.data.model.prayerJson.Meta
-import com.programmergabut.solatkuy.data.model.prayerJson.Timings
+import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.Data
+import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.Date
+import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.Meta
+import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.Timings
 import dagger.Module
 import dagger.Provides
 
@@ -12,7 +12,7 @@ import dagger.Provides
  */
 
 @Module
-class DataModule(private val timings: Timings,private val day: String,  private val en: String, private val number: Int) {
+class DataModule(private val timings: Timings, private val day: String, private val en: String, private val number: Int) {
 
     @Provides
     fun date(): Date = DateModule(day, en, number).provideDate()
@@ -24,7 +24,11 @@ class DataModule(private val timings: Timings,private val day: String,  private 
 
     @Provides
     fun provideData(): Data {
-        return Data(date(), meta(), timings())
+        return Data(
+            date(),
+            meta(),
+            timings()
+        )
     }
 
 }

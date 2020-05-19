@@ -1,6 +1,6 @@
 package com.programmergabut.solatkuy.di.component
 
-import com.programmergabut.solatkuy.data.model.prayerJson.Data
+import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.Data
 import com.programmergabut.solatkuy.di.module.DataModule
 import dagger.Component
 

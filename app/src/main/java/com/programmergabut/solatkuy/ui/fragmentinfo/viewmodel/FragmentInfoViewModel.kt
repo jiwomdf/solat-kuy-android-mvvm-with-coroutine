@@ -2,10 +2,10 @@ package com.programmergabut.solatkuy.ui.fragmentinfo.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.*
-import com.programmergabut.solatkuy.data.model.asmaalhusnaJson.AsmaAlHusnaApi
-import com.programmergabut.solatkuy.data.model.entity.MsApi1
-import com.programmergabut.solatkuy.data.model.prayerJson.PrayerApi
-import com.programmergabut.solatkuy.data.repository.Repository
+import com.programmergabut.solatkuy.data.local.localentity.MsApi1
+import com.programmergabut.solatkuy.data.Repository
+import com.programmergabut.solatkuy.data.remote.remoteentity.asmaalhusnaJson.AsmaAlHusnaApi
+import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.PrayerApi
 import com.programmergabut.solatkuy.util.Resource
 
 /*

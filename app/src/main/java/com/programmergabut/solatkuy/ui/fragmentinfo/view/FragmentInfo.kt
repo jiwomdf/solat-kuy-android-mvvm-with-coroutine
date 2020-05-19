@@ -10,9 +10,9 @@ import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.programmergabut.solatkuy.R
-import com.programmergabut.solatkuy.data.model.entity.MsApi1
-import com.programmergabut.solatkuy.data.model.prayerJson.Data
-import com.programmergabut.solatkuy.data.model.prayerJson.PrayerApi
+import com.programmergabut.solatkuy.data.local.localentity.MsApi1
+import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.Data
+import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.PrayerApi
 import com.programmergabut.solatkuy.ui.fragmentinfo.viewmodel.FragmentInfoViewModel
 import com.programmergabut.solatkuy.ui.fragmentinfo.adapter.FragmentInfoAdapter
 import com.programmergabut.solatkuy.util.EnumConfig
@@ -21,8 +21,6 @@ import com.programmergabut.solatkuy.util.LocationHelper
 import com.programmergabut.solatkuy.util.Resource
 import com.programmergabut.solatkuy.viewmodel.ViewModelFactory
 import kotlinx.android.synthetic.main.fragment_info.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
@@ -38,8 +36,8 @@ class FragmentInfo : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
 
-        fragmentInfoViewModel = ViewModelProvider(this, ViewModelFactory.getInstance(activity?.application!!,
-            CoroutineScope(Dispatchers.IO)))[FragmentInfoViewModel::class.java]
+        fragmentInfoViewModel = ViewModelProvider(this, ViewModelFactory
+            .getInstance(activity?.application!!))[FragmentInfoViewModel::class.java]
 
         subscribeObserversDB()
 
@@ -97,7 +95,7 @@ class FragmentInfo : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
                     val sdf = SimpleDateFormat("dd", Locale.getDefault())
                     val currentDate = sdf.format(Date())
-                    val data = createOnlineData(it.data!!, currentDate)
+                    val data = createTodayData(it.data!!, currentDate)
                     val date = data?.date
                     val hijriDate = date?.hijri
                     val gregorianDate = date?.gregorian
@@ -123,22 +121,12 @@ class FragmentInfo : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                     tv_gregorian_day.text = getString(R.string.loading)
                     tv_hijri_day.text = getString(R.string.loading)
                 }
-                EnumStatus.ERROR -> {
-                    tv_imsak_date.text = getString(R.string.fetch_failed)
-                    tv_imsak_time.text = getString(R.string.fetch_failed_sort)
-
-                    tv_gregorian_date.text = getString(R.string.fetch_failed_sort)
-                    tv_hijri_date.text = getString(R.string.fetch_failed_sort)
-                    tv_gregorian_month.text = getString(R.string.fetch_failed_sort)
-                    tv_hijri_month.text = getString(R.string.fetch_failed_sort)
-                    tv_gregorian_day.text = getString(R.string.fetch_failed_sort)
-                    tv_hijri_day.text = getString(R.string.fetch_failed_sort)
-                }
+                EnumStatus.ERROR -> print("error")
             }
         })
     }
 
-    private fun initAHAdapter(datas: List<com.programmergabut.solatkuy.data.model.asmaalhusnaJson.Data>) {
+    private fun initAHAdapter(datas: List<com.programmergabut.solatkuy.data.remote.remoteentity.asmaalhusnaJson.Data>) {
 
         rv_ah.apply {
             adapter =
@@ -153,7 +141,7 @@ class FragmentInfo : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
 
     /* Create data from API */
-    private fun createOnlineData(it: PrayerApi?, currentDate: String): Data? {
+    private fun createTodayData(it: PrayerApi?, currentDate: String): Data? {
         return it?.data?.find { obj -> obj.date.gregorian.day == currentDate }
     }
 

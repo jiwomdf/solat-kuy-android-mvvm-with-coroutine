@@ -15,14 +15,14 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.transition.DrawableCrossFadeFactory
 import com.programmergabut.solatkuy.R
-import com.programmergabut.solatkuy.data.model.entity.MsApi1
-import com.programmergabut.solatkuy.data.model.entity.PrayerLocal
-import com.programmergabut.solatkuy.data.model.prayerJson.Data
-import com.programmergabut.solatkuy.data.model.prayerJson.PrayerApi
-import com.programmergabut.solatkuy.data.model.prayerJson.Timings
+import com.programmergabut.solatkuy.data.local.localentity.MsApi1
+import com.programmergabut.solatkuy.data.local.localentity.NotifiedPrayer
+import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.Data
+import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.Timings
 import com.programmergabut.solatkuy.di.component.DaggerIDataComponent
 import com.programmergabut.solatkuy.di.component.DaggerITimingsComponent
 import com.programmergabut.solatkuy.di.module.DataModule
+import com.programmergabut.solatkuy.ui.fragmentmain.CoroutineTimerProvider
 import com.programmergabut.solatkuy.ui.fragmentmain.viewmodel.FragmentMainViewModel
 import com.programmergabut.solatkuy.util.*
 import com.programmergabut.solatkuy.viewmodel.ViewModelFactory
@@ -34,6 +34,7 @@ import kotlinx.coroutines.*
 import org.joda.time.DateTime
 import org.joda.time.LocalDate
 import org.joda.time.Period
+import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.abs
@@ -45,17 +46,15 @@ import kotlin.math.abs
 class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     private lateinit var fragmentMainViewModel: FragmentMainViewModel
-    private var tempApiData: Data? = null
+    private lateinit var coroutineTimerProvider: CoroutineTimerProvider
     private var tempMsApi1: MsApi1? = null
-    private var tempListPL: List<PrayerLocal>? = null
     private var mCityName: String? = null
-
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        fragmentMainViewModel = ViewModelProvider(this, ViewModelFactory.getInstance(activity?.application!!,
-            CoroutineScope(Dispatchers.IO)))[FragmentMainViewModel::class.java]
+        fragmentMainViewModel = ViewModelProvider(this, ViewModelFactory
+            .getInstance(activity?.application!!))[FragmentMainViewModel::class.java]
 
         subscribeObserversAPI()
         subscribeObserversDB()
@@ -64,13 +63,15 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     override fun onPause() {
         super.onPause()
 
-        CoroutineScope(Dispatchers.Default).cancel()
-        CoroutineScope(Dispatchers.Main).cancel()
+        coroutineTimerProvider.Main.cancel()
+        coroutineTimerProvider.IO.cancel()
     }
 
 
     override fun onStart() {
         super.onStart()
+
+        coroutineTimerProvider = CoroutineTimerProvider.getInstance()
 
         if(tv_widget_prayer_countdown != null)
             tv_widget_prayer_countdown.text = getString(R.string.loading)
@@ -92,28 +93,28 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     /* Subscribe live data */
     private fun subscribeObserversAPI() {
 
-        val sdf = SimpleDateFormat("dd", Locale.getDefault())
-        val currentDate = sdf.format(Date())
-
-        fragmentMainViewModel.prayerApi.observe(this, androidx.lifecycle.Observer { it ->
-            when(it.Status){
+        fragmentMainViewModel.notifiedPrayer.observe(this, androidx.lifecycle.Observer { retVal ->
+            when(retVal.Status){
                 EnumStatus.SUCCESS -> {
-                    it.data.let {
 
-                        /* save temp data */
-                        tempApiData = createOnlineData(it, currentDate)
-                        bindWidget(tempApiData)
-                    }}
+                    if(retVal.data == null)
+                        throw Exception("notifiedPrayer return null")
+
+                    /* Bind Checkbox */
+                    bindCheckBox(retVal.data)
+
+                    /* Update Alarm Manager */
+                    updateAlarmManager(retVal.data)
+
+                    /* Bind Widget */
+                    val data = createData(retVal.data)
+                    bindWidget(data)
+                }
                 EnumStatus.LOADING -> {
-                    Toasty.info(context!!, "fetching data..", Toast.LENGTH_SHORT).show()
+                    Toasty.info(context!!, "syncing data..", Toast.LENGTH_SHORT).show()
                     bindPrayerText(null)
                 }
-                EnumStatus.ERROR -> { Toasty.info(context!!,"offline mode", Toast.LENGTH_SHORT).show()
-
-                    /* save temp data */
-                    tempApiData = createOfflineData()
-                    bindWidget(tempApiData)
-                }
+                EnumStatus.ERROR -> print("error")
             }
         })
 
@@ -121,14 +122,14 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     private fun subscribeObserversDB() {
 
-        fragmentMainViewModel.listPrayerLocal.observe(this, androidx.lifecycle.Observer {
+        /* fragmentMainViewModel.listNotifiedPrayer.observe(this, androidx.lifecycle.Observer {
 
             /* save temp data */
             tempListPL = it
 
             bindCheckBox(it)
             createModelPrayer(it)?.let { data -> updateAlarmManager(data) }
-        })
+        }) */
 
         fragmentMainViewModel.msApi1Local.observe(this, androidx.lifecycle.Observer {
 
@@ -141,37 +142,30 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
             bindWidgetLocation(it)
 
             /* fetching Prayer API */
-            fragmentMainViewModel.fetchPrayerApi(it)
+            fetchPrayerApi(it)
         })
     }
 
-    /* Create data from API */
-    private fun createOnlineData(it: PrayerApi?, currentDate: String): Data? {
-        return it?.data?.find { obj -> obj.date.gregorian.day == currentDate }
-    }
-
-    private fun createOfflineData(): Data {
+    private fun createData(prayer: List<NotifiedPrayer>): Data {
         /* Dagger Injection */
-        /* based from saved API data */
+        /* based from sync API data */
         val localTimings = DaggerITimingsComponent.builder()
-            .fajr(tempListPL!![0].prayerTime /* fajr */)
-            .dhuhr(tempListPL!![1].prayerTime /* dhuhr */)
-            .asr(tempListPL!![2].prayerTime /* asr*/)
-            .maghrib(tempListPL!![3].prayerTime /* mahgrib */)
-            .isha(tempListPL!![4].prayerTime /* isha */)
-            .sunrise(tempListPL!![5].prayerTime /* isha */)
+            .fajr(prayer[0].prayerTime /* fajr */)
+            .dhuhr(prayer[1].prayerTime /* dhuhr */)
+            .asr(prayer[2].prayerTime /* asr*/)
+            .maghrib(prayer[3].prayerTime /* mahgrib */)
+            .isha(prayer[4].prayerTime /* isha */)
+            .sunrise(prayer[5].prayerTime /* isha */)
             .imsak("")
             .midnight("")
             .sunset("")
             .build()
             .getTimings()
 
-        //for api 21
         val arrDate = LocalDate.now().toString("dd/MMM/yyyy").split("/")
-        //val arrDate = java.time.LocalDate.now().format(DateTimeFormatter.ofPattern("dd/MMM/yyyy")).split("/")
 
         return DaggerIDataComponent.builder()
-            .dataModule(DataModule(localTimings, arrDate[1], arrDate[2],0))
+            .dataModule(DataModule(localTimings, arrDate[0], arrDate[1],0))
             .build()
             .getData()
     }
@@ -179,13 +173,12 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     /* fetch API data */
     private fun fetchPrayerApi(msApi1: MsApi1) {
-        fragmentMainViewModel.prayerApi.postValue(Resource.loading(null))
         fragmentMainViewModel.fetchPrayerApi(msApi1)
     }
 
 
     /* Database Transaction */
-    private fun updateNotifiedPrayerWithoutTime(prayer:String, isNotified:Boolean){
+    private fun updatePrayerIsNotified(prayer:String, isNotified:Boolean){
 
         if(isNotified)
             Toasty.success(context!!, "$prayer will be notified every day", Toast.LENGTH_SHORT).show()
@@ -197,77 +190,113 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
 
     /* init first load data */
-    private fun createModelPrayer(it: List<PrayerLocal>): MutableList<PrayerLocal>? {
+    private fun loadTempData() {
+        tempMsApi1?.let {
+            fetchPrayerApi(it)
+            bindWidgetLocation(it)
+        }
+    }
 
-        val list = mutableListOf<PrayerLocal>()
-        var modelPrayer: PrayerLocal? = null
+    /* private fun createModelPrayer(it: List<NotifiedPrayer>): MutableList<NotifiedPrayer>? {
+
+        val list = mutableListOf<NotifiedPrayer>()
+        var modelNotifiedPrayer: NotifiedPrayer? = null
 
         if(tempApiData == null || tempApiData?.timings == null)
             return null
 
         it.forEach con@{ p ->
             when (p.prayerName) {
-                getString(R.string.fajr) -> modelPrayer = PrayerLocal(1 ,p.prayerName, p.isNotified, tempApiData?.timings?.fajr!!)
-                getString(R.string.dhuhr) -> modelPrayer = PrayerLocal(2 ,p.prayerName, p.isNotified, tempApiData?.timings?.dhuhr!!)
-                getString(R.string.asr) -> modelPrayer = PrayerLocal(3 ,p.prayerName, p.isNotified, tempApiData?.timings?.asr!!)
-                getString(R.string.maghrib) -> modelPrayer = PrayerLocal(4 ,p.prayerName, p.isNotified, tempApiData?.timings?.maghrib!!)
-                getString(R.string.isha) -> modelPrayer = PrayerLocal(5, p.prayerName, p.isNotified, tempApiData?.timings?.isha!!)
-                getString(R.string.sunrise) -> modelPrayer = PrayerLocal(6, p.prayerName, p.isNotified, tempApiData?.timings?.sunrise!!)
+                getString(R.string.fajr) -> modelNotifiedPrayer =
+                    NotifiedPrayer(
+                        1,
+                        p.prayerName,
+                        p.isNotified,
+                        tempApiData?.timings?.fajr!!
+                    )
+                getString(R.string.dhuhr) -> modelNotifiedPrayer =
+                    NotifiedPrayer(
+                        2,
+                        p.prayerName,
+                        p.isNotified,
+                        tempApiData?.timings?.dhuhr!!
+                    )
+                getString(R.string.asr) -> modelNotifiedPrayer =
+                    NotifiedPrayer(
+                        3,
+                        p.prayerName,
+                        p.isNotified,
+                        tempApiData?.timings?.asr!!
+                    )
+                getString(R.string.maghrib) -> modelNotifiedPrayer =
+                    NotifiedPrayer(
+                        4,
+                        p.prayerName,
+                        p.isNotified,
+                        tempApiData?.timings?.maghrib!!
+                    )
+                getString(R.string.isha) -> modelNotifiedPrayer =
+                    NotifiedPrayer(
+                        5,
+                        p.prayerName,
+                        p.isNotified,
+                        tempApiData?.timings?.isha!!
+                    )
+                getString(R.string.sunrise) -> modelNotifiedPrayer =
+                    NotifiedPrayer(
+                        6,
+                        p.prayerName,
+                        p.isNotified,
+                        tempApiData?.timings?.sunrise!!
+                    )
             }
 
-            list.add(modelPrayer!!)
+            list.add(modelNotifiedPrayer!!)
         }
 
         return list
-    }
-
-    private fun loadTempData() {
-        if(tempApiData != null)
-            bindWidget(tempApiData)
-        if(tempMsApi1 != null)
-            bindWidgetLocation(tempMsApi1!!)
-    }
+    } */
 
     private fun cbClickListener() {
 
         cb_fajr.setOnClickListener {
             if(cb_fajr.isChecked)
-                updateNotifiedPrayerWithoutTime(getString(R.string.fajr), true)
+                updatePrayerIsNotified(getString(R.string.fajr), true)
             else
-                updateNotifiedPrayerWithoutTime(getString(R.string.fajr), false)
+                updatePrayerIsNotified(getString(R.string.fajr), false)
         }
 
         cb_dhuhr.setOnClickListener {
             if(cb_dhuhr.isChecked)
-                updateNotifiedPrayerWithoutTime(getString(R.string.dhuhr), true)
+                updatePrayerIsNotified(getString(R.string.dhuhr), true)
             else
-                updateNotifiedPrayerWithoutTime(getString(R.string.dhuhr), false)
+                updatePrayerIsNotified(getString(R.string.dhuhr), false)
         }
 
         cb_asr.setOnClickListener {
             if(cb_asr.isChecked)
-                updateNotifiedPrayerWithoutTime(getString(R.string.asr), true)
+                updatePrayerIsNotified(getString(R.string.asr), true)
             else
-                updateNotifiedPrayerWithoutTime(getString(R.string.asr), false)
+                updatePrayerIsNotified(getString(R.string.asr), false)
         }
 
         cb_maghrib.setOnClickListener {
             if(cb_maghrib.isChecked)
-                updateNotifiedPrayerWithoutTime(getString(R.string.maghrib), true)
+                updatePrayerIsNotified(getString(R.string.maghrib), true)
             else
-                updateNotifiedPrayerWithoutTime(getString(R.string.maghrib), false)
+                updatePrayerIsNotified(getString(R.string.maghrib), false)
         }
 
         cb_isha.setOnClickListener {
             if(cb_isha.isChecked)
-                updateNotifiedPrayerWithoutTime(getString(R.string.isha), true)
+                updatePrayerIsNotified(getString(R.string.isha), true)
             else
-                updateNotifiedPrayerWithoutTime(getString(R.string.isha), false)
+                updatePrayerIsNotified(getString(R.string.isha), false)
         }
 
     }
 
-    private fun bindCheckBox(list: List<PrayerLocal>) {
+    private fun bindCheckBox(list: List<NotifiedPrayer>) {
         list.forEach {
             when {
                 it.prayerName.trim() == getString(R.string.fajr) && it.isNotified -> cb_fajr.isChecked = true
@@ -280,6 +309,19 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
 
     /* Widget */
+    private fun bindWidget(data: Data?) {
+
+        if(data == null)
+            return
+
+        val selPrayer = SelectPrayerHelper.selectNextPrayerToInt(data.timings)
+
+        bindPrayerText(data)
+        selectWidgetTitle(selPrayer)
+        selectWidgetPic(selPrayer)
+        selectNextPrayerTime(selPrayer, data.timings)
+    }
+
     private fun bindWidgetLocation(it: MsApi1) {
         mCityName = LocationHelper.getCity(context!!, it.latitude.toDouble(), it.longitude.toDouble())
 
@@ -308,19 +350,6 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         }
     }
 
-    private fun bindWidget(apiData: Data?) {
-
-        if(apiData == null)
-            return
-
-        val selPrayer = SelectPrayerHelper.selectNextPrayerToInt(apiData.timings)
-
-        bindPrayerText(apiData)
-        selectWidgetTitle(selPrayer)
-        selectWidgetPic(selPrayer)
-        selectNextPrayerTime(selPrayer, apiData.timings)
-    }
-
     private fun selectNextPrayerTime(selPrayer: Int, timings: Timings) {
 
         val sdfPrayer = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
@@ -341,7 +370,7 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         if(period == null)
             return
 
-        CoroutineScope(Dispatchers.Default).launch{
+        GlobalScope.launch(coroutineTimerProvider.IO){
             coroutineTimer(period.hours, period.minutes, 60 - nowTime.secondOfMinute)
         }
 
@@ -393,10 +422,10 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         var tempMinute = abs(minute)
         var tempSecond = abs(second)
 
-        var onOffCountDown = true
+        var isCountDownOn = true
         var isMinuteZero = false
 
-        while (onOffCountDown){
+        while (isCountDownOn){
             delay(1000)
             tempSecond--
 
@@ -422,32 +451,29 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
             /* fetching Prayer API */
             if(tempHour == 0 && tempMinute == 0 && tempSecond == 1){
 
-                CoroutineScope(Dispatchers.Default).cancel()
-
-                withContext(Dispatchers.Main){
-                    tempMsApi1?.let {
-                        //fetchPrayerApi(it.latitude, it.longitude, EnumConfig.pMethod, it.month, it.year)
-                    }
+                GlobalScope.launch(coroutineTimerProvider.Main){
+                    tempMsApi1?.let { fetchPrayerApi(it) }
                 }
             }
 
-            withContext(Dispatchers.Main){
+            GlobalScope.launch(coroutineTimerProvider.Main){
                 if(tv_widget_prayer_countdown != null)
                     tv_widget_prayer_countdown.text = "$tempHour : $tempMinute : $tempSecond remaining"
                 else
-                    onOffCountDown = false
+                    isCountDownOn = false
             }
 
         }
     }
 
     /* Alarm Manager & Notification */
-    private fun updateAlarmManager(listPrayer: MutableList<PrayerLocal>){
+    private fun updateAlarmManager(listNotifiedPrayer: List<NotifiedPrayer>){
 
         if(mCityName == null)
             mCityName = "-"
 
-        PushNotificationHelper(context!!, listPrayer, mCityName!!)
+        PushNotificationHelper(context!!,
+            listNotifiedPrayer as MutableList<NotifiedPrayer>, mCityName!!)
         //Toasty.info(context!!, "alarm manager updated", Toast.LENGTH_SHORT).show()
     }
 
@@ -460,6 +486,7 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
         tempMsApi1?.let {
             fetchPrayerApi(it)
+            bindWidgetLocation(it)
         }
 
         sl_main.isRefreshing = false

@@ -2,9 +2,9 @@ package com.programmergabut.solatkuy.ui.fragmentcompass.viewmodel
 
 import android.app.Application
 import androidx.lifecycle.*
-import com.programmergabut.solatkuy.data.model.compassJson.CompassApi
-import com.programmergabut.solatkuy.data.model.entity.MsApi1
-import com.programmergabut.solatkuy.data.repository.Repository
+import com.programmergabut.solatkuy.data.local.localentity.MsApi1
+import com.programmergabut.solatkuy.data.Repository
+import com.programmergabut.solatkuy.data.remote.remoteentity.compassJson.CompassApi
 import com.programmergabut.solatkuy.util.Resource
 
 class FragmentCompassViewModel(a: Application, private val repository: Repository): AndroidViewModel(a) {
@@ -16,10 +16,6 @@ class FragmentCompassViewModel(a: Application, private val repository: Repositor
     } as MutableLiveData<Resource<CompassApi>>
 
     val msApi1Local = repository.mMsApi1
-
-    init {
-        compassApi.postValue(Resource.loading(null))
-    }
 
     fun fetchCompassApi(msApi1: MsApi1){
         this.coordinateID.value = msApi1

@@ -1,8 +1,8 @@
 package com.programmergabut.solatkuy.di.module
 
-import com.programmergabut.solatkuy.data.model.prayerJson.Date
-import com.programmergabut.solatkuy.data.model.prayerJson.Gregorian
-import com.programmergabut.solatkuy.data.model.prayerJson.Hijri
+import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.Date
+import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.Gregorian
+import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.Hijri
 import dagger.Module
 import dagger.Provides
 
@@ -26,7 +26,12 @@ class DateModule(private val day: String,  private val en: String, private val n
 
     @Provides
     fun provideDate(): Date {
-        return Date(gregorian(), hijri(), readable(), timestamp())
+        return Date(
+            gregorian(),
+            hijri(),
+            readable(),
+            timestamp()
+        )
     }
 
 }

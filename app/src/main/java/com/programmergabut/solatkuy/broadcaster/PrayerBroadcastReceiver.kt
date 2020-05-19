@@ -7,7 +7,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import com.programmergabut.solatkuy.data.model.entity.PrayerLocal
+import com.programmergabut.solatkuy.data.local.localentity.NotifiedPrayer
 import com.programmergabut.solatkuy.ui.main.view.MainActivity
 import com.programmergabut.solatkuy.util.EnumConfig
 import com.programmergabut.solatkuy.util.NotificationHelper
@@ -80,7 +80,7 @@ class PrayerBroadcastReceiver: BroadcastReceiver() {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
         /* remove sunrise */
-        val newList = listData.filter { x -> x.prayerName !=  EnumConfig.sunrise} as MutableList<PrayerLocal>
+        val newList = listData.filter { x -> x.prayerName !=  EnumConfig.sunrise} as MutableList<NotifiedPrayer>
 
         val selID = SelectPrayerHelper.selNextPrayerByLastID(newList, pID!!)
         //selID = PrayerLocal(2,"mantap 2",true,"01:12") //#testing purpose
@@ -119,9 +119,9 @@ class PrayerBroadcastReceiver: BroadcastReceiver() {
 
     }
 
-    private fun bundleDeserializer(listPrayerBundle: Bundle?): MutableList<PrayerLocal> {
+    private fun bundleDeserializer(listPrayerBundle: Bundle?): MutableList<NotifiedPrayer> {
 
-        val listData = mutableListOf<PrayerLocal>()
+        val listData = mutableListOf<NotifiedPrayer>()
 
         val listPID  =  listPrayerBundle?.getIntegerArrayList("list_PID")
         val listPName = listPrayerBundle?.getStringArrayList("list_PName")
@@ -135,7 +135,14 @@ class PrayerBroadcastReceiver: BroadcastReceiver() {
 
             val isNotified: Boolean = listPIsNotified!![i] == 1
 
-            listData.add(PrayerLocal(listPID[i], listPName?.get(i)!!, isNotified, listPTime?.get(i)!!))
+            listData.add(
+                NotifiedPrayer(
+                    listPID[i],
+                    listPName?.get(i)!!,
+                    isNotified,
+                    listPTime?.get(i)!!
+                )
+            )
         }
 
         return listData

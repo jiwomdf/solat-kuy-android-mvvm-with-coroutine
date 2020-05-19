@@ -1,6 +1,6 @@
 package com.programmergabut.solatkuy.di.component
 
-import com.programmergabut.solatkuy.data.model.prayerJson.Timings
+import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.Timings
 import dagger.BindsInstance
 import dagger.Component
 import javax.inject.Named

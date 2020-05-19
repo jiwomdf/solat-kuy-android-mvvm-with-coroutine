@@ -20,7 +20,7 @@ class SwipeAdapter(fm: FragmentManager): FragmentPagerAdapter(fm, BEHAVIOR_RESUM
             1 -> FragmentCompass()
             2 -> FragmentInfo()
             3-> FragmentSetting()
-            else -> FragmentMain()
+            else -> error("Can't have more than 2 fragment on team detail")
         }
     }
 

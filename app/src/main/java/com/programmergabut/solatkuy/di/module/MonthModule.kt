@@ -1,6 +1,6 @@
 package com.programmergabut.solatkuy.di.module
 
-import com.programmergabut.solatkuy.data.model.prayerJson.Month
+import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.Month
 import dagger.Module
 import dagger.Provides
 
@@ -17,8 +17,11 @@ class MonthModule(private val en: String, private val number: Int) {
     fun number(): Int = number
 
     @Provides
-    fun provideMonth(): Month{
-        return Month(en(), number())
+    fun provideMonth(): Month {
+        return Month(
+            en(),
+            number()
+        )
     }
 
 }

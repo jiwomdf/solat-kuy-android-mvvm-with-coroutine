@@ -7,7 +7,7 @@ import android.content.ContextWrapper
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import com.programmergabut.solatkuy.data.model.entity.PrayerLocal
+import com.programmergabut.solatkuy.data.local.localentity.NotifiedPrayer
 import com.programmergabut.solatkuy.broadcaster.PrayerBroadcastReceiver
 import java.util.*
 
@@ -15,7 +15,7 @@ import java.util.*
  * Created by Katili Jiwo Adi Wiyono on 02/04/20.
  */
 
-class PushNotificationHelper(context: Context, selList: MutableList<PrayerLocal>, mCityName: String): ContextWrapper(context) {
+class PushNotificationHelper(context: Context, selList: MutableList<NotifiedPrayer>, mCityName: String): ContextWrapper(context) {
 
     private var mCityName: String? = null
 
@@ -66,7 +66,7 @@ class PushNotificationHelper(context: Context, selList: MutableList<PrayerLocal>
 
     }
 
-    private fun bundleCreator(selList: MutableList<PrayerLocal>): Bundle {
+    private fun bundleCreator(selList: MutableList<NotifiedPrayer>): Bundle {
 
         val listPID = arrayListOf<Int>()
         val listPName = arrayListOf<String>()

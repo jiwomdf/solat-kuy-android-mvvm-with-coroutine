@@ -28,8 +28,8 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.programmergabut.solatkuy.R
-import com.programmergabut.solatkuy.data.model.entity.MsApi1
-import com.programmergabut.solatkuy.data.model.entity.MsSetting
+import com.programmergabut.solatkuy.data.local.localentity.MsApi1
+import com.programmergabut.solatkuy.data.local.localentity.MsSetting
 import com.programmergabut.solatkuy.ui.main.adapter.SwipeAdapter
 import com.programmergabut.solatkuy.ui.main.viewmodel.MainActivityViewModel
 import com.programmergabut.solatkuy.viewmodel.ViewModelFactory
@@ -38,10 +38,8 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.layout_bottom_navigation_bar.*
 import kotlinx.android.synthetic.main.layout_bottomsheet_bygps.view.*
 import kotlinx.android.synthetic.main.layout_bottomsheet_bylatitudelongitude.view.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import org.joda.time.LocalDate
-import kotlin.math.abs
+import java.lang.Math.abs
 
 /*
  * Created by Katili Jiwo Adi Wiyono on 25/03/20.
@@ -59,8 +57,8 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        mainActivityViewModel = ViewModelProvider(this, ViewModelFactory.getInstance(application,
-            CoroutineScope(Dispatchers.IO)))[MainActivityViewModel::class.java]
+        mainActivityViewModel = ViewModelProvider(this, ViewModelFactory
+            .getInstance(application))[MainActivityViewModel::class.java]
 
         bottom_navigation.setOnNavigationItemSelectedListener(this)
 
@@ -188,7 +186,12 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         mSubDialog.dismiss()
         dialog.dismiss()
 
-        mainActivityViewModel.updateSetting(MsSetting(1,true))
+        mainActivityViewModel.updateSetting(
+            MsSetting(
+                1,
+                true
+            )
+        )
         Toasty.success(this@MainActivity,"Success change the coordinate", Toast.LENGTH_SHORT).show()
 
         initViewPager()
@@ -322,29 +325,23 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
 
     /* Animation */
     private inner class ZoomOutPageTransformer : ViewPager.PageTransformer {
-
         private val MIN_SCALE = 0.85f
         private val MIN_ALPHA = 0.5f
-
         override fun transformPage(view: View, position: Float) {
             view.apply {
-
                 val pageWidth = width
                 val pageHeight = height
-
                 when {
                     position < -1 -> alpha = 0f
                     position <= 1 -> {
                         // Modify the default slide transition to shrink the page as well
-                        val scaleFactor = MIN_SCALE.coerceAtLeast(1 - abs(position))
+                        val scaleFactor = MIN_SCALE.coerceAtLeast(1 - kotlin.math.abs(position))
                         val vertMargin = pageHeight * (1 - scaleFactor) / 2
                         val horzMargin = pageWidth * (1 - scaleFactor) / 2
                         translationX = if (position < 0) horzMargin - vertMargin / 2 else horzMargin + vertMargin / 2
-
                         // Scale the page down (between MIN_SCALE and 1)
                         scaleX = scaleFactor
                         scaleY = scaleFactor
-
                         // Fade the page relative to its size.
                         alpha = (MIN_ALPHA + (((scaleFactor - MIN_SCALE) / (1 - MIN_SCALE)) * (1 - MIN_ALPHA)))
                     }
@@ -352,7 +349,6 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
                 }
             }
         }
-
     }
 
 

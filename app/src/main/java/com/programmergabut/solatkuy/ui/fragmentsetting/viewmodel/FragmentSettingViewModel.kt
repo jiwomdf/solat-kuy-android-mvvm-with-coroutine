@@ -3,8 +3,8 @@ package com.programmergabut.solatkuy.ui.fragmentsetting.viewmodel
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.viewModelScope
-import com.programmergabut.solatkuy.data.model.entity.MsApi1
-import com.programmergabut.solatkuy.data.repository.Repository
+import com.programmergabut.solatkuy.data.local.localentity.MsApi1
+import com.programmergabut.solatkuy.data.Repository
 import kotlinx.coroutines.launch
 
 /*

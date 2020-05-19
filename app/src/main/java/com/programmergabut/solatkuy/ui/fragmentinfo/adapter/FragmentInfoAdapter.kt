@@ -5,7 +5,7 @@ import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.programmergabut.solatkuy.R
-import com.programmergabut.solatkuy.data.model.asmaalhusnaJson.Data
+import com.programmergabut.solatkuy.data.remote.remoteentity.asmaalhusnaJson.Data
 import kotlinx.android.synthetic.main.layout_ah_viewholder.view.*
 
 class FragmentInfoAdapter(private val datas: List<Data>): RecyclerView.Adapter<FragmentInfoAdapter.FragmentInfoViewHolder>() {

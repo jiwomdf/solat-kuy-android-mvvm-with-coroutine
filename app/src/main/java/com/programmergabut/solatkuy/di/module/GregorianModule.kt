@@ -1,7 +1,7 @@
 package com.programmergabut.solatkuy.di.module
 
-import com.programmergabut.solatkuy.data.model.prayerJson.Gregorian
-import com.programmergabut.solatkuy.data.model.prayerJson.Month
+import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.Gregorian
+import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.Month
 import dagger.Module
 import dagger.Provides
 
@@ -30,7 +30,15 @@ class GregorianModule(private val day: String, private val en: String, private v
 
     @Provides
     fun provideGregorian(): Gregorian {
-        return Gregorian(date(), day, designation(), format(), month(), weekday(), year())
+        return Gregorian(
+            date(),
+            day,
+            designation(),
+            format(),
+            month(),
+            weekday(),
+            year()
+        )
     }
 
 }

@@ -1,7 +1,7 @@
 package com.programmergabut.solatkuy.util
 
-import com.programmergabut.solatkuy.data.model.entity.PrayerLocal
-import com.programmergabut.solatkuy.data.model.prayerJson.Timings
+import com.programmergabut.solatkuy.data.local.localentity.NotifiedPrayer
+import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.Timings
 import org.joda.time.DateTime
 import org.joda.time.LocalTime
 import java.text.SimpleDateFormat
@@ -47,7 +47,7 @@ class SelectPrayerHelper {
             return prayer
         }
 
-        fun selectNextPrayerToLocalPrayer(selList: MutableList<PrayerLocal>): PrayerLocal? {
+        fun selectNextPrayerToLocalPrayer(selList: MutableList<NotifiedPrayer>): NotifiedPrayer? {
 
             var prayer: Int = -1
 
@@ -88,18 +88,48 @@ class SelectPrayerHelper {
                 prayer = 1 //fajr
 
             return when(prayer){
-                6 -> PrayerLocal(5, EnumConfig.isha, true, strIshaTime)
-                1 -> PrayerLocal(1, EnumConfig.fajr, true, strFajrTime)
-                2 -> PrayerLocal(2, EnumConfig.dhuhr, true, strDhuhrTime)
-                3 -> PrayerLocal(3, EnumConfig.asr, true, strAsrTime)
-                4 -> PrayerLocal(4, EnumConfig.maghrib, true, strMaghribTime)
-                5 -> PrayerLocal(5, EnumConfig.isha, true, strIshaTime)
+                6 -> NotifiedPrayer(
+                    5,
+                    EnumConfig.isha,
+                    true,
+                    strIshaTime
+                )
+                1 -> NotifiedPrayer(
+                    1,
+                    EnumConfig.fajr,
+                    true,
+                    strFajrTime
+                )
+                2 -> NotifiedPrayer(
+                    2,
+                    EnumConfig.dhuhr,
+                    true,
+                    strDhuhrTime
+                )
+                3 -> NotifiedPrayer(
+                    3,
+                    EnumConfig.asr,
+                    true,
+                    strAsrTime
+                )
+                4 -> NotifiedPrayer(
+                    4,
+                    EnumConfig.maghrib,
+                    true,
+                    strMaghribTime
+                )
+                5 -> NotifiedPrayer(
+                    5,
+                    EnumConfig.isha,
+                    true,
+                    strIshaTime
+                )
                 else -> null
             }
 
         }
 
-        fun selNextPrayerByLastID(listData: MutableList<PrayerLocal>, selID: Int): PrayerLocal? {
+        fun selNextPrayerByLastID(listData: MutableList<NotifiedPrayer>, selID: Int): NotifiedPrayer? {
 
             listData.sortBy { x -> x.prayerID }
 

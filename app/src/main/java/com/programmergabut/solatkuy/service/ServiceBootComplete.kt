@@ -3,7 +3,7 @@ package com.programmergabut.solatkuy.service
 import android.app.Service
 import android.content.Intent
 import android.os.IBinder
-import com.programmergabut.solatkuy.data.room.SolatKuyRoom
+import com.programmergabut.solatkuy.data.local.SolatKuyRoom
 import com.programmergabut.solatkuy.util.PushNotificationHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers

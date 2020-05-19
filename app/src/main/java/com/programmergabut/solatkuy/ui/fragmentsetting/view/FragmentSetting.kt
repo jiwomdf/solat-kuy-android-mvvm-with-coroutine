@@ -26,7 +26,7 @@ import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices.getFusedLocationProviderClient
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.programmergabut.solatkuy.R
-import com.programmergabut.solatkuy.data.model.entity.MsApi1
+import com.programmergabut.solatkuy.data.local.localentity.MsApi1
 import com.programmergabut.solatkuy.ui.fragmentsetting.viewmodel.FragmentSettingViewModel
 import com.programmergabut.solatkuy.util.EnumConfig
 import com.programmergabut.solatkuy.util.LocationHelper
@@ -35,8 +35,6 @@ import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.fragment_setting.*
 import kotlinx.android.synthetic.main.layout_bottomsheet_bygps.view.*
 import kotlinx.android.synthetic.main.layout_bottomsheet_bylatitudelongitude.view.*
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
 import org.joda.time.LocalDate
 
 /*
@@ -64,8 +62,8 @@ class FragmentSetting : Fragment() {
         dialog = BottomSheetDialog(context!!)
         btnSetLatitudeLongitude()
 
-        fragmentSettingViewModel = ViewModelProvider(this, ViewModelFactory.getInstance(activity?.application!!,
-            CoroutineScope(Dispatchers.IO)))[FragmentSettingViewModel::class.java]
+        fragmentSettingViewModel = ViewModelProvider(this, ViewModelFactory
+            .getInstance(activity?.application!!))[FragmentSettingViewModel::class.java]
 
         subscribeObserversDB()
     }
