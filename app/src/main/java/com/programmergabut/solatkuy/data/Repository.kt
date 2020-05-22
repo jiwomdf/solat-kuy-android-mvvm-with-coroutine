@@ -9,7 +9,8 @@ import com.programmergabut.solatkuy.data.remote.RemoteDataSource
 import com.programmergabut.solatkuy.data.remote.remoteentity.asmaalhusnaJson.AsmaAlHusnaApi
 import com.programmergabut.solatkuy.data.remote.remoteentity.compassJson.CompassApi
 import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.PrayerApi
-import com.programmergabut.solatkuy.util.EnumConfig
+import com.programmergabut.solatkuy.data.remote.remoteentity.quransurahJson.QuranSurahApi
+import com.programmergabut.solatkuy.util.enumclass.EnumConfig
 import com.programmergabut.solatkuy.util.Resource
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -84,14 +85,25 @@ class Repository(private val contextProviders: ContextProviders,
         return result
     }
 
+    fun fetchQuranSurah(nInSurah: String): LiveData<Resource<QuranSurahApi>>{
+        val result = MutableLiveData<Resource<QuranSurahApi>>()
+
+        remoteDataSource.fetchQuranSurah(nInSurah, object : RemoteDataSource.LoadQuranSurahCallback{
+            override fun onReceived(response: Resource<QuranSurahApi>) {
+                result.postValue(response)
+            }
+        })
+
+        return result
+    }
+
     fun syncNotifiedPrayer(msApi1: MsApi1): LiveData<Resource<List<NotifiedPrayer>>> {
 
         return object : NetworkBoundResource<List<NotifiedPrayer>, PrayerApi>(contextProviders){
             override fun loadFromDB(): LiveData<List<NotifiedPrayer>> = localDataSource.getNotifiedPrayer()
 
             override fun shouldFetch(data: List<NotifiedPrayer>?): Boolean{
-                val ret = data == null || data.isEmpty()
-                return ret
+                return true
             }
 
             override fun createCall(): LiveData<Resource<PrayerApi>> = remoteDataSource.syncNotifiedPrayer(msApi1)

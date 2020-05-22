@@ -1,4 +1,4 @@
-package com.programmergabut.solatkuy.util
+package com.programmergabut.solatkuy.util.helper
 
 import android.app.Notification
 import android.app.NotificationChannel
@@ -16,6 +16,7 @@ import android.os.Vibrator
 import androidx.core.app.NotificationCompat
 import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.broadcaster.MoreTimeBroadcastReceiver
+import com.programmergabut.solatkuy.util.enumclass.EnumConfig
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.delay
@@ -97,6 +98,7 @@ class NotificationHelper(c: Context): ContextWrapper(c) {
             return NotificationCompat.Builder(applicationContext, channel1ID)
                 .setContentTitle(pName)
                 .setContentText(message)
+                .setSubText(EnumConfig.duaAfterAdhan)
                 .setColor(getColor(R.color.colorPrimary))
                 .setStyle(NotificationCompat.BigTextStyle().bigText(message))
                 .setAutoCancel(true)
@@ -112,6 +114,7 @@ class NotificationHelper(c: Context): ContextWrapper(c) {
             return NotificationCompat.Builder(this, channel1ID)
                 .setContentTitle(pName)
                 .setContentText(message)
+                .setSubText(EnumConfig.duaAfterAdhan)
                 .setColor(getColor(R.color.colorPrimary))
                 .setVibrate(longArrayOf(500, 500, 500))
                 .setSmallIcon(R.drawable.ic_notifications_active_24dp)

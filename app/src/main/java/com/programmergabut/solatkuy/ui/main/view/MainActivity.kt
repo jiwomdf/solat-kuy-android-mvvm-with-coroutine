@@ -28,8 +28,8 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.programmergabut.solatkuy.R
-import com.programmergabut.solatkuy.data.local.localentity.MsApi1
-import com.programmergabut.solatkuy.data.local.localentity.MsSetting
+import com.programmergabut.solatkuy.data.ContextProviders
+import com.programmergabut.solatkuy.data.local.SolatKuyRoom
 import com.programmergabut.solatkuy.ui.main.adapter.SwipeAdapter
 import com.programmergabut.solatkuy.ui.main.viewmodel.MainActivityViewModel
 import com.programmergabut.solatkuy.viewmodel.ViewModelFactory
@@ -38,8 +38,10 @@ import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.layout_bottom_navigation_bar.*
 import kotlinx.android.synthetic.main.layout_bottomsheet_bygps.view.*
 import kotlinx.android.synthetic.main.layout_bottomsheet_bylatitudelongitude.view.*
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
 import org.joda.time.LocalDate
-import java.lang.Math.abs
 
 /*
  * Created by Katili Jiwo Adi Wiyono on 25/03/20.
@@ -50,6 +52,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
     lateinit var mSubDialogView: View
     private lateinit var mSubDialog: Dialog
     private lateinit var mainActivityViewModel: MainActivityViewModel
+    private lateinit var db : SolatKuyRoom
     private val ALL_PERMISSIONS = 101
 
 
@@ -57,6 +60,8 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
+
+        db = SolatKuyRoom.getDataBase(this)
         mainActivityViewModel = ViewModelProvider(this, ViewModelFactory
             .getInstance(application))[MainActivityViewModel::class.java]
 
@@ -76,7 +81,8 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
                 else
                     initDialog()
             else
-                throw Exception("null observe")
+                SolatKuyRoom.populateDatabase(ContextProviders.getInstance())
+
         })
 
     }
@@ -153,7 +159,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
                 }
 
                 insertLocationSettingToDb(latitude, longitude)
-                successIsFirstOpen(dialog)
+                insertMsSetting(dialog)
             }
         }
 
@@ -176,22 +182,26 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
                 }
 
                 insertLocationSettingToDb(latitude, longitude)
-                successIsFirstOpen(dialog)
+                insertMsSetting(dialog)
             }
         }
 
     }
 
-    private fun successIsFirstOpen(dialog: Dialog) {
+    private fun insertMsSetting(dialog: Dialog) {
         mSubDialog.dismiss()
         dialog.dismiss()
 
-        mainActivityViewModel.updateSetting(
+        GlobalScope.launch(Dispatchers.IO){
+            db.msSettingDao().updateMsSetting(true)
+        }
+
+        /* mainActivityViewModel.updateSetting(
             MsSetting(
                 1,
                 true
             )
-        )
+        )*/
         Toasty.success(this@MainActivity,"Success change the coordinate", Toast.LENGTH_SHORT).show()
 
         initViewPager()
@@ -202,16 +212,16 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
 
         val currDate = LocalDate()
 
-        val data = MsApi1(
-            1,
-            latitude,
-            longitude,
-            "3",
-            currDate.monthOfYear.toString(),
-            currDate.year.toString()
-        )
+        GlobalScope.launch(Dispatchers.IO){
+            db.msApi1Dao().updateMsApi1(1,
+                latitude,
+                longitude,
+                "3",
+                currDate.monthOfYear.toString(),
+                currDate.year.toString())
+        }
 
-        mainActivityViewModel.updateMsApi1(data)
+        //mainActivityViewModel.updateMsApi1(data)
     }
 
     /* Permission */

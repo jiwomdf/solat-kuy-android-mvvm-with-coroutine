@@ -1,4 +1,4 @@
-package com.programmergabut.solatkuy.util
+package com.programmergabut.solatkuy.util.enumclass
 
 /*
  * Created by Katili Jiwo Adi Wiyono on 12/04/20.
@@ -28,5 +28,8 @@ class EnumConfig {
 
         /* City not found */
         const val lCity = "City not found"
+
+        /* Dua after adhan*/
+        const val duaAfterAdhan = "Tap to see the dua after adhan \uD83D\uDE4F"
     }
 }

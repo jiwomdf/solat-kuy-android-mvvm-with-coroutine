@@ -4,7 +4,7 @@ import android.app.Service
 import android.content.Intent
 import android.os.IBinder
 import com.programmergabut.solatkuy.data.local.SolatKuyRoom
-import com.programmergabut.solatkuy.util.PushNotificationHelper
+import com.programmergabut.solatkuy.util.helper.PushNotificationHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -27,7 +27,11 @@ class ServiceBootComplete: Service() {
             val db = SolatKuyRoom.getDataBase(this@ServiceBootComplete)
             val data = db.notifiedPrayerDao().getNotifiedPrayerSync() as MutableList
 
-            PushNotificationHelper(this@ServiceBootComplete, data,"-")
+            PushNotificationHelper(
+                this@ServiceBootComplete,
+                data,
+                "-"
+            )
         }
 
         return START_REDELIVER_INTENT

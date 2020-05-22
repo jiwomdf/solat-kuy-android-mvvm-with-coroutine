@@ -8,10 +8,11 @@ import android.content.Intent
 import android.os.Build
 import android.os.Bundle
 import com.programmergabut.solatkuy.data.local.localentity.NotifiedPrayer
-import com.programmergabut.solatkuy.ui.main.view.MainActivity
-import com.programmergabut.solatkuy.util.EnumConfig
-import com.programmergabut.solatkuy.util.NotificationHelper
-import com.programmergabut.solatkuy.util.SelectPrayerHelper
+import com.programmergabut.solatkuy.ui.activityprayer.DuaActivity
+import com.programmergabut.solatkuy.util.enumclass.EnumConfig
+import com.programmergabut.solatkuy.util.helper.NotificationHelper
+import com.programmergabut.solatkuy.util.generator.DuaGenerator
+import com.programmergabut.solatkuy.util.helper.SelectPrayerHelper
 import java.lang.Exception
 import java.util.*
 
@@ -42,9 +43,7 @@ class PrayerBroadcastReceiver: BroadcastReceiver() {
         if(pCity == null)
             pCity = "-"
 
-        val nextIntent = Intent(context, MainActivity::class.java)
-        nextIntent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-
+        val nextIntent = intentGenerator(context)
 
         when (pID!!) {
             EnumConfig.nId1 -> {
@@ -71,6 +70,17 @@ class PrayerBroadcastReceiver: BroadcastReceiver() {
 
     }
 
+    private fun intentGenerator(context: Context): Intent {
+        val i = Intent(context, DuaActivity::class.java)
+        i.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        i.putExtra(DuaActivity.duaTitle, DuaGenerator.duaAfterAdhan.title)
+        i.putExtra(DuaActivity.duaAr, DuaGenerator.duaAfterAdhan.arab)
+        i.putExtra(DuaActivity.duaLt, DuaGenerator.duaAfterAdhan.latin)
+        i.putExtra(DuaActivity.duaEn, DuaGenerator.duaAfterAdhan.english)
+        i.putExtra(DuaActivity.duaIn, DuaGenerator.duaAfterAdhan.indonesia)
+
+        return i
+    }
 
     private fun executeNextNotification(listPrayerBundle: Bundle?, context: Context, pCity: String) {
 
@@ -83,7 +93,7 @@ class PrayerBroadcastReceiver: BroadcastReceiver() {
         val newList = listData.filter { x -> x.prayerName !=  EnumConfig.sunrise} as MutableList<NotifiedPrayer>
 
         val selID = SelectPrayerHelper.selNextPrayerByLastID(newList, pID!!)
-        //selID = PrayerLocal(2,"mantap 2",true,"01:12") //#testing purpose
+        //val selID = NotifiedPrayer(2,"mantap 2",true,"18:46") //#testing purpose
 
         selID?.let{
 

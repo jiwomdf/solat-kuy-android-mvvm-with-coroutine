@@ -1,5 +1,7 @@
 package com.programmergabut.solatkuy.util
 
+import com.programmergabut.solatkuy.util.enumclass.EnumStatus
+
 /*
  * Created by Katili Jiwo Adi Wiyono on 25/03/20.
  */

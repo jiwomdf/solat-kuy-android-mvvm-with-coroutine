@@ -19,16 +19,24 @@ import com.programmergabut.solatkuy.data.local.localentity.MsApi1
 import com.programmergabut.solatkuy.data.local.localentity.NotifiedPrayer
 import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.Data
 import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.Timings
+import com.programmergabut.solatkuy.data.remote.remoteentity.quransurahJson.QuranSurahApi
 import com.programmergabut.solatkuy.di.component.DaggerIDataComponent
 import com.programmergabut.solatkuy.di.component.DaggerITimingsComponent
 import com.programmergabut.solatkuy.di.module.DataModule
 import com.programmergabut.solatkuy.ui.fragmentmain.CoroutineTimerProvider
 import com.programmergabut.solatkuy.ui.fragmentmain.viewmodel.FragmentMainViewModel
-import com.programmergabut.solatkuy.util.*
+import com.programmergabut.solatkuy.util.Resource
+import com.programmergabut.solatkuy.util.enumclass.EnumConfig
+import com.programmergabut.solatkuy.util.enumclass.EnumStatus
+import com.programmergabut.solatkuy.util.generator.SurahQuoteGenerator
+import com.programmergabut.solatkuy.util.helper.LocationHelper
+import com.programmergabut.solatkuy.util.helper.PushNotificationHelper
+import com.programmergabut.solatkuy.util.helper.SelectPrayerHelper
 import com.programmergabut.solatkuy.viewmodel.ViewModelFactory
 import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.fragment_main.*
 import kotlinx.android.synthetic.main.layout_prayer_time.*
+import kotlinx.android.synthetic.main.layout_quran_quote.*
 import kotlinx.android.synthetic.main.layout_widget.*
 import kotlinx.coroutines.*
 import org.joda.time.DateTime
@@ -76,6 +84,9 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         if(tv_widget_prayer_countdown != null)
             tv_widget_prayer_countdown.text = getString(R.string.loading)
 
+        tv_quran_ayah_quote.visibility = View.GONE
+        tv_quran_ayah_quote_click.visibility = View.VISIBLE
+
         loadTempData()
     }
 
@@ -84,6 +95,7 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
         cbClickListener()
         refreshLayout()
+        tvQuranQuoteClick()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
@@ -118,6 +130,20 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
             }
         })
 
+
+        fragmentMainViewModel.quranSurah.observe(this, androidx.lifecycle.Observer {retVal ->
+            when(retVal.Status){
+                EnumStatus.SUCCESS -> {
+                    if(retVal.data == null)
+                        bindQuranSurahOffline()
+                    else
+                        bindQuranSurahOnline(retVal)
+                }
+                EnumStatus.LOADING -> tv_quran_ayah_quote_click.text = getString(R.string.loading)
+                EnumStatus.ERROR -> bindQuranSurahOffline()
+            }
+        })
+
     }
 
     private fun subscribeObserversDB() {
@@ -143,6 +169,7 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
             /* fetching Prayer API */
             fetchPrayerApi(it)
+            fetchQuranSurah()
         })
     }
 
@@ -173,9 +200,17 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     /* fetch API data */
     private fun fetchPrayerApi(msApi1: MsApi1) {
+        fragmentMainViewModel.notifiedPrayer.postValue(Resource.loading(null))
         fragmentMainViewModel.fetchPrayerApi(msApi1)
     }
 
+    private fun fetchQuranSurah(){
+        fragmentMainViewModel.quranSurah.postValue(Resource.loading(null))
+
+        val randSurah = (1..114).random()
+
+        fragmentMainViewModel.fetchQuranSurah(randSurah.toString())
+    }
 
     /* Database Transaction */
     private fun updatePrayerIsNotified(prayer:String, isNotified:Boolean){
@@ -189,10 +224,11 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     }
 
 
-    /* init first load data */
+    /* init onStart data */
     private fun loadTempData() {
         tempMsApi1?.let {
             fetchPrayerApi(it)
+            fetchQuranSurah()
             bindWidgetLocation(it)
         }
     }
@@ -415,6 +451,21 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         }
     }
 
+    private fun bindQuranSurahOffline(){
+        val ayah = SurahQuoteGenerator.retAyah()
+        tv_quran_ayah_quote_click.text = if(ayah.length > 100) ayah.substring(0, 100) + "..." else ayah
+        tv_quran_ayah_quote.text = ayah
+    }
+
+    private fun bindQuranSurahOnline(retVal: Resource<QuranSurahApi>) {
+        val returnValue = retVal.data?.data!!
+        val randAyah = (returnValue.ayahs.indices).random()
+        val ayah = returnValue.ayahs[randAyah].text + " - QS " + returnValue.englishName + " Ayah " + returnValue.numberOfAyahs
+
+        tv_quran_ayah_quote_click.text = if(ayah.length > 100) ayah.substring(0, 100) + "..." else ayah
+        tv_quran_ayah_quote.text = ayah
+    }
+
     /* Coroutine Timer */
     private suspend fun coroutineTimer(hour: Int, minute: Int, second: Int){
         
@@ -472,9 +523,23 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         if(mCityName == null)
             mCityName = "-"
 
-        PushNotificationHelper(context!!,
-            listNotifiedPrayer as MutableList<NotifiedPrayer>, mCityName!!)
+        PushNotificationHelper(
+            context!!,
+            listNotifiedPrayer as MutableList<NotifiedPrayer>, mCityName!!
+        )
         //Toasty.info(context!!, "alarm manager updated", Toast.LENGTH_SHORT).show()
+    }
+
+    /* tv Quran Quote Click */
+    private fun tvQuranQuoteClick() {
+        tv_quran_ayah_quote_click.setOnClickListener {
+            it.visibility = View.GONE
+            tv_quran_ayah_quote.visibility = View.VISIBLE
+        }
+        tv_quran_ayah_quote.setOnClickListener {
+            tv_quran_ayah_quote_click.visibility = View.VISIBLE
+            it.visibility = View.GONE
+        }
     }
 
     /* Refresher */
@@ -483,12 +548,7 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     override fun onRefresh() {
-
-        tempMsApi1?.let {
-            fetchPrayerApi(it)
-            bindWidgetLocation(it)
-        }
-
+        loadTempData()
         sl_main.isRefreshing = false
     }
 

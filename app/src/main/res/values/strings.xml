@@ -31,7 +31,7 @@
     <string name="https_unsplash_com">https://unsplash.com</string>
     <string name="images">Images: </string>
     <string name="api">Api: </string>
-    <string name="qibla">Qibla Degrees</string>
+    <string name="qibla">Qibla degrees in \n your location</string>
     <string name="fetch_failed">fetching data failed</string>
     <string name="fetch_failed_sort">N/A</string>
     <string name="next_prayer_is_dhuhr">Next prayer is Dhuhr</string>
@@ -52,4 +52,10 @@
     <string name="compass_art">Compass Art:</string>
     <string name="please_enable_your_location">please enable your location</string>
     <string name="proceeded">Proceed</string>
+    <string name="duaAfterAdhan">Dua after Adhan</string>
+    <string name="dua_collection">Dua Collection</string>
+    <string name="latin">Latin</string>
+    <string name="english">English</string>
+    <string name="indonesia">Indonesia</string>
+    <string name="dua_save_from_hell_amp_world"><![CDATA[Dua Save from Hell & World]]></string>
 </resources>

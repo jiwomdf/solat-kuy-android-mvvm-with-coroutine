@@ -12,7 +12,7 @@ import com.programmergabut.solatkuy.data.local.dao.NotifiedPrayerDao
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
 import com.programmergabut.solatkuy.data.local.localentity.MsSetting
 import com.programmergabut.solatkuy.data.local.localentity.NotifiedPrayer
-import com.programmergabut.solatkuy.util.EnumConfig
+import com.programmergabut.solatkuy.util.enumclass.EnumConfig
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
@@ -33,44 +33,6 @@ abstract class SolatKuyRoom: RoomDatabase() {
         private var INSTANCE: SolatKuyRoom? = null
         private const val dbName = "solatkuydb"
 
-        fun getDataBase(context: Context, contextProviders: ContextProviders): SolatKuyRoom {
-            val tempInstance =
-                INSTANCE
-
-            if(tempInstance != null)
-                return tempInstance
-
-            synchronized(this) {
-                val instance = Room.databaseBuilder(context.applicationContext, SolatKuyRoom::class.java,
-                    dbName
-                )
-                    //.fallbackToDestructiveMigration()
-                    /*.addMigrations(object :Migration(1,2){
-                        override fun migrate(database: SupportSQLiteDatabase) {
-                            database.execSQL("CREATE TABLE MsApi1 (`api1ID` INTEGER, "
-                                    + "`latitude` TEXT, "
-                                    + "`longitude` TEXT, "
-                                    + "`method` TEXT, "
-                                    + "`month` TEXT"
-                                    + "`year` TEXT"
-                                    + "PRIMARY KEY(`id`))")
-
-                            //var api1ID: Int, val latitude: String, val longitude: String, val method: String, val month: String, val year: String
-                        }
-
-                  })*/
-                    .addCallback(
-                        NotifiedPrayerCallBack(
-                            contextProviders
-                        )
-                    )
-                    .build()
-
-                INSTANCE = instance
-                return instance
-            }
-        }
-
         fun getDataBase(context: Context): SolatKuyRoom {
             val tempInstance =
                 INSTANCE
@@ -79,10 +41,8 @@ abstract class SolatKuyRoom: RoomDatabase() {
                 return tempInstance
 
             synchronized(this) {
-                val instance = Room.databaseBuilder(context.applicationContext,
-                    SolatKuyRoom::class.java,
-                    dbName
-                )
+                val instance = Room.databaseBuilder(context.applicationContext, SolatKuyRoom::class.java, dbName)
+                    //.fallbackToDestructiveMigration()
                     .build()
 
                 INSTANCE = instance
@@ -90,7 +50,42 @@ abstract class SolatKuyRoom: RoomDatabase() {
             }
         }
 
-        private class NotifiedPrayerCallBack(private val contextProviders: ContextProviders): RoomDatabase.Callback(){
+        /* fun getDataBase(context: Context, contextProviders: ContextProviders): SolatKuyRoom {
+           val tempInstance =
+               INSTANCE
+
+           if(tempInstance != null)
+               return tempInstance
+
+           synchronized(this) {
+               val instance = Room.databaseBuilder(context.applicationContext, SolatKuyRoom::class.java, dbName)
+                   //.fallbackToDestructiveMigration()
+                   /*.addMigrations(object :Migration(1,2){
+                       override fun migrate(database: SupportSQLiteDatabase) {
+                           database.execSQL("CREATE TABLE MsApi1 (`api1ID` INTEGER, "
+                                   + "`latitude` TEXT, "
+                                   + "`longitude` TEXT, "
+                                   + "`method` TEXT, "
+                                   + "`month` TEXT"
+                                   + "`year` TEXT"
+                                   + "PRIMARY KEY(`id`))")
+
+                           //var api1ID: Int, val latitude: String, val longitude: String, val method: String, val month: String, val year: String
+                       }
+
+                 })*/
+                   /*.addCallback(
+                       NotifiedPrayerCallBack(contextProviders)
+                   )*/
+                   .build()
+
+               INSTANCE = instance
+               return instance
+           }
+       }*/
+
+
+        /* class NotifiedPrayerCallBack(private val contextProviders: ContextProviders): RoomDatabase.Callback(){
 
             override fun onCreate(db: SupportSQLiteDatabase) {
                 super.onCreate(db)
@@ -178,8 +173,88 @@ abstract class SolatKuyRoom: RoomDatabase() {
                     )
                 )
             }
+        } */
+
+        fun populateDatabase(contextProviders: ContextProviders){
+            GlobalScope.launch(contextProviders.IO) {
+                populateMsSetting(INSTANCE?.msSettingDao()!!)
+                populateNotifiedPrayer(INSTANCE?.notifiedPrayerDao()!!)
+                populateMsApi1(INSTANCE?.msApi1Dao()!!)
+            }
         }
 
+        suspend fun populateMsSetting(msSettingDao: MsSettingDao){
+            msSettingDao.deleteAll()
+
+            msSettingDao.insertMsSetting(
+                MsSetting(
+                    1,
+                    false
+                )
+            )
+        }
+
+        suspend fun populateMsApi1(msApi1Dao: MsApi1Dao) {
+            msApi1Dao.deleteAll()
+
+            msApi1Dao.insertMsApi1(
+                MsApi1(
+                    1,
+                    "0",
+                    "0",
+                    "3",
+                    "3",
+                    "2020"
+                )
+            )
+        }
+
+        suspend fun populateNotifiedPrayer(notifiedPrayerDao: NotifiedPrayerDao){
+            notifiedPrayerDao.deleteAll()
+
+            notifiedPrayerDao.insertNotifiedPrayer(
+                NotifiedPrayer(
+                    EnumConfig.fajr,
+                    true,
+                    "00:00"
+                )
+            )
+            notifiedPrayerDao.insertNotifiedPrayer(
+                NotifiedPrayer(
+                    EnumConfig.dhuhr,
+                    true,
+                    "00:00"
+                )
+            )
+            notifiedPrayerDao.insertNotifiedPrayer(
+                NotifiedPrayer(
+                    EnumConfig.asr,
+                    true,
+                    "00:00"
+                )
+            )
+            notifiedPrayerDao.insertNotifiedPrayer(
+                NotifiedPrayer(
+                    EnumConfig.maghrib,
+                    true,
+                    "00:00"
+                )
+            )
+            notifiedPrayerDao.insertNotifiedPrayer(
+                NotifiedPrayer(
+                    EnumConfig.isha,
+                    true,
+                    "00:00"
+                )
+            )
+            notifiedPrayerDao.insertNotifiedPrayer(
+                NotifiedPrayer(
+                    EnumConfig.sunrise,
+                    true,
+                    "00:00"
+                )
+            )
+        }
 
     }
 

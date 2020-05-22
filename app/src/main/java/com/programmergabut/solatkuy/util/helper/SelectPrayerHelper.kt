@@ -1,7 +1,8 @@
-package com.programmergabut.solatkuy.util
+package com.programmergabut.solatkuy.util.helper
 
 import com.programmergabut.solatkuy.data.local.localentity.NotifiedPrayer
 import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.Timings
+import com.programmergabut.solatkuy.util.enumclass.EnumConfig
 import org.joda.time.DateTime
 import org.joda.time.LocalTime
 import java.text.SimpleDateFormat

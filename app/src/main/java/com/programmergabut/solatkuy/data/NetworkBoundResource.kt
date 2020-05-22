@@ -2,7 +2,7 @@ package com.programmergabut.solatkuy.data
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
-import com.programmergabut.solatkuy.util.EnumStatus
+import com.programmergabut.solatkuy.util.enumclass.EnumStatus
 import com.programmergabut.solatkuy.util.Resource
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -14,7 +14,7 @@ constructor(private val contextProviders: ContextProviders) {
     private val result = MediatorLiveData<Resource<ResultType>>()
 
     init {
-        setValue(Resource.loading(null))
+        //setValue(Resource.loading(null))
 
         @Suppress("LeakingThis")
         val dbSource = loadFromDB()

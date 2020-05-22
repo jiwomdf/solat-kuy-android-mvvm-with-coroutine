@@ -28,8 +28,8 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
 import com.programmergabut.solatkuy.ui.fragmentsetting.viewmodel.FragmentSettingViewModel
-import com.programmergabut.solatkuy.util.EnumConfig
-import com.programmergabut.solatkuy.util.LocationHelper
+import com.programmergabut.solatkuy.util.enumclass.EnumConfig
+import com.programmergabut.solatkuy.util.helper.LocationHelper
 import com.programmergabut.solatkuy.viewmodel.ViewModelFactory
 import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.fragment_setting.*

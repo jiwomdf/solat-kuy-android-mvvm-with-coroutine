@@ -1,4 +1,4 @@
-package com.programmergabut.solatkuy.util
+package com.programmergabut.solatkuy.util.helper
 
 import android.app.AlarmManager
 import android.app.PendingIntent
@@ -9,6 +9,7 @@ import android.os.Build
 import android.os.Bundle
 import com.programmergabut.solatkuy.data.local.localentity.NotifiedPrayer
 import com.programmergabut.solatkuy.broadcaster.PrayerBroadcastReceiver
+import com.programmergabut.solatkuy.util.enumclass.EnumConfig
 import java.util.*
 
 /*
@@ -30,7 +31,7 @@ class PushNotificationHelper(context: Context, selList: MutableList<NotifiedPray
         selList.sortBy { x -> x.prayerID }
 
         val selPrayer = SelectPrayerHelper.selectNextPrayerToLocalPrayer(selList)
-        //selPrayer = PrayerLocal(1,"mantap 1", true, "01:10") //#testing purpose
+        //val selPrayer = NotifiedPrayer(1,"Isha", true, "18:47") //#testing purpose
 
         selPrayer?.let{
 

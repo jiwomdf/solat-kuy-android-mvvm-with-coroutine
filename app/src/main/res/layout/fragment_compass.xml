@@ -7,67 +7,82 @@
     android:layout_height="match_parent"
     tools:context=".ui.fragmentcompass.view.FragmentCompass">
 
-    <androidx.constraintlayout.widget.ConstraintLayout
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <com.google.android.material.card.MaterialCardView
-            android:id="@+id/cv_qiblaDegrees"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/medium_margin"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent">
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cv_qiblaDegrees"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/medium_margin"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
+
+                <LinearLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="@dimen/medium_margin"
+                    android:orientation="vertical">
+                    <TextView
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_marginStart="@dimen/smaller_margin"
+                        android:layout_marginEnd="@dimen/smaller_margin"
+                        android:layout_marginBottom="@dimen/smaller_margin"
+                        android:gravity="center"
+                        android:layout_gravity="center"
+                        android:text="@string/qibla"
+                        android:textStyle="bold"/>
+
+                    <TextView
+                        android:id="@+id/tv_qibla_dir"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:text="@string/loading"/>
+                </LinearLayout>
+
+
+            </com.google.android.material.card.MaterialCardView>
+
+            <ImageView
+                android:id="@+id/iv_compass"
+                android:layout_width="match_parent"
+                android:layout_height="@dimen/compassSize"
+                android:layout_centerInParent="true"
+                android:layout_marginTop="@dimen/large_margin"
+                android:contentDescription="@string/compass"
+                android:src="@drawable/degree"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/cv_qiblaDegrees" />
+
+            <TextView
+                android:id="@+id/textView4"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/large_margin"
+                android:gravity="center"
+                android:text="@string/please_tilt_your_phone_until_the_image_is_balanced"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/iv_compass" />
 
             <LinearLayout
                 android:layout_width="match_parent"
-                android:layout_height="match_parent"
-                android:layout_margin="@dimen/medium_margin"
-                android:orientation="vertical">
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/smaller_margin"
-                    android:layout_marginEnd="@dimen/smaller_margin"
-                    android:layout_marginBottom="@dimen/smaller_margin"
-                    android:layout_gravity="center"
-                    android:text="@string/qibla"
-                    android:textStyle="bold"/>
+                android:layout_height="?attr/actionBarSize"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/textView4" />
 
-                <TextView
-                    android:id="@+id/tv_qibla_dir"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:text="@string/loading"/>
-            </LinearLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-
-        </com.google.android.material.card.MaterialCardView>
-
-        <ImageView
-            android:id="@+id/iv_compass"
-            android:layout_width="match_parent"
-            android:layout_height="@dimen/compassSize"
-            android:layout_centerInParent="true"
-            android:layout_marginTop="@dimen/large_margin"
-            android:contentDescription="@string/compass"
-            android:src="@drawable/degree"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/cv_qiblaDegrees" />
-
-        <TextView
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:layout_marginTop="@dimen/large_margin"
-            android:text="@string/please_tilt_your_phone_until_the_image_is_balanced"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toBottomOf="@+id/iv_compass" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    </ScrollView>
 
 </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

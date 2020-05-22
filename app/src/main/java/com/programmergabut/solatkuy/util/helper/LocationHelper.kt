@@ -1,4 +1,4 @@
-package com.programmergabut.solatkuy.util
+package com.programmergabut.solatkuy.util.helper
 
 import android.content.Context
 import android.location.Address

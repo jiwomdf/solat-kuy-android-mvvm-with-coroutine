@@ -8,7 +8,7 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import com.programmergabut.solatkuy.util.EnumConfig
+import com.programmergabut.solatkuy.util.enumclass.EnumConfig
 import org.joda.time.LocalTime
 import java.util.*
 

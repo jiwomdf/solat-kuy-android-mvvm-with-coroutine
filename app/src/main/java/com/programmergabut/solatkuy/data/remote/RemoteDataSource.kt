@@ -7,9 +7,11 @@ import com.programmergabut.solatkuy.data.remote.api.AsmaAlHusnaService
 import com.programmergabut.solatkuy.data.remote.api.CalendarApiService
 import com.programmergabut.solatkuy.data.remote.api.QiblaApiService
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
+import com.programmergabut.solatkuy.data.remote.api.QuranSurahService
 import com.programmergabut.solatkuy.data.remote.remoteentity.asmaalhusnaJson.AsmaAlHusnaApi
 import com.programmergabut.solatkuy.data.remote.remoteentity.compassJson.CompassApi
 import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.PrayerApi
+import com.programmergabut.solatkuy.data.remote.remoteentity.quransurahJson.QuranSurahApi
 import com.programmergabut.solatkuy.util.Resource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.GlobalScope
@@ -60,6 +62,14 @@ class RemoteDataSource(private val contextProviders: ContextProviders) {
             .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
             .build()
             .create(CalendarApiService::class.java)
+    }
+
+    private fun getQuranSurahApi(): QuranSurahService {
+        return Retrofit.Builder()
+            .baseUrl(strApi)
+            .addConverterFactory(GsonConverterFactory.create(GsonBuilder().create()))
+            .build()
+            .create(QuranSurahService::class.java)
     }
 
     //Coroutine
@@ -117,6 +127,19 @@ class RemoteDataSource(private val contextProviders: ContextProviders) {
         }
     }
 
+    fun fetchQuranSurah(nInSurah: String, callback: LoadQuranSurahCallback){
+
+        GlobalScope.launch(contextProviders.IO){
+            try {
+                callback.onReceived(Resource.success(getQuranSurahApi()
+                    .fetchQuranSurah(nInSurah)))
+            }
+            catch (ex: Exception){
+                callback.onReceived(Resource.error(ex.message.toString(), null))
+            }
+        }
+    }
+
 
     //Internal interface
     interface LoadPrayerApiCallback{
@@ -129,6 +152,10 @@ class RemoteDataSource(private val contextProviders: ContextProviders) {
 
     interface LoadAsmaAlHusnaCallback{
         fun onReceived(response: Resource<AsmaAlHusnaApi>)
+    }
+
+    interface LoadQuranSurahCallback{
+        fun onReceived(response: Resource<QuranSurahApi>)
     }
 
 }

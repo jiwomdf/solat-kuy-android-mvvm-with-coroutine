@@ -1,5 +1,6 @@
 package com.programmergabut.solatkuy.ui.fragmentinfo.view
 
+import android.content.Intent
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -13,12 +14,14 @@ import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
 import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.Data
 import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.PrayerApi
+import com.programmergabut.solatkuy.ui.activityprayer.DuaActivity
 import com.programmergabut.solatkuy.ui.fragmentinfo.viewmodel.FragmentInfoViewModel
 import com.programmergabut.solatkuy.ui.fragmentinfo.adapter.FragmentInfoAdapter
-import com.programmergabut.solatkuy.util.EnumConfig
-import com.programmergabut.solatkuy.util.EnumStatus
-import com.programmergabut.solatkuy.util.LocationHelper
-import com.programmergabut.solatkuy.util.Resource
+import com.programmergabut.solatkuy.util.*
+import com.programmergabut.solatkuy.util.enumclass.EnumConfig
+import com.programmergabut.solatkuy.util.enumclass.EnumStatus
+import com.programmergabut.solatkuy.util.generator.DuaGenerator
+import com.programmergabut.solatkuy.util.helper.LocationHelper
 import com.programmergabut.solatkuy.viewmodel.ViewModelFactory
 import kotlinx.android.synthetic.main.fragment_info.*
 import java.lang.Exception
@@ -49,6 +52,7 @@ class FragmentInfo : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
         refreshLayout()
         subscribeObserversAPI()
+        openDua()
     }
 
 
@@ -121,7 +125,16 @@ class FragmentInfo : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                     tv_gregorian_day.text = getString(R.string.loading)
                     tv_hijri_day.text = getString(R.string.loading)
                 }
-                EnumStatus.ERROR -> print("error")
+                EnumStatus.ERROR ->{
+                    tv_imsak_date.text = getString(R.string.fetch_failed)
+                    tv_imsak_time.text = getString(R.string.fetch_failed_sort)
+                    tv_gregorian_date.text = getString(R.string.fetch_failed_sort)
+                    tv_hijri_date.text = getString(R.string.fetch_failed_sort)
+                    tv_gregorian_month.text = getString(R.string.fetch_failed_sort)
+                    tv_hijri_month.text = getString(R.string.fetch_failed_sort)
+                    tv_gregorian_day.text = getString(R.string.fetch_failed_sort)
+                    tv_hijri_day.text = getString(R.string.fetch_failed_sort)
+                }
             }
         })
     }
@@ -146,7 +159,6 @@ class FragmentInfo : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     /* Fetch API Data */
-
     private fun fetchAsmaAlHusnaApi(mMsApi1: MsApi1) {
         fragmentInfoViewModel.asmaAlHusnaApi.postValue(Resource.loading(null))
         fragmentInfoViewModel.fetchAsmaAlHusna(mMsApi1)
@@ -174,6 +186,32 @@ class FragmentInfo : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         fetchAsmaAlHusnaApi(mMsApi1!!)
 
         sl_info.isRefreshing = false
+    }
+
+    /* Dua For After Adhan */
+    private fun openDua(){
+        val i = Intent(context, DuaActivity::class.java)
+
+        btn_dua_after_adhan.setOnClickListener {
+
+            i.putExtra(DuaActivity.duaTitle, DuaGenerator.duaAfterAdhan.title)
+            i.putExtra(DuaActivity.duaAr, DuaGenerator.duaAfterAdhan.arab)
+            i.putExtra(DuaActivity.duaLt, DuaGenerator.duaAfterAdhan.latin)
+            i.putExtra(DuaActivity.duaEn, DuaGenerator.duaAfterAdhan.english)
+            i.putExtra(DuaActivity.duaIn, DuaGenerator.duaAfterAdhan.indonesia)
+
+            startActivity(i)
+        }
+
+        btn_dua_save_from_hell_world.setOnClickListener{
+            i.putExtra(DuaActivity.duaTitle, DuaGenerator.duaSaveFromHell.title)
+            i.putExtra(DuaActivity.duaAr, DuaGenerator.duaSaveFromHell.arab)
+            i.putExtra(DuaActivity.duaLt, DuaGenerator.duaSaveFromHell.latin)
+            i.putExtra(DuaActivity.duaEn, DuaGenerator.duaSaveFromHell.english)
+            i.putExtra(DuaActivity.duaIn, DuaGenerator.duaSaveFromHell.indonesia)
+
+            startActivity(i)
+        }
     }
 
 }
