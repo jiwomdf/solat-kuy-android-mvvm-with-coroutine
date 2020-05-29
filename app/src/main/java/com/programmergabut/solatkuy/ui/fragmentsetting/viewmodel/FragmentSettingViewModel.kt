@@ -13,7 +13,7 @@ import kotlinx.coroutines.launch
 
 class FragmentSettingViewModel(application: Application, private val repository: Repository): AndroidViewModel(application) {
 
-    val msApi1Local = repository.mMsApi1
+    val msApi1Local = repository.mMsApi1()
 
     fun updateMsApi1(msApi1: MsApi1) = viewModelScope.launch {
         repository.updateMsApi1(msApi1)

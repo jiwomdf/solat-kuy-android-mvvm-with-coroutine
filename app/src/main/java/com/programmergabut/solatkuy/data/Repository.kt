@@ -1,6 +1,7 @@
 package com.programmergabut.solatkuy.data
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import com.programmergabut.solatkuy.data.local.LocalDataSource
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
@@ -38,79 +39,46 @@ class Repository(private val contextProviders: ContextProviders,
     }
 
     //Room
-    val mListPrayerLocal = localDataSource.getNotifiedPrayer()
-    val mMsApi1 = localDataSource.getMsApi1()
-    val mMsSetting = localDataSource.getMsSetting()
 
-    fun updateNotifiedPrayer(notifiedPrayer: NotifiedPrayer) = localDataSource.updateNotifiedPrayer(notifiedPrayer)
-    fun updatePrayerTime(prayerName: String, prayerTime: String) = localDataSource.updatePrayerTime(prayerName, prayerTime)
+    fun mMsApi1(): LiveData<MsApi1> {
+        val data = MediatorLiveData<MsApi1>()
+        data.addSource(localDataSource.getMsApi1()) {
+            if (it != null)
+                data.value = it
+        }
+        return data
+    }
+
+    //fun mMsApi1() = localDataSource.getMsApi1()
+    fun mMsSetting() = localDataSource.getMsSetting()
+
+    //fun updateNotifiedPrayer(notifiedPrayer: NotifiedPrayer) = localDataSource.updateNotifiedPrayer(notifiedPrayer)
+    //fun updatePrayerTime(prayerName: String, prayerTime: String) = localDataSource.updatePrayerTime(prayerName, prayerTime)
     fun updatePrayerIsNotified(prayerName: String, isNotified: Boolean) = localDataSource.updatePrayerIsNotified(prayerName, isNotified)
     fun updateMsApi1(msApi1: MsApi1) = localDataSource.updateMsApi1(msApi1)
     fun updateMsSetting(isHasOpen: Boolean) = localDataSource.updateMsSetting(isHasOpen)
 
     //Retrofit
-    fun getCompass(msApi1: MsApi1): LiveData<Resource<CompassApi>>{
-        val result = MutableLiveData<Resource<CompassApi>>()
+    fun getCompass(msApi1: MsApi1) = remoteDataSource.fetchCompassApi(msApi1)
 
-        remoteDataSource.fetchCompassApi(object : RemoteDataSource.LoadCompassCallback{
-            override fun onReceived(response: Resource<CompassApi>) {
-                result.postValue(response)
-            }
-        }, msApi1)
+    fun fetchAsmaAlHusna() = remoteDataSource.fetchAsmaAlHusnaApi()
 
-        return result
-    }
+    fun fetchPrayerApi(msApi1: MsApi1) = remoteDataSource.fetchPrayerApi(msApi1)
 
-    fun fetchAsmaAlHusna(): LiveData<Resource<AsmaAlHusnaApi>>{
-        val result = MutableLiveData<Resource<AsmaAlHusnaApi>>()
-
-        remoteDataSource.fetchAsmaAlHusnaApi(object : RemoteDataSource.LoadAsmaAlHusnaCallback{
-            override fun onReceived(response: Resource<AsmaAlHusnaApi>) {
-                result.postValue(response)
-            }
-        })
-
-        return result
-    }
-
-    fun fetchPrayerApi(msApi1: MsApi1): LiveData<Resource<PrayerApi>>{
-        val result = MutableLiveData<Resource<PrayerApi>>()
-
-        remoteDataSource.fetchPrayerApi(msApi1, object : RemoteDataSource.LoadPrayerApiCallback{
-            override fun onReceived(response: Resource<PrayerApi>) {
-                result.postValue(response)
-            }
-        })
-
-        return result
-    }
-
-    fun fetchQuranSurah(nInSurah: String): LiveData<Resource<QuranSurahApi>>{
-        val result = MutableLiveData<Resource<QuranSurahApi>>()
-
-        remoteDataSource.fetchQuranSurah(nInSurah, object : RemoteDataSource.LoadQuranSurahCallback{
-            override fun onReceived(response: Resource<QuranSurahApi>) {
-                result.postValue(response)
-            }
-        })
-
-        return result
-    }
+    fun fetchQuranSurah(nInSurah: String) = remoteDataSource.fetchQuranSurah(nInSurah)
 
     fun syncNotifiedPrayer(msApi1: MsApi1): LiveData<Resource<List<NotifiedPrayer>>> {
 
         return object : NetworkBoundResource<List<NotifiedPrayer>, PrayerApi>(contextProviders){
             override fun loadFromDB(): LiveData<List<NotifiedPrayer>> = localDataSource.getNotifiedPrayer()
 
-            override fun shouldFetch(data: List<NotifiedPrayer>?): Boolean{
-                return true
-            }
+            override fun shouldFetch(data: List<NotifiedPrayer>?): Boolean = true
 
             override fun createCall(): LiveData<Resource<PrayerApi>> = remoteDataSource.syncNotifiedPrayer(msApi1)
 
             override fun saveCallResult(data: PrayerApi) {
 
-                val sdf = SimpleDateFormat("dd", Locale.getDefault())
+                /*val sdf = SimpleDateFormat("dd", Locale.getDefault())
                 val currentDate = sdf.format(Date())
 
                 val timings = data.data.find { obj -> obj.date.gregorian.day == currentDate.toString() }?.timings
@@ -128,7 +96,7 @@ class Repository(private val contextProviders: ContextProviders,
                     map.forEach { p ->
                         localDataSource.updatePrayerTime(p.key, p.value)
                     }
-                }
+                }*/
 
             }
         }.asLiveData()

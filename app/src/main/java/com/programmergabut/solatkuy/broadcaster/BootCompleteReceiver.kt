@@ -4,7 +4,12 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import com.programmergabut.solatkuy.data.local.SolatKuyRoom
 import com.programmergabut.solatkuy.service.ServiceBootComplete
+import com.programmergabut.solatkuy.util.helper.PushNotificationHelper
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.launch
 
 /*
  * Created by Katili Jiwo Adi Wiyono on 02/04/20.
@@ -22,6 +27,17 @@ class BootCompleteReceiver: BroadcastReceiver() {
                     context.startForegroundService(i)
                 else
                     context.startService(i)
+
+                /* CoroutineScope(Dispatchers.IO).launch {
+                    val db = SolatKuyRoom.getDataBase(context)
+                    val data = db.notifiedPrayerDao().getNotifiedPrayerSync() as MutableList
+
+                    PushNotificationHelper(
+                        context,
+                        data,
+                        "-"
+                    )
+                }*/
             }
             else
                 throw Exception("Context Null")

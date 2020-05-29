@@ -11,7 +11,7 @@ import kotlinx.coroutines.launch
 
 class MainActivityViewModel(application: Application, repository: Repository) : AndroidViewModel(application){
 
-    val msSetting: LiveData<MsSetting> = repository.mMsSetting
+    val msSetting: LiveData<MsSetting> = repository.mMsSetting()
     private var repository: Repository? = null
 
     fun updateMsApi1(msApi1: MsApi1) = viewModelScope.launch {

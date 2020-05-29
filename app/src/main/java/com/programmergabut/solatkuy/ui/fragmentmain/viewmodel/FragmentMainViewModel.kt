@@ -15,31 +15,30 @@ import kotlinx.coroutines.launch
 
 class FragmentMainViewModel(application: Application, private val repository: Repository): AndroidViewModel(application) {
 
-    private var idMsApi1 = MutableLiveData<MsApi1>()
-    private var idNInSurah = MutableLiveData<String>()
+    private var msApi1Param = MutableLiveData<MsApi1>()
+    private var quranSurahID = MutableLiveData<String>()
 
-    val listNotifiedPrayer: LiveData<List<NotifiedPrayer>> = repository.mListPrayerLocal
-    val msApi1Local: LiveData<MsApi1> = repository.mMsApi1
+    fun msApi1Local(): LiveData<MsApi1> = repository.mMsApi1()
 
-    var quranSurah : MutableLiveData<Resource<QuranSurahApi>> = Transformations.switchMap(idNInSurah){
-        repository.fetchQuranSurah(idNInSurah.value!!)
+    var quranSurah : MutableLiveData<Resource<QuranSurahApi>> = Transformations.switchMap(quranSurahID){
+        repository.fetchQuranSurah(quranSurahID.value!!)
     } as MutableLiveData<Resource<QuranSurahApi>>
 
-    val notifiedPrayer : MutableLiveData<Resource<List<NotifiedPrayer>>> = Transformations.switchMap(idMsApi1){
+    var notifiedPrayer : MutableLiveData<Resource<List<NotifiedPrayer>>> = Transformations.switchMap(msApi1Param){
         repository.syncNotifiedPrayer(it)
     } as MutableLiveData<Resource<List<NotifiedPrayer>>>
 
     fun fetchPrayerApi(msApi1: MsApi1){
-        this.idMsApi1.value = msApi1
+        this.msApi1Param.value = msApi1
     }
 
     fun fetchQuranSurah(nInSurah: String){
-        this.idNInSurah.value = nInSurah
+        this.quranSurahID.value = nInSurah
     }
 
-    fun updateNotifiedPrayer(NotifiedPrayer: NotifiedPrayer){
+    /*fun updateNotifiedPrayer(NotifiedPrayer: NotifiedPrayer){
         repository.updateNotifiedPrayer(NotifiedPrayer)
-    }
+    }*/
 
     fun updatePrayerIsNotified(prayerName: String, isNotified: Boolean) = viewModelScope.launch {
         repository.updatePrayerIsNotified(prayerName, isNotified)

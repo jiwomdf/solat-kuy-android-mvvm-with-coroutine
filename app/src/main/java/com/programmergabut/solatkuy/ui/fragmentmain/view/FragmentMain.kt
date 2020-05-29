@@ -157,7 +157,7 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
             createModelPrayer(it)?.let { data -> updateAlarmManager(data) }
         }) */
 
-        fragmentMainViewModel.msApi1Local.observe(this, androidx.lifecycle.Observer {
+        fragmentMainViewModel.msApi1Local().observe(this, androidx.lifecycle.Observer {
 
             if(it == null )
                 return@Observer

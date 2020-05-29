@@ -10,7 +10,7 @@ android {
         applicationId "com.programmergabut.solatkuy"
         minSdkVersion 19
         targetSdkVersion 29
-        versionCode 12
+        versionCode 14
         versionName "1.4"
         multiDexEnabled true
 
@@ -91,7 +91,27 @@ dependencies {
     annotationProcessor 'com.google.dagger:dagger-compiler:2.27'
     kapt 'com.google.dagger:dagger-compiler:2.27'
 
+    //Multifed
     implementation 'com.android.support:multidex:1.0.3'
+
+    //espresso idling source
+    implementation "androidx.test.espresso:espresso-idling-resource:3.2.0"
+
+    //Unit Testing
+    androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
+    testImplementation "org.mockito:mockito-core:3.0.0"
+    testImplementation 'org.mockito:mockito-inline:3.0.0'
+    testImplementation "androidx.arch.core:core-testing:2.1.0"
+    testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:2.1.0"
+    testImplementation 'junit:junit:4.12'
+
+    // Instrumental Testing
+    androidTestImplementation "androidx.test:rules:1.2.0"
+    androidTestImplementation "androidx.test.espresso:espresso-contrib:3.2.0"
+
+    //espresso
+    implementation "com.android.support.test.espresso:espresso-idling-resource:3.0.2"
 
 
 }

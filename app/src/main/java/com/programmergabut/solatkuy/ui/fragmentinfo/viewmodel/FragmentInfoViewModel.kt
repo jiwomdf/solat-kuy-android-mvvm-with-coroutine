@@ -14,16 +14,16 @@ import com.programmergabut.solatkuy.util.Resource
 
 class FragmentInfoViewModel(application: Application,  private val repository: Repository): AndroidViewModel(application) {
 
-    private var idMsApi1 = MutableLiveData<MsApi1>()
-    val prayerApi : MutableLiveData<Resource<PrayerApi>> = Transformations.switchMap(idMsApi1){
+    private var msApi1Param = MutableLiveData<MsApi1>()
+    val prayerApi : MutableLiveData<Resource<PrayerApi>> = Transformations.switchMap(msApi1Param){
         repository.fetchPrayerApi(it)
     } as MutableLiveData<Resource<PrayerApi>>
 
-    var asmaAlHusnaApi : MutableLiveData<Resource<AsmaAlHusnaApi>> = Transformations.switchMap(idMsApi1){
+    var asmaAlHusnaApi : MutableLiveData<Resource<AsmaAlHusnaApi>> = Transformations.switchMap(msApi1Param){
         repository.fetchAsmaAlHusna()
     } as MutableLiveData<Resource<AsmaAlHusnaApi>>
 
-    val msApi1Local: LiveData<MsApi1> = repository.mMsApi1
+    val msApi1Local: LiveData<MsApi1> = repository.mMsApi1()
 
     //Room
     init {
@@ -32,11 +32,11 @@ class FragmentInfoViewModel(application: Application,  private val repository: R
     }
 
     fun fetchAsmaAlHusna(msApi1: MsApi1){
-        this.idMsApi1.value = msApi1
+        this.msApi1Param.value = msApi1
     }
 
     fun fetchPrayerApi(msApi1: MsApi1){
-        this.idMsApi1.value = msApi1
+        this.msApi1Param.value = msApi1
     }
 
 }

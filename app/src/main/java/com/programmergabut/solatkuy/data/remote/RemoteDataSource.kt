@@ -1,5 +1,6 @@
 package com.programmergabut.solatkuy.data.remote
 
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.google.gson.GsonBuilder
 import com.programmergabut.solatkuy.data.ContextProviders
@@ -73,29 +74,34 @@ class RemoteDataSource(private val contextProviders: ContextProviders) {
     }
 
     //Coroutine
-    fun fetchCompassApi(callback: LoadCompassCallback, msApi1: MsApi1){
+    fun fetchCompassApi(msApi1: MsApi1): LiveData<Resource<CompassApi>>{
+        val result = MutableLiveData<Resource<CompassApi>>()
 
         CoroutineScope(contextProviders.IO).launch{
             try {
-                callback.onReceived(
-                    Resource.success(getQiblaApi().fetchQibla(msApi1.latitude, msApi1.longitude))
-                )
+                result.postValue( Resource.success(getQiblaApi().fetchQibla(msApi1.latitude, msApi1.longitude)))
             }
             catch (ex: Exception){
-                callback.onReceived(Resource.error(ex.message.toString(), null))
+                result.postValue( Resource.error(ex.message.toString(), null))
             }
         }
+
+        return result
     }
 
-    fun fetchAsmaAlHusnaApi(callback: LoadAsmaAlHusnaCallback){
+    fun fetchAsmaAlHusnaApi(): LiveData<Resource<AsmaAlHusnaApi>>{
+        val result = MutableLiveData<Resource<AsmaAlHusnaApi>>()
+
         CoroutineScope(contextProviders.IO).launch {
             try {
-                callback.onReceived(Resource.success(getAsmaAlHusnaApi().fetchAsmaAlHusnaApi()))
+                result.postValue(Resource.success(getAsmaAlHusnaApi().fetchAsmaAlHusnaApi()))
             }
             catch (ex: Exception){
-                callback.onReceived(Resource.error(ex.message.toString(), null))
+                result.postValue(Resource.error(ex.message.toString(), null))
             }
         }
+
+        return result
     }
 
     fun syncNotifiedPrayer(msApi1: MsApi1): MutableLiveData<Resource<PrayerApi>> {
@@ -114,48 +120,36 @@ class RemoteDataSource(private val contextProviders: ContextProviders) {
         return resultContent
     }
 
-    fun fetchPrayerApi(msApi1: MsApi1, callback: LoadPrayerApiCallback){
+    fun fetchPrayerApi(msApi1: MsApi1): LiveData<Resource<PrayerApi>> {
+        val result = MutableLiveData<Resource<PrayerApi>>()
 
         GlobalScope.launch(contextProviders.IO){
             try {
-                callback.onReceived(Resource.success(getCalendarApi()
+                result.postValue( Resource.success(getCalendarApi()
                     .fetchPrayer( msApi1.latitude, msApi1.longitude, msApi1.method, msApi1.month, msApi1.year)))
             }
             catch (ex: Exception){
-                callback.onReceived(Resource.error(ex.message.toString(), null))
+                result.postValue( Resource.error(ex.message.toString(), null))
             }
         }
+
+        return result
     }
 
-    fun fetchQuranSurah(nInSurah: String, callback: LoadQuranSurahCallback){
+    fun fetchQuranSurah(nInSurah: String): MutableLiveData<Resource<QuranSurahApi>> {
+        val result = MutableLiveData<Resource<QuranSurahApi>>()
 
         GlobalScope.launch(contextProviders.IO){
             try {
-                callback.onReceived(Resource.success(getQuranSurahApi()
+                result.postValue( Resource.success(getQuranSurahApi()
                     .fetchQuranSurah(nInSurah)))
             }
             catch (ex: Exception){
-                callback.onReceived(Resource.error(ex.message.toString(), null))
+                result.postValue( Resource.error(ex.message.toString(), null))
             }
         }
-    }
 
-
-    //Internal interface
-    interface LoadPrayerApiCallback{
-        fun onReceived(response: Resource<PrayerApi>)
-    }
-
-    interface LoadCompassCallback{
-        fun onReceived(response: Resource<CompassApi>)
-    }
-
-    interface LoadAsmaAlHusnaCallback{
-        fun onReceived(response: Resource<AsmaAlHusnaApi>)
-    }
-
-    interface LoadQuranSurahCallback{
-        fun onReceived(response: Resource<QuranSurahApi>)
+        return result
     }
 
 }

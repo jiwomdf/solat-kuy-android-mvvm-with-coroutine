@@ -15,7 +15,7 @@ class FragmentCompassViewModel(a: Application, private val repository: Repositor
         repository.getCompass(it)
     } as MutableLiveData<Resource<CompassApi>>
 
-    val msApi1Local = repository.mMsApi1
+    val msApi1Local = repository.mMsApi1()
 
     fun fetchCompassApi(msApi1: MsApi1){
         this.coordinateID.value = msApi1
