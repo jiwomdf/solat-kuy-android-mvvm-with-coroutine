@@ -78,10 +78,10 @@ class Repository(private val contextProviders: ContextProviders,
 
             override fun saveCallResult(data: PrayerApi) {
 
-                /*val sdf = SimpleDateFormat("dd", Locale.getDefault())
+                val sdf = SimpleDateFormat("dd", Locale.getDefault())
                 val currentDate = sdf.format(Date())
 
-                val timings = data.data.find { obj -> obj.date.gregorian.day == currentDate.toString() }?.timings
+                val timings = data.data.find { obj -> obj.date.gregorian?.day == currentDate.toString() }?.timings
 
                 val map = mutableMapOf<String, String>()
 
@@ -96,7 +96,7 @@ class Repository(private val contextProviders: ContextProviders,
                     map.forEach { p ->
                         localDataSource.updatePrayerTime(p.key, p.value)
                     }
-                }*/
+                }
 
             }
         }.asLiveData()

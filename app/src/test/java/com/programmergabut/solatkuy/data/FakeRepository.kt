@@ -17,7 +17,7 @@ import java.util.*
  * Created by Katili Jiwo Adi Wiyono on 26/03/20.
  */
 
-class Repository(private val contextProviders: ContextProviders,
+class FakeRepository(private val contextProviders: ContextProviders,
                  private val remoteDataSource: RemoteDataSource,
                  private val localDataSource: LocalDataSource
 ) {

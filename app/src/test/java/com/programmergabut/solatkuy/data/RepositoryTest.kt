@@ -21,14 +21,14 @@ class RepositoryTest{
     private val remote = mock(RemoteDataSource::class.java)
     private val local = mock(LocalDataSource::class.java)
     private val contextProviders = mock(ContextProviders::class.java)
+    private val repository = FakeRepository(contextProviders, remote, local)
 
     private val msApi1 = MsApi1(0, "", "", "","","")
 
 
     @Test
     fun fetchPrayerApi(){
-
-        remote.fetchPrayerApi(msApi1)
+        repository.fetchPrayerApi(msApi1)
 
         val dummyPrayerApi = Resource.success(DummyData.fetchPrayerApi())
 
@@ -42,8 +42,7 @@ class RepositoryTest{
 
     @Test
     fun getMsApi1(){
-        
-        local.getMsApi1()
+        repository.getMsApi1()
 
         val dummyMsApi1 = DummyData.getMsApi1()
 
