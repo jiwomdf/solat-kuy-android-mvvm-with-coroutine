@@ -18,13 +18,13 @@ class FragmentMainViewModel(application: Application, private val repository: Re
     private var msApi1Param = MutableLiveData<MsApi1>()
     private var quranSurahID = MutableLiveData<String>()
 
-    fun msApi1Local(): LiveData<MsApi1> = repository.mMsApi1()
+    val msApi1Local = repository.getMsApi1()
 
     var quranSurah : MutableLiveData<Resource<QuranSurahApi>> = Transformations.switchMap(quranSurahID){
         repository.fetchQuranSurah(quranSurahID.value!!)
     } as MutableLiveData<Resource<QuranSurahApi>>
 
-    var notifiedPrayer : MutableLiveData<Resource<List<NotifiedPrayer>>> = Transformations.switchMap(msApi1Param){
+    val notifiedPrayer : MutableLiveData<Resource<List<NotifiedPrayer>>> = Transformations.switchMap(msApi1Param){
         repository.syncNotifiedPrayer(it)
     } as MutableLiveData<Resource<List<NotifiedPrayer>>>
 
@@ -40,8 +40,6 @@ class FragmentMainViewModel(application: Application, private val repository: Re
         repository.updateNotifiedPrayer(NotifiedPrayer)
     }*/
 
-    fun updatePrayerIsNotified(prayerName: String, isNotified: Boolean) = viewModelScope.launch {
-        repository.updatePrayerIsNotified(prayerName, isNotified)
-    }
+    fun updatePrayerIsNotified(prayerName: String, isNotified: Boolean) = repository.updatePrayerIsNotified(prayerName, isNotified)
 
 }

@@ -51,10 +51,9 @@ class FragmentSetting : Fragment() {
     private val ALL_PERMISSIONS = 101
 
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
+        inflater.inflate(R.layout.fragment_setting, container, false)
 
-        return inflater.inflate(R.layout.fragment_setting, container, false)
-    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -68,26 +67,9 @@ class FragmentSetting : Fragment() {
         subscribeObserversDB()
     }
 
-    /* Database Transaction */
-    private fun insertLocationSettingToDb(latitude: String, longitude: String) {
-
-        val currDate = LocalDate()
-
-        val data = MsApi1(
-            1,
-            latitude,
-            longitude,
-            "3",
-            currDate.monthOfYear.toString(),
-            currDate.year.toString()
-        )
-
-        fragmentSettingViewModel.updateMsApi1(data)
-    }
-
     /* Subscribe live data */
     private fun subscribeObserversDB() {
-        fragmentSettingViewModel.msApi1Local.observe(this, Observer {
+        fragmentSettingViewModel.msApi1.observe(this, Observer {
 
             val city = LocationHelper.getCity(context!!, it.latitude.toDouble(), it.longitude.toDouble())
 
@@ -168,6 +150,23 @@ class FragmentSetting : Fragment() {
             dialog.setContentView(dialogView)
             dialog.show()
         }
+    }
+
+    /* Database Transaction */
+    private fun insertLocationSettingToDb(latitude: String, longitude: String) {
+
+        val currDate = LocalDate()
+
+        val data = MsApi1(
+            1,
+            latitude,
+            longitude,
+            "3",
+            currDate.monthOfYear.toString(),
+            currDate.year.toString()
+        )
+
+        fragmentSettingViewModel.updateMsApi1(data)
     }
 
     /* permission */

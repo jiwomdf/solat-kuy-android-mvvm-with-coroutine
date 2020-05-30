@@ -155,7 +155,7 @@ class FragmentInfo : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     /* Create data from API */
     private fun createTodayData(it: PrayerApi?, currentDate: String): Data? {
-        return it?.data?.find { obj -> obj.date.gregorian.day == currentDate }
+        return it?.data?.find { obj -> obj.date.gregorian?.day == currentDate }
     }
 
     /* Fetch API Data */

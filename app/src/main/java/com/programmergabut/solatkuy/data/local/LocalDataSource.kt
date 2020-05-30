@@ -4,6 +4,7 @@ import com.programmergabut.solatkuy.data.ContextProviders
 import com.programmergabut.solatkuy.data.local.dao.MsSettingDao
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
 import com.programmergabut.solatkuy.data.local.localentity.NotifiedPrayer
+import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
@@ -18,14 +19,14 @@ constructor(private val contextProviders: ContextProviders, db: SolatKuyRoom) {
     }
 
     private var notifiedPrayerDao = db.notifiedPrayerDao()
-    private var msApi1Dao =db.msApi1Dao()
+    private var msApi1Dao = db.msApi1Dao()
     private var msSettingDao: MsSettingDao = db.msSettingDao()
 
     fun getNotifiedPrayer() = notifiedPrayerDao.getNotifiedPrayer()
     fun getMsApi1() = msApi1Dao.getMsApi1()
     fun getMsSetting() = msSettingDao.getMsSetting()
 
-    fun updateNotifiedPrayer(NotifiedPrayer: NotifiedPrayer){
+    /* fun updateNotifiedPrayer(NotifiedPrayer: NotifiedPrayer){
         GlobalScope.launch(contextProviders.IO) {
             notifiedPrayerDao.updateNotifiedPrayer(
                 NotifiedPrayer.prayerName,
@@ -33,7 +34,7 @@ constructor(private val contextProviders: ContextProviders, db: SolatKuyRoom) {
                 NotifiedPrayer.prayerTime
             )
         }
-    }
+    } */
 
     fun updatePrayerTime(prayerName: String, prayerTime: String){
         GlobalScope.launch(contextProviders.IO){
@@ -53,10 +54,10 @@ constructor(private val contextProviders: ContextProviders, db: SolatKuyRoom) {
         }
     }
 
-    fun updateMsSetting(isHasOpen: Boolean){
+    /* fun updateMsSetting(isHasOpen: Boolean){
         GlobalScope.launch(contextProviders.IO) {
             msSettingDao.updateMsSetting(isHasOpen)
         }
-    }
+    } */
 
 }

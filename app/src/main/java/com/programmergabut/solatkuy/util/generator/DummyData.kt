@@ -1,10 +1,17 @@
 package com.programmergabut.solatkuy.util.generator
 
 import androidx.lifecycle.LiveData
+import com.programmergabut.solatkuy.data.local.localentity.MsApi1
+import com.programmergabut.solatkuy.data.local.localentity.MsSetting
 import com.programmergabut.solatkuy.data.local.localentity.NotifiedPrayer
 import com.programmergabut.solatkuy.data.remote.remoteentity.asmaalhusnaJson.AsmaAlHusnaApi
 import com.programmergabut.solatkuy.data.remote.remoteentity.asmaalhusnaJson.Data
 import com.programmergabut.solatkuy.data.remote.remoteentity.asmaalhusnaJson.En
+import com.programmergabut.solatkuy.data.remote.remoteentity.compassJson.CompassApi
+import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.Date
+import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.Gregorian
+import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.PrayerApi
+import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.Timings
 import com.programmergabut.solatkuy.data.remote.remoteentity.quransurahJson.Ayah
 import com.programmergabut.solatkuy.data.remote.remoteentity.quransurahJson.Edition
 import com.programmergabut.solatkuy.data.remote.remoteentity.quransurahJson.QuranSurahApi
@@ -63,7 +70,7 @@ object DummyData {
         return listNotifiedPrayer
     }
 
-    fun getAsmaAlHusna(): AsmaAlHusnaApi {
+    fun fetchAsmaAlHusnaApi(): AsmaAlHusnaApi {
 
         val list = mutableListOf<Data>()
 
@@ -72,7 +79,7 @@ object DummyData {
         return AsmaAlHusnaApi(0, list, "testing")
     }
 
-    fun getSurahApi(): QuranSurahApi{
+    fun fetchSurahApi(): QuranSurahApi{
         val listAyah = mutableListOf<Ayah>()
         listAyah.add(Ayah(0,0,0,0,0,0,0,false,"test"))
         return QuranSurahApi(0,
@@ -81,6 +88,23 @@ object DummyData {
                 "", "", "", 0,0, ""
             )
             ,"")
+    }
+
+    fun fetchPrayerApi(): PrayerApi{
+        val listData = mutableListOf<com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.Data>()
+        listData.add(com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.Data(
+            Date(null, null, null, null),null,
+            Timings("", "", "", "", "", "", "", "", "")))
+
+        return PrayerApi(0, listData,"testing")
+    }
+
+    fun fetchCompassApi(): CompassApi{
+        return CompassApi(0,com.programmergabut.solatkuy.data.remote.remoteentity.compassJson.Data(0.0,0.0,0.0),"testing")
+    }
+
+    fun getMsApi1(): MsApi1 {
+        return MsApi1(0, "","","","", "")
     }
 
 }

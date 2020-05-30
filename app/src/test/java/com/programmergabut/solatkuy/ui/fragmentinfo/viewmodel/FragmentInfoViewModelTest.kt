@@ -4,12 +4,13 @@ import android.app.Application
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
+import androidx.lifecycle.viewModelScope
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.programmergabut.solatkuy.data.Repository
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
-import com.programmergabut.solatkuy.data.local.localentity.NotifiedPrayer
 import com.programmergabut.solatkuy.data.remote.remoteentity.asmaalhusnaJson.AsmaAlHusnaApi
+import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.PrayerApi
 import com.programmergabut.solatkuy.util.Resource
 import com.programmergabut.solatkuy.util.generator.DummyData
 import org.junit.Before
@@ -35,8 +36,7 @@ class FragmentInfoViewModelTest {
     @Mock
     private lateinit var context: Application
 
-    val msApi1 = MsApi1(0, "", "", "","","")
-
+    private val msApi1 = MsApi1(0, "", "", "","","")
 
     @Before
     fun setUp() {
@@ -45,9 +45,23 @@ class FragmentInfoViewModelTest {
     }
 
     @Test
-    fun getAsmaAlHusna(){
+    fun fetchPrayerApi(){
+        val observer = mock<Observer<Resource<PrayerApi>>>()
+        val dummyPrayerApi = Resource.success(DummyData.fetchPrayerApi())
+
+        val prayerApi = MutableLiveData<Resource<PrayerApi>>()
+        prayerApi.value = dummyPrayerApi
+        `when`(repository.fetchPrayerApi(msApi1)).thenReturn(prayerApi)
+
+        viewModel.prayerApi.observeForever(observer)
+
+        Mockito.verify(observer).onChanged(dummyPrayerApi)
+    }
+
+    @Test
+    fun fetchAsmaAlHusna(){
         val observer = mock<Observer<Resource<AsmaAlHusnaApi>>>()
-        val dummyAsmaAlHusna = Resource.success(DummyData.getAsmaAlHusna())
+        val dummyAsmaAlHusna = Resource.success(DummyData.fetchAsmaAlHusnaApi())
         val asmaAlHusna = MutableLiveData<Resource<AsmaAlHusnaApi>>()
 
         asmaAlHusna.value = dummyAsmaAlHusna

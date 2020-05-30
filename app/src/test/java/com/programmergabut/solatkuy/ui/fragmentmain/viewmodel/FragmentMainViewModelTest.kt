@@ -1,16 +1,14 @@
 package com.programmergabut.solatkuy.ui.fragmentmain.viewmodel
 
 import android.app.Application
-import android.content.res.Resources
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import com.nhaarman.mockitokotlin2.any
+import androidx.lifecycle.viewModelScope
 import com.nhaarman.mockitokotlin2.mock
 import com.programmergabut.solatkuy.data.Repository
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
 import com.programmergabut.solatkuy.data.local.localentity.NotifiedPrayer
-import com.programmergabut.solatkuy.data.remote.remoteentity.asmaalhusnaJson.AsmaAlHusnaApi
 import com.programmergabut.solatkuy.data.remote.remoteentity.quransurahJson.QuranSurahApi
 import com.programmergabut.solatkuy.util.Resource
 import com.programmergabut.solatkuy.util.generator.DummyData
@@ -20,7 +18,6 @@ import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito.*
-import org.mockito.MockitoAnnotations
 import org.mockito.junit.MockitoJUnitRunner
 
 
@@ -38,7 +35,7 @@ class FragmentMainViewModelTest {
     @Mock
     private lateinit var context: Application
 
-    val msApi1 = MsApi1(0, "", "", "","","")
+    private val msApi1 = MsApi1(0, "", "", "","","")
 
     @Before
     fun setUp() {
@@ -64,7 +61,7 @@ class FragmentMainViewModelTest {
     @Test
     fun getQuranSurah(){
         val observer = mock<Observer<Resource<QuranSurahApi>>>()
-        val dummyQuranSurah = Resource.success(DummyData.getSurahApi())
+        val dummyQuranSurah = Resource.success(DummyData.fetchSurahApi())
         val quranSurah = MutableLiveData<Resource<QuranSurahApi>>()
 
         quranSurah.value = dummyQuranSurah
@@ -72,9 +69,7 @@ class FragmentMainViewModelTest {
 
         viewModel.quranSurah.observeForever(observer)
 
-        //verify(repository).fetchQuranSurah("1")
         verify(observer).onChanged(dummyQuranSurah)
-
     }
 
 }

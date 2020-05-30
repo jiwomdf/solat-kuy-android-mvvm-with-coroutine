@@ -19,11 +19,11 @@ class FragmentInfoViewModel(application: Application,  private val repository: R
         repository.fetchPrayerApi(it)
     } as MutableLiveData<Resource<PrayerApi>>
 
-    var asmaAlHusnaApi : MutableLiveData<Resource<AsmaAlHusnaApi>> = Transformations.switchMap(msApi1Param){
+    val asmaAlHusnaApi : MutableLiveData<Resource<AsmaAlHusnaApi>> = Transformations.switchMap(msApi1Param){
         repository.fetchAsmaAlHusna()
     } as MutableLiveData<Resource<AsmaAlHusnaApi>>
 
-    val msApi1Local: LiveData<MsApi1> = repository.mMsApi1()
+    val msApi1Local: LiveData<MsApi1> = repository.getMsApi1()
 
     //Room
     init {

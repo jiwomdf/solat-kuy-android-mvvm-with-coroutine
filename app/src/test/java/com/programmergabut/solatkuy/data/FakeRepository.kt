@@ -2,19 +2,14 @@ package com.programmergabut.solatkuy.data
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.MutableLiveData
 import com.programmergabut.solatkuy.data.local.LocalDataSource
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
 import com.programmergabut.solatkuy.data.local.localentity.NotifiedPrayer
 import com.programmergabut.solatkuy.data.remote.RemoteDataSource
-import com.programmergabut.solatkuy.data.remote.remoteentity.asmaalhusnaJson.AsmaAlHusnaApi
-import com.programmergabut.solatkuy.data.remote.remoteentity.compassJson.CompassApi
 import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.PrayerApi
-import com.programmergabut.solatkuy.data.remote.remoteentity.quransurahJson.QuranSurahApi
-import com.programmergabut.solatkuy.util.enumclass.EnumConfig
 import com.programmergabut.solatkuy.util.Resource
-import kotlinx.coroutines.GlobalScope
-import kotlinx.coroutines.launch
+import com.programmergabut.solatkuy.util.enumclass.EnumConfig
+import kotlinx.coroutines.CoroutineScope
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -24,22 +19,10 @@ import java.util.*
 
 class Repository(private val contextProviders: ContextProviders,
                  private val remoteDataSource: RemoteDataSource,
-                 private val localDataSource: LocalDataSource) {
-
-    companion object{
-        @Volatile
-        private var instance: Repository? = null
-
-        fun getInstance(contextProviders: ContextProviders,
-                        remoteDataSource: RemoteDataSource, localDataSource: LocalDataSource) =
-            instance ?: synchronized(this){
-                instance
-                    ?: Repository(contextProviders, remoteDataSource, localDataSource)
-            }
-    }
+                 private val localDataSource: LocalDataSource
+) {
 
     //Room
-
     fun getMsApi1(): LiveData<MsApi1> {
         val data = MediatorLiveData<MsApi1>()
         data.addSource(localDataSource.getMsApi1()) {
@@ -49,8 +32,8 @@ class Repository(private val contextProviders: ContextProviders,
         return data
     }
 
-    //fun getMsApi1() = localDataSource.getMsApi1()
-    fun getMsSetting() = localDataSource.getMsSetting()
+    //fun mMsApi1() = localDataSource.getMsApi1()
+    fun mMsSetting() = localDataSource.getMsSetting()
 
     //fun updateNotifiedPrayer(notifiedPrayer: NotifiedPrayer) = localDataSource.updateNotifiedPrayer(notifiedPrayer)
     //fun updatePrayerTime(prayerName: String, prayerTime: String) = localDataSource.updatePrayerTime(prayerName, prayerTime)

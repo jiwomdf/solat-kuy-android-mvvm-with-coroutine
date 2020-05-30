@@ -157,7 +157,7 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
             createModelPrayer(it)?.let { data -> updateAlarmManager(data) }
         }) */
 
-        fragmentMainViewModel.msApi1Local().observe(this, androidx.lifecycle.Observer {
+        fragmentMainViewModel.msApi1Local.observe(this, androidx.lifecycle.Observer {
 
             if(it == null )
                 return@Observer
@@ -382,7 +382,7 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
             tv_asr_time.text = apiData.timings.asr
             tv_maghrib_time.text = apiData.timings.maghrib
             tv_isha_time.text = apiData.timings.isha
-            tv_year_change.text = "${apiData.date.gregorian.month?.en} ${apiData.date.gregorian.day} "
+            tv_year_change.text = "${apiData.date.gregorian?.month?.en} ${apiData.date.gregorian?.day} "
         }
     }
 
