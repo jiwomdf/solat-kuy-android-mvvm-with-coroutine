@@ -33,7 +33,7 @@ class FakeRepository(private val contextProviders: ContextProviders,
     }
 
     //fun mMsApi1() = localDataSource.getMsApi1()
-    fun mMsSetting() = localDataSource.getMsSetting()
+    fun getMsSetting() = localDataSource.getMsSetting()
 
     //fun updateNotifiedPrayer(notifiedPrayer: NotifiedPrayer) = localDataSource.updateNotifiedPrayer(notifiedPrayer)
     //fun updatePrayerTime(prayerName: String, prayerTime: String) = localDataSource.updatePrayerTime(prayerName, prayerTime)
