@@ -126,7 +126,22 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                     Toasty.info(context!!, "syncing data..", Toast.LENGTH_SHORT).show()
                     bindPrayerText(null)
                 }
-                EnumStatus.ERROR -> print("error")
+                EnumStatus.ERROR -> {
+                    if(retVal.data == null)
+                        throw Exception("notifiedPrayer return null")
+
+                    Toasty.warning(context!!, "using offline data", Toast.LENGTH_SHORT).show()
+
+                    /* Bind Checkbox */
+                    bindCheckBox(retVal.data)
+
+                    /* Update Alarm Manager */
+                    updateAlarmManager(retVal.data)
+
+                    /* Bind Widget */
+                    val data = createData(retVal.data)
+                    bindWidget(data)
+                }
             }
         })
 

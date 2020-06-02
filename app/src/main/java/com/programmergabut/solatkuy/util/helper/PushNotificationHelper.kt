@@ -28,9 +28,44 @@ class PushNotificationHelper(context: Context, selList: MutableList<NotifiedPray
 
         val listPrayerBundle = bundleCreator(selList)
 
+        val idx = selList.size - 1
         selList.sortBy { x -> x.prayerID }
+        selList.forEachIndexed { index, it ->
 
-        val selPrayer = SelectPrayerHelper.selectNextPrayerToLocalPrayer(selList)
+            if(index == idx)
+                return@forEachIndexed
+
+            val arrPrayer = it.prayerTime.split(":")
+
+            val hour = arrPrayer[0].trim()
+            val minute = arrPrayer[1].split(" ")[0].trim()
+
+            val c = Calendar.getInstance()
+            c.set(Calendar.HOUR_OF_DAY, hour.toInt())
+            c.set(Calendar.MINUTE, minute.toInt())
+            c.set(Calendar.SECOND, 0)
+
+            intent.putExtra("prayer_id", it.prayerID)
+            intent.putExtra("prayer_name", it.prayerName)
+            intent.putExtra("prayer_time", it.prayerTime)
+            intent.putExtra("prayer_city", mCityName)
+            intent.putExtra("list_prayer_bundle", listPrayerBundle)
+
+            val pendingIntent = PendingIntent.getBroadcast(context, it.prayerID, intent, 0)
+
+            if(c.before(Calendar.getInstance()))
+                c.add(Calendar.DATE, 1)
+
+            if(it.isNotified)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+                    alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, c.timeInMillis, pendingIntent)
+                else
+                    alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.timeInMillis, pendingIntent)
+            else
+                alarmManager.cancel(pendingIntent)
+        }
+
+        /* val selPrayer = SelectPrayerHelper.selectNextPrayerToLocalPrayer(selList)
         //val selPrayer = NotifiedPrayer(1,"Isha", true, "18:47") //#testing purpose
 
         selPrayer?.let{
@@ -63,7 +98,7 @@ class PushNotificationHelper(context: Context, selList: MutableList<NotifiedPray
                     alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.timeInMillis, pendingIntent)
             else
                 alarmManager.cancel(pendingIntent)
-        }
+        } */
 
     }
 

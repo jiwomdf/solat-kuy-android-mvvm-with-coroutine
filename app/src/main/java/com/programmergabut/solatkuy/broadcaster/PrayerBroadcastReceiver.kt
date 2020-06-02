@@ -68,6 +68,17 @@ class PrayerBroadcastReceiver: BroadcastReceiver() {
             }
         }
 
+        removeFirstNotification(context)
+    }
+
+    private fun removeFirstNotification(context: Context){
+        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val intent = Intent(context, PrayerBroadcastReceiver::class.java)
+
+        for (id in 1..5){
+            val pendingIntent = PendingIntent.getBroadcast(context, id, intent, 0)
+            alarmManager.cancel(pendingIntent)
+        }
     }
 
     private fun intentGenerator(context: Context): Intent {

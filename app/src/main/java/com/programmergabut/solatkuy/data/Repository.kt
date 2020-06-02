@@ -74,7 +74,7 @@ class Repository(private val contextProviders: ContextProviders,
 
             override fun shouldFetch(data: List<NotifiedPrayer>?): Boolean = true
 
-            override fun createCall(): LiveData<Resource<PrayerApi>> = remoteDataSource.syncNotifiedPrayer(msApi1)
+            override fun createCall(): LiveData<Resource<PrayerApi>> = remoteDataSource.fetchPrayerApi(msApi1)
 
             override fun saveCallResult(data: PrayerApi) {
 

@@ -19,7 +19,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:targetApi="n">
-        <activity android:name=".ui.activityprayer.DuaActivity"></activity>
+        <activity android:name=".ui.activityprayer.DuaActivity" />
         <activity
             android:name=".ui.main.view.MainActivity"
             android:screenOrientation="portrait"

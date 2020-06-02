@@ -18,7 +18,7 @@
             android:layout_margin="@dimen/small_margin">
 
             <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="@dimen/bottomSheet_size"
+                android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/medium_margin"
                 android:layout_marginTop="@dimen/medium_margin"
@@ -54,9 +54,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
-                    android:text="@string/loading"
+                    android:layout_marginStart="@dimen/large_margin"
                     android:gravity="start"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    android:text="@string/loading"
                     app:layout_constraintStart_toEndOf="@id/tv_text_latitude"
                     app:layout_constraintTop_toBottomOf="@+id/tv_cur_loc" />
 
@@ -74,9 +74,9 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="@string/loading"
+                    android:layout_marginStart="@dimen/large_margin"
                     android:gravity="start"
-                    app:layout_constraintEnd_toEndOf="parent"
+                    android:text="@string/loading"
                     app:layout_constraintStart_toEndOf="@+id/tv_text_longitude"
                     app:layout_constraintTop_toBottomOf="@+id/tv_view_latitude" />
 
@@ -95,10 +95,10 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
-                    android:text="@string/loading"
+                    android:layout_marginStart="@dimen/large_margin"
                     android:gravity="start"
+                    android:text="@string/loading"
                     app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/tv_text_city"
                     app:layout_constraintTop_toBottomOf="@+id/tv_view_longitude" />
 
@@ -185,7 +185,6 @@
                     android:id="@+id/iv_author_logo"
                     android:layout_width="@dimen/avatar_size"
                     android:layout_height="@dimen/avatar_size"
-                    android:layout_marginTop="@dimen/medium_margin"
                     android:layout_marginStart="@dimen/small_margin"
                     android:layout_marginBottom="@dimen/small_margin"
                     android:src="@drawable/ic_person_black_24dp"
@@ -197,7 +196,6 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
-                    android:layout_marginTop="@dimen/medium_margin"
                     android:text="@string/author_credit"
                     android:textSize="@dimen/large_text_size"
                     app:layout_constraintStart_toEndOf="@+id/iv_author_logo"
