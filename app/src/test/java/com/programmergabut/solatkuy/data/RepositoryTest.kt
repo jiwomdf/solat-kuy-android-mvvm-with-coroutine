@@ -5,7 +5,6 @@ import androidx.lifecycle.MutableLiveData
 import com.programmergabut.solatkuy.data.local.LocalDataSource
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
 import com.programmergabut.solatkuy.data.remote.RemoteDataSource
-import com.programmergabut.solatkuy.data.remote.remoteentity.asmaalhusnaJson.AsmaAlHusnaApi
 import com.programmergabut.solatkuy.data.remote.remoteentity.compassJson.CompassApi
 import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.PrayerApi
 import com.programmergabut.solatkuy.data.remote.remoteentity.quransurahJson.QuranSurahApi
@@ -57,7 +56,7 @@ class RepositoryTest{
         assertNotNull(compassApi.value)
     }
 
-    @Test
+    /* @Test
     fun fetchAsmaAlHusna(){
         repository.fetchAsmaAlHusna()
 
@@ -69,7 +68,7 @@ class RepositoryTest{
         Mockito.verify(remote).fetchAsmaAlHusnaApi()
 
         assertNotNull(asmaAlHusnaApi.value)
-    }
+    } */
 
     @Test
     fun fetchQuranSurah(){

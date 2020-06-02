@@ -1,6 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
 <ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
@@ -88,6 +87,27 @@
             android:layout_marginStart="@dimen/medium_margin"
             android:layout_marginEnd="@dimen/medium_margin"
             tools:text="Ya Allah Tuhan yang memiliki seruan yang sempurna dan shalat yang tetap didirikan, kurniailah Nabi Muhammad wasilah (tempat yang luhur) dan kelebihan serta kemuliaan dan derajat yang tinggi dan tempatkanlah dia pada kependudukan yang terpuji yang telah Engkaujanjikan, sesungguhnya Engkau tiada menyalahi janji, wahai dzat yang paling Penyayang." />
+
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/medium_margin"
+            android:layout_marginTop="@dimen/medium_margin"
+            android:textColor="@color/colorBlack"
+            android:textStyle="bold"
+            android:textSize="@dimen/medium_text_size"
+            android:text="@string/reference"/>
+
+        <TextView
+            android:id="@+id/tv_prayer_ref"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:textColor="@color/colorAccent"
+            android:layout_marginBottom="@dimen/medium_margin"
+            android:textSize="@dimen/medium_text_size"
+            android:layout_marginStart="@dimen/medium_margin"
+            android:layout_marginEnd="@dimen/medium_margin"
+            tools:text="www.google.com \nwww.yahoo.com" />
 
     </LinearLayout>
 

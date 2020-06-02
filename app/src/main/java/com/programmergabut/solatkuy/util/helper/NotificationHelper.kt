@@ -115,7 +115,6 @@ class NotificationHelper(c: Context): ContextWrapper(c) {
                 .setContentTitle(pName)
                 .setContentText(message)
                 .setSubText(EnumConfig.duaAfterAdhan)
-                .setColor(getColor(R.color.colorPrimary))
                 .setVibrate(longArrayOf(500, 500, 500))
                 .setSmallIcon(R.drawable.ic_notifications_active_24dp)
                 .setAutoCancel(true)

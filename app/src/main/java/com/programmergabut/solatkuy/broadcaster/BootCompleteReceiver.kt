@@ -1,17 +1,10 @@
 package com.programmergabut.solatkuy.broadcaster
 
-import android.app.AlarmManager
-import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.Build
-import com.programmergabut.solatkuy.data.local.SolatKuyRoom
 import com.programmergabut.solatkuy.service.ServiceBootComplete
-import com.programmergabut.solatkuy.util.helper.PushNotificationHelper
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 
 /*
  * Created by Katili Jiwo Adi Wiyono on 02/04/20.

@@ -6,7 +6,6 @@
     <string name="asr">Asr</string>
     <string name="maghrib">Maghrib</string>
     <string name="isha">Isha</string>
-    <string name="sunrise">Sunrise</string>
 
     <string name="prayer_name">Prayer Name</string>
 
@@ -44,7 +43,6 @@
     <string name="hijri">Hijri</string>
     <string name="date">Date</string>
     <string name="month">Month</string>
-    <string name="asma_al_husna">Asma Al Husna</string>
     <string name="please_do_this_move_before_using_the_compass_to_calibrate_the_compass">Please do this move before using the compass, in order to calibrate the compass</string>
     <string name="hide">Hide</string>
     <string name="see_author_and_credit">see author and credit</string>
@@ -52,10 +50,15 @@
     <string name="compass_art">Compass Art:</string>
     <string name="please_enable_your_location">please enable your location</string>
     <string name="proceeded">Proceed</string>
-    <string name="duaAfterAdhan">Dua after Adhan</string>
     <string name="dua_collection">Dua Collection</string>
     <string name="latin">Latin</string>
     <string name="english">English</string>
     <string name="indonesia">Indonesia</string>
-    <string name="dua_save_from_hell_amp_world"><![CDATA[Dua Save from Hell & World]]></string>
+    <string name="notification_icon">notification_icon</string>
+    <string name="reference">Reference</string>
+    <string name="locationicon">locationIcon</string>
+    <string name="abouticon">aboutIcon</string>
+    <string name="notactivelocationicon">notActiveLocationIcon</string>
+    <string name="solatkuyicon">solatKuyIcon</string>
+    <string name="widgetwallpaper">widgetWallpaper</string>
 </resources>

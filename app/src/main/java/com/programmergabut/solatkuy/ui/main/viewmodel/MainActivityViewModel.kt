@@ -3,11 +3,8 @@ package com.programmergabut.solatkuy.ui.main.viewmodel
 import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.viewModelScope
-import com.programmergabut.solatkuy.data.local.localentity.MsApi1
-import com.programmergabut.solatkuy.data.local.localentity.MsSetting
 import com.programmergabut.solatkuy.data.Repository
-import kotlinx.coroutines.launch
+import com.programmergabut.solatkuy.data.local.localentity.MsSetting
 
 class MainActivityViewModel(application: Application, repository: Repository) : AndroidViewModel(application){
 

@@ -2,17 +2,13 @@ package com.programmergabut.solatkuy.data
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.MutableLiveData
 import com.programmergabut.solatkuy.data.local.LocalDataSource
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
 import com.programmergabut.solatkuy.data.local.localentity.NotifiedPrayer
 import com.programmergabut.solatkuy.data.remote.RemoteDataSource
-import com.programmergabut.solatkuy.data.remote.remoteentity.asmaalhusnaJson.AsmaAlHusnaApi
-import com.programmergabut.solatkuy.data.remote.remoteentity.compassJson.CompassApi
 import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.PrayerApi
-import com.programmergabut.solatkuy.data.remote.remoteentity.quransurahJson.QuranSurahApi
-import com.programmergabut.solatkuy.util.enumclass.EnumConfig
 import com.programmergabut.solatkuy.util.Resource
+import com.programmergabut.solatkuy.util.enumclass.EnumConfig
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
@@ -61,7 +57,7 @@ class Repository(private val contextProviders: ContextProviders,
     //Retrofit
     fun fetchCompass(msApi1: MsApi1) = remoteDataSource.fetchCompassApi(msApi1)
 
-    fun fetchAsmaAlHusna() = remoteDataSource.fetchAsmaAlHusnaApi()
+    //fun fetchAsmaAlHusna() = remoteDataSource.fetchAsmaAlHusnaApi()
 
     fun fetchPrayerApi(msApi1: MsApi1) = remoteDataSource.fetchPrayerApi(msApi1)
 

@@ -25,7 +25,8 @@
                 android:layout_marginTop="@dimen/medium_margin"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toTopOf="parent" />
+                app:layout_constraintTop_toTopOf="parent"
+                android:contentDescription="@string/abouticon" />
 
             <TextView
                 android:id="@+id/tv_author"

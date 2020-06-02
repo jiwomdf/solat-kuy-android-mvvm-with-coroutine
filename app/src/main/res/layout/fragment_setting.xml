@@ -15,6 +15,7 @@
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:cardCornerRadius="@dimen/medium_margin"
             android:layout_margin="@dimen/small_margin">
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -53,6 +54,7 @@
                     android:id="@+id/tv_view_latitude"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/colorBlack"
                     android:layout_marginTop="16dp"
                     android:layout_marginStart="@dimen/large_margin"
                     android:gravity="start"
@@ -73,6 +75,7 @@
                     android:id="@+id/tv_view_longitude"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/colorBlack"
                     android:layout_marginTop="8dp"
                     android:layout_marginStart="@dimen/large_margin"
                     android:gravity="start"
@@ -94,6 +97,7 @@
                     android:id="@+id/tv_view_city"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/colorBlack"
                     android:layout_marginTop="8dp"
                     android:layout_marginStart="@dimen/large_margin"
                     android:gravity="start"
@@ -109,6 +113,7 @@
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:cardCornerRadius="@dimen/medium_margin"
             android:layout_margin="@dimen/small_margin">
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -126,7 +131,8 @@
                     android:src="@drawable/ic_location_24dp"
                     app:layout_constraintBottom_toTopOf="@+id/rg_lcation_setting"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:contentDescription="@string/locationicon" />
 
                 <TextView
                     android:id="@+id/textView2"
@@ -173,6 +179,7 @@
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:cardCornerRadius="@dimen/medium_margin"
             android:layout_margin="@dimen/small_margin">
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -189,7 +196,8 @@
                     android:layout_marginBottom="@dimen/small_margin"
                     android:src="@drawable/ic_person_black_24dp"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintTop_toTopOf="parent"
+                    android:contentDescription="@string/abouticon" />
 
                 <TextView
                     android:id="@+id/tv_authorCredit"
@@ -208,7 +216,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="16dp"
-                    android:backgroundTint="@color/colorWhite"
                     android:textColor="@color/colorPrimary"
                     android:text="@string/see_author_and_credit"
                     app:layout_constraintStart_toStartOf="parent"

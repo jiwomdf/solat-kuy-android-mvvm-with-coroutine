@@ -20,6 +20,7 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                app:cardCornerRadius="@dimen/medium_margin"
                 android:layout_margin="@dimen/small_margin">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -83,6 +84,7 @@
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
+                app:cardCornerRadius="@dimen/medium_margin"
                 android:layout_margin="@dimen/small_margin">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -205,45 +207,47 @@
                 </androidx.constraintlayout.widget.ConstraintLayout>
             </androidx.cardview.widget.CardView>
 
+<!--            <androidx.cardview.widget.CardView-->
+<!--                android:layout_width="match_parent"-->
+<!--                android:layout_height="wrap_content"-->
+<!--                app:cardCornerRadius="@dimen/medium_margin"-->
+<!--                android:layout_margin="@dimen/small_margin">-->
+<!--                <LinearLayout-->
+<!--                    android:layout_width="match_parent"-->
+<!--                    android:layout_height="wrap_content"-->
+<!--                    android:orientation="vertical">-->
+<!--                    <TextView-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:textSize="@dimen/large_text_size"-->
+<!--                        android:layout_marginTop="@dimen/medium_margin"-->
+<!--                        android:layout_marginStart="@dimen/medium_margin"-->
+<!--                        android:text="@string/asma_al_husna"/>-->
+<!--                    <TextView-->
+<!--                        android:id="@+id/tv_ah_loading"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:textColor="@color/colorBlack"-->
+<!--                        android:textSize="@dimen/large_text_size"-->
+<!--                        android:gravity="center"-->
+<!--                        android:layout_marginTop="@dimen/medium_margin"-->
+<!--                        android:layout_marginStart="@dimen/medium_margin"-->
+<!--                        android:layout_marginBottom="@dimen/medium_margin"-->
+<!--                        android:text="@string/loading"/>-->
+<!--                    <androidx.recyclerview.widget.RecyclerView-->
+<!--                        android:id="@+id/rv_ah"-->
+<!--                        android:layout_width="match_parent"-->
+<!--                        android:layout_height="wrap_content"-->
+<!--                        android:layout_marginBottom="@dimen/medium_margin"-->
+<!--                        android:layout_margin="@dimen/small_margin"/>-->
+<!--                </LinearLayout>-->
+
+<!--            </androidx.cardview.widget.CardView>-->
+
             <androidx.cardview.widget.CardView
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_margin="@dimen/small_margin">
-                <LinearLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:orientation="vertical">
-                    <TextView
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textSize="@dimen/large_text_size"
-                        android:layout_marginTop="@dimen/medium_margin"
-                        android:layout_marginStart="@dimen/medium_margin"
-                        android:text="@string/asma_al_husna"/>
-                    <TextView
-                        android:id="@+id/tv_ah_loading"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:textColor="@color/colorBlack"
-                        android:textSize="@dimen/large_text_size"
-                        android:gravity="center"
-                        android:layout_marginTop="@dimen/medium_margin"
-                        android:layout_marginStart="@dimen/medium_margin"
-                        android:layout_marginBottom="@dimen/medium_margin"
-                        android:text="@string/loading"/>
-                    <androidx.recyclerview.widget.RecyclerView
-                        android:id="@+id/rv_ah"
-                        android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginBottom="@dimen/medium_margin"
-                        android:layout_margin="@dimen/small_margin"/>
-                </LinearLayout>
-
-            </androidx.cardview.widget.CardView>
-
-            <androidx.cardview.widget.CardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
+                app:cardCornerRadius="@dimen/medium_margin"
                 android:layout_margin="@dimen/small_margin">
 
                 <LinearLayout
@@ -259,27 +263,10 @@
                         android:layout_marginTop="@dimen/medium_margin"
                         android:layout_marginStart="@dimen/medium_margin"/>
 
-                    <Button
-                        android:id="@+id/btn_dua_after_adhan"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/medium_margin"
-                        android:layout_marginStart="@dimen/medium_margin"
-                        style="@style/Widget.AppCompat.Button.Borderless.Colored"
-                        android:backgroundTint="@color/colorWhite"
-                        android:textColor="@color/colorPrimary"
-                        android:text="@string/duaAfterAdhan"/>
-
-                    <Button
-                        android:id="@+id/btn_dua_save_from_hell_world"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/medium_margin"
-                        android:layout_marginBottom="@dimen/medium_margin"
-                        style="@style/Widget.AppCompat.Button.Borderless.Colored"
-                        android:backgroundTint="@color/colorWhite"
-                        android:textColor="@color/colorPrimary"
-                        android:text="@string/dua_save_from_hell_amp_world"/>
+                        <androidx.recyclerview.widget.RecyclerView
+                            android:id="@+id/rvDuaCollection"
+                            android:layout_width="match_parent"
+                            android:layout_height="match_parent" />
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>

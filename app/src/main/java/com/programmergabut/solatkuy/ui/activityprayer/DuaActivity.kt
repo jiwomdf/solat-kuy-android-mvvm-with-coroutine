@@ -13,6 +13,7 @@ class DuaActivity : AppCompatActivity() {
         const val duaLt = "duaLt"
         const val duaEn = "duaEn"
         const val duaIn = "duaIn"
+        const val duaRef = "duaRef"
     }
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -24,6 +25,7 @@ class DuaActivity : AppCompatActivity() {
         tv_prayer_lt.text = intent.getStringExtra(duaLt)!!
         tv_prayer_en.text = intent.getStringExtra(duaEn)!!
         tv_prayer_in.text = intent.getStringExtra(duaIn)!!
+        tv_prayer_ref.text = intent.getStringExtra(duaRef)!!
     }
 
 }

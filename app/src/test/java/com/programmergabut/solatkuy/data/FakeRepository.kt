@@ -8,10 +8,6 @@ import com.programmergabut.solatkuy.data.local.localentity.NotifiedPrayer
 import com.programmergabut.solatkuy.data.remote.RemoteDataSource
 import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.PrayerApi
 import com.programmergabut.solatkuy.util.Resource
-import com.programmergabut.solatkuy.util.enumclass.EnumConfig
-import kotlinx.coroutines.CoroutineScope
-import java.text.SimpleDateFormat
-import java.util.*
 
 /*
  * Created by Katili Jiwo Adi Wiyono on 26/03/20.
@@ -44,7 +40,7 @@ class FakeRepository(private val contextProviders: ContextProviders,
     //Retrofit
     fun fetchCompass(msApi1: MsApi1) = remoteDataSource.fetchCompassApi(msApi1)
 
-    fun fetchAsmaAlHusna() = remoteDataSource.fetchAsmaAlHusnaApi()
+    //fun fetchAsmaAlHusna() = remoteDataSource.fetchAsmaAlHusnaApi()
 
     fun fetchPrayerApi(msApi1: MsApi1) = remoteDataSource.fetchPrayerApi(msApi1)
 
@@ -57,7 +53,7 @@ class FakeRepository(private val contextProviders: ContextProviders,
 
             override fun shouldFetch(data: List<NotifiedPrayer>?): Boolean = true
 
-            override fun createCall(): LiveData<Resource<PrayerApi>> = remoteDataSource.syncNotifiedPrayer(msApi1)
+            override fun createCall(): LiveData<Resource<PrayerApi>> = remoteDataSource.fetchPrayerApi(msApi1)
 
             override fun saveCallResult(data: PrayerApi) {
 

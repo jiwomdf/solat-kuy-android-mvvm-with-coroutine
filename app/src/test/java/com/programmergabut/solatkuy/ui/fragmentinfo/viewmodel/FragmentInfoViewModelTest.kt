@@ -4,12 +4,9 @@ import android.app.Application
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
-import androidx.lifecycle.viewModelScope
 import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.verify
 import com.programmergabut.solatkuy.data.Repository
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
-import com.programmergabut.solatkuy.data.remote.remoteentity.asmaalhusnaJson.AsmaAlHusnaApi
 import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.PrayerApi
 import com.programmergabut.solatkuy.util.Resource
 import com.programmergabut.solatkuy.util.generator.DummyData
@@ -58,7 +55,7 @@ class FragmentInfoViewModelTest {
         Mockito.verify(observer).onChanged(dummyPrayerApi)
     }
 
-    @Test
+   /* @Test
     fun fetchAsmaAlHusna(){
         val observer = mock<Observer<Resource<AsmaAlHusnaApi>>>()
         val dummyAsmaAlHusna = Resource.success(DummyData.fetchAsmaAlHusnaApi())
@@ -69,6 +66,6 @@ class FragmentInfoViewModelTest {
         viewModel.asmaAlHusnaApi.observeForever(observer)
 
         verify(observer).onChanged(dummyAsmaAlHusna)
-    }
+    } */
 
 }

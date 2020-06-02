@@ -4,7 +4,6 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import androidx.sqlite.db.SupportSQLiteDatabase
 import com.programmergabut.solatkuy.data.ContextProviders
 import com.programmergabut.solatkuy.data.local.dao.MsApi1Dao
 import com.programmergabut.solatkuy.data.local.dao.MsSettingDao
@@ -183,7 +182,7 @@ abstract class SolatKuyRoom: RoomDatabase() {
             }
         }
 
-        suspend fun populateMsSetting(msSettingDao: MsSettingDao){
+        private suspend fun populateMsSetting(msSettingDao: MsSettingDao){
             msSettingDao.deleteAll()
 
             msSettingDao.insertMsSetting(
@@ -194,7 +193,7 @@ abstract class SolatKuyRoom: RoomDatabase() {
             )
         }
 
-        suspend fun populateMsApi1(msApi1Dao: MsApi1Dao) {
+        private suspend fun populateMsApi1(msApi1Dao: MsApi1Dao) {
             msApi1Dao.deleteAll()
 
             msApi1Dao.insertMsApi1(
@@ -209,7 +208,7 @@ abstract class SolatKuyRoom: RoomDatabase() {
             )
         }
 
-        suspend fun populateNotifiedPrayer(notifiedPrayerDao: NotifiedPrayerDao){
+        private suspend fun populateNotifiedPrayer(notifiedPrayerDao: NotifiedPrayerDao){
             notifiedPrayerDao.deleteAll()
 
             notifiedPrayerDao.insertNotifiedPrayer(

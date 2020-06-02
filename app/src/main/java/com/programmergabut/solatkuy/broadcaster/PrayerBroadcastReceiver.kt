@@ -83,12 +83,16 @@ class PrayerBroadcastReceiver: BroadcastReceiver() {
 
     private fun intentGenerator(context: Context): Intent {
         val i = Intent(context, DuaActivity::class.java)
+
+        val duaAfterAdhan = DuaGenerator.getListDua().find { x -> x.id == 1}
+
         i.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        i.putExtra(DuaActivity.duaTitle, DuaGenerator.duaAfterAdhan.title)
-        i.putExtra(DuaActivity.duaAr, DuaGenerator.duaAfterAdhan.arab)
-        i.putExtra(DuaActivity.duaLt, DuaGenerator.duaAfterAdhan.latin)
-        i.putExtra(DuaActivity.duaEn, DuaGenerator.duaAfterAdhan.english)
-        i.putExtra(DuaActivity.duaIn, DuaGenerator.duaAfterAdhan.indonesia)
+        i.putExtra(DuaActivity.duaTitle, duaAfterAdhan?.title)
+        i.putExtra(DuaActivity.duaAr, duaAfterAdhan?.arab)
+        i.putExtra(DuaActivity.duaLt, duaAfterAdhan?.latin)
+        i.putExtra(DuaActivity.duaEn, duaAfterAdhan?.english)
+        i.putExtra(DuaActivity.duaIn, duaAfterAdhan?.indonesia)
+        i.putExtra(DuaActivity.duaRef, duaAfterAdhan?.reference)
 
         return i
     }

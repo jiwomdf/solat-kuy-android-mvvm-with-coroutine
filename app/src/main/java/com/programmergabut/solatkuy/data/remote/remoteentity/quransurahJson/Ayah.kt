@@ -2,7 +2,6 @@ package com.programmergabut.solatkuy.data.remote.remoteentity.quransurahJson
 
 
 import com.google.gson.annotations.SerializedName
-import java.util.*
 
 data class Ayah(
     @SerializedName("hizbQuarter")

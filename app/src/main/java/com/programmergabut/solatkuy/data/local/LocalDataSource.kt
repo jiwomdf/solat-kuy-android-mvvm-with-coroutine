@@ -3,8 +3,6 @@ package com.programmergabut.solatkuy.data.local
 import com.programmergabut.solatkuy.data.ContextProviders
 import com.programmergabut.solatkuy.data.local.dao.MsSettingDao
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
-import com.programmergabut.solatkuy.data.local.localentity.NotifiedPrayer
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 

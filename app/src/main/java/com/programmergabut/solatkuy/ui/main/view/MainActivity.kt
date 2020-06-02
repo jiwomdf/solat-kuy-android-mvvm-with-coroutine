@@ -284,7 +284,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         } catch (ex: java.lang.Exception) { }
 
         if (!gpsEnabled && !networkEnabled)
-            mSubDialogView.tv_warning.text = "Please enable your location"
+            mSubDialogView.tv_warning.text = getString(R.string.please_enable_your_location)
         else
             mSubDialogView.tv_warning.text = getString(R.string.loading)
     }
@@ -295,6 +295,18 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         mLocationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         mLocationRequest.interval = 10 * 10000 /* 1 minute */
         mLocationRequest.fastestInterval = 10 * 10000 /* 1 minute */
+
+        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+            ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+            // TODO: Consider calling
+            //    ActivityCompat#requestPermissions
+            // here to request the missing permissions, and then overriding
+            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
+            //                                          int[] grantResults)
+            // to handle the case where the user grants the permission. See the documentation
+            // for ActivityCompat#requestPermissions for more details.
+            return
+        }
 
         LocationServices.getFusedLocationProviderClient(this)
             .requestLocationUpdates(mLocationRequest, object : LocationCallback() {

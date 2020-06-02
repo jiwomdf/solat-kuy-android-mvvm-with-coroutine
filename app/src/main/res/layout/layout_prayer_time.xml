@@ -1,190 +1,168 @@
 <?xml version="1.0" encoding="utf-8"?>
-<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:orientation="vertical"
-    app:cardBackgroundColor="@color/colorPrimary">
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    app:cardBackgroundColor="@color/colorDarkWhite"
+    app:cardCornerRadius="@dimen/medium_margin"
+    android:orientation="vertical">
 
-    <androidx.cardview.widget.CardView
+    <TableLayout
         android:layout_width="match_parent"
-        android:layout_height="wrap_content">
+        android:layout_height="wrap_content"
+        android:stretchColumns="1">
 
-        <TableLayout
+        <TableRow
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/medium_margin"
-            android:stretchColumns="0,2"
-            android:background="@color/colorPrimary">
+            android:paddingTop="@dimen/smaller_margin"
+            android:paddingBottom="@dimen/smaller_margin">
 
-            <TableRow
-                android:layout_width="match_parent"
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="start"
+                android:layout_marginStart="@dimen/smaller_margin"
+                android:src="@drawable/ic_notifications_active_24dp"
+                android:contentDescription="@string/notification_icon" />
+
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingTop="@dimen/smaller_margin"
-                android:paddingBottom="@dimen/smaller_margin"
-                android:background="@color/colorWhite">
+                android:text="@string/prayer_name"/>
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="start"
-                    android:layout_marginStart="@dimen/smaller_margin"
-                    android:src="@drawable/ic_notifications_active_24dp" />
+            <TextView
+                android:id="@+id/tv_year_change"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:gravity="end"
+                android:layout_marginEnd="@dimen/medium_margin"
+                android:text="@string/loading"/>
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:text="@string/prayer_name"/>
+        </TableRow>
 
-                <TextView
-                    android:id="@+id/tv_year_change"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:gravity="end"
-                    android:layout_marginEnd="@dimen/medium_margin"
-                    android:text="@string/loading"/>
+        <!--Fajr-->
+        <TableRow>
+            <CheckBox
+                android:id="@+id/cb_fajr"/>
 
-            </TableRow>
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="start|center"
+                android:layout_marginStart="@dimen/smaller_margin"
+                android:text="@string/fajr"
+                android:textStyle="bold"
+                />
 
-            <!--Fajr-->
-            <TableRow>
-                <CheckBox
-                    android:id="@+id/cb_fajr"
-                    android:layout_width="@dimen/list_width_size"
-                    android:layout_height="@dimen/list_width_size"
-                    />
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tv_fajr_time"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/loading"
+                android:gravity="end|center"
+                android:layout_marginEnd="@dimen/small_margin"
+                android:textStyle="bold" />
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="start|center"
-                    android:layout_marginStart="@dimen/smaller_margin"
-                    android:text="@string/fajr"
-                    android:textStyle="bold"
-                    android:textColor="@color/colorWhite" />
+        </TableRow>
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/tv_fajr_time"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:text="@string/loading"
-                    android:gravity="end|center"
-                    android:layout_marginEnd="@dimen/small_margin"
-                    android:textStyle="bold"
-                    android:textColor="@color/colorWhite"/>
+        <!--Dhuhur-->
+        <TableRow>
+            <CheckBox
+                android:id="@+id/cb_dhuhr"
+                android:layout_width="@dimen/list_width_size"
+                android:layout_height="@dimen/list_width_size"/>
 
-            </TableRow>
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="start|center"
+                android:layout_marginStart="@dimen/smaller_margin"
+                android:text="@string/dhuhr"
+                android:textStyle="bold" />
 
-            <!--Dhuhur-->
-            <TableRow>
-                <CheckBox
-                    android:id="@+id/cb_dhuhr"
-                    android:layout_width="@dimen/list_width_size"
-                    android:layout_height="@dimen/list_width_size"/>
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tv_dhuhr_time"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/loading"
+                android:gravity="end|center"
+                android:textStyle="bold"
+                android:layout_marginEnd="@dimen/small_margin"/>
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="start|center"
-                    android:layout_marginStart="@dimen/smaller_margin"
-                    android:text="@string/dhuhr"
-                    android:textStyle="bold"
-                    android:textColor="@color/colorWhite"/>
+        </TableRow>
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/tv_dhuhr_time"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:text="@string/loading"
-                    android:gravity="end|center"
-                    android:textStyle="bold"
-                    android:textColor="@color/colorWhite"
-                    android:layout_marginEnd="@dimen/small_margin"/>
+        <!--Asr-->
+        <TableRow>
+            <CheckBox
+                android:id="@+id/cb_asr"
+                android:layout_width="@dimen/list_width_size"
+                android:layout_height="@dimen/list_width_size"/>
 
-            </TableRow>
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="start|center"                    android:layout_marginStart="@dimen/smaller_margin"
+                android:text="@string/asr"
+                android:textStyle="bold" />
 
-            <!--Asr-->
-            <TableRow>
-                <CheckBox
-                    android:id="@+id/cb_asr"
-                    android:layout_width="@dimen/list_width_size"
-                    android:layout_height="@dimen/list_width_size"/>
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tv_asr_time"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/loading"
+                android:gravity="end|center"
+                android:textStyle="bold"
+                android:layout_marginEnd="@dimen/small_margin"/>
+        </TableRow>
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="start|center"                    android:layout_marginStart="@dimen/smaller_margin"
-                    android:text="@string/asr"
-                    android:textStyle="bold"
-                    android:textColor="@color/colorWhite"/>
+        <!--Maghrib-->
+        <TableRow>
+            <CheckBox
+                android:id="@+id/cb_maghrib"/>
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/tv_asr_time"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:text="@string/loading"
-                    android:gravity="end|center"
-                    android:textStyle="bold"
-                    android:textColor="@color/colorWhite"
-                    android:layout_marginEnd="@dimen/small_margin"/>
-            </TableRow>
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="start|center"                    android:layout_marginStart="@dimen/smaller_margin"
+                android:text="@string/maghrib"
+                android:textStyle="bold"
+                />
 
-            <!--Maghrib-->
-            <TableRow>
-                <CheckBox
-                    android:id="@+id/cb_maghrib"
-                    android:layout_width="@dimen/list_width_size"
-                    android:layout_height="@dimen/list_width_size" />
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tv_maghrib_time"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/loading"
+                android:gravity="end|center"
+                android:textStyle="bold"
+                android:layout_marginEnd="@dimen/small_margin"/>
+        </TableRow>
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="start|center"                    android:layout_marginStart="@dimen/smaller_margin"
-                    android:text="@string/maghrib"
-                    android:textStyle="bold"
-                    android:textColor="@color/colorWhite" />
+        <!--Isha-->
+        <TableRow>
+            <CheckBox
+                android:id="@+id/cb_isha"/>
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/tv_maghrib_time"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:text="@string/loading"
-                    android:gravity="end|center"
-                    android:textStyle="bold"
-                    android:textColor="@color/colorWhite"
-                    android:layout_marginEnd="@dimen/small_margin"/>
-            </TableRow>
+            <com.google.android.material.textview.MaterialTextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:gravity="start|center"                    android:layout_marginStart="@dimen/smaller_margin"
+                android:text="@string/isha"
+                android:textStyle="bold" />
 
-            <!--Isha-->
-            <TableRow>
-                <CheckBox
-                    android:id="@+id/cb_isha"
-                    android:layout_width="@dimen/list_width_size"
-                    android:layout_height="@dimen/list_width_size" />
+            <com.google.android.material.textview.MaterialTextView
+                android:id="@+id/tv_isha_time"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:text="@string/loading"
+                android:gravity="end|center"
+                android:textStyle="bold"
+                android:layout_marginEnd="@dimen/small_margin"/>
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="start|center"                    android:layout_marginStart="@dimen/smaller_margin"
-                    android:text="@string/isha"
-                    android:textStyle="bold"
-                    android:textColor="@color/colorWhite"/>
+        </TableRow>
 
-                <com.google.android.material.textview.MaterialTextView
-                    android:id="@+id/tv_isha_time"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:text="@string/loading"
-                    android:gravity="end|center"
-                    android:textStyle="bold"
-                    android:textColor="@color/colorWhite"
-                    android:layout_marginEnd="@dimen/small_margin"/>
+    </TableLayout>
 
-            </TableRow>
+</androidx.cardview.widget.CardView>
 
-        </TableLayout>
-
-    </androidx.cardview.widget.CardView>
-
-
-</LinearLayout>

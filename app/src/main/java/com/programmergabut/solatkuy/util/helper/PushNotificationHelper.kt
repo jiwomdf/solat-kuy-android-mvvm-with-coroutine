@@ -7,9 +7,8 @@ import android.content.ContextWrapper
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
-import com.programmergabut.solatkuy.data.local.localentity.NotifiedPrayer
 import com.programmergabut.solatkuy.broadcaster.PrayerBroadcastReceiver
-import com.programmergabut.solatkuy.util.enumclass.EnumConfig
+import com.programmergabut.solatkuy.data.local.localentity.NotifiedPrayer
 import java.util.*
 
 /*

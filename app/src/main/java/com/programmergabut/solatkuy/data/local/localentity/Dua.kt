@@ -1,7 +1,9 @@
 package com.programmergabut.solatkuy.data.local.localentity
 
-class Dua(val title: String,
+data class Dua(val id: Int,
+          val title: String,
           val arab: String,
           val latin: String,
           val english: String,
-          val indonesia: String)
+          val indonesia: String,
+          val reference: String)
