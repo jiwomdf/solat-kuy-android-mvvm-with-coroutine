@@ -16,7 +16,7 @@ import java.util.*
  * Created by Katili Jiwo Adi Wiyono on 29/03/20.
  */
 
-class MoreTimeBroadcastReceiver: BroadcastReceiver() {
+/* class MoreTimeBroadcastReceiver: BroadcastReceiver() {
 
     override fun onReceive(context: Context?, intent: Intent?) {
 
@@ -72,8 +72,10 @@ class MoreTimeBroadcastReceiver: BroadcastReceiver() {
                 notificationManager.cancel(EnumConfig.nId2)
             }
             else -> {
+
                 i.putExtra("prayer_id", EnumConfig.nId1)
                 reloadOriginalIntent(prayerID, originalPrayerName!!, originalPrayerTime!!, originalPrayerCity!!, originalListPrayerBundle!!, context)
+
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
                     alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, c.timeInMillis,
                         PendingIntent.getBroadcast(context, EnumConfig.nId1, i, 0)) //first more time pID = 100
@@ -118,4 +120,4 @@ class MoreTimeBroadcastReceiver: BroadcastReceiver() {
             alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.timeInMillis, pendingIntentReload)
     }
 
-}
+}*/

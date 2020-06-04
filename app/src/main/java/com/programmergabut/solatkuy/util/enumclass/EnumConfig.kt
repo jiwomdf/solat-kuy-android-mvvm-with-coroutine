@@ -7,6 +7,7 @@ package com.programmergabut.solatkuy.util.enumclass
 
 class EnumConfig {
     companion object{
+
         const val fajr = "Fajr"
         const val dhuhr = "Dhuhr"
         const val asr = "Asr"
@@ -16,15 +17,16 @@ class EnumConfig {
         const val imsak = "Imsak"
 
         /* Notification */
-        const val nIdMain = 400
-        const val nId1 = 100
-        const val nId2 = 200
+        const val nIdDua = 500 //main notification
+        const val nIdMain = 400 //main notification
+        //const val nId1 = 100 //first remind
+        //const val nId2 = 200 //second remind
 
         /* more time */
-        const val mTime = 10
+        //const val mTime = 10
 
         /* Prayer Method */
-        const val pMethod = "3"
+        //const val pMethod = "3"
 
         /* City not found */
         const val lCity = "City not found"

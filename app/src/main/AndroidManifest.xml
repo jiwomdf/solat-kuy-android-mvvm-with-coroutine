@@ -34,7 +34,6 @@
         <service android:name=".service.ServiceBootComplete" />
 
         <receiver android:name=".broadcaster.PrayerBroadcastReceiver" />
-        <receiver android:name=".broadcaster.MoreTimeBroadcastReceiver" />
         <receiver android:name=".broadcaster.BootCompleteReceiver">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />

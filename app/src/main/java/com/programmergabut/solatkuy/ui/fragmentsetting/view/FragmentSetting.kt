@@ -1,6 +1,7 @@
 package com.programmergabut.solatkuy.ui.fragmentsetting.view
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
@@ -68,6 +69,7 @@ class FragmentSetting : Fragment() {
     }
 
     /* Subscribe live data */
+    @SuppressLint("SetTextI18n")
     private fun subscribeObserversDB() {
         fragmentSettingViewModel.msApi1.observe(this, Observer {
 

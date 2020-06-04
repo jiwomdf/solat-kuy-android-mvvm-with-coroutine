@@ -1,5 +1,6 @@
 package com.programmergabut.solatkuy.ui.fragmentinfo.view
 
+import android.annotation.SuppressLint
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
@@ -79,6 +80,7 @@ class FragmentInfo : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         })
     }
 
+    @SuppressLint("SetTextI18n")
     private fun subscribeObserversAPI(){
 
         /* fragmentInfoViewModel.asmaAlHusnaApi.observe(this, Observer {

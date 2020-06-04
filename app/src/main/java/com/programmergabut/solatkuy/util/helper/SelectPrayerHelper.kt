@@ -48,7 +48,7 @@ class SelectPrayerHelper {
             return prayer
         }
 
-        fun selectNextPrayerToLocalPrayer(selList: MutableList<NotifiedPrayer>): NotifiedPrayer? {
+        /* fun selectNextPrayerToLocalPrayer(selList: MutableList<NotifiedPrayer>): NotifiedPrayer? {
 
             var prayer: Int = -1
 
@@ -128,9 +128,9 @@ class SelectPrayerHelper {
                 else -> null
             }
 
-        }
+        } */
 
-        fun selNextPrayerByLastID(listData: MutableList<NotifiedPrayer>, selID: Int): NotifiedPrayer? {
+        /* fun selNextPrayerByLastID(listData: MutableList<NotifiedPrayer>, selID: Int): NotifiedPrayer? {
 
             listData.sortBy { x -> x.prayerID }
 
@@ -143,7 +143,7 @@ class SelectPrayerHelper {
                 nextID = firstID
 
             return listData.find { x -> x.prayerID == nextID }
-        }
+        } */
     }
 
 }

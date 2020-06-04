@@ -11,8 +11,8 @@ android {
         applicationId "com.programmergabut.solatkuy"
         minSdkVersion 19
         targetSdkVersion 29
-        versionCode 15
-        versionName "1.5"
+        versionCode 16
+        versionName "2.0"
         multiDexEnabled true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"

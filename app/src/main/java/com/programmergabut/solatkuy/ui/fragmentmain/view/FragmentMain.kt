@@ -1,5 +1,6 @@
 package com.programmergabut.solatkuy.ui.fragmentmain.view
 
+import android.annotation.SuppressLint
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -373,6 +374,7 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         selectNextPrayerTime(selPrayer, data.timings)
     }
 
+    @SuppressLint("SetTextI18n")
     private fun bindWidgetLocation(it: MsApi1) {
         mCityName = LocationHelper.getCity(context!!, it.latitude.toDouble(), it.longitude.toDouble())
 
@@ -381,6 +383,7 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         tv_view_city.text = mCityName ?: EnumConfig.lCity
     }
 
+    @SuppressLint("SetTextI18n")
     private fun bindPrayerText(apiData: Data?) {
 
         if(apiData == null){

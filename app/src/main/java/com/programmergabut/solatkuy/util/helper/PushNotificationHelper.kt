@@ -9,6 +9,7 @@ import android.os.Build
 import android.os.Bundle
 import com.programmergabut.solatkuy.broadcaster.PrayerBroadcastReceiver
 import com.programmergabut.solatkuy.data.local.localentity.NotifiedPrayer
+import com.programmergabut.solatkuy.util.enumclass.EnumConfig
 import java.util.*
 
 /*
@@ -27,12 +28,14 @@ class PushNotificationHelper(context: Context, selList: MutableList<NotifiedPray
 
         val listPrayerBundle = bundleCreator(selList)
 
-        val idx = selList.size - 1
-        selList.sortBy { x -> x.prayerID }
-        selList.forEachIndexed { index, it ->
+        val newList = selList.filter { x -> x.prayerName !=  EnumConfig.sunrise} as MutableList<NotifiedPrayer>
 
-            if(index == idx)
-                return@forEachIndexed
+        newList.sortBy { x -> x.prayerID }
+        newList.forEachIndexed { _, it ->
+
+            /* #TESTING PURPOSE
+             if(it.prayerID != 1)
+                return@forEachIndexed*/
 
             val arrPrayer = it.prayerTime.split(":")
 
@@ -42,13 +45,16 @@ class PushNotificationHelper(context: Context, selList: MutableList<NotifiedPray
             val c = Calendar.getInstance()
             c.set(Calendar.HOUR_OF_DAY, hour.toInt())
             c.set(Calendar.MINUTE, minute.toInt())
+            /* #TESTING PURPOSE
+            c.set(Calendar.HOUR_OF_DAY, 21)
+            c.set(Calendar.MINUTE, 10)*/
             c.set(Calendar.SECOND, 0)
 
-            intent.putExtra("prayer_id", it.prayerID)
-            intent.putExtra("prayer_name", it.prayerName)
-            intent.putExtra("prayer_time", it.prayerTime)
-            intent.putExtra("prayer_city", mCityName)
-            intent.putExtra("list_prayer_bundle", listPrayerBundle)
+            intent.putExtra(PrayerBroadcastReceiver.prayer_id, it.prayerID)
+            intent.putExtra(PrayerBroadcastReceiver.prayer_name, it.prayerName)
+            intent.putExtra(PrayerBroadcastReceiver.prayer_time, it.prayerTime)
+            intent.putExtra(PrayerBroadcastReceiver.prayer_city, mCityName)
+            intent.putExtra(PrayerBroadcastReceiver.list_prayer_bundle, listPrayerBundle)
 
             val pendingIntent = PendingIntent.getBroadcast(context, it.prayerID, intent, 0)
 
@@ -64,7 +70,13 @@ class PushNotificationHelper(context: Context, selList: MutableList<NotifiedPray
                 alarmManager.cancel(pendingIntent)
         }
 
-        /* val selPrayer = SelectPrayerHelper.selectNextPrayerToLocalPrayer(selList)
+        /*
+        * Deprecated, 4 June 2020
+        * because change the notification mechanism to fire all the data
+        * then cancel all alarm manager it when notification come, then fire it all again
+        * also remove the more time feature
+
+        val selPrayer = SelectPrayerHelper.selectNextPrayerToLocalPrayer(selList)
         //val selPrayer = NotifiedPrayer(1,"Isha", true, "18:47") //#testing purpose
 
         selPrayer?.let{
@@ -98,10 +110,9 @@ class PushNotificationHelper(context: Context, selList: MutableList<NotifiedPray
             else
                 alarmManager.cancel(pendingIntent)
         } */
-
     }
 
-    private fun bundleCreator(selList: MutableList<NotifiedPrayer>): Bundle {
+   private fun bundleCreator(selList: MutableList<NotifiedPrayer>): Bundle {
 
         val listPID = arrayListOf<Int>()
         val listPName = arrayListOf<String>()

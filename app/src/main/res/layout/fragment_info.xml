@@ -85,6 +85,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="@dimen/medium_margin"
+                app:cardBackgroundColor="@color/colorDarkWhite"
                 android:layout_margin="@dimen/small_margin">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -248,6 +249,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="@dimen/medium_margin"
+                app:cardBackgroundColor="@color/colorDarkWhite"
                 android:layout_margin="@dimen/small_margin">
 
                 <LinearLayout

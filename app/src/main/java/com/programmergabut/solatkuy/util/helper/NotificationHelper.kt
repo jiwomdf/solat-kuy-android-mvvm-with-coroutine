@@ -6,7 +6,6 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.ContextWrapper
-import android.content.Intent
 import android.graphics.BitmapFactory
 import android.media.RingtoneManager
 import android.os.Build
@@ -15,7 +14,6 @@ import android.os.VibrationEffect
 import android.os.Vibrator
 import androidx.core.app.NotificationCompat
 import com.programmergabut.solatkuy.R
-import com.programmergabut.solatkuy.broadcaster.MoreTimeBroadcastReceiver
 import com.programmergabut.solatkuy.util.enumclass.EnumConfig
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -58,10 +56,17 @@ class NotificationHelper(c: Context): ContextWrapper(c) {
         return mManager
     }
 
-    fun getPrayerReminderNC(pID: Int, pTime: String, pCity: String, pName: String, listPrayerBundle: Bundle, intent: PendingIntent): NotificationCompat.Builder {
+    fun getPrayerReminderNC(/* pID: Int, */ pTime: String, pCity: String, pName: String,
+        /* listPrayerBundle: Bundle, */ intent: PendingIntent): NotificationCompat.Builder {
 
         val message = "now is $pTime in $pCity let's pray $pName"
 
+        /*
+        * Deprecated, 4 June 2020
+        * because change the notification mechanism to fire all the data
+        * then cancel all alarm manager it when notification come, then fire it all again
+        * also remove the more time feature
+        *
         val moreTimeIntent = Intent(this, MoreTimeBroadcastReceiver::class.java)
         moreTimeIntent.putExtra("moreTime_prayerID", pID)
         moreTimeIntent.putExtra("moreTime_prayerTime", pTime)
@@ -70,7 +75,7 @@ class NotificationHelper(c: Context): ContextWrapper(c) {
         moreTimeIntent.putExtra("moreTime_listPrayerBundle", listPrayerBundle)
 
         val actionIntent = PendingIntent.getBroadcast(this, 0, moreTimeIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT)
+            PendingIntent.FLAG_UPDATE_CURRENT) */
 
         val lIcon = when(pName){
             getString(R.string.fajr) -> R.drawable.fajr
@@ -102,7 +107,7 @@ class NotificationHelper(c: Context): ContextWrapper(c) {
                 .setColor(getColor(R.color.colorPrimary))
                 .setStyle(NotificationCompat.BigTextStyle().bigText(message))
                 .setAutoCancel(true)
-                .addAction(R.mipmap.ic_launcher, "remind me 10 more minute", actionIntent)
+                //.addAction(R.mipmap.ic_launcher, "remind me 10 more minute", actionIntent)
                 .setLargeIcon(bitmap)
                 .setSmallIcon(R.drawable.ic_notifications_active_24dp)
                 .setContentIntent(intent)
