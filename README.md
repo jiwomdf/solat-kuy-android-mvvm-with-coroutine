@@ -11,7 +11,7 @@ created with:
 - Retrofit 
 - Dagger 2
 - Material Design 
-- Testing with Mockito & Junit4
+- Testing with Mockito, espresso, & Junit4
 
 Feel free to see and contribute
 
