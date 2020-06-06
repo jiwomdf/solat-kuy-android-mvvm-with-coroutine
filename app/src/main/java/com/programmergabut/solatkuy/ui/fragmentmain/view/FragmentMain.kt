@@ -113,35 +113,38 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                     if(retVal.data == null)
                         throw Exception("notifiedPrayer return null")
 
-                    /* Bind Checkbox */
+                    /* Bind Checkbox*/
                     bindCheckBox(retVal.data)
 
-                    /* Update Alarm Manager */
+                    /* Update Alarm Manager*/
                     updateAlarmManager(retVal.data)
 
-                    /* Bind Widget */
+                    /* Bind Widget*/
                     val data = createData(retVal.data)
                     bindWidget(data)
+
                 }
                 EnumStatus.LOADING -> {
                     Toasty.info(context!!, "syncing data..", Toast.LENGTH_SHORT).show()
                     bindPrayerText(null)
                 }
                 EnumStatus.ERROR -> {
+                    Toasty.error(context!!,"FAILED", Toast.LENGTH_LONG).show()
                     if(retVal.data == null)
                         throw Exception("notifiedPrayer return null")
 
                     Toasty.warning(context!!, "using offline data", Toast.LENGTH_SHORT).show()
 
-                    /* Bind Checkbox */
+                    /* Bind Checkbox*/
                     bindCheckBox(retVal.data)
 
-                    /* Update Alarm Manager */
+                    /* Update Alarm Manager*/
                     updateAlarmManager(retVal.data)
 
-                    /* Bind Widget */
+                    /* Bind Widget*/
                     val data = createData(retVal.data)
                     bindWidget(data)
+
                 }
             }
         })
@@ -485,6 +488,7 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     /* Coroutine Timer */
+    @SuppressLint("SetTextI18n")
     private suspend fun coroutineTimer(hour: Int, minute: Int, second: Int){
         
         var tempHour = abs(hour)

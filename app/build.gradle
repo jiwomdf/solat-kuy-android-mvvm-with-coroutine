@@ -11,7 +11,7 @@ android {
         applicationId "com.programmergabut.solatkuy"
         minSdkVersion 19
         targetSdkVersion 29
-        versionCode 16
+        versionCode 28
         versionName "2.0"
         multiDexEnabled true
 
@@ -20,9 +20,9 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled true
-            shrinkResources true
-            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+            //minifyEnabled true
+            //shrinkResources true
+            //proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
 
@@ -92,7 +92,7 @@ dependencies {
     kapt 'com.google.dagger:dagger-compiler:2.27'
 
     //Multidex
-    implementation 'com.android.support:multidex:1.0.3'
+    implementation 'androidx.multidex:multidex:2.0.1'
 
     //espresso idling source
     implementation "androidx.test.espresso:espresso-idling-resource:3.2.0"

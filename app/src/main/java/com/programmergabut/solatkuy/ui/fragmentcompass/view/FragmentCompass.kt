@@ -1,5 +1,6 @@
 package com.programmergabut.solatkuy.ui.fragmentcompass.view
 
+import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Context.SENSOR_SERVICE
 import android.hardware.Sensor
@@ -68,6 +69,7 @@ class FragmentCompass : Fragment(), SensorEventListener, SwipeRefreshLayout.OnRe
     }
 
     /* Subscribe live data */
+    @SuppressLint("SetTextI18n")
     private fun subscribeObserversAPI() {
 
         fragmentCompassViewModel.compassApi.observe(this, Observer {retVal ->
@@ -75,7 +77,10 @@ class FragmentCompass : Fragment(), SensorEventListener, SwipeRefreshLayout.OnRe
             when(retVal.Status){
                 EnumStatus.SUCCESS -> {
                     retVal.data?.data.let {
-                        tv_qibla_dir.text = it?.direction.toString().substring(0,6).trim() + "°"
+                        tv_qibla_dir.text = if(it?.direction.toString().length > 6)
+                            it?.direction.toString().substring(0,6).trim() + "°"
+                        else
+                            it?.direction.toString()
                     }}
                 EnumStatus.LOADING -> {
                     tv_qibla_dir.text = getString(R.string.loading)
