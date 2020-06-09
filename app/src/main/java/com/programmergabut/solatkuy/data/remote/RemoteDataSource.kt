@@ -40,14 +40,14 @@ class RemoteDataSource(private val contextProviders: ContextProviders) {
 
         CoroutineScope(contextProviders.IO).launch{
             try {
-                result.postValue( Resource.success(
+                result.postValue(Resource.success(
                     RetrofitBuilder
                     .build<QiblaApiService>(strApi)
                     .fetchQibla(msApi1.latitude, msApi1.longitude))
                 )
             }
             catch (ex: Exception){
-                result.postValue( Resource.error(ex.message.toString(), null))
+                result.postValue(Resource.error(ex.message.toString(), null))
             }
         }
 
@@ -85,7 +85,7 @@ class RemoteDataSource(private val contextProviders: ContextProviders) {
                 )
             }
             catch (ex: Exception){
-                result.postValue( Resource.error(ex.message.toString(), null))
+                result.postValue(Resource.error(ex.message.toString(), null))
             }
         }
 
@@ -104,7 +104,7 @@ class RemoteDataSource(private val contextProviders: ContextProviders) {
                 )
             }
             catch (ex: Exception){
-                result.postValue( Resource.error(ex.message.toString(), null))
+                result.postValue(Resource.error(ex.message.toString(), null))
             }
         }
 

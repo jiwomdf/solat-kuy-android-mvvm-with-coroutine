@@ -35,15 +35,7 @@ class Repository(private val contextProviders: ContextProviders,
     }
 
     //Room
-
-    fun getMsApi1(): LiveData<MsApi1> {
-        val data = MediatorLiveData<MsApi1>()
-        data.addSource(localDataSource.getMsApi1()) {
-            if (it != null)
-                data.value = it
-        }
-        return data
-    }
+    fun getMsApi1() = localDataSource.getMsApi1()
 
     //fun getMsApi1() = localDataSource.getMsApi1()
     fun getMsSetting() = localDataSource.getMsSetting()

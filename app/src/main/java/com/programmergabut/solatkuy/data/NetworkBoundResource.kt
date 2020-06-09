@@ -46,8 +46,9 @@ constructor(private val contextProviders: ContextProviders) {
         val apiResponse = createCall()
 
         result.addSource(dbSource) { newData ->
-            setValue(Resource.loading(newData))
+            //setValue(Resource.loading(newData))
         }
+
         result.addSource(apiResponse) { response ->
             result.removeSource(apiResponse)
             result.removeSource(dbSource)
