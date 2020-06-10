@@ -1,12 +1,14 @@
 package com.programmergabut.solatkuy.data
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.MutableLiveData
 import com.programmergabut.solatkuy.data.local.LocalDataSource
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
 import com.programmergabut.solatkuy.data.local.localentity.NotifiedPrayer
-import com.programmergabut.solatkuy.data.remote.RemoteDataSource
+import com.programmergabut.solatkuy.data.remote.RemoteDataSourceAladhan
+import com.programmergabut.solatkuy.data.remote.RemoteDataSourceApiAlquran
 import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.PrayerApi
+import com.programmergabut.solatkuy.data.remote.remoteentity.quranallsurahJson.AllSurahApi
 import com.programmergabut.solatkuy.util.Resource
 import com.programmergabut.solatkuy.util.enumclass.EnumConfig
 import kotlinx.coroutines.GlobalScope
@@ -19,7 +21,8 @@ import java.util.*
  */
 
 class Repository(private val contextProviders: ContextProviders,
-                 private val remoteDataSource: RemoteDataSource,
+                 private val remoteDataSourceAladhan: RemoteDataSourceAladhan,
+                 private val remoteDataSourceApiAlquran: RemoteDataSourceApiAlquran,
                  private val localDataSource: LocalDataSource) {
 
     companion object{
@@ -27,10 +30,12 @@ class Repository(private val contextProviders: ContextProviders,
         private var instance: Repository? = null
 
         fun getInstance(contextProviders: ContextProviders,
-                        remoteDataSource: RemoteDataSource, localDataSource: LocalDataSource) =
+                        remoteDataSourceAladhan: RemoteDataSourceAladhan,
+                        remoteDataSourceApiAlquran: RemoteDataSourceApiAlquran,
+                        localDataSource: LocalDataSource) =
             instance ?: synchronized(this){
                 instance
-                    ?: Repository(contextProviders, remoteDataSource, localDataSource)
+                    ?: Repository(contextProviders, remoteDataSourceAladhan, remoteDataSourceApiAlquran, localDataSource)
             }
     }
 
@@ -47,13 +52,16 @@ class Repository(private val contextProviders: ContextProviders,
     //fun updateMsSetting(isHasOpen: Boolean) = localDataSource.updateMsSetting(isHasOpen)
 
     //Retrofit
-    fun fetchCompass(msApi1: MsApi1) = remoteDataSource.fetchCompassApi(msApi1)
+    fun fetchCompass(msApi1: MsApi1) = remoteDataSourceAladhan.fetchCompassApi(msApi1)
 
     //fun fetchAsmaAlHusna() = remoteDataSource.fetchAsmaAlHusnaApi()
 
-    fun fetchPrayerApi(msApi1: MsApi1) = remoteDataSource.fetchPrayerApi(msApi1)
+    fun fetchPrayerApi(msApi1: MsApi1) = remoteDataSourceAladhan.fetchPrayerApi(msApi1)
 
-    fun fetchQuranSurah(nInSurah: String) = remoteDataSource.fetchQuranSurah(nInSurah)
+    fun fetchQuranSurah(nInSurah: String) = remoteDataSourceApiAlquran.fetchQuranSurah(nInSurah)
+
+    fun fetchAllSurah() = remoteDataSourceApiAlquran.fetchAllSurah()
+
 
     fun syncNotifiedPrayer(msApi1: MsApi1): LiveData<Resource<List<NotifiedPrayer>>> {
 
@@ -62,7 +70,7 @@ class Repository(private val contextProviders: ContextProviders,
 
             override fun shouldFetch(data: List<NotifiedPrayer>?): Boolean = true
 
-            override fun createCall(): LiveData<Resource<PrayerApi>> = remoteDataSource.fetchPrayerApi(msApi1)
+            override fun createCall(): LiveData<Resource<PrayerApi>> = remoteDataSourceAladhan.fetchPrayerApi(msApi1)
 
             override fun saveCallResult(data: PrayerApi) {
 

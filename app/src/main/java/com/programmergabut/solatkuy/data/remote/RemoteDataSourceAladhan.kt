@@ -19,18 +19,18 @@ import kotlinx.coroutines.launch
  * Created by Katili Jiwo Adi Wiyono on 09/05/20.
  */
 
-class RemoteDataSource(private val contextProviders: ContextProviders) {
+class RemoteDataSourceAladhan(private val contextProviders: ContextProviders) {
 
     private val strApi = "https://api.aladhan.com/v1/"
 
     companion object{
         @Volatile
-        private var instance: RemoteDataSource? = null
+        private var instance: RemoteDataSourceAladhan? = null
 
         fun getInstance(contextProviders: ContextProviders) = instance
             ?: synchronized(this){
             instance
-                ?: RemoteDataSource(contextProviders)
+                ?: RemoteDataSourceAladhan(contextProviders)
         }
     }
 
@@ -91,25 +91,5 @@ class RemoteDataSource(private val contextProviders: ContextProviders) {
 
         return result
     }
-
-    fun fetchQuranSurah(nInSurah: String): MutableLiveData<Resource<QuranSurahApi>> {
-        val result = MutableLiveData<Resource<QuranSurahApi>>()
-
-        GlobalScope.launch(contextProviders.IO){
-            try {
-                result.postValue(Resource.success(
-                    RetrofitBuilder
-                    .build<QuranSurahService>(strApi)
-                    .fetchQuranSurah(nInSurah))
-                )
-            }
-            catch (ex: Exception){
-                result.postValue(Resource.error(ex.message.toString(), null))
-            }
-        }
-
-        return result
-    }
-
 
 }

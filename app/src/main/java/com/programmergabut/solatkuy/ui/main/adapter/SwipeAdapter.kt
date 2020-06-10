@@ -6,6 +6,7 @@ import androidx.fragment.app.FragmentPagerAdapter
 import com.programmergabut.solatkuy.ui.fragmentmain.view.FragmentMain
 import com.programmergabut.solatkuy.ui.fragmentcompass.view.FragmentCompass
 import com.programmergabut.solatkuy.ui.fragmentinfo.view.FragmentInfo
+import com.programmergabut.solatkuy.ui.fragmentquran.QuranFragment
 import com.programmergabut.solatkuy.ui.fragmentsetting.view.FragmentSetting
 
 /*
@@ -18,12 +19,13 @@ class SwipeAdapter(fm: FragmentManager): FragmentPagerAdapter(fm, BEHAVIOR_RESUM
         return when(position){
             0 -> FragmentMain()
             1 -> FragmentCompass()
-            2 -> FragmentInfo()
-            3-> FragmentSetting()
-            else -> error("Can't have more than 2 fragment on team detail")
+            2 -> QuranFragment()
+            3 -> FragmentInfo()
+            4 -> FragmentSetting()
+            else -> error("SwipeAdapter")
         }
     }
 
-    override fun getCount(): Int = 4
+    override fun getCount(): Int = 5
 
 }

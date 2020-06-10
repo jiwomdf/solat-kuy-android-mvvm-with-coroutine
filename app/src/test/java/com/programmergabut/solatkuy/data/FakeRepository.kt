@@ -5,30 +5,30 @@ import androidx.lifecycle.MediatorLiveData
 import com.programmergabut.solatkuy.data.local.LocalDataSource
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
 import com.programmergabut.solatkuy.data.local.localentity.NotifiedPrayer
-import com.programmergabut.solatkuy.data.remote.RemoteDataSource
+import com.programmergabut.solatkuy.data.remote.RemoteDataSourceAladhan
+import com.programmergabut.solatkuy.data.remote.RemoteDataSourceApiAlquran
 import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.PrayerApi
 import com.programmergabut.solatkuy.util.Resource
+import com.programmergabut.solatkuy.util.enumclass.EnumConfig
+import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.launch
+import java.text.SimpleDateFormat
+import java.util.*
 
 /*
  * Created by Katili Jiwo Adi Wiyono on 26/03/20.
  */
 
 class FakeRepository(private val contextProviders: ContextProviders,
-                 private val remoteDataSource: RemoteDataSource,
-                 private val localDataSource: LocalDataSource
+                     private val remoteDataSourceAladhan: RemoteDataSourceAladhan,
+                     private val remoteDataSourceApiAlquran: RemoteDataSourceApiAlquran,
+                     private val localDataSource: LocalDataSource
 ) {
 
     //Room
-    fun getMsApi1(): LiveData<MsApi1> {
-        val data = MediatorLiveData<MsApi1>()
-        data.addSource(localDataSource.getMsApi1()) {
-            if (it != null)
-                data.value = it
-        }
-        return data
-    }
+    fun getMsApi1() = localDataSource.getMsApi1()
 
-    //fun mMsApi1() = localDataSource.getMsApi1()
+    //fun getMsApi1() = localDataSource.getMsApi1()
     fun getMsSetting() = localDataSource.getMsSetting()
 
     //fun updateNotifiedPrayer(notifiedPrayer: NotifiedPrayer) = localDataSource.updateNotifiedPrayer(notifiedPrayer)
@@ -38,13 +38,16 @@ class FakeRepository(private val contextProviders: ContextProviders,
     //fun updateMsSetting(isHasOpen: Boolean) = localDataSource.updateMsSetting(isHasOpen)
 
     //Retrofit
-    fun fetchCompass(msApi1: MsApi1) = remoteDataSource.fetchCompassApi(msApi1)
+    fun fetchCompass(msApi1: MsApi1) = remoteDataSourceAladhan.fetchCompassApi(msApi1)
 
     //fun fetchAsmaAlHusna() = remoteDataSource.fetchAsmaAlHusnaApi()
 
-    fun fetchPrayerApi(msApi1: MsApi1) = remoteDataSource.fetchPrayerApi(msApi1)
+    fun fetchPrayerApi(msApi1: MsApi1) = remoteDataSourceAladhan.fetchPrayerApi(msApi1)
 
-    fun fetchQuranSurah(nInSurah: String) = remoteDataSource.fetchQuranSurah(nInSurah)
+    fun fetchQuranSurah(nInSurah: String) = remoteDataSourceApiAlquran.fetchQuranSurah(nInSurah)
+
+    fun fetchAllSurah() = remoteDataSourceApiAlquran.fetchAllSurah()
+
 
     fun syncNotifiedPrayer(msApi1: MsApi1): LiveData<Resource<List<NotifiedPrayer>>> {
 
@@ -53,14 +56,14 @@ class FakeRepository(private val contextProviders: ContextProviders,
 
             override fun shouldFetch(data: List<NotifiedPrayer>?): Boolean = true
 
-            override fun createCall(): LiveData<Resource<PrayerApi>> = remoteDataSource.fetchPrayerApi(msApi1)
+            override fun createCall(): LiveData<Resource<PrayerApi>> = remoteDataSourceAladhan.fetchPrayerApi(msApi1)
 
             override fun saveCallResult(data: PrayerApi) {
 
-                /*val sdf = SimpleDateFormat("dd", Locale.getDefault())
+                val sdf = SimpleDateFormat("dd", Locale.getDefault())
                 val currentDate = sdf.format(Date())
 
-                val timings = data.data.find { obj -> obj.date.gregorian.day == currentDate.toString() }?.timings
+                val timings = data.data.find { obj -> obj.date.gregorian?.day == currentDate.toString() }?.timings
 
                 val map = mutableMapOf<String, String>()
 
@@ -75,10 +78,11 @@ class FakeRepository(private val contextProviders: ContextProviders,
                     map.forEach { p ->
                         localDataSource.updatePrayerTime(p.key, p.value)
                     }
-                }*/
+                }
 
             }
         }.asLiveData()
     }
+
 
 }

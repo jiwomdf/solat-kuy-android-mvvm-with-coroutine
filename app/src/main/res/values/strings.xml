@@ -61,4 +61,7 @@
     <string name="notactivelocationicon">notActiveLocationIcon</string>
     <string name="solatkuyicon">solatKuyIcon</string>
     <string name="widgetwallpaper">widgetWallpaper</string>
+    <string name="holy_quran">Holy Quran</string>
+    <string name="hello_blank_fragment">Hello blank fragment</string>
+    <string name="search_surah_name">Search Surah Name</string>
 </resources>

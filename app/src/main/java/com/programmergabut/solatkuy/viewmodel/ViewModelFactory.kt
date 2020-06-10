@@ -8,6 +8,7 @@ import com.programmergabut.solatkuy.di.Injection
 import com.programmergabut.solatkuy.ui.fragmentcompass.viewmodel.FragmentCompassViewModel
 import com.programmergabut.solatkuy.ui.fragmentinfo.viewmodel.FragmentInfoViewModel
 import com.programmergabut.solatkuy.ui.fragmentmain.viewmodel.FragmentMainViewModel
+import com.programmergabut.solatkuy.ui.fragmentquran.QuranFragmentViewModel
 import com.programmergabut.solatkuy.ui.fragmentsetting.viewmodel.FragmentSettingViewModel
 import com.programmergabut.solatkuy.ui.main.viewmodel.MainActivityViewModel
 
@@ -31,6 +32,7 @@ class ViewModelFactory(private val application: Application, private val reposit
             modelClass.isAssignableFrom(FragmentSettingViewModel::class.java) -> FragmentSettingViewModel(application, repository) as T
             modelClass.isAssignableFrom(FragmentMainViewModel::class.java) -> FragmentMainViewModel(application, repository) as T
             modelClass.isAssignableFrom(FragmentCompassViewModel::class.java) -> FragmentCompassViewModel(application, repository) as T
+            modelClass.isAssignableFrom(QuranFragmentViewModel::class.java) -> QuranFragmentViewModel(application, repository) as T
             modelClass.isAssignableFrom(FragmentInfoViewModel::class.java) -> FragmentInfoViewModel(application, repository) as T
             else -> throw Throwable("Unknown ViewModel class: " + modelClass.name)
         }

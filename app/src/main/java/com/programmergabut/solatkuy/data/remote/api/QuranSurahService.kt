@@ -12,6 +12,6 @@ interface QuranSurahService {
 
     //http://api.alquran.cloud/v1/surah/110/en.asad
 
-    @GET("https://api.alquran.cloud/v1/surah/{nInSurah}/en.asad")
+    @GET("surah/{nInSurah}/en.asad")
     suspend fun fetchQuranSurah(@Path("nInSurah") nInSurah: String): QuranSurahApi
 }

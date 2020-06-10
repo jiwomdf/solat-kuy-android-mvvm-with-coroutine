@@ -103,7 +103,6 @@ class FragmentInfo : Fragment(), SwipeRefreshLayout.OnRefreshListener {
             }
         }) */
 
-
         fragmentInfoViewModel.prayerApi.observe(this, Observer {
 
             when(it.Status){

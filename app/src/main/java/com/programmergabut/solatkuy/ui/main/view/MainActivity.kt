@@ -110,10 +110,11 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
             override fun onPageSelected(position: Int) {
                 when(position){
                     0 -> bottom_navigation.menu.findItem(R.id.i_prayer_time).isChecked  = true
-                    1 -> bottom_navigation.menu.findItem(R.id.i_prayer_time2).isChecked = true
-                    2 -> bottom_navigation.menu.findItem(R.id.i_prayer_time3).isChecked = true
-                    3 -> bottom_navigation.menu.findItem(R.id.i_prayer_time4).isChecked = true
-                    else -> bottom_navigation.menu.findItem(R.id.i_prayer_time4).isChecked = true
+                    1 -> bottom_navigation.menu.findItem(R.id.i_compass).isChecked = true
+                    2 -> bottom_navigation.menu.findItem(R.id.i_quran).isChecked = true
+                    3 -> bottom_navigation.menu.findItem(R.id.i_info).isChecked = true
+                    4 -> bottom_navigation.menu.findItem(R.id.i_setting).isChecked = true
+                    else -> error("MainActivity")
                 }
             }
 
@@ -338,9 +339,9 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
     override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when(item.itemId) {
             R.id.i_prayer_time -> vp2_main.currentItem = 0
-            R.id.i_prayer_time2 -> vp2_main.currentItem = 1
-            R.id.i_prayer_time3 -> vp2_main.currentItem = 2
-            R.id.i_prayer_time4 -> vp2_main.currentItem = 3
+            R.id.i_compass -> vp2_main.currentItem = 1
+            R.id.i_info -> vp2_main.currentItem = 2
+            R.id.i_setting -> vp2_main.currentItem = 3
         }
         return true
     }

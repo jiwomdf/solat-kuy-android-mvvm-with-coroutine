@@ -4,7 +4,8 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import com.programmergabut.solatkuy.data.local.LocalDataSource
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
-import com.programmergabut.solatkuy.data.remote.RemoteDataSource
+import com.programmergabut.solatkuy.data.remote.RemoteDataSourceAladhan
+import com.programmergabut.solatkuy.data.remote.RemoteDataSourceApiAlquran
 import com.programmergabut.solatkuy.data.remote.remoteentity.compassJson.CompassApi
 import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.PrayerApi
 import com.programmergabut.solatkuy.data.remote.remoteentity.quransurahJson.QuranSurahApi
@@ -20,10 +21,11 @@ class RepositoryTest{
     @get:Rule
     var instantTaskExecutorRule = InstantTaskExecutorRule()
 
-    private val remote = mock(RemoteDataSource::class.java)
+    private val remoteDataSourceApiAlquran = mock(RemoteDataSourceApiAlquran::class.java)
+    private val remoteDataSourceAladhan = mock(RemoteDataSourceAladhan::class.java)
     private val local = mock(LocalDataSource::class.java)
     private val contextProviders = mock(ContextProviders::class.java)
-    private val repository = FakeRepository(contextProviders, remote, local)
+    private val repository = FakeRepository(contextProviders, remoteDataSourceAladhan, remoteDataSourceApiAlquran, local)
 
     private val msApi1 = MsApi1(0, "", "", "","","")
 
@@ -36,8 +38,8 @@ class RepositoryTest{
         val prayerApi = MutableLiveData<Resource<PrayerApi>>()
         prayerApi.value = dummyPrayerApi
 
-        Mockito.`when`(remote.fetchPrayerApi(msApi1)).thenReturn(prayerApi)
-        Mockito.verify(remote).fetchPrayerApi(msApi1)
+        Mockito.`when`(remoteDataSourceAladhan.fetchPrayerApi(msApi1)).thenReturn(prayerApi)
+        Mockito.verify(remoteDataSourceAladhan).fetchPrayerApi(msApi1)
 
         assertNotNull(prayerApi.value)
     }
@@ -50,8 +52,8 @@ class RepositoryTest{
         val compassApi = MutableLiveData<Resource<CompassApi>>()
         compassApi.value = dummyCompassApi
 
-        Mockito.`when`(remote.fetchCompassApi(msApi1)).thenReturn(compassApi)
-        Mockito.verify(remote).fetchCompassApi(msApi1)
+        Mockito.`when`(remoteDataSourceAladhan.fetchCompassApi(msApi1)).thenReturn(compassApi)
+        Mockito.verify(remoteDataSourceAladhan).fetchCompassApi(msApi1)
 
         assertNotNull(compassApi.value)
     }
@@ -78,8 +80,8 @@ class RepositoryTest{
         val quranSurahApi = MutableLiveData<Resource<QuranSurahApi>>()
         quranSurahApi.value = dummyQuranSurah
 
-        Mockito.`when`(remote.fetchQuranSurah("1")).thenReturn(quranSurahApi)
-        Mockito.verify(remote).fetchQuranSurah("1")
+        Mockito.`when`(remoteDataSourceApiAlquran.fetchQuranSurah("1")).thenReturn(quranSurahApi)
+        Mockito.verify(remoteDataSourceApiAlquran).fetchQuranSurah("1")
 
         assertNotNull(quranSurahApi.value)
     }
