@@ -9,4 +9,5 @@
     <color name="colorGrey">#bebebe</color>
     <color name="colorDarkGrey">#616161</color>
     <color name="colorBlack">#000</color>
+    <color name="halfTransparentBackground">#aacccccc</color>
 </resources>

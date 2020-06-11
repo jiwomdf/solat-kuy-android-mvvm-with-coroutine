@@ -1,4 +1,4 @@
-package com.programmergabut.solatkuy.data.remote.remoteentity.quransurahJson
+package com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonEn
 
 
 import com.google.gson.annotations.SerializedName

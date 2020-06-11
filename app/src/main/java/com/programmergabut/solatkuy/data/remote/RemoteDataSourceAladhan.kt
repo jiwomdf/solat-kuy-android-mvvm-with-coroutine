@@ -6,10 +6,8 @@ import com.programmergabut.solatkuy.data.ContextProviders
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
 import com.programmergabut.solatkuy.data.remote.api.CalendarApiService
 import com.programmergabut.solatkuy.data.remote.api.QiblaApiService
-import com.programmergabut.solatkuy.data.remote.api.QuranSurahService
 import com.programmergabut.solatkuy.data.remote.remoteentity.compassJson.CompassApi
 import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.PrayerApi
-import com.programmergabut.solatkuy.data.remote.remoteentity.quransurahJson.QuranSurahApi
 import com.programmergabut.solatkuy.util.Resource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.GlobalScope

@@ -1,9 +1,9 @@
-package com.programmergabut.solatkuy.data.remote.remoteentity.quransurahJson
+package com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonEn
 
 
 import com.google.gson.annotations.SerializedName
 
-data class QuranSurahApi(
+data class ReadSurahEnApi(
     @SerializedName("code")
     val code: Int,
     @SerializedName("data")

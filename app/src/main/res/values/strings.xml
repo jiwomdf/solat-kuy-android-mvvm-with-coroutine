@@ -6,9 +6,7 @@
     <string name="asr">Asr</string>
     <string name="maghrib">Maghrib</string>
     <string name="isha">Isha</string>
-
     <string name="prayer_name">Prayer Name</string>
-
     <string name="prayer_time">Prayer Time</string>
     <string name="compass">Compass</string>
     <string name="setting">Setting</string>
@@ -64,4 +62,6 @@
     <string name="holy_quran">Holy Quran</string>
     <string name="hello_blank_fragment">Hello blank fragment</string>
     <string name="search_surah_name">Search Surah Name</string>
+    <string name="favotite_ayah">favotite_ayah</string>
+    <string name="please_wait_for_a_while">Please wait for a while..</string>
 </resources>

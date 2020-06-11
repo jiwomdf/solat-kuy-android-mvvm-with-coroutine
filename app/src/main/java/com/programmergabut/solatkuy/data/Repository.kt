@@ -1,14 +1,12 @@
 package com.programmergabut.solatkuy.data
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
 import com.programmergabut.solatkuy.data.local.LocalDataSource
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
 import com.programmergabut.solatkuy.data.local.localentity.NotifiedPrayer
 import com.programmergabut.solatkuy.data.remote.RemoteDataSourceAladhan
 import com.programmergabut.solatkuy.data.remote.RemoteDataSourceApiAlquran
 import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.PrayerApi
-import com.programmergabut.solatkuy.data.remote.remoteentity.quranallsurahJson.AllSurahApi
 import com.programmergabut.solatkuy.util.Resource
 import com.programmergabut.solatkuy.util.enumclass.EnumConfig
 import kotlinx.coroutines.GlobalScope
@@ -47,9 +45,9 @@ class Repository(private val contextProviders: ContextProviders,
 
     //fun updateNotifiedPrayer(notifiedPrayer: NotifiedPrayer) = localDataSource.updateNotifiedPrayer(notifiedPrayer)
     //fun updatePrayerTime(prayerName: String, prayerTime: String) = localDataSource.updatePrayerTime(prayerName, prayerTime)
+    //fun updateMsSetting(isHasOpen: Boolean) = localDataSource.updateMsSetting(isHasOpen)
     fun updatePrayerIsNotified(prayerName: String, isNotified: Boolean) = localDataSource.updatePrayerIsNotified(prayerName, isNotified)
     fun updateMsApi1(msApi1: MsApi1) = localDataSource.updateMsApi1(msApi1)
-    //fun updateMsSetting(isHasOpen: Boolean) = localDataSource.updateMsSetting(isHasOpen)
 
     //Retrofit
     fun fetchCompass(msApi1: MsApi1) = remoteDataSourceAladhan.fetchCompassApi(msApi1)
@@ -58,10 +56,11 @@ class Repository(private val contextProviders: ContextProviders,
 
     fun fetchPrayerApi(msApi1: MsApi1) = remoteDataSourceAladhan.fetchPrayerApi(msApi1)
 
-    fun fetchQuranSurah(nInSurah: String) = remoteDataSourceApiAlquran.fetchQuranSurah(nInSurah)
+    fun fetchReadSurahEn(surahID: String) = remoteDataSourceApiAlquran.fetchReadSurahEn(surahID)
 
     fun fetchAllSurah() = remoteDataSourceApiAlquran.fetchAllSurah()
 
+    fun fetchReadSurahAr(surahID: String)= remoteDataSourceApiAlquran.fetchReadSurahAr(surahID)
 
     fun syncNotifiedPrayer(msApi1: MsApi1): LiveData<Resource<List<NotifiedPrayer>>> {
 

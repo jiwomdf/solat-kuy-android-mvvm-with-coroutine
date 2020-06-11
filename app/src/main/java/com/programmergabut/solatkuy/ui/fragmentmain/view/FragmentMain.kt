@@ -20,7 +20,7 @@ import com.programmergabut.solatkuy.data.local.localentity.MsApi1
 import com.programmergabut.solatkuy.data.local.localentity.NotifiedPrayer
 import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.Data
 import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.Timings
-import com.programmergabut.solatkuy.data.remote.remoteentity.quransurahJson.QuranSurahApi
+import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonEn.ReadSurahEnApi
 import com.programmergabut.solatkuy.di.component.DaggerIDataComponent
 import com.programmergabut.solatkuy.di.component.DaggerITimingsComponent
 import com.programmergabut.solatkuy.di.module.DataModule
@@ -129,7 +129,6 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                     bindPrayerText(null)
                 }
                 EnumStatus.ERROR -> {
-                    Toasty.error(context!!,"FAILED", Toast.LENGTH_LONG).show()
                     if(retVal.data == null)
                         throw Exception("notifiedPrayer return null")
 
@@ -150,7 +149,7 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         })
 
 
-        fragmentMainViewModel.quranSurah.observe(this, androidx.lifecycle.Observer {retVal ->
+        fragmentMainViewModel.readSurahEn.observe(this, androidx.lifecycle.Observer { retVal ->
             when(retVal.Status){
                 EnumStatus.SUCCESS -> {
                     if(retVal.data == null)
@@ -224,7 +223,7 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     private fun fetchQuranSurah(){
-        fragmentMainViewModel.quranSurah.postValue(Resource.loading(null))
+        fragmentMainViewModel.readSurahEn.postValue(Resource.loading(null))
 
         val randSurah = (1..114).random()
 
@@ -478,7 +477,7 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         tv_quran_ayah_quote.text = ayah
     }
 
-    private fun bindQuranSurahOnline(retVal: Resource<QuranSurahApi>) {
+    private fun bindQuranSurahOnline(retVal: Resource<ReadSurahEnApi>) {
         val returnValue = retVal.data?.data!!
         val randAyah = (returnValue.ayahs.indices).random()
         val ayah = returnValue.ayahs[randAyah].text + " - QS " + returnValue.englishName + " Ayah " + returnValue.numberOfAyahs

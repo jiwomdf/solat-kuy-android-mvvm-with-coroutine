@@ -7,7 +7,7 @@ import androidx.lifecycle.Transformations
 import com.programmergabut.solatkuy.data.Repository
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
 import com.programmergabut.solatkuy.data.local.localentity.NotifiedPrayer
-import com.programmergabut.solatkuy.data.remote.remoteentity.quransurahJson.QuranSurahApi
+import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonEn.ReadSurahEnApi
 import com.programmergabut.solatkuy.util.Resource
 
 /*
@@ -21,9 +21,9 @@ class FragmentMainViewModel(application: Application, private val repository: Re
 
     val msApi1Local = repository.getMsApi1()
 
-    var quranSurah : MutableLiveData<Resource<QuranSurahApi>> = Transformations.switchMap(quranSurahID){
-        repository.fetchQuranSurah(quranSurahID.value!!)
-    } as MutableLiveData<Resource<QuranSurahApi>>
+    var readSurahEn : MutableLiveData<Resource<ReadSurahEnApi>> = Transformations.switchMap(quranSurahID){
+        repository.fetchReadSurahEn(quranSurahID.value!!)
+    } as MutableLiveData<Resource<ReadSurahEnApi>>
 
     val notifiedPrayer : MutableLiveData<Resource<List<NotifiedPrayer>>> = Transformations.switchMap(msApi1Param){
         repository.syncNotifiedPrayer(it)

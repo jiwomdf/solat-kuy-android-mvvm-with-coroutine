@@ -9,9 +9,9 @@ import com.programmergabut.solatkuy.data.remote.remoteentity.compassJson.Compass
 import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.Date
 import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.PrayerApi
 import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.Timings
-import com.programmergabut.solatkuy.data.remote.remoteentity.quransurahJson.Ayah
-import com.programmergabut.solatkuy.data.remote.remoteentity.quransurahJson.Edition
-import com.programmergabut.solatkuy.data.remote.remoteentity.quransurahJson.QuranSurahApi
+import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonEn.Ayah
+import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonEn.Edition
+import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonEn.ReadSurahEnApi
 import com.programmergabut.solatkuy.util.enumclass.EnumConfig
 
 object DummyData {
@@ -75,11 +75,11 @@ object DummyData {
         return AsmaAlHusnaApi(0, list, "testing")
     }
 
-    fun fetchSurahApi(): QuranSurahApi{
+    fun fetchSurahApi(): ReadSurahEnApi{
         val listAyah = mutableListOf<Ayah>()
         listAyah.add(Ayah(0,0,0,0,0,0,0,false,"test"))
-        return QuranSurahApi(0,
-            com.programmergabut.solatkuy.data.remote.remoteentity.quransurahJson.Data(listAyah,
+        return ReadSurahEnApi(0,
+            com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonEn.Data(listAyah,
                 Edition("","","","","","",""),
                 "", "", "", 0,0, ""
             )

@@ -8,7 +8,7 @@ import com.programmergabut.solatkuy.data.remote.RemoteDataSourceAladhan
 import com.programmergabut.solatkuy.data.remote.RemoteDataSourceApiAlquran
 import com.programmergabut.solatkuy.data.remote.remoteentity.compassJson.CompassApi
 import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.PrayerApi
-import com.programmergabut.solatkuy.data.remote.remoteentity.quransurahJson.QuranSurahApi
+import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonEn.ReadSurahEnApi
 import com.programmergabut.solatkuy.util.Resource
 import com.programmergabut.solatkuy.util.generator.DummyData
 import junit.framework.Assert.assertNotNull
@@ -77,11 +77,11 @@ class RepositoryTest{
         repository.fetchQuranSurah("1")
 
         val dummyQuranSurah = Resource.success(DummyData.fetchSurahApi())
-        val quranSurahApi = MutableLiveData<Resource<QuranSurahApi>>()
+        val quranSurahApi = MutableLiveData<Resource<ReadSurahEnApi>>()
         quranSurahApi.value = dummyQuranSurah
 
-        Mockito.`when`(remoteDataSourceApiAlquran.fetchQuranSurah("1")).thenReturn(quranSurahApi)
-        Mockito.verify(remoteDataSourceApiAlquran).fetchQuranSurah("1")
+        Mockito.`when`(remoteDataSourceApiAlquran.fetchReadSurahEn("1")).thenReturn(quranSurahApi)
+        Mockito.verify(remoteDataSourceApiAlquran).fetchReadSurahEn("1")
 
         assertNotNull(quranSurahApi.value)
     }

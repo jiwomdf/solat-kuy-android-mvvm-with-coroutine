@@ -5,6 +5,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.programmergabut.solatkuy.data.Repository
 import com.programmergabut.solatkuy.di.Injection
+import com.programmergabut.solatkuy.ui.activityreadsurah.ReadSurahViewModel
 import com.programmergabut.solatkuy.ui.fragmentcompass.viewmodel.FragmentCompassViewModel
 import com.programmergabut.solatkuy.ui.fragmentinfo.viewmodel.FragmentInfoViewModel
 import com.programmergabut.solatkuy.ui.fragmentmain.viewmodel.FragmentMainViewModel
@@ -34,6 +35,7 @@ class ViewModelFactory(private val application: Application, private val reposit
             modelClass.isAssignableFrom(FragmentCompassViewModel::class.java) -> FragmentCompassViewModel(application, repository) as T
             modelClass.isAssignableFrom(QuranFragmentViewModel::class.java) -> QuranFragmentViewModel(application, repository) as T
             modelClass.isAssignableFrom(FragmentInfoViewModel::class.java) -> FragmentInfoViewModel(application, repository) as T
+            modelClass.isAssignableFrom(ReadSurahViewModel::class.java) -> ReadSurahViewModel(application, repository) as T
             else -> throw Throwable("Unknown ViewModel class: " + modelClass.name)
         }
 

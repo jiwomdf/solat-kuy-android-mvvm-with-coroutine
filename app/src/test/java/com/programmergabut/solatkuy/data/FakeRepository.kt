@@ -1,7 +1,6 @@
 package com.programmergabut.solatkuy.data
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
 import com.programmergabut.solatkuy.data.local.LocalDataSource
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
 import com.programmergabut.solatkuy.data.local.localentity.NotifiedPrayer
@@ -44,7 +43,7 @@ class FakeRepository(private val contextProviders: ContextProviders,
 
     fun fetchPrayerApi(msApi1: MsApi1) = remoteDataSourceAladhan.fetchPrayerApi(msApi1)
 
-    fun fetchQuranSurah(nInSurah: String) = remoteDataSourceApiAlquran.fetchQuranSurah(nInSurah)
+    fun fetchQuranSurah(nInSurah: String) = remoteDataSourceApiAlquran.fetchReadSurahEn(nInSurah)
 
     fun fetchAllSurah() = remoteDataSourceApiAlquran.fetchAllSurah()
 
