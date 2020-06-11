@@ -3,14 +3,14 @@ package com.programmergabut.solatkuy.ui.activityreadsurah
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
+import android.widget.Toast
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.programmergabut.solatkuy.R
-import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonAr.Ayah
-import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonAr.ReadSurahArApi
 import com.programmergabut.solatkuy.util.enumclass.EnumStatus
 import com.programmergabut.solatkuy.viewmodel.ViewModelFactory
+import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.activity_read_surah.*
 
 class ReadSurahActivity : AppCompatActivity() {
@@ -26,13 +26,13 @@ class ReadSurahActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_read_surah)
 
-        val selSurahId = intent.getStringExtra(surahID)
+        val selSurahId = intent.getStringExtra(surahID) ?: throw Exception(Thread.currentThread().stackTrace[1].methodName)
 
         readSurahViewModel = ViewModelProvider(this, ViewModelFactory.getInstance(
             this.application))[ReadSurahViewModel::class.java]
 
         initRVReadSurah()
-        selSurahId?.let { observeApi(selSurahId) }
+        observeApi(selSurahId)
 
     }
 
@@ -44,16 +44,29 @@ class ReadSurahActivity : AppCompatActivity() {
                 EnumStatus.SUCCESS -> {
 
                     if(it.data == null)
-                        throw Exception("recyler view READ SURAH ACTIVITY")
+                        throw Exception(Thread.currentThread().stackTrace[1].methodName)
 
-                    readSurahAdapter.setAyah(it.data.data.ayahs)
+                    val data = it.data.data
+
+                    readSurahAdapter.setAyah(data.ayahs)
                     readSurahAdapter.notifyDataSetChanged()
+
+                    ab_readQuran.visibility = View.VISIBLE
+                    tb_readQuran_title.title = data.englishName
+                    tb_readQuran_title.subtitle = data.revelationType + " - " + data.numberOfAyahs + " Ayahs"
 
                     cc_readQuran_loading.animate().alpha(0.5f)
                     cc_readQuran_loading.visibility = View.GONE
+
+                    Toasty.info(this, "Press twice on an ayah to save your last read", Toast.LENGTH_LONG).show()
                 }
-                EnumStatus.LOADING -> cc_readQuran_loading.visibility = View.VISIBLE
+                EnumStatus.LOADING -> {
+                    ab_readQuran.visibility = View.INVISIBLE
+                    cc_readQuran_loading.visibility = View.VISIBLE
+                    tb_readQuran_title.title = ""
+                }
                 EnumStatus.ERROR -> {
+                    ab_readQuran.visibility = View.INVISIBLE
                     lottieAnimationView.cancelAnimation()
                     tv_readQuran_loading.text = getString(R.string.fetch_failed)
                 }

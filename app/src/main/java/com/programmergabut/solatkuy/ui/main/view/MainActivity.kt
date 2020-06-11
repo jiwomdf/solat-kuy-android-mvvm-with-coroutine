@@ -35,7 +35,6 @@ import com.programmergabut.solatkuy.ui.main.viewmodel.MainActivityViewModel
 import com.programmergabut.solatkuy.viewmodel.ViewModelFactory
 import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.layout_bottom_navigation_bar.*
 import kotlinx.android.synthetic.main.layout_bottomsheet_bygps.view.*
 import kotlinx.android.synthetic.main.layout_bottomsheet_bylatitudelongitude.view.*
 import kotlinx.coroutines.Dispatchers
@@ -340,8 +339,9 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         when(item.itemId) {
             R.id.i_prayer_time -> vp2_main.currentItem = 0
             R.id.i_compass -> vp2_main.currentItem = 1
-            R.id.i_info -> vp2_main.currentItem = 2
-            R.id.i_setting -> vp2_main.currentItem = 3
+            R.id.i_quran -> vp2_main.currentItem = 2
+            R.id.i_info -> vp2_main.currentItem = 3
+            R.id.i_setting -> vp2_main.currentItem = 4
         }
         return true
     }

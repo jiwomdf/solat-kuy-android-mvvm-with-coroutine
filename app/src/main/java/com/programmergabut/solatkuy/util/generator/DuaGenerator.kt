@@ -33,7 +33,7 @@ class DuaGenerator {
                         "Kursi Allah meliputi langit dan bumi. Dan Allah tidak merasa berat memelihara keduanya, dan Allah Maha tinggi lagi maha besar.",
                 "https://www.quran411.com/ayatul-kursi \nhttps://qazwa.id/blog/ayat-kursi/"))
 
-            listDua.add(Dua(4,"Yasin","بِسْمِ اللهِ الرَّحْمٰنِ الرَّحِيمِ\n \n" +
+            /* listDua.add(Dua(4,"Yasin","بِسْمِ اللهِ الرَّحْمٰنِ الرَّحِيمِ\n \n" +
                     "يسٓ :١\n \n" +
                     "وَالْقُرْءَانِ الْحَكِيمِ :٢\n \n" +
                     "إِنَّكَ لَمِنَ الْمُرْسَلِينَ :٣\n \n" +
@@ -117,7 +117,7 @@ class DuaGenerator {
                     "أَوَلَيْسَ الَّذِى خَلَقَ السَّمٰوٰتِ وَالْأَرْضَ بِقٰدِرٍ عَلَىٰٓ أَن يَخْلُقَ مِثْلَهُم ۚ بَلَىٰ وَهُوَ الْخَلّٰقُ الْعَلِيمُ :٨١\n \n" +
                     "إِنَّمَآ أَمْرُهُۥٓ إِذَآ أَرَادَ شَيْـًٔا أَن يَقُولَ لَهُۥ كُن فَيَكُونُ :٨٢\n \n" +
                     "فَسُبْحٰنَ الَّذِى بِيَدِهِۦ مَلَكُوتُ كُلِّ شَىْءٍ وَإِلَيْهِ تُرْجَعُونَ :٨٣\n \n","-","-","-",
-                "referensi https://ayatalquran.net/2014/11/surah-yaa-siin-%d9%8a%d8%b3-tulisan-arab/"))
+                "referensi https://ayatalquran.net/2014/11/surah-yaa-siin-%d9%8a%d8%b3-tulisan-arab/")) */
 
             return listDua
         }
