@@ -9,7 +9,7 @@ android {
 
     defaultConfig {
         applicationId "com.programmergabut.solatkuy"
-        minSdkVersion 19
+        minSdkVersion 21
         targetSdkVersion 29
         versionCode 30
         versionName "2.0"

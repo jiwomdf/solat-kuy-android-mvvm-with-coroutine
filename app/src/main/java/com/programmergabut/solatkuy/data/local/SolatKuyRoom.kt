@@ -6,9 +6,11 @@ import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.programmergabut.solatkuy.data.ContextProviders
 import com.programmergabut.solatkuy.data.local.dao.MsApi1Dao
+import com.programmergabut.solatkuy.data.local.dao.MsFavAyahDao
 import com.programmergabut.solatkuy.data.local.dao.MsSettingDao
 import com.programmergabut.solatkuy.data.local.dao.NotifiedPrayerDao
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
+import com.programmergabut.solatkuy.data.local.localentity.MsFavAyah
 import com.programmergabut.solatkuy.data.local.localentity.MsSetting
 import com.programmergabut.solatkuy.data.local.localentity.NotifiedPrayer
 import com.programmergabut.solatkuy.util.enumclass.EnumConfig
@@ -19,12 +21,13 @@ import kotlinx.coroutines.launch
  * Created by Katili Jiwo Adi Wiyono on 25/03/20.
  */
 
-@Database(version = 5, entities = [NotifiedPrayer::class, MsApi1::class, MsSetting::class])
+@Database(version = 8, entities = [NotifiedPrayer::class, MsApi1::class, MsSetting::class, MsFavAyah::class])
 abstract class SolatKuyRoom: RoomDatabase() {
 
     abstract fun notifiedPrayerDao(): NotifiedPrayerDao
     abstract fun msApi1Dao(): MsApi1Dao
     abstract fun msSettingDao(): MsSettingDao
+    abstract fun msFavAyahDao(): MsFavAyahDao
 
 
     companion object{
@@ -41,7 +44,7 @@ abstract class SolatKuyRoom: RoomDatabase() {
 
             synchronized(this) {
                 val instance = Room.databaseBuilder(context.applicationContext, SolatKuyRoom::class.java, dbName)
-                    //.fallbackToDestructiveMigration()
+                    .fallbackToDestructiveMigration()
                     .build()
 
                 INSTANCE = instance

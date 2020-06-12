@@ -31,7 +31,7 @@ class ReadSurahActivity : AppCompatActivity() {
         readSurahViewModel = ViewModelProvider(this, ViewModelFactory.getInstance(
             this.application))[ReadSurahViewModel::class.java]
 
-        initRVReadSurah()
+        initRVReadSurah(selSurahId)
         observeApi(selSurahId)
 
     }
@@ -48,17 +48,30 @@ class ReadSurahActivity : AppCompatActivity() {
 
                     val data = it.data.data
 
-                    readSurahAdapter.setAyah(data.ayahs)
-                    readSurahAdapter.notifyDataSetChanged()
+                    readSurahViewModel.msFavAyahByID.observe(this, Observer { ayahs ->
 
-                    ab_readQuran.visibility = View.VISIBLE
-                    tb_readQuran_title.title = data.englishName
-                    tb_readQuran_title.subtitle = data.revelationType + " - " + data.numberOfAyahs + " Ayahs"
+                        data.ayahs.forEach {remoteAyah ->
+                            ayahs.forEach{ ayah ->
+                                if(remoteAyah.numberInSurah == ayah.ayahID)
+                                    remoteAyah.isFav = true
 
-                    cc_readQuran_loading.animate().alpha(0.5f)
-                    cc_readQuran_loading.visibility = View.GONE
+                            }
+                        }
 
-                    Toasty.info(this, "Press twice on an ayah to save your last read", Toast.LENGTH_LONG).show()
+                        readSurahAdapter.setAyah(data.ayahs)
+                        readSurahAdapter.notifyDataSetChanged()
+
+                        ab_readQuran.visibility = View.VISIBLE
+                        tb_readQuran_title.title = data.englishName
+                        tb_readQuran_title.subtitle = data.revelationType + " - " + data.numberOfAyahs + " Ayahs"
+
+                        cc_readQuran_loading.animate().alpha(0.5f)
+                        cc_readQuran_loading.visibility = View.GONE
+
+                        Toasty.info(this, "Press twice on an ayah to save your last read", Toast.LENGTH_LONG).show()
+
+                    })
+
                 }
                 EnumStatus.LOADING -> {
                     ab_readQuran.visibility = View.INVISIBLE
@@ -73,11 +86,11 @@ class ReadSurahActivity : AppCompatActivity() {
             }
         })
 
-        readSurahViewModel.fetchQuranSurah(selSurahId)
+        readSurahViewModel.fetchQuranSurah(selSurahId.toInt())
     }
 
-    private fun initRVReadSurah() {
-        readSurahAdapter = ReadSurahAdapter()
+    private fun initRVReadSurah(selSurahId: String) {
+        readSurahAdapter = ReadSurahAdapter(this, readSurahViewModel, selSurahId)
 
         rv_read_surah.apply {
             adapter = readSurahAdapter

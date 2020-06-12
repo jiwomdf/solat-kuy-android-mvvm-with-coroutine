@@ -40,7 +40,7 @@ class FragmentMainViewModelTest {
     @Before
     fun setUp() {
         viewModel = FragmentMainViewModel(context, repository)
-        viewModel.fetchQuranSurah("")
+        viewModel.fetchQuranSurah(1)
         viewModel.fetchPrayerApi(msApi1)
     }
 
@@ -65,7 +65,7 @@ class FragmentMainViewModelTest {
         val quranSurah = MutableLiveData<Resource<ReadSurahEnApi>>()
 
         quranSurah.value = dummyQuranSurah
-        `when`(repository.fetchReadSurahEn("")).thenReturn(quranSurah)
+        `when`(repository.fetchReadSurahEn(1)).thenReturn(quranSurah)
 
         viewModel.readSurahEn.observeForever(observer)
 

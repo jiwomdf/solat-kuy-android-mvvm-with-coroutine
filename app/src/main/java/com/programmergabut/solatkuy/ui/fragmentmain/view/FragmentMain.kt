@@ -227,7 +227,7 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
         val randSurah = (1..114).random()
 
-        fragmentMainViewModel.fetchQuranSurah(randSurah.toString())
+        fragmentMainViewModel.fetchQuranSurah(randSurah)
     }
 
     /* Database Transaction */

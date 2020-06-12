@@ -31,7 +31,7 @@ class RemoteDataSourceApiAlquran(private val contextProviders: ContextProviders)
     }
 
 
-    fun fetchReadSurahEn(surahID: String): MutableLiveData<Resource<ReadSurahEnApi>> {
+    fun fetchReadSurahEn(surahID: Int): MutableLiveData<Resource<ReadSurahEnApi>> {
         val result = MutableLiveData<Resource<ReadSurahEnApi>>()
 
         GlobalScope.launch(contextProviders.IO){
@@ -72,7 +72,7 @@ class RemoteDataSourceApiAlquran(private val contextProviders: ContextProviders)
         return result
     }
 
-    fun fetchReadSurahAr(surahID: String): MutableLiveData<Resource<ReadSurahArApi>> {
+    fun fetchReadSurahAr(surahID: Int): MutableLiveData<Resource<ReadSurahArApi>> {
         val result = MutableLiveData<Resource<ReadSurahArApi>>()
 
         GlobalScope.launch(contextProviders.IO){
@@ -98,11 +98,13 @@ class RemoteDataSourceApiAlquran(private val contextProviders: ContextProviders)
                     x.ruku,
                     x.sajda,
                     x.text,
-                    "")} as MutableList<Ayah>
+                    "",
+                    false)} as MutableList<Ayah>
 
                 retValEn.data.ayahs.forEachIndexed { index, x ->
                     listAyah[index].textEn = x.text
                 }
+
 
                 retValAr.data.ayahs = listAyah
 

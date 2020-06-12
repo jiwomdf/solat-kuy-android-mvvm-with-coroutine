@@ -43,7 +43,7 @@ class FakeRepository(private val contextProviders: ContextProviders,
 
     fun fetchPrayerApi(msApi1: MsApi1) = remoteDataSourceAladhan.fetchPrayerApi(msApi1)
 
-    fun fetchQuranSurah(nInSurah: String) = remoteDataSourceApiAlquran.fetchReadSurahEn(nInSurah)
+    fun fetchQuranSurah(nInSurah: Int) = remoteDataSourceApiAlquran.fetchReadSurahEn(nInSurah)
 
     fun fetchAllSurah() = remoteDataSourceApiAlquran.fetchAllSurah()
 

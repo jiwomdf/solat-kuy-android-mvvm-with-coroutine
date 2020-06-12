@@ -74,14 +74,14 @@ class RepositoryTest{
 
     @Test
     fun fetchQuranSurah(){
-        repository.fetchQuranSurah("1")
+        repository.fetchQuranSurah(1)
 
         val dummyQuranSurah = Resource.success(DummyData.fetchSurahApi())
         val quranSurahApi = MutableLiveData<Resource<ReadSurahEnApi>>()
         quranSurahApi.value = dummyQuranSurah
 
-        Mockito.`when`(remoteDataSourceApiAlquran.fetchReadSurahEn("1")).thenReturn(quranSurahApi)
-        Mockito.verify(remoteDataSourceApiAlquran).fetchReadSurahEn("1")
+        Mockito.`when`(remoteDataSourceApiAlquran.fetchReadSurahEn(1)).thenReturn(quranSurahApi)
+        Mockito.verify(remoteDataSourceApiAlquran).fetchReadSurahEn(1)
 
         assertNotNull(quranSurahApi.value)
     }

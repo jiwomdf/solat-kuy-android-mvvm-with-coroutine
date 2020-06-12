@@ -22,5 +22,7 @@ data class Ayah(
     val sajda: Boolean,
     @SerializedName("text")
     val text: String,
-    var textEn: String?
+
+    var textEn: String?,
+    var isFav: Boolean
 )

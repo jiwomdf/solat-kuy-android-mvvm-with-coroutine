@@ -1,8 +1,8 @@
 package com.programmergabut.solatkuy.data.local
 
 import com.programmergabut.solatkuy.data.ContextProviders
-import com.programmergabut.solatkuy.data.local.dao.MsSettingDao
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
+import com.programmergabut.solatkuy.data.local.localentity.MsFavAyah
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
@@ -18,11 +18,15 @@ constructor(private val contextProviders: ContextProviders, db: SolatKuyRoom) {
 
     private var notifiedPrayerDao = db.notifiedPrayerDao()
     private var msApi1Dao = db.msApi1Dao()
-    private var msSettingDao: MsSettingDao = db.msSettingDao()
+    private var msSettingDao = db.msSettingDao()
+    private var msFavAyahDao = db.msFavAyahDao()
 
     fun getNotifiedPrayer() = notifiedPrayerDao.getNotifiedPrayer()
     fun getMsApi1() = msApi1Dao.getMsApi1()
     fun getMsSetting() = msSettingDao.getMsSetting()
+
+    fun getMsFavAyahByID(ayahID: Int) = msFavAyahDao.getMsFavAyahByID(ayahID)
+    fun isFavAyah(ayahID: Int, surahID: Int) = msFavAyahDao.isFavAyah(ayahID, surahID)
 
     /* fun updateNotifiedPrayer(NotifiedPrayer: NotifiedPrayer){
         GlobalScope.launch(contextProviders.IO) {
@@ -49,6 +53,12 @@ constructor(private val contextProviders: ContextProviders, db: SolatKuyRoom) {
     fun updateMsApi1(msApi1: MsApi1){
         GlobalScope.launch(contextProviders.IO) {
             msApi1Dao.updateMsApi1(msApi1.api1ID, msApi1.latitude, msApi1.longitude, msApi1.method, msApi1.month, msApi1.year)
+        }
+    }
+
+    fun insertFavAyah(msFavAyah: MsFavAyah){
+        GlobalScope.launch(contextProviders.IO) {
+            msFavAyahDao.insertMsApi1(msFavAyah)
         }
     }
 

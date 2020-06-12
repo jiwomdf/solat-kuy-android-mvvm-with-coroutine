@@ -17,7 +17,7 @@ import com.programmergabut.solatkuy.util.Resource
 class FragmentMainViewModel(application: Application, private val repository: Repository): AndroidViewModel(application) {
 
     private var msApi1Param = MutableLiveData<MsApi1>()
-    private var quranSurahID = MutableLiveData<String>()
+    private var quranSurahID = MutableLiveData<Int>()
 
     val msApi1Local = repository.getMsApi1()
 
@@ -33,7 +33,7 @@ class FragmentMainViewModel(application: Application, private val repository: Re
         this.msApi1Param.value = msApi1
     }
 
-    fun fetchQuranSurah(nInSurah: String){
+    fun fetchQuranSurah(nInSurah: Int){
         this.quranSurahID.value = nInSurah
     }
 

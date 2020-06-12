@@ -1,12 +1,16 @@
 package com.programmergabut.solatkuy.data
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
+import androidx.lifecycle.MutableLiveData
 import com.programmergabut.solatkuy.data.local.LocalDataSource
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
+import com.programmergabut.solatkuy.data.local.localentity.MsFavAyah
 import com.programmergabut.solatkuy.data.local.localentity.NotifiedPrayer
 import com.programmergabut.solatkuy.data.remote.RemoteDataSourceAladhan
 import com.programmergabut.solatkuy.data.remote.RemoteDataSourceApiAlquran
 import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.PrayerApi
+import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonAr.ReadSurahArApi
 import com.programmergabut.solatkuy.util.Resource
 import com.programmergabut.solatkuy.util.enumclass.EnumConfig
 import kotlinx.coroutines.GlobalScope
@@ -42,12 +46,14 @@ class Repository(private val contextProviders: ContextProviders,
 
     //fun getMsApi1() = localDataSource.getMsApi1()
     fun getMsSetting() = localDataSource.getMsSetting()
+    fun getMsFavAyahByID(ayahID: Int) = localDataSource.getMsFavAyahByID(ayahID)
 
     //fun updateNotifiedPrayer(notifiedPrayer: NotifiedPrayer) = localDataSource.updateNotifiedPrayer(notifiedPrayer)
     //fun updatePrayerTime(prayerName: String, prayerTime: String) = localDataSource.updatePrayerTime(prayerName, prayerTime)
     //fun updateMsSetting(isHasOpen: Boolean) = localDataSource.updateMsSetting(isHasOpen)
     fun updatePrayerIsNotified(prayerName: String, isNotified: Boolean) = localDataSource.updatePrayerIsNotified(prayerName, isNotified)
     fun updateMsApi1(msApi1: MsApi1) = localDataSource.updateMsApi1(msApi1)
+    fun insertFavAyah(msFavAyah: MsFavAyah) = localDataSource.insertFavAyah(msFavAyah)
 
     //Retrofit
     fun fetchCompass(msApi1: MsApi1) = remoteDataSourceAladhan.fetchCompassApi(msApi1)
@@ -56,11 +62,85 @@ class Repository(private val contextProviders: ContextProviders,
 
     fun fetchPrayerApi(msApi1: MsApi1) = remoteDataSourceAladhan.fetchPrayerApi(msApi1)
 
-    fun fetchReadSurahEn(surahID: String) = remoteDataSourceApiAlquran.fetchReadSurahEn(surahID)
+    fun fetchReadSurahEn(surahID: Int) = remoteDataSourceApiAlquran.fetchReadSurahEn(surahID)
 
     fun fetchAllSurah() = remoteDataSourceApiAlquran.fetchAllSurah()
 
-    fun fetchReadSurahAr(surahID: String)= remoteDataSourceApiAlquran.fetchReadSurahAr(surahID)
+    fun fetchReadSurahAr(surahID: Int): MutableLiveData<Resource<ReadSurahArApi>> = remoteDataSourceApiAlquran.fetchReadSurahAr(surahID)
+
+    /* return object : NetworkBoundResource<List<MsFavAyah>, ReadSurahArApi>(contextProviders){
+        override fun loadFromDB(): LiveData<List<MsFavAyah>> = localDataSource.getMsFavAyah()
+
+        override fun shouldFetch(data: List<MsFavAyah>?): Boolean = true
+
+        override fun createCall(): LiveData<Resource<ReadSurahArApi>> = remoteDataSourceApiAlquran.fetchReadSurahAr(surahID)
+
+        override fun saveCallResult(data: ReadSurahArApi) {
+
+            val msFavAyah = loadFromDB().value
+
+            data.data.ayahs.forEach{remoteAyah ->
+
+                msFavAyah?.forEach {
+                    if(it.ayahID == remoteAyah.numberInSurah){
+
+                    }
+                }
+
+            }
+        }
+
+    }.asLiveData() */
+
+    /* val result = MutableLiveData<Resource<ReadSurahArApi>>()
+
+    GlobalScope.launch(contextProviders.IO){
+
+        val remoteData = remoteDataSourceApiAlquran.fetchReadSurahAr(surahID)
+
+        val selReadSurah = remoteData.value?.data?.data
+
+        val localFavData = localDataSource.getMsFavAyahByID()
+
+
+        if(localFavData.value.isNullOrEmpty())
+            result.postValue(remoteData.value)
+        else{
+            val selSurahFav = localFavData.value!!.filter { x -> x.favAyahID == surahID.toInt() }
+
+            selReadSurah?.ayahs?.forEach { remote ->
+
+                selSurahFav.forEach {localFavSurah ->
+
+                    if(remote.numberInSurah == localFavSurah.favAyahID)
+                        remote.isFav = true
+
+                }
+            }
+        }
+
+        result.postValue(remoteData.value)
+    }
+
+        return result
+    */
+
+
+    fun isFavoriteAyah(ayahID: Int, surahID: Int): LiveData<Boolean> {
+        val isFavorite = MediatorLiveData<Boolean>()
+        val listfavAyah = localDataSource.isFavAyah(ayahID, surahID)
+
+        listfavAyah.value
+
+        isFavorite.addSource(listfavAyah) { data ->
+            if(data == null)
+                isFavorite.value = false
+            else
+                isFavorite.value = ayahID == data.ayahID
+        }
+
+        return isFavorite
+    }
 
     fun syncNotifiedPrayer(msApi1: MsApi1): LiveData<Resource<List<NotifiedPrayer>>> {
 
