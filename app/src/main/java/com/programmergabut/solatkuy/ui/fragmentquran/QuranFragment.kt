@@ -57,6 +57,8 @@ class QuranFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
                 allSurahAdapter.setData(newData)
                 allSurahAdapter.notifyDataSetChanged()
+
+                s_juzz.setSelection(0)
             }
 
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
@@ -111,7 +113,7 @@ class QuranFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         arrJuzz.add("All Juzz")
         for (i in 1..30){ arrJuzz.add(i.toString()) }
 
-        s_juzz.adapter = ArrayAdapter(context!!, android.R.layout.simple_spinner_dropdown_item, arrJuzz)
+        s_juzz.adapter = ArrayAdapter(context!!, R.layout.spinner_item, arrJuzz)
 
         s_juzz.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
             override fun onNothingSelected(parent: AdapterView<*>?) {}
@@ -196,6 +198,7 @@ class QuranFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     override fun onRefresh() {
         fetchfetchAllSurah()
         sl_quran.isRefreshing = false
+        s_juzz.setSelection(0)
     }
 
 }

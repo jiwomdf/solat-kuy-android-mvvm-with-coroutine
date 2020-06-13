@@ -5,6 +5,7 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.LifecycleOwner
 import androidx.lifecycle.Observer
@@ -13,6 +14,8 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.data.local.localentity.MsFavAyah
 import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonAr.Ayah
+import com.programmergabut.solatkuy.util.Resource
+import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.layout_read_surah.view.*
 
 class ReadSurahAdapter(private val context: Context, private val viewModel: ReadSurahViewModel,
@@ -47,11 +50,24 @@ class ReadSurahAdapter(private val context: Context, private val viewModel: Read
             else
                 itemView.tv_readSurah_fav.setImageDrawable(context.getDrawable(R.drawable.ic_favorite_24))
 
-            itemView.cl_readSurah.setOnClickListener {
+            itemView.tv_readSurah_fav.setOnClickListener {
 
-                //val bottomSheet = BottomSheetDialog(context)
+                val msFavAyah = MsFavAyah(surahId.toInt(), data.numberInSurah, data.text, data.textEn!!)
 
-                //viewModel.insertFavAyah(MsFavAyah(surahId.toInt(), data.numberInSurah, data.text, data.textEn!!))
+                if(itemView.tv_readSurah_fav.drawable.constantState == context.getDrawable(R.drawable.ic_favorite_red_24)?.constantState){
+                    viewModel.selectedSurahAr.postValue(Resource.loading(null))
+                    Toasty.info(context, "Unsaving the ayah", Toast.LENGTH_SHORT).show()
+
+                    viewModel.deleteFavAyah(msFavAyah)
+                    itemView.tv_readSurah_fav.setImageDrawable(context.getDrawable(R.drawable.ic_favorite_24))
+                }
+                else{
+                    //Toasty.info(context, "Saving the ayah", Toast.LENGTH_SHORT).show()
+                    viewModel.insertFavAyah(msFavAyah)
+                    itemView.tv_readSurah_fav.setImageDrawable(context.getDrawable(R.drawable.ic_favorite_red_24))
+                }
+
+                viewModel.fetchQuranSurah(surahId.toInt())
             }
         }
     }

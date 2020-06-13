@@ -9,17 +9,19 @@
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/ab_readQuran"
+        android:visibility="invisible"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="invisible">
-        
+        android:layout_height="wrap_content">
+
         <androidx.appcompat.widget.Toolbar
-            android:id="@+id/tb_readQuran_title"
+            android:id="@+id/tb_readQuran"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/colorWhite"
-            app:layout_scrollFlags="scroll|enterAlways"/>
-        
+            app:layout_scrollFlags="scroll|enterAlways">
+
+        </androidx.appcompat.widget.Toolbar>
+
     </com.google.android.material.appbar.AppBarLayout>
 
     <androidx.recyclerview.widget.RecyclerView
@@ -38,6 +40,7 @@
             android:layout_width="match_parent"
             android:layout_height="match_parent"
             android:animateLayoutChanges="true"
+            android:background="@color/colorWhite"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"

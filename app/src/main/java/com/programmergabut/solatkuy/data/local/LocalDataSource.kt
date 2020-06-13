@@ -3,6 +3,7 @@ package com.programmergabut.solatkuy.data.local
 import com.programmergabut.solatkuy.data.ContextProviders
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
 import com.programmergabut.solatkuy.data.local.localentity.MsFavAyah
+import com.programmergabut.solatkuy.data.local.localentity.MsFavSurah
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
@@ -20,13 +21,16 @@ constructor(private val contextProviders: ContextProviders, db: SolatKuyRoom) {
     private var msApi1Dao = db.msApi1Dao()
     private var msSettingDao = db.msSettingDao()
     private var msFavAyahDao = db.msFavAyahDao()
+    private var msFavSurahDao = db.msFavSurahDao()
 
     fun getNotifiedPrayer() = notifiedPrayerDao.getNotifiedPrayer()
     fun getMsApi1() = msApi1Dao.getMsApi1()
     fun getMsSetting() = msSettingDao.getMsSetting()
 
-    fun getMsFavAyahByID(ayahID: Int) = msFavAyahDao.getMsFavAyahByID(ayahID)
+    fun getMsFavAyahBySurahID(surahID: Int) = msFavAyahDao.getMsFavAyahBySurahID(surahID)
     fun isFavAyah(ayahID: Int, surahID: Int) = msFavAyahDao.isFavAyah(ayahID, surahID)
+
+    fun getMsFavSurahByUD(surahID: Int) = msFavSurahDao.getMsFavSurahBySurahID(surahID)
 
     /* fun updateNotifiedPrayer(NotifiedPrayer: NotifiedPrayer){
         GlobalScope.launch(contextProviders.IO) {
@@ -58,7 +62,25 @@ constructor(private val contextProviders: ContextProviders, db: SolatKuyRoom) {
 
     fun insertFavAyah(msFavAyah: MsFavAyah){
         GlobalScope.launch(contextProviders.IO) {
-            msFavAyahDao.insertMsApi1(msFavAyah)
+            msFavAyahDao.insertMsAyah(msFavAyah)
+        }
+    }
+
+    fun deleteFavAyah(msFavAyah: MsFavAyah){
+        GlobalScope.launch(contextProviders.IO) {
+            msFavAyahDao.deleteMsFavAyah(msFavAyah)
+        }
+    }
+
+    fun insertFavSurah(msFavSurah: MsFavSurah){
+        GlobalScope.launch(contextProviders.IO) {
+            msFavSurahDao.insertMsSurah(msFavSurah)
+        }
+    }
+
+    fun deleteFavSurah(msFavSurah: MsFavSurah){
+        GlobalScope.launch(contextProviders.IO) {
+            msFavSurahDao.deleteMsFavSurah(msFavSurah)
         }
     }
 

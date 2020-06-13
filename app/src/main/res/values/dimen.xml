@@ -21,4 +21,6 @@
     <dimen name="editText_size">200dp</dimen>
 
     <dimen name="bottomSheet_size">200dp</dimen>
+
+    <dimen name="progressBar_size">170dp</dimen>
 </resources>

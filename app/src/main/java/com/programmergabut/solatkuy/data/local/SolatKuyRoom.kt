@@ -5,14 +5,8 @@ import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
 import com.programmergabut.solatkuy.data.ContextProviders
-import com.programmergabut.solatkuy.data.local.dao.MsApi1Dao
-import com.programmergabut.solatkuy.data.local.dao.MsFavAyahDao
-import com.programmergabut.solatkuy.data.local.dao.MsSettingDao
-import com.programmergabut.solatkuy.data.local.dao.NotifiedPrayerDao
-import com.programmergabut.solatkuy.data.local.localentity.MsApi1
-import com.programmergabut.solatkuy.data.local.localentity.MsFavAyah
-import com.programmergabut.solatkuy.data.local.localentity.MsSetting
-import com.programmergabut.solatkuy.data.local.localentity.NotifiedPrayer
+import com.programmergabut.solatkuy.data.local.dao.*
+import com.programmergabut.solatkuy.data.local.localentity.*
 import com.programmergabut.solatkuy.util.enumclass.EnumConfig
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -21,13 +15,14 @@ import kotlinx.coroutines.launch
  * Created by Katili Jiwo Adi Wiyono on 25/03/20.
  */
 
-@Database(version = 8, entities = [NotifiedPrayer::class, MsApi1::class, MsSetting::class, MsFavAyah::class])
+@Database(version = 9, entities = [NotifiedPrayer::class, MsApi1::class, MsSetting::class, MsFavAyah::class, MsFavSurah::class])
 abstract class SolatKuyRoom: RoomDatabase() {
 
     abstract fun notifiedPrayerDao(): NotifiedPrayerDao
     abstract fun msApi1Dao(): MsApi1Dao
     abstract fun msSettingDao(): MsSettingDao
     abstract fun msFavAyahDao(): MsFavAyahDao
+    abstract fun msFavSurahDao(): MsFavSurahDao
 
 
     companion object{

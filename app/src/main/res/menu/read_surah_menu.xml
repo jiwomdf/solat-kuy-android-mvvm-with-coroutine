@@ -1,0 +1,11 @@
+<menu xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    tools:context=".ui.activityreadsurah.ReadSurahActivity">
+
+    <item android:id="@+id/i_star_surah"
+        android:icon="@drawable/ic_star_24"
+        app:showAsAction="always"
+        android:title="@string/prayer_time"/>
+
+</menu>

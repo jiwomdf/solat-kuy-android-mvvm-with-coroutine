@@ -33,16 +33,23 @@ class AllSurahAdapter(private val c: Context): RecyclerView.Adapter<AllSurahAdap
         fun bind(data: Data){
 
             val i = Intent(c, ReadSurahActivity::class.java)
-            i.putExtra(ReadSurahActivity.surahID, data.number.toString())
+            i.apply {
+                this.putExtra(ReadSurahActivity.surahID, data.number.toString())
+                this.putExtra(ReadSurahActivity.surahName, data.englishName)
+                this.putExtra(ReadSurahActivity.surahTranslation, data.englishNameTranslation)
+            }
 
-            itemView.tv_allsurah_no.text = data.number.toString()
-            itemView.tv_allsurah_en.text = data.englishName
-            itemView.tv_allsurah_en_meaning.text = data.englishNameTranslation
-            itemView.tv_allsurah_ar.text = data.name
+            itemView.apply {
+                this.tv_allsurah_no.text = data.number.toString()
+                this.tv_allsurah_en.text = data.englishName
+                this.tv_allsurah_en_meaning.text = data.englishNameTranslation
+                this.tv_allsurah_ar.text = data.name
+            }
 
             itemView.cc_allsurah.setOnClickListener {
                 c.startActivities(arrayOf(i))
             }
+
         }
 
     }
