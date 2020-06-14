@@ -27,10 +27,12 @@ constructor(private val contextProviders: ContextProviders, db: SolatKuyRoom) {
     fun getMsApi1() = msApi1Dao.getMsApi1()
     fun getMsSetting() = msSettingDao.getMsSetting()
 
+    fun getMsFavAyah() = msFavAyahDao.getMsFavAyah()
     fun getMsFavAyahBySurahID(surahID: Int) = msFavAyahDao.getMsFavAyahBySurahID(surahID)
     fun isFavAyah(ayahID: Int, surahID: Int) = msFavAyahDao.isFavAyah(ayahID, surahID)
 
-    fun getMsFavSurahByUD(surahID: Int) = msFavSurahDao.getMsFavSurahBySurahID(surahID)
+    fun getMsFavSurahByID(surahID: Int) = msFavSurahDao.getMsFavSurahBySurahID(surahID)
+    fun getMsFavSurah() = msFavSurahDao.getMsFavSurah()
 
     /* fun updateNotifiedPrayer(NotifiedPrayer: NotifiedPrayer){
         GlobalScope.launch(contextProviders.IO) {

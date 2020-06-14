@@ -20,7 +20,8 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:targetApi="n">
-        <activity android:name=".ui.activityreadsurah.ReadSurahActivity"></activity>
+        <activity android:name=".ui.activityfavayah.FavAyahActivity"></activity>
+        <activity android:name=".ui.activityreadsurah.ReadSurahActivity" />
         <activity android:name=".ui.activityprayer.DuaActivity" />
         <activity
             android:name=".ui.main.view.MainActivity"

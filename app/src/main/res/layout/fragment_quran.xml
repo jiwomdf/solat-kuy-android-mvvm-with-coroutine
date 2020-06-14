@@ -68,6 +68,7 @@
                 app:cardCornerRadius="@dimen/medium_margin">
 
                 <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/cv_fav_ayah"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/smaller_margin"
@@ -75,43 +76,12 @@
 
             </androidx.cardview.widget.CardView>
 
-
-            <androidx.cardview.widget.CardView
-                android:layout_width="wrap_content"
+            <androidx.recyclerview.widget.RecyclerView
+                android:id="@+id/rv_stared_ayah"
+                android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:layout_marginStart="@dimen/small_margin"
-                app:cardBackgroundColor="@color/colorDarkWhite"
-                app:cardCornerRadius="@dimen/medium_margin">
-
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_gravity="center"
-                    android:layout_margin="@dimen/smaller_margin"
-                    android:text="Al-Baqara"/>
-
-            </androidx.cardview.widget.CardView>
-
-<!--            <androidx.recyclerview.widget.RecyclerView-->
-<!--                android:layout_width="match_parent"-->
-<!--                android:layout_height="match_parent"-->
-<!--                android:layout_marginStart="@dimen/small_margin"-->
-<!--                android:orientation="horizontal">-->
-
-<!--                <androidx.cardview.widget.CardView-->
-<!--                    android:layout_width="wrap_content"-->
-<!--                    android:layout_height="match_parent"-->
-<!--                    android:layout_marginStart="@dimen/small_margin"-->
-<!--                    app:cardBackgroundColor="@color/colorDarkWhite"-->
-<!--                    app:cardCornerRadius="@dimen/medium_margin">-->
-
-<!--                    <TextView-->
-<!--                        android:layout_width="wrap_content"-->
-<!--                        android:layout_height="wrap_content"-->
-<!--                        tools:text="Al-Faatiha"/>-->
-
-<!--                </androidx.cardview.widget.CardView>-->
-<!--            </androidx.recyclerview.widget.RecyclerView>-->
+                android:layout_marginEnd="@dimen/small_margin" />
 
         </LinearLayout>
 

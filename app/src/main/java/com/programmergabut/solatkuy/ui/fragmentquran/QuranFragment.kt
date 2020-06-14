@@ -1,5 +1,6 @@
 package com.programmergabut.solatkuy.ui.fragmentquran
 
+import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
@@ -15,6 +16,7 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.data.remote.remoteentity.quranallsurahJson.Data
+import com.programmergabut.solatkuy.ui.activityfavayah.FavAyahActivity
 import com.programmergabut.solatkuy.util.Resource
 import com.programmergabut.solatkuy.util.enumclass.EnumStatus
 import com.programmergabut.solatkuy.viewmodel.ViewModelFactory
@@ -25,6 +27,7 @@ class QuranFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     private lateinit var fragmentQuranFragmentViewModel: QuranFragmentViewModel
     private lateinit var allSurahAdapter: AllSurahAdapter
+    private lateinit var staredSurahAdapter: StaredSurahAdapter
     private var allSurahDatas: MutableList<Data>? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
@@ -43,10 +46,17 @@ class QuranFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         super.onViewCreated(view, savedInstanceState)
 
         initRvAllSurah()
+        initRvStaredSurah()
         observeApi()
         refreshLayout()
         searchSurah()
         createJuzzSpinner()
+
+        cv_fav_ayah.setOnClickListener {
+            val i = Intent(context, FavAyahActivity::class.java)
+
+            context?.startActivities(arrayOf(i))
+        }
     }
 
     private fun searchSurah() {
@@ -105,7 +115,13 @@ class QuranFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
             }
         })
 
-        fetchfetchAllSurah()
+        fragmentQuranFragmentViewModel.staredSurah.observe(this, Observer {
+            staredSurahAdapter.setData(it)
+            staredSurahAdapter.notifyDataSetChanged()
+
+        })
+
+        fetchAllSurah()
     }
 
     private fun createJuzzSpinner(){
@@ -135,7 +151,17 @@ class QuranFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         }
     }
 
-    private fun fetchfetchAllSurah(){
+    private fun initRvStaredSurah() {
+        staredSurahAdapter = StaredSurahAdapter(context!!)
+
+        rv_stared_ayah.apply {
+            adapter = staredSurahAdapter
+            layoutManager = LinearLayoutManager(this@QuranFragment.context, LinearLayoutManager.HORIZONTAL, false)
+            setHasFixedSize(true)
+        }
+    }
+
+    private fun fetchAllSurah(){
         fragmentQuranFragmentViewModel.allSurah.postValue(Resource.loading(null))
         fragmentQuranFragmentViewModel.fetchAllSurah("triger")
     }
@@ -196,7 +222,7 @@ class QuranFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     override fun onRefresh() {
-        fetchfetchAllSurah()
+        fetchAllSurah()
         sl_quran.isRefreshing = false
         s_juzz.setSelection(0)
     }

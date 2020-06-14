@@ -26,7 +26,7 @@ class ReadSurahViewModel(application: Application, private val repository: Repos
     }
 
     var msFavSurah = Transformations.switchMap(ayahID){
-        repository.getMsFavSurahByUD(it)
+        repository.getMsFavSurahByID(it)
     }
 
     fun fetchQuranSurah(surahID: Int){

@@ -55,11 +55,13 @@ class Repository(private val contextProviders: ContextProviders,
     fun updatePrayerIsNotified(prayerName: String, isNotified: Boolean) = localDataSource.updatePrayerIsNotified(prayerName, isNotified)
     fun updateMsApi1(msApi1: MsApi1) = localDataSource.updateMsApi1(msApi1)
 
+    fun getMsFavAyah() = localDataSource.getMsFavAyah()
     fun getMsFavAyahBySurahID(surahID: Int) = localDataSource.getMsFavAyahBySurahID(surahID)
     fun insertFavAyah(msFavAyah: MsFavAyah) = localDataSource.insertFavAyah(msFavAyah)
     fun deleteFavAyah(msFavAyah: MsFavAyah) = localDataSource.deleteFavAyah(msFavAyah)
 
-    fun getMsFavSurahByUD(ayahID: Int) = localDataSource.getMsFavSurahByUD(ayahID)
+    fun getMsFavSurah() = localDataSource.getMsFavSurah()
+    fun getMsFavSurahByID(ayahID: Int) = localDataSource.getMsFavSurahByID(ayahID)
     fun insertFavSurah(msFavSurah: MsFavSurah) = localDataSource.insertFavSurah(msFavSurah)
     fun deleteFavSurah(msFavSurah: MsFavSurah) = localDataSource.deleteFavSurah(msFavSurah)
     //Retrofit

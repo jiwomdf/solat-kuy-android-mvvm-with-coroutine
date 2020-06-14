@@ -1,6 +1,7 @@
 package com.programmergabut.solatkuy.ui.fragmentmain.view
 
 import android.annotation.SuppressLint
+import android.app.Dialog
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.LayoutInflater
@@ -97,6 +98,7 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         cbClickListener()
         refreshLayout()
         tvQuranQuoteClick()
+        openPopupQuote()
     }
 
     override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
@@ -573,5 +575,17 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         sl_main.isRefreshing = false
     }
 
+    /* Popup quotes setting */
+    fun openPopupQuote(){
+        iv_quote_setting.setOnClickListener {
+
+            val dialog = Dialog(context!!)
+            val dialogView = layoutInflater.inflate(R.layout.layout_popup_choose_quote_setting,null)
+            dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+            dialog.setContentView(dialogView)
+            dialog.show()
+
+        }
+    }
 
 }

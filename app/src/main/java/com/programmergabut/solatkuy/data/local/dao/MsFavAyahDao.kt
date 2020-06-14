@@ -7,6 +7,9 @@ import com.programmergabut.solatkuy.data.local.localentity.MsFavAyah
 @Dao
 interface MsFavAyahDao {
 
+    @Query("select * from MsFavAyah")
+    fun getMsFavAyah(): LiveData<List<MsFavAyah>>
+
     @Query("select * from MsFavAyah where surahID like :surahID")
     fun getMsFavAyahBySurahID(surahID: Int): LiveData<List<MsFavAyah>>
 

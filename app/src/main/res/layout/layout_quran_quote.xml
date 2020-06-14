@@ -31,9 +31,18 @@
             android:layout_marginStart="@dimen/medium_margin"
             android:layout_marginTop="@dimen/medium_margin"
             android:layout_marginEnd="@dimen/medium_margin"
-            android:layout_marginBottom="@dimen/large_margin"
+            android:layout_marginBottom="@dimen/small_margin"
             android:textColor="@color/colorWhite"
             tools:text="Extol thy Sustainer's limitless glory, and praise Him, and seek His forgiveness: for, behold, He is ever an acceptor of repentance. - QS An-nasr ayat 3" />
+
+        <ImageView
+            android:id="@+id/iv_quote_setting"
+            android:layout_width="15dp"
+            android:layout_height="15dp"
+            android:layout_gravity="end"
+            android:layout_marginBottom="@dimen/small_margin"
+            android:layout_marginRight="@dimen/small_margin"
+            android:src="@drawable/ic_settings_24dp"/>
 
     </LinearLayout>
 </androidx.cardview.widget.CardView>
