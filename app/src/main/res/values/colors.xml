@@ -11,4 +11,5 @@
     <color name="colorBlack">#000</color>
     <color name="halfTransparentBackground">#aacccccc</color>
     <color name="colorRed">#FF6374</color>
+    <color name="colorYellow">#E5DB2D</color>
 </resources>

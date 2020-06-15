@@ -15,7 +15,7 @@ import kotlinx.coroutines.launch
  * Created by Katili Jiwo Adi Wiyono on 25/03/20.
  */
 
-@Database(version = 9, entities = [NotifiedPrayer::class, MsApi1::class, MsSetting::class, MsFavAyah::class, MsFavSurah::class])
+@Database(version = 12, entities = [NotifiedPrayer::class, MsApi1::class, MsSetting::class, MsFavAyah::class, MsFavSurah::class])
 abstract class SolatKuyRoom: RoomDatabase() {
 
     abstract fun notifiedPrayerDao(): NotifiedPrayerDao
@@ -186,7 +186,8 @@ abstract class SolatKuyRoom: RoomDatabase() {
             msSettingDao.insertMsSetting(
                 MsSetting(
                     1,
-                    false
+                    false,
+                    isUsingDBQuotes = false
                 )
             )
         }

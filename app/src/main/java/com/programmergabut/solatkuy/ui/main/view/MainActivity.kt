@@ -159,7 +159,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
                 }
 
                 insertLocationSettingToDb(latitude, longitude)
-                insertMsSetting(dialog)
+                updateIsHasOpenApp(dialog)
             }
         }
 
@@ -182,18 +182,18 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
                 }
 
                 insertLocationSettingToDb(latitude, longitude)
-                insertMsSetting(dialog)
+                updateIsHasOpenApp(dialog)
             }
         }
 
     }
 
-    private fun insertMsSetting(dialog: Dialog) {
+    private fun updateIsHasOpenApp(dialog: Dialog) {
         mSubDialog.dismiss()
         dialog.dismiss()
 
         GlobalScope.launch(Dispatchers.IO){
-            db.msSettingDao().updateMsSetting(true)
+            db.msSettingDao().updateIsHasOpenApp(true)
         }
 
         /* mainActivityViewModel.updateSetting(

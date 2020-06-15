@@ -82,7 +82,7 @@ class QuranFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     private fun observeApi(){
         fragmentQuranFragmentViewModel.allSurah.observe(this, Observer {
-            when(it.Status){
+            when(it.status){
                 EnumStatus.SUCCESS -> {
                     val datas = it.data?.data!! as MutableList<Data>
                     allSurahAdapter.setData(datas)

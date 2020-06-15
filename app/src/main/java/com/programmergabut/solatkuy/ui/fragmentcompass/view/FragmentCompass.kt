@@ -74,7 +74,7 @@ class FragmentCompass : Fragment(), SensorEventListener, SwipeRefreshLayout.OnRe
 
         fragmentCompassViewModel.compassApi.observe(this, Observer {retVal ->
 
-            when(retVal.Status){
+            when(retVal.status){
                 EnumStatus.SUCCESS -> {
                     retVal.data?.data.let {
                         tv_qibla_dir.text = if(it?.direction.toString().length > 6)

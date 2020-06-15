@@ -6,7 +6,7 @@ import com.programmergabut.solatkuy.util.enumclass.EnumStatus
  * Created by Katili Jiwo Adi Wiyono on 25/03/20.
  */
 
-data class Resource<out T>(val Status: EnumStatus, val data: T?, val message:String?) {
+data class Resource<out T>(val status: EnumStatus, val data: T?, val message:String?) {
 
     companion object{
 

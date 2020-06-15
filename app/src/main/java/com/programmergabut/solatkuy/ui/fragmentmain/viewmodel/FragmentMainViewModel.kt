@@ -29,6 +29,9 @@ class FragmentMainViewModel(application: Application, private val repository: Re
         repository.syncNotifiedPrayer(it)
     } as MutableLiveData<Resource<List<NotifiedPrayer>>>
 
+    val msSetting = repository.getMsSetting()
+    val favAyah = repository.getMsFavAyah()
+
     fun fetchPrayerApi(msApi1: MsApi1){
         this.msApi1Param.value = msApi1
     }
@@ -42,5 +45,7 @@ class FragmentMainViewModel(application: Application, private val repository: Re
     }*/
 
     fun updatePrayerIsNotified(prayerName: String, isNotified: Boolean) = repository.updatePrayerIsNotified(prayerName, isNotified)
+
+    fun updateIsUsingDBQuotes(isUsingDBQuotes: Boolean) = repository.updateIsUsingDBQuotes(isUsingDBQuotes)
 
 }

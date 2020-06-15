@@ -94,7 +94,7 @@ class ReadSurahActivity : AppCompatActivity() {
 
         readSurahViewModel.selectedSurahAr.observe(this, Observer {
 
-            when(it.Status){
+            when(it.status){
                 EnumStatus.SUCCESS -> {
 
                     if(it.data == null)
@@ -177,7 +177,7 @@ class ReadSurahActivity : AppCompatActivity() {
 
 
     private fun initRVReadSurah() {
-        readSurahAdapter = ReadSurahAdapter(this, readSurahViewModel, mSelSurahId)
+        readSurahAdapter = ReadSurahAdapter(this, readSurahViewModel, mSelSurahId, mSelSurahName)
 
         rv_read_surah.apply {
             adapter = readSurahAdapter

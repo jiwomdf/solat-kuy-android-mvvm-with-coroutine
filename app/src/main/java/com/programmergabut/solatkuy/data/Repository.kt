@@ -43,27 +43,49 @@ class Repository(private val contextProviders: ContextProviders,
     }
 
     //Room
-    fun getMsApi1() = localDataSource.getMsApi1()
 
     //fun getMsApi1() = localDataSource.getMsApi1()
-    fun getMsSetting() = localDataSource.getMsSetting()
     //fun getMsFavAyahBySurahID(surahID: Int) = localDataSource.getMsFavAyahBySurahID(surahID)
 
     //fun updateNotifiedPrayer(notifiedPrayer: NotifiedPrayer) = localDataSource.updateNotifiedPrayer(notifiedPrayer)
     //fun updatePrayerTime(prayerName: String, prayerTime: String) = localDataSource.updatePrayerTime(prayerName, prayerTime)
     //fun updateMsSetting(isHasOpen: Boolean) = localDataSource.updateMsSetting(isHasOpen)
-    fun updatePrayerIsNotified(prayerName: String, isNotified: Boolean) = localDataSource.updatePrayerIsNotified(prayerName, isNotified)
-    fun updateMsApi1(msApi1: MsApi1) = localDataSource.updateMsApi1(msApi1)
 
-    fun getMsFavAyah() = localDataSource.getMsFavAyah()
+    /* NotifiedPrayer */
+    fun updatePrayerIsNotified(prayerName: String, isNotified: Boolean) = localDataSource.updatePrayerIsNotified(prayerName, isNotified)
+
+    /* MsApi1 */
+    fun updateMsApi1(msApi1: MsApi1) = localDataSource.updateMsApi1(msApi1)
+    fun getMsApi1() = localDataSource.getMsApi1()
+
+    /* MsFavAyah */
+    //fun getMsFavAyah() = localDataSource.getMsFavAyah()
+    fun getMsFavAyah() : LiveData<Resource<List<MsFavAyah>>> {
+        val data = MediatorLiveData<Resource<List<MsFavAyah>>>()
+        val listfavAyah = localDataSource.getMsFavAyah()
+
+        data.value = Resource.loading(null)
+
+        data.addSource(listfavAyah) {
+            data.value = Resource.success(it)
+        }
+
+        return data
+    }
     fun getMsFavAyahBySurahID(surahID: Int) = localDataSource.getMsFavAyahBySurahID(surahID)
     fun insertFavAyah(msFavAyah: MsFavAyah) = localDataSource.insertFavAyah(msFavAyah)
     fun deleteFavAyah(msFavAyah: MsFavAyah) = localDataSource.deleteFavAyah(msFavAyah)
 
+    /* MsFavSurah */
     fun getMsFavSurah() = localDataSource.getMsFavSurah()
     fun getMsFavSurahByID(ayahID: Int) = localDataSource.getMsFavSurahByID(ayahID)
     fun insertFavSurah(msFavSurah: MsFavSurah) = localDataSource.insertFavSurah(msFavSurah)
     fun deleteFavSurah(msFavSurah: MsFavSurah) = localDataSource.deleteFavSurah(msFavSurah)
+
+    /* MsSetting */
+    fun getMsSetting() = localDataSource.getMsSetting()
+    fun updateIsUsingDBQuotes(isUsingDBQuotes: Boolean) = localDataSource.updateIsUsingDBQuotes(isUsingDBQuotes)
+
     //Retrofit
     fun fetchCompass(msApi1: MsApi1) = remoteDataSourceAladhan.fetchCompassApi(msApi1)
 
@@ -135,7 +157,7 @@ class Repository(private val contextProviders: ContextProviders,
     */
 
 
-    fun isFavoriteAyah(ayahID: Int, surahID: Int): LiveData<Boolean> {
+    /* fun isFavoriteAyah(ayahID: Int, surahID: Int): LiveData<Boolean> {
         val isFavorite = MediatorLiveData<Boolean>()
         val listfavAyah = localDataSource.isFavAyah(ayahID, surahID)
 
@@ -147,7 +169,7 @@ class Repository(private val contextProviders: ContextProviders,
         }
 
         return isFavorite
-    }
+    }*/
 
     /* LiveData<Resource<List<MsFavAyah>>> {
         val data = MediatorLiveData<Resource<List<MsFavAyah>>>()

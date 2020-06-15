@@ -6,10 +6,10 @@ import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.programmergabut.solatkuy.R
-import com.programmergabut.solatkuy.ui.activityreadsurah.ReadSurahAdapter
+import com.programmergabut.solatkuy.util.enumclass.EnumStatus
 import com.programmergabut.solatkuy.viewmodel.ViewModelFactory
 import kotlinx.android.synthetic.main.activity_fav_ayah.*
-import kotlinx.android.synthetic.main.activity_read_surah.*
+import java.lang.Exception
 
 class FavAyahActivity : AppCompatActivity() {
 
@@ -23,19 +23,35 @@ class FavAyahActivity : AppCompatActivity() {
         favAyahViewModel = ViewModelProvider(this,
             ViewModelFactory.getInstance(this.application))[FavAyahViewModel::class.java]
 
+        initAppBar()
         initRVFavAyah()
         observeDB()
     }
 
+    private fun initAppBar() {
+        tb_readQuran.title = "Ayahs you've been liked"
+    }
+
     private fun observeDB() {
         favAyahViewModel.favAyah.observe(this, Observer {
-            favAyahAdapter.setAyah(it)
-            favAyahAdapter.notifyDataSetChanged()
+
+            when(it.status){
+                EnumStatus.SUCCESS -> {
+                    if(it.data == null)
+                        throw Exception("favAyahViewModel.favAyah")
+
+                    favAyahAdapter.setAyah(it.data)
+                    favAyahAdapter.notifyDataSetChanged()
+                }
+                EnumStatus.LOADING -> print("loading")
+                EnumStatus.ERROR -> print("error")
+            }
+
         })
     }
 
     private fun initRVFavAyah() {
-        favAyahAdapter = FavAyahAdapter()
+        favAyahAdapter = FavAyahAdapter(this, favAyahViewModel)
 
         rv_fav_ayah.apply {
             adapter = favAyahAdapter

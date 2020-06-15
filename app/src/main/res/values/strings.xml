@@ -64,7 +64,11 @@
     <string name="search_surah_name">Search Surah Name</string>
     <string name="favotite_ayah">favotite_ayah</string>
     <string name="please_wait_for_a_while">Please wait for a while..</string>
-    <string name="choose_the_quotes_are_from">Choose the quotes are from</string>
+    <string name="select_the_quotes_from">Select the quotes from</string>
     <string name="from_fav_quote">From fav Quote</string>
     <string name="from_api">From API</string>
+    <string name="youHaventFavAnyAyah">You haven\'t favorite any ayah</string>
+    <string name="delete">Delete</string>
+    <string name="cancel">Cancel</string>
+    <string name="are_you_sure_want_to_delete_this_ayah">Are you sure want to delete this ayah?</string>
 </resources>

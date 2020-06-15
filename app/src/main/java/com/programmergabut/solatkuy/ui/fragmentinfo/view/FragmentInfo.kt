@@ -105,7 +105,7 @@ class FragmentInfo : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
         fragmentInfoViewModel.prayerApi.observe(this, Observer {
 
-            when(it.Status){
+            when(it.status){
                 EnumStatus.SUCCESS -> {
 
                     val sdf = SimpleDateFormat("dd", Locale.getDefault())

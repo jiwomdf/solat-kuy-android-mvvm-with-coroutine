@@ -18,6 +18,7 @@ import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.transition.DrawableCrossFadeFactory
 import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
+import com.programmergabut.solatkuy.data.local.localentity.MsFavAyah
 import com.programmergabut.solatkuy.data.local.localentity.NotifiedPrayer
 import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.Data
 import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.Timings
@@ -37,6 +38,7 @@ import com.programmergabut.solatkuy.util.helper.SelectPrayerHelper
 import com.programmergabut.solatkuy.viewmodel.ViewModelFactory
 import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.fragment_main.*
+import kotlinx.android.synthetic.main.layout_popup_choose_quote_setting.view.*
 import kotlinx.android.synthetic.main.layout_prayer_time.*
 import kotlinx.android.synthetic.main.layout_quran_quote.*
 import kotlinx.android.synthetic.main.layout_widget.*
@@ -57,6 +59,7 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     private lateinit var fragmentMainViewModel: FragmentMainViewModel
     private lateinit var coroutineTimerProvider: CoroutineTimerProvider
+    private var dialogView: View? = null
     private var tempMsApi1: MsApi1? = null
     private var mCityName: String? = null
 
@@ -90,6 +93,7 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         tv_quran_ayah_quote_click.visibility = View.VISIBLE
 
         loadTempData()
+        subscribeObserversDB()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -109,7 +113,7 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     private fun subscribeObserversAPI() {
 
         fragmentMainViewModel.notifiedPrayer.observe(this, androidx.lifecycle.Observer { retVal ->
-            when(retVal.Status){
+            when(retVal.status){
                 EnumStatus.SUCCESS -> {
 
                     if(retVal.data == null)
@@ -150,20 +154,6 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
             }
         })
 
-
-        fragmentMainViewModel.readSurahEn.observe(this, androidx.lifecycle.Observer { retVal ->
-            when(retVal.Status){
-                EnumStatus.SUCCESS -> {
-                    if(retVal.data == null)
-                        bindQuranSurahOffline()
-                    else
-                        bindQuranSurahOnline(retVal)
-                }
-                EnumStatus.LOADING -> tv_quran_ayah_quote_click.text = getString(R.string.loading)
-                EnumStatus.ERROR -> bindQuranSurahOffline()
-            }
-        })
-
     }
 
     private fun subscribeObserversDB() {
@@ -190,6 +180,45 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
             /* fetching Prayer API */
             fetchPrayerApi(it)
             fetchQuranSurah()
+        })
+
+        fragmentMainViewModel.msSetting.observe(this, androidx.lifecycle.Observer {
+
+            if(!it.isUsingDBQuotes){
+                fragmentMainViewModel.readSurahEn.observe(this, androidx.lifecycle.Observer { apiQuotes ->
+                    when(apiQuotes.status){
+                        EnumStatus.SUCCESS -> {
+
+                            if(apiQuotes.data == null)
+                                bindQuranQuoteApiOffline()
+                            else
+                                bindQuranQuoteApiOnline(apiQuotes)
+
+                            fragmentMainViewModel.favAyah.removeObservers(this)
+                        }
+                        EnumStatus.LOADING -> tv_quran_ayah_quote_click.text = getString(R.string.loading)
+                        EnumStatus.ERROR -> bindQuranQuoteApiOffline()
+                    }
+                })
+            }
+            else{
+                fragmentMainViewModel.favAyah.observe(this, androidx.lifecycle.Observer { localQuotes ->
+
+                    when(localQuotes.status){
+                        EnumStatus.SUCCESS -> {
+                            if(localQuotes.data == null)
+                                throw Exception("favAyahViewModel.favAyah")
+
+                            bindQuranSurahDB(localQuotes.data)
+                            fragmentMainViewModel.readSurahEn.removeObservers(this)
+                        }
+                        EnumStatus.LOADING -> tv_quran_ayah_quote_click.text = getString(R.string.loading)
+                        EnumStatus.ERROR -> tv_quran_ayah_quote_click.text = getString(R.string.fetch_failed)
+                    }
+
+                })
+            }
+
         })
     }
 
@@ -473,19 +502,36 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         }
     }
 
-    private fun bindQuranSurahOffline(){
+    private fun bindQuranQuoteApiOffline(){
         val ayah = SurahQuoteGenerator.retAyah()
         tv_quran_ayah_quote_click.text = if(ayah.length > 100) ayah.substring(0, 100) + "..." else ayah
         tv_quran_ayah_quote.text = ayah
     }
 
-    private fun bindQuranSurahOnline(retVal: Resource<ReadSurahEnApi>) {
+    private fun bindQuranQuoteApiOnline(retVal: Resource<ReadSurahEnApi>) {
         val returnValue = retVal.data?.data!!
         val randAyah = (returnValue.ayahs.indices).random()
         val ayah = returnValue.ayahs[randAyah].text + " - QS " + returnValue.englishName + " Ayah " + returnValue.numberOfAyahs
 
         tv_quran_ayah_quote_click.text = if(ayah.length > 100) ayah.substring(0, 100) + "..." else ayah
         tv_quran_ayah_quote.text = ayah
+    }
+
+    private fun bindQuranSurahDB(listAyah: List<MsFavAyah>) {
+
+        if(listAyah.isNotEmpty()){
+            val randAyah = (listAyah.indices).random()
+            val data = listAyah[randAyah]
+            val ayah = data.ayahEn + " - QS " + data.surahName + " Ayah " + data.ayahID
+
+            tv_quran_ayah_quote_click.text = if(ayah.length > 100) ayah.substring(0, 100) + "..." else ayah
+            tv_quran_ayah_quote.text = ayah
+        }
+        else{
+            tv_quran_ayah_quote_click.text = getString(R.string.youHaventFavAnyAyah)
+            tv_quran_ayah_quote.text = getString(R.string.youHaventFavAnyAyah)
+        }
+
     }
 
     /* Coroutine Timer */
@@ -576,14 +622,31 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     /* Popup quotes setting */
-    fun openPopupQuote(){
+    private fun openPopupQuote(){
         iv_quote_setting.setOnClickListener {
 
             val dialog = Dialog(context!!)
-            val dialogView = layoutInflater.inflate(R.layout.layout_popup_choose_quote_setting,null)
+            dialogView = layoutInflater.inflate(R.layout.layout_popup_choose_quote_setting,null)
             dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-            dialog.setContentView(dialogView)
+            dialog.setContentView(dialogView!!)
             dialog.show()
+
+            fragmentMainViewModel.msSetting.observe(this, androidx.lifecycle.Observer {
+
+                if(it.isUsingDBQuotes)
+                    dialogView?.rbg_quotesDataSource?.check(R.id.rb_fromFavQuote)
+                else
+                    dialogView?.rbg_quotesDataSource?.check(R.id.rb_fromApi)
+
+            })
+
+            dialogView?.rb_fromApi?.setOnClickListener {
+                fragmentMainViewModel.updateIsUsingDBQuotes(false)
+            }
+
+            dialogView?.rb_fromFavQuote?.setOnClickListener {
+                fragmentMainViewModel.updateIsUsingDBQuotes(true)
+            }
 
         }
     }

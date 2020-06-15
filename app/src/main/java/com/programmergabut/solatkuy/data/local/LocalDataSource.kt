@@ -23,26 +23,8 @@ constructor(private val contextProviders: ContextProviders, db: SolatKuyRoom) {
     private var msFavAyahDao = db.msFavAyahDao()
     private var msFavSurahDao = db.msFavSurahDao()
 
+    /* Notified Prayer */
     fun getNotifiedPrayer() = notifiedPrayerDao.getNotifiedPrayer()
-    fun getMsApi1() = msApi1Dao.getMsApi1()
-    fun getMsSetting() = msSettingDao.getMsSetting()
-
-    fun getMsFavAyah() = msFavAyahDao.getMsFavAyah()
-    fun getMsFavAyahBySurahID(surahID: Int) = msFavAyahDao.getMsFavAyahBySurahID(surahID)
-    fun isFavAyah(ayahID: Int, surahID: Int) = msFavAyahDao.isFavAyah(ayahID, surahID)
-
-    fun getMsFavSurahByID(surahID: Int) = msFavSurahDao.getMsFavSurahBySurahID(surahID)
-    fun getMsFavSurah() = msFavSurahDao.getMsFavSurah()
-
-    /* fun updateNotifiedPrayer(NotifiedPrayer: NotifiedPrayer){
-        GlobalScope.launch(contextProviders.IO) {
-            notifiedPrayerDao.updateNotifiedPrayer(
-                NotifiedPrayer.prayerName,
-                NotifiedPrayer.isNotified,
-                NotifiedPrayer.prayerTime
-            )
-        }
-    } */
 
     fun updatePrayerTime(prayerName: String, prayerTime: String){
         GlobalScope.launch(contextProviders.IO){
@@ -56,11 +38,27 @@ constructor(private val contextProviders: ContextProviders, db: SolatKuyRoom) {
         }
     }
 
+    /* MsApi1 */
+    fun getMsApi1() = msApi1Dao.getMsApi1()
+
     fun updateMsApi1(msApi1: MsApi1){
         GlobalScope.launch(contextProviders.IO) {
             msApi1Dao.updateMsApi1(msApi1.api1ID, msApi1.latitude, msApi1.longitude, msApi1.method, msApi1.month, msApi1.year)
         }
     }
+
+    /* MsSetting */
+    fun getMsSetting() = msSettingDao.getMsSetting()
+
+    fun updateIsUsingDBQuotes(isUsingDBQuotes: Boolean){
+        GlobalScope.launch(contextProviders.IO){
+            msSettingDao.updateIsUsingDBQuotes(isUsingDBQuotes)
+        }
+    }
+
+    /* MsFavAyah */
+    fun getMsFavAyah() = msFavAyahDao.getMsFavAyah()
+    fun getMsFavAyahBySurahID(surahID: Int) = msFavAyahDao.getMsFavAyahBySurahID(surahID)
 
     fun insertFavAyah(msFavAyah: MsFavAyah){
         GlobalScope.launch(contextProviders.IO) {
@@ -74,6 +72,10 @@ constructor(private val contextProviders: ContextProviders, db: SolatKuyRoom) {
         }
     }
 
+    /* MsFavSurah */
+    fun getMsFavSurahByID(surahID: Int) = msFavSurahDao.getMsFavSurahBySurahID(surahID)
+    fun getMsFavSurah() = msFavSurahDao.getMsFavSurah()
+
     fun insertFavSurah(msFavSurah: MsFavSurah){
         GlobalScope.launch(contextProviders.IO) {
             msFavSurahDao.insertMsSurah(msFavSurah)
@@ -86,10 +88,26 @@ constructor(private val contextProviders: ContextProviders, db: SolatKuyRoom) {
         }
     }
 
+    //fun isFavAyah(ayahID: Int, surahID: Int) = msFavAyahDao.isFavAyah(ayahID, surahID)
+
+    /* fun updateNotifiedPrayer(NotifiedPrayer: NotifiedPrayer){
+        GlobalScope.launch(contextProviders.IO) {
+            notifiedPrayerDao.updateNotifiedPrayer(
+                NotifiedPrayer.prayerName,
+                NotifiedPrayer.isNotified,
+                NotifiedPrayer.prayerTime
+            )
+        }
+    } */
+
+
     /* fun updateMsSetting(isHasOpen: Boolean){
         GlobalScope.launch(contextProviders.IO) {
             msSettingDao.updateMsSetting(isHasOpen)
         }
     } */
+
+
+
 
 }

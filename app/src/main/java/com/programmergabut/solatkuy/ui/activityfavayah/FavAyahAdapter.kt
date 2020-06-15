@@ -1,14 +1,19 @@
 package com.programmergabut.solatkuy.ui.activityfavayah
 
+import android.app.Dialog
+import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.data.local.localentity.MsFavAyah
-import kotlinx.android.synthetic.main.layout_read_surah.view.*
+import kotlinx.android.synthetic.main.layout_delete.view.*
+import kotlinx.android.synthetic.main.layout_listfav_surah.view.*
 
-class FavAyahAdapter : RecyclerView.Adapter<FavAyahAdapter.FavAyahAdapterViewHolder>() {
+class FavAyahAdapter(private val context: Context,
+                     private val favAyahViewModel: FavAyahViewModel)
+    : RecyclerView.Adapter<FavAyahAdapter.FavAyahAdapterViewHolder>() {
 
     private var listAyah = mutableListOf<MsFavAyah>()
 
@@ -18,7 +23,7 @@ class FavAyahAdapter : RecyclerView.Adapter<FavAyahAdapter.FavAyahAdapterViewHol
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavAyahAdapterViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.layout_read_surah, parent, false)
+        val view = LayoutInflater.from(parent.context).inflate(R.layout.layout_listfav_surah, parent, false)
         return FavAyahAdapterViewHolder(view)
     }
 
@@ -29,34 +34,27 @@ class FavAyahAdapter : RecyclerView.Adapter<FavAyahAdapter.FavAyahAdapterViewHol
 
     inner class FavAyahAdapterViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         fun bind(data: MsFavAyah){
-            itemView.tv_readSurah_ar.text = data.ayahAr
-            itemView.tv_readSurah_en.text = data.ayahEn
-            itemView.tv_readSurah_num.text = ""
+            itemView.tv_listFav_ar.text = data.ayahAr
+            itemView.tv_listFav_en.text = data.ayahEn
+            itemView.tv_listFav_surahName.text = data.surahName + " | Ayah " + data.ayahID.toString()
 
-            /* if(data.isFav)
-                itemView.tv_readSurah_fav.setImageDrawable(context.getDrawable(R.drawable.ic_favorite_red_24))
-            else
-                itemView.tv_readSurah_fav.setImageDrawable(context.getDrawable(R.drawable.ic_favorite_24)) */
+            itemView.tv_listFav_del.setOnClickListener {
 
-            /* itemView.tv_readSurah_fav.setOnClickListener {
+                val dialog = Dialog(context)
+                val dialogView = LayoutInflater.from(context).inflate(R.layout.layout_delete, null)
+                dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+                dialog.setContentView(dialogView)
+                dialog.show()
 
-                  val msFavAyah = MsFavAyah(surahId.toInt(), data.numberInSurah, data.text, data.textEn!!)
+                dialogView.btn_layoutDel_Delete.setOnClickListener {
+                    favAyahViewModel.deleteFavAyah(data)
+                    dialog.hide()
+                }
 
-                 if(itemView.tv_readSurah_fav.drawable.constantState == context.getDrawable(R.drawable.ic_favorite_red_24)?.constantState){
-                     viewModel.selectedSurahAr.postValue(Resource.loading(null))
-                     Toasty.info(context, "Unsaving the ayah", Toast.LENGTH_SHORT).show()
+                dialogView.btn_layoutDel_Cancel.setOnClickListener { dialog.hide() }
 
-                     viewModel.deleteFavAyah(msFavAyah)
-                     itemView.tv_readSurah_fav.setImageDrawable(context.getDrawable(R.drawable.ic_favorite_24))
-                 }
-                 else{
-                     //Toasty.info(context, "Saving the ayah", Toast.LENGTH_SHORT).show()
-                     viewModel.insertFavAyah(msFavAyah)
-                     itemView.tv_readSurah_fav.setImageDrawable(context.getDrawable(R.drawable.ic_favorite_red_24))
-                 }
+            }
 
-                 viewModel.fetchQuranSurah(surahId.toInt())
-             } */
         }
     }
 

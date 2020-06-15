@@ -52,7 +52,7 @@ constructor(private val contextProviders: ContextProviders) {
         result.addSource(apiResponse) { response ->
             result.removeSource(apiResponse)
             result.removeSource(dbSource)
-            when (response.Status) {
+            when (response.status) {
                 EnumStatus.SUCCESS ->
                     GlobalScope.launch(contextProviders.IO) {
                         //EspressoIdlingResource.increment()
