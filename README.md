@@ -9,18 +9,13 @@ created with:
 - Live Data 
 - Coroutine
 - Retrofit 
-- Dagger 2
+- Dagger 2 (some part)
 - Material Design 
 - Testing with Mockito, espresso, & Junit4
 
 Feel free to see and contribute
 
 ![](https://camo.githubusercontent.com/e1459518188f17c1fa6a30570ca5d21530975f9e/68747470733a2f2f646576656c6f7065722e616e64726f69642e636f6d2f746f7069632f6c69627261726965732f6172636869746563747572652f696d616765732f66696e616c2d6172636869746563747572652e706e67)
-
-![](https://firebasestorage.googleapis.com/v0/b/personalwebsite-cbad4.appspot.com/o/screenshoot%2F1.jpg?alt=media&token=14fcf879-050d-4f1f-9678-67794032b823)
-![](https://firebasestorage.googleapis.com/v0/b/personalwebsite-cbad4.appspot.com/o/screenshoot%2F2.jpg?alt=media&token=e481333e-e37d-495d-98e5-c814dc70b401)
-![](https://firebasestorage.googleapis.com/v0/b/personalwebsite-cbad4.appspot.com/o/screenshoot%2F3.jpg?alt=media&token=53976c10-a36c-49d1-bc9d-dbef0a0761d0)
-![](https://firebasestorage.googleapis.com/v0/b/personalwebsite-cbad4.appspot.com/o/screenshoot%2F4.jpg?alt=media&token=bcc1eb3f-8e6d-4195-b299-c4347e4d458d)
 
 # License
 MIT License
