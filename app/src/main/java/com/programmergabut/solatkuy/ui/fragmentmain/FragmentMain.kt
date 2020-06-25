@@ -1,4 +1,4 @@
-package com.programmergabut.solatkuy.ui.fragmentmain.view
+package com.programmergabut.solatkuy.ui.fragmentmain
 
 import android.annotation.SuppressLint
 import android.app.Dialog
@@ -11,7 +11,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModelProvider
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.lifecycleScope
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.Glide
@@ -21,14 +21,9 @@ import com.bumptech.glide.request.transition.DrawableCrossFadeFactory
 import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
 import com.programmergabut.solatkuy.data.local.localentity.MsFavAyah
+import com.programmergabut.solatkuy.data.local.localentity.MsTimings
 import com.programmergabut.solatkuy.data.local.localentity.NotifiedPrayer
-import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.Data
-import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.Timings
 import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonEn.ReadSurahEnResponse
-import com.programmergabut.solatkuy.di.timings.component.DaggerIDataComponent
-import com.programmergabut.solatkuy.di.timings.component.DaggerITimingsComponent
-import com.programmergabut.solatkuy.di.timings.module.DataModule
-import com.programmergabut.solatkuy.ui.fragmentmain.viewmodel.FragmentMainViewModel
 import com.programmergabut.solatkuy.util.Resource
 import com.programmergabut.solatkuy.util.enumclass.EnumConfig
 import com.programmergabut.solatkuy.util.enumclass.EnumStatus
@@ -36,7 +31,7 @@ import com.programmergabut.solatkuy.util.generator.SurahQuoteGenerator
 import com.programmergabut.solatkuy.util.helper.LocationHelper
 import com.programmergabut.solatkuy.util.helper.PushNotificationHelper
 import com.programmergabut.solatkuy.util.helper.SelectPrayerHelper
-import com.programmergabut.solatkuy.viewmodel.ViewModelFactory
+import dagger.hilt.android.AndroidEntryPoint
 import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.fragment_main.*
 import kotlinx.android.synthetic.main.layout_popup_choose_quote_setting.view.*
@@ -47,7 +42,6 @@ import kotlinx.coroutines.*
 import org.joda.time.DateTime
 import org.joda.time.LocalDate
 import org.joda.time.Period
-import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
 import kotlin.math.abs
@@ -56,9 +50,12 @@ import kotlin.math.abs
  * Created by Katili Jiwo Adi Wiyono on 25/03/20.
  */
 
+@AndroidEntryPoint
 class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
-    private lateinit var fragmentMainViewModel: FragmentMainViewModel
+    //private lateinit var fragmentMainViewModel: FragmentMainViewModel
+    private val fragmentMainViewModel: FragmentMainViewModel by viewModels()
+
     private var coroutineTimerJob: Job? = null
     private var dialogView: View? = null
     private var tempMsApi1: MsApi1? = null
@@ -67,8 +64,8 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        fragmentMainViewModel = ViewModelProvider(this, ViewModelFactory
-            .getInstance(activity?.application!!))[FragmentMainViewModel::class.java]
+        /* fragmentMainViewModel = ViewModelProvider(this, ViewModelFactory
+            .getInstance(activity?.application!!))[FragmentMainViewModel::class.java] */
 
         subscribeObserversAPI()
         subscribeObserversDB()
@@ -110,7 +107,7 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     /* Subscribe live data */
     private fun subscribeObserversAPI() {
 
-        fragmentMainViewModel.notifiedPrayer.observe(this, androidx.lifecycle.Observer { retVal ->
+        fragmentMainViewModel.notifiedPrayer.observe(viewLifecycleOwner, androidx.lifecycle.Observer { retVal ->
             when(retVal.status){
                 EnumStatus.SUCCESS -> {
 
@@ -129,14 +126,14 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
                 }
                 EnumStatus.LOADING -> {
-                    Toasty.info(context!!, "syncing data..", Toast.LENGTH_SHORT).show()
+                    Toasty.info(requireContext(), "syncing data..", Toast.LENGTH_SHORT).show()
                     bindPrayerText(null)
                 }
                 EnumStatus.ERROR -> {
                     if(retVal.data == null)
                         throw Exception("notifiedPrayer return null")
 
-                    Toasty.warning(context!!, "using offline data", Toast.LENGTH_SHORT).show()
+                    Toasty.warning(requireContext(), "using offline data", Toast.LENGTH_SHORT).show()
 
                     /* Bind Checkbox*/
                     bindCheckBox(retVal.data)
@@ -165,7 +162,7 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
             createModelPrayer(it)?.let { data -> updateAlarmManager(data) }
         }) */
 
-        fragmentMainViewModel.msApi1Local.observe(this, androidx.lifecycle.Observer {
+        fragmentMainViewModel.msApi1Local.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             when(it.status){
                 EnumStatus.SUCCESS -> {
                     if(it.data == null )
@@ -185,7 +182,7 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
             }
         })
 
-        fragmentMainViewModel.msSetting.observe(this, androidx.lifecycle.Observer {
+        fragmentMainViewModel.msSetting.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             when(it.status){
                 EnumStatus.SUCCESS -> {
 
@@ -193,7 +190,7 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                         return@Observer
 
                     if(!it.data.isUsingDBQuotes){
-                        fragmentMainViewModel.readSurahEn.observe(this, androidx.lifecycle.Observer { apiQuotes ->
+                        fragmentMainViewModel.readSurahEn.observe(viewLifecycleOwner, androidx.lifecycle.Observer { apiQuotes ->
                             when(apiQuotes.status){
                                 EnumStatus.SUCCESS -> {
 
@@ -210,7 +207,7 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                         })
                     }
                     else{
-                        fragmentMainViewModel.favAyah.observe(this, androidx.lifecycle.Observer { localQuotes ->
+                        fragmentMainViewModel.favAyah.observe(viewLifecycleOwner, androidx.lifecycle.Observer { localQuotes ->
 
                             when(localQuotes.status){
                                 EnumStatus.SUCCESS -> {
@@ -233,28 +230,25 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         })
     }
 
-    private fun createData(prayer: List<NotifiedPrayer>): Data {
+    private fun createData(prayer: List<NotifiedPrayer>): MsTimings {
         /* Dagger Injection */
         /* based from sync API data */
-        val localTimings = DaggerITimingsComponent.builder()
-            .fajr(prayer[0].prayerTime /* fajr */)
-            .dhuhr(prayer[1].prayerTime /* dhuhr */)
-            .asr(prayer[2].prayerTime /* asr*/)
-            .maghrib(prayer[3].prayerTime /* mahgrib */)
-            .isha(prayer[4].prayerTime /* isha */)
-            .sunrise(prayer[5].prayerTime /* isha */)
-            .imsak("")
-            .midnight("")
-            .sunset("")
-            .build()
-            .getTimings()
 
         val arrDate = LocalDate.now().toString("dd/MMM/yyyy").split("/")
 
-        return DaggerIDataComponent.builder()
-            .dataModule(DataModule(localTimings, arrDate[0], arrDate[1],0))
-            .build()
-            .getData()
+        return MsTimings(
+            prayer[0].prayerTime,
+                prayer[1].prayerTime,
+                prayer[2].prayerTime,
+                prayer[3].prayerTime,
+                prayer[4].prayerTime,
+                prayer[5].prayerTime,
+        "",
+        "",
+        "",
+            arrDate[0],
+            arrDate[1]
+        )
     }
 
 
@@ -274,9 +268,9 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     private fun updatePrayerIsNotified(prayer:String, isNotified:Boolean){
 
         if(isNotified)
-            Toasty.success(context!!, "$prayer will be notified every day", Toast.LENGTH_SHORT).show()
+            Toasty.success(requireContext(), "$prayer will be notified every day", Toast.LENGTH_SHORT).show()
         else
-            Toasty.warning(context!!, "$prayer will not be notified anymore", Toast.LENGTH_SHORT).show()
+            Toasty.warning(requireContext(), "$prayer will not be notified anymore", Toast.LENGTH_SHORT).show()
 
         fragmentMainViewModel.updatePrayerIsNotified(prayer, isNotified)
     }
@@ -403,22 +397,22 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
 
     /* Widget */
-    private fun bindWidget(data: Data?) {
+    private fun bindWidget(data: MsTimings?) {
 
         if(data == null)
             return
 
-        val selPrayer = SelectPrayerHelper.selectNextPrayerToInt(data.timings)
+        val selPrayer = SelectPrayerHelper.selectNextPrayerToInt(data)
 
         bindPrayerText(data)
         selectWidgetTitle(selPrayer)
         selectWidgetPic(selPrayer)
-        selectNextPrayerTime(selPrayer, data.timings)
+        selectNextPrayerTime(selPrayer, data)
     }
 
     @SuppressLint("SetTextI18n")
     private fun bindWidgetLocation(it: MsApi1) {
-        mCityName = LocationHelper.getCity(context!!, it.latitude.toDouble(), it.longitude.toDouble())
+        mCityName = LocationHelper.getCity(requireContext(), it.latitude.toDouble(), it.longitude.toDouble())
 
         tv_view_latitude.text = it.latitude + " °N"
         tv_view_longitude.text = it.longitude + " °W"
@@ -426,7 +420,7 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     @SuppressLint("SetTextI18n")
-    private fun bindPrayerText(apiData: Data?) {
+    private fun bindPrayerText(apiData: MsTimings?) {
 
         if(apiData == null){
             tv_fajr_time.text = getString(R.string.loading)
@@ -437,16 +431,16 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
             tv_year_change.text = getString(R.string.loading)
         }
         else{
-            tv_fajr_time.text = apiData.timings.fajr
-            tv_dhuhr_time.text = apiData.timings.dhuhr
-            tv_asr_time.text = apiData.timings.asr
-            tv_maghrib_time.text = apiData.timings.maghrib
-            tv_isha_time.text = apiData.timings.isha
-            tv_year_change.text = "${apiData.date.gregorian?.month?.en} ${apiData.date.gregorian?.day} "
+            tv_fajr_time.text = apiData.fajr
+            tv_dhuhr_time.text = apiData.dhuhr
+            tv_asr_time.text = apiData.asr
+            tv_maghrib_time.text = apiData.maghrib
+            tv_isha_time.text = apiData.isha
+            tv_year_change.text = "${apiData.month} ${apiData.day} "
         }
     }
 
-    private fun selectNextPrayerTime(selPrayer: Int, timings: Timings) {
+    private fun selectNextPrayerTime(selPrayer: Int, timings: MsTimings) {
 
         val sdfPrayer = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
 
@@ -616,7 +610,7 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
             mCityName = "-"
 
         PushNotificationHelper(
-            context!!,
+            requireContext(),
             listNotifiedPrayer as MutableList<NotifiedPrayer>, mCityName!!
         )
         //Toasty.info(context!!, "alarm manager updated", Toast.LENGTH_SHORT).show()
@@ -648,13 +642,13 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     private fun openPopupQuote(){
         iv_quote_setting.setOnClickListener {
 
-            val dialog = Dialog(context!!)
+            val dialog = Dialog(requireContext())
             dialogView = layoutInflater.inflate(R.layout.layout_popup_choose_quote_setting,null)
             dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
             dialog.setContentView(dialogView!!)
             dialog.show()
 
-            fragmentMainViewModel.msSetting.observe(this, androidx.lifecycle.Observer {
+            fragmentMainViewModel.msSetting.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
                 when(it.status){
                     EnumStatus.SUCCESS -> {
                         if(it.data != null){

@@ -24,7 +24,7 @@
         <activity android:name=".ui.activityreadsurah.ReadSurahActivity" />
         <activity android:name=".ui.activityprayer.DuaActivity" />
         <activity
-            android:name=".ui.main.view.MainActivity"
+            android:name=".ui.main.MainActivity"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity">
             <intent-filter>

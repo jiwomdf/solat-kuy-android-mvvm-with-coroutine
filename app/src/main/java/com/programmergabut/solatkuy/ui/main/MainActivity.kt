@@ -1,4 +1,4 @@
-package com.programmergabut.solatkuy.ui.main.view
+package com.programmergabut.solatkuy.ui.main
 
 import android.Manifest
 import android.app.AlertDialog
@@ -16,10 +16,10 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager.widget.ViewPager
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
@@ -29,10 +29,8 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.data.local.SolatKuyRoom
-import com.programmergabut.solatkuy.ui.main.adapter.SwipeAdapter
-import com.programmergabut.solatkuy.ui.main.viewmodel.MainActivityViewModel
 import com.programmergabut.solatkuy.util.enumclass.EnumStatus
-import com.programmergabut.solatkuy.viewmodel.ViewModelFactory
+import dagger.hilt.android.AndroidEntryPoint
 import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.layout_bottomsheet_bygps.view.*
@@ -41,17 +39,19 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.joda.time.LocalDate
+import javax.inject.Inject
 
 /*
  * Created by Katili Jiwo Adi Wiyono on 25/03/20.
  */
-
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener {
 
     lateinit var mSubDialogView: View
     private lateinit var mSubDialog: Dialog
-    private lateinit var mainActivityViewModel: MainActivityViewModel
-    private lateinit var db : SolatKuyRoom
+    //private lateinit var mainActivityViewModel: MainActivityViewModel
+    private val mainActivityViewModel: MainActivityViewModel by viewModels()
+    @Inject lateinit var db : SolatKuyRoom
     private val ALL_PERMISSIONS = 101
 
 
@@ -60,9 +60,9 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         setContentView(R.layout.activity_main)
 
 
-        db = SolatKuyRoom.getDataBase(this)
-        mainActivityViewModel = ViewModelProvider(this, ViewModelFactory
-            .getInstance(application))[MainActivityViewModel::class.java]
+        //db = SolatKuyRoom.getDataBase(this)
+        /* mainActivityViewModel = ViewModelProvider(this, ViewModelFactory
+            .getInstance(application))[MainActivityViewModel::class.java] */
 
         bottom_navigation.setOnNavigationItemSelectedListener(this)
 
@@ -81,7 +81,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
                         else
                             initDialog()
                     else
-                        SolatKuyRoom.populateDatabase()
+                        SolatKuyRoom.populateDatabase(db)
                 }
                 EnumStatus.LOADING -> {}
                 EnumStatus.ERROR -> {}
@@ -103,8 +103,9 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
     }
 
     private fun initViewPager() {
-        vp2_main.adapter = SwipeAdapter(supportFragmentManager)
-        vp2_main.setPageTransformer(true, ZoomOutPageTransformer())
+        vp2_main.adapter = SwipeAdapter(
+            supportFragmentManager
+        )
         vp2_main.addOnPageChangeListener( object : ViewPager.OnPageChangeListener{
             override fun onPageScrollStateChanged(state: Int) {}
 
@@ -350,33 +351,6 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         return true
     }
 
-    /* Animation */
-    private inner class ZoomOutPageTransformer : ViewPager.PageTransformer {
-        private val MIN_SCALE = 0.85f
-        private val MIN_ALPHA = 0.5f
-        override fun transformPage(view: View, position: Float) {
-            view.apply {
-                val pageWidth = width
-                val pageHeight = height
-                when {
-                    position < -1 -> alpha = 0f
-                    position <= 1 -> {
-                        // Modify the default slide transition to shrink the page as well
-                        val scaleFactor = MIN_SCALE.coerceAtLeast(1 - kotlin.math.abs(position))
-                        val vertMargin = pageHeight * (1 - scaleFactor) / 2
-                        val horzMargin = pageWidth * (1 - scaleFactor) / 2
-                        translationX = if (position < 0) horzMargin - vertMargin / 2 else horzMargin + vertMargin / 2
-                        // Scale the page down (between MIN_SCALE and 1)
-                        scaleX = scaleFactor
-                        scaleY = scaleFactor
-                        // Fade the page relative to its size.
-                        alpha = (MIN_ALPHA + (((scaleFactor - MIN_SCALE) / (1 - MIN_SCALE)) * (1 - MIN_ALPHA)))
-                    }
-                    else -> alpha = 0f
-                }
-            }
-        }
-    }
 
 
 }

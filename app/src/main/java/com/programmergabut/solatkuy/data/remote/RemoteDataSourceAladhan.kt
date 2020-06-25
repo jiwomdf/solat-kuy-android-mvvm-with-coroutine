@@ -11,16 +11,18 @@ import com.programmergabut.solatkuy.util.Resource
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import javax.inject.Inject
+import javax.inject.Singleton
 
 /*
  * Created by Katili Jiwo Adi Wiyono on 09/05/20.
  */
 
-class RemoteDataSourceAladhan {
+class RemoteDataSourceAladhan(){
 
     private val strApi = "https://api.aladhan.com/v1/"
 
-    companion object{
+    /* companion object{
         @Volatile
         private var instance: RemoteDataSourceAladhan? = null
 
@@ -29,7 +31,7 @@ class RemoteDataSourceAladhan {
             instance
                 ?: RemoteDataSourceAladhan()
         }
-    }
+    } */
 
     //Coroutine
     fun fetchCompassApi(msApi1: MsApi1): LiveData<Resource<CompassResponse>>{

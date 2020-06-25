@@ -11,12 +11,14 @@ import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonEn.Rea
 import com.programmergabut.solatkuy.util.EspressoIdlingResource
 import com.programmergabut.solatkuy.util.Resource
 import kotlinx.coroutines.*
+import javax.inject.Inject
+import javax.inject.Singleton
 
-class RemoteDataSourceApiAlquran {
+class RemoteDataSourceApiAlquran(){
 
     private val strApi = "https://api.alquran.cloud/v1/"
 
-    companion object{
+    /* companion object{
         @Volatile
         private var instance: RemoteDataSourceApiAlquran? = null
 
@@ -25,7 +27,7 @@ class RemoteDataSourceApiAlquran {
                 instance
                     ?: RemoteDataSourceApiAlquran()
             }
-    }
+    }*/
 
 
     fun fetchReadSurahEn(surahID: Int): MutableLiveData<Resource<ReadSurahEnResponse>> {

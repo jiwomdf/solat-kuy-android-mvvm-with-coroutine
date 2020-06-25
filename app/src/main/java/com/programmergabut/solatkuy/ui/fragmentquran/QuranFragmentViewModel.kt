@@ -1,16 +1,14 @@
 package com.programmergabut.solatkuy.ui.fragmentquran
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
+import androidx.hilt.lifecycle.ViewModelInject
+import androidx.lifecycle.*
 import com.programmergabut.solatkuy.data.Repository
 import com.programmergabut.solatkuy.data.local.localentity.MsFavSurah
 import com.programmergabut.solatkuy.data.remote.remoteentity.quranallsurahJson.AllSurahResponse
 import com.programmergabut.solatkuy.util.Resource
 
-class QuranFragmentViewModel(application: Application, private val repository: Repository): AndroidViewModel(application) {
+class QuranFragmentViewModel @ViewModelInject constructor(val repository: Repository): ViewModel() {
 
     private var updateAllSurah = MutableLiveData<String>()
 

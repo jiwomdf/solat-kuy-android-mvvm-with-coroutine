@@ -1,15 +1,17 @@
-package com.programmergabut.solatkuy.ui.fragmentcompass.viewmodel
+package com.programmergabut.solatkuy.ui.fragmentcompass
 
 import android.app.Application
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
+import androidx.lifecycle.ViewModel
 import com.programmergabut.solatkuy.data.Repository
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
 import com.programmergabut.solatkuy.data.remote.remoteentity.compassJson.CompassResponse
 import com.programmergabut.solatkuy.util.Resource
 
-class FragmentCompassViewModel(a: Application, private val repository: Repository): AndroidViewModel(a) {
+class FragmentCompassViewModel @ViewModelInject constructor(val repository: Repository): ViewModel() {
 
     private var coordinateID = MutableLiveData<MsApi1>()
 

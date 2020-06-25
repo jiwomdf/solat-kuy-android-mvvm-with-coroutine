@@ -6,6 +6,7 @@ import androidx.lifecycle.MutableLiveData
 import com.nhaarman.mockitokotlin2.verify
 import com.programmergabut.solatkuy.data.Repository
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
+import com.programmergabut.solatkuy.ui.fragmentsetting.FragmentSettingViewModel
 import com.programmergabut.solatkuy.util.generator.DummyData
 import junit.framework.Assert.assertNotNull
 import kotlinx.coroutines.Dispatchers
@@ -21,7 +22,6 @@ import org.junit.Test
 import org.junit.Rule
 import org.junit.runner.RunWith
 import org.mockito.Mock
-import org.mockito.Mockito.`when`
 import org.mockito.junit.MockitoJUnitRunner
 
 @RunWith(MockitoJUnitRunner::class)
@@ -47,7 +47,11 @@ class FragmentSettingViewModelTest {
     @Before
     fun setUp() {
         Dispatchers.setMain(dispatcher)
-        viewModel = FragmentSettingViewModel(context, repository)
+        viewModel =
+            FragmentSettingViewModel(
+                context,
+                repository
+            )
         viewModel.updateMsApi1(msApi1)
     }
 

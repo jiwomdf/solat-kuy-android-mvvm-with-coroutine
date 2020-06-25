@@ -3,7 +3,7 @@ package com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson
 
 import com.google.gson.annotations.SerializedName
 
-data class Hijri (
+data class Hijri(
     @SerializedName("date")
     val date: String,
     @SerializedName("day")

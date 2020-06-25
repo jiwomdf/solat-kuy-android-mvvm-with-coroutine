@@ -1,10 +1,8 @@
-package com.programmergabut.solatkuy.ui.fragmentmain.viewmodel
+package com.programmergabut.solatkuy.ui.fragmentmain
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
-import androidx.lifecycle.viewModelScope
+import androidx.hilt.lifecycle.ViewModelInject
+import androidx.lifecycle.*
 import com.programmergabut.solatkuy.data.Repository
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
 import com.programmergabut.solatkuy.data.local.localentity.NotifiedPrayer
@@ -16,7 +14,7 @@ import kotlinx.coroutines.launch
  * Created by Katili Jiwo Adi Wiyono on 25/03/20.
  */
 
-class FragmentMainViewModel(application: Application, private val repository: Repository): AndroidViewModel(application) {
+class FragmentMainViewModel @ViewModelInject constructor(val repository: Repository): ViewModel() {
 
     private var msApi1Param = MutableLiveData<MsApi1>()
     private var quranSurahID = MutableLiveData<Int>()

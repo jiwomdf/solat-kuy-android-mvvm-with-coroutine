@@ -1,4 +1,4 @@
-package com.programmergabut.solatkuy.di.appmodule
+package com.programmergabut.solatkuy.di.app
 
 import android.content.Context
 import androidx.room.Room

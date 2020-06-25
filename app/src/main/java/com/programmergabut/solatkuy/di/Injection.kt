@@ -8,7 +8,7 @@ import com.programmergabut.solatkuy.data.local.SolatKuyRoom
 import com.programmergabut.solatkuy.data.remote.RemoteDataSourceApiAlquran
 import kotlinx.coroutines.GlobalScope
 
-object Injection {
+/* object Injection {
 
     fun provideRepository(application: Application): Repository {
 
@@ -21,9 +21,8 @@ object Injection {
 
         return Repository(
             remoteDataSourceAladhan,
-            remoteDataSourceQuranApi,
-            localDataSource
+            remoteDataSourceQuranApi
         )
     }
 
-}
+}*/

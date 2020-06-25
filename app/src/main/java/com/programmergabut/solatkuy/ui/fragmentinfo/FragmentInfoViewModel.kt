@@ -1,10 +1,8 @@
-package com.programmergabut.solatkuy.ui.fragmentinfo.viewmodel
+package com.programmergabut.solatkuy.ui.fragmentinfo
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
+import androidx.hilt.lifecycle.ViewModelInject
+import androidx.lifecycle.*
 import com.programmergabut.solatkuy.data.Repository
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
 import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.PrayerResponse
@@ -14,7 +12,7 @@ import com.programmergabut.solatkuy.util.Resource
  * Created by Katili Jiwo Adi Wiyono on 25/04/20.
  */
 
-class FragmentInfoViewModel(application: Application,  private val repository: Repository): AndroidViewModel(application) {
+class FragmentInfoViewModel @ViewModelInject constructor(val repository: Repository): ViewModel() {
 
     private var msApi1Param = MutableLiveData<MsApi1>()
     val prayerResponse : MutableLiveData<Resource<PrayerResponse>> = Transformations.switchMap(msApi1Param){

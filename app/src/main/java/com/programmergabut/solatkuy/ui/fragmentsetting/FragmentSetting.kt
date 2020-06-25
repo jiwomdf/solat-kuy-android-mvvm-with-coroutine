@@ -1,4 +1,4 @@
-package com.programmergabut.solatkuy.ui.fragmentsetting.view
+package com.programmergabut.solatkuy.ui.fragmentsetting
 
 import android.Manifest
 import android.annotation.SuppressLint
@@ -18,6 +18,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -28,11 +29,11 @@ import com.google.android.gms.location.LocationServices.getFusedLocationProvider
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
-import com.programmergabut.solatkuy.ui.fragmentsetting.viewmodel.FragmentSettingViewModel
+import com.programmergabut.solatkuy.ui.fragmentquran.QuranFragmentViewModel
 import com.programmergabut.solatkuy.util.enumclass.EnumConfig
 import com.programmergabut.solatkuy.util.enumclass.EnumStatus
 import com.programmergabut.solatkuy.util.helper.LocationHelper
-import com.programmergabut.solatkuy.viewmodel.ViewModelFactory
+import dagger.hilt.android.AndroidEntryPoint
 import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.fragment_setting.*
 import kotlinx.android.synthetic.main.layout_bottomsheet_bygps.view.*
@@ -43,11 +44,14 @@ import org.joda.time.LocalDate
  * Created by Katili Jiwo Adi Wiyono on 25/03/20.
  */
 
+@AndroidEntryPoint
 class FragmentSetting : Fragment() {
 
     private lateinit var dialog: BottomSheetDialog
     lateinit var dialogView: View
-    private lateinit var fragmentSettingViewModel: FragmentSettingViewModel
+    //private lateinit var fragmentSettingViewModel: FragmentSettingViewModel
+    private val fragmentSettingViewModel: FragmentSettingViewModel by viewModels()
+
     private lateinit var mFusedLocationClient: FusedLocationProviderClient
 
     private val ALL_PERMISSIONS = 101
@@ -60,11 +64,11 @@ class FragmentSetting : Fragment() {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        dialog = BottomSheetDialog(context!!)
+        dialog = BottomSheetDialog(requireContext())
         btnSetLatitudeLongitude()
 
-        fragmentSettingViewModel = ViewModelProvider(this, ViewModelFactory
-            .getInstance(activity?.application!!))[FragmentSettingViewModel::class.java]
+        /* fragmentSettingViewModel = ViewModelProvider(this, ViewModelFactory
+            .getInstance(activity?.application!!))[FragmentSettingViewModel::class.java] */
 
         subscribeObserversDB()
     }
@@ -72,12 +76,12 @@ class FragmentSetting : Fragment() {
     /* Subscribe live data */
     @SuppressLint("SetTextI18n")
     private fun subscribeObserversDB() {
-        fragmentSettingViewModel.msApi1.observe(this, Observer {
+        fragmentSettingViewModel.msApi1.observe(viewLifecycleOwner, Observer {
             when(it.status){
                 EnumStatus.SUCCESS -> {
                     val retVal = it.data
                     if(retVal != null){
-                        val city = LocationHelper.getCity(context!!, retVal.latitude.toDouble(), retVal.longitude.toDouble())
+                        val city = LocationHelper.getCity(requireContext(), retVal.latitude.toDouble(), retVal.longitude.toDouble())
 
                         tv_view_latitude.text = retVal.latitude + " °S"
                         tv_view_longitude.text = retVal.longitude + " °E"
@@ -105,7 +109,7 @@ class FragmentSetting : Fragment() {
                 val longitude = dialogView.et_llDialog_longitude.text.toString().trim()
 
                 if(latitude.isEmpty() || longitude.isEmpty() || latitude == "." || longitude == "."){
-                    Toasty.warning(context!!,"latitude and longitude cannot be empty", Toast.LENGTH_SHORT).show()
+                    Toasty.warning(requireContext(),"latitude and longitude cannot be empty", Toast.LENGTH_SHORT).show()
                     return@byLl
                 }
 
@@ -113,19 +117,19 @@ class FragmentSetting : Fragment() {
                 val arrLongitude = longitude.toCharArray()
 
                 if(arrLatitude[arrLatitude.size - 1] == '.' || arrLongitude[arrLongitude.size - 1] == '.'){
-                    Toasty.warning(context!!,"latitude and longitude cannot be ended by .", Toast.LENGTH_SHORT).show()
+                    Toasty.warning(requireContext(),"latitude and longitude cannot be ended by .", Toast.LENGTH_SHORT).show()
                     return@byLl
                 }
 
                 if(arrLatitude[0] == '.' || arrLongitude[0] == '.'){
-                    Toasty.warning(context!!,"latitude and longitude cannot be started by .", Toast.LENGTH_SHORT).show()
+                    Toasty.warning(requireContext(),"latitude and longitude cannot be started by .", Toast.LENGTH_SHORT).show()
                     return@byLl
                 }
 
                 insertLocationSettingToDb(latitude, longitude)
 
                 dialog.dismiss()
-                Toasty.success(context!!,"Success change the coordinate", Toast.LENGTH_SHORT).show()
+                Toasty.success(requireContext(),"Success change the coordinate", Toast.LENGTH_SHORT).show()
             }
         }
 
@@ -143,19 +147,19 @@ class FragmentSetting : Fragment() {
                 val longitude = dialogView.tv_gpsDialog_longitude.text.toString().trim()
 
                 if(latitude.isEmpty() || longitude.isEmpty()){
-                    Toasty.warning(context!!,"Action failed, please enable your location", Toast.LENGTH_SHORT).show()
+                    Toasty.warning(requireContext(),"Action failed, please enable your location", Toast.LENGTH_SHORT).show()
                     return@byGps
                 }
 
                 insertLocationSettingToDb(latitude, longitude)
 
                 dialog.dismiss()
-                Toasty.success(context!!,"Success change the coordinate", Toast.LENGTH_SHORT).show()
+                Toasty.success(requireContext(),"Success change the coordinate", Toast.LENGTH_SHORT).show()
             }
         }
 
         btn_seeAuthor.setOnClickListener{
-            val dialog = Dialog(context!!)
+            val dialog = Dialog(requireContext())
             dialogView = layoutInflater.inflate(R.layout.layout_about_author,null)
             dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
             dialog.setContentView(dialogView)
@@ -188,7 +192,7 @@ class FragmentSetting : Fragment() {
             if(grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)
                 onUpdateLocationListener()
             else
-                Toasty.error(context!!, "All Permission Denied", Toast.LENGTH_SHORT).show()
+                Toasty.error(requireContext(), "All Permission Denied", Toast.LENGTH_SHORT).show()
         }
 
     }
@@ -199,7 +203,7 @@ class FragmentSetting : Fragment() {
             .setMessage("Permission is needed to run the Gps")
             .setPositiveButton("ok") { _: DialogInterface, _: Int ->
                 ActivityCompat.requestPermissions(
-                    this.activity!!,
+                    this.requireActivity(),
                     arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION),
                     ALL_PERMISSIONS
                 )
@@ -218,10 +222,10 @@ class FragmentSetting : Fragment() {
         dialogView.findViewById<TextView>(R.id.tv_view_latitude).visibility = View.GONE
         dialogView.findViewById<TextView>(R.id.tv_view_longitude).visibility = View.GONE
 
-        if (ActivityCompat.checkSelfPermission(context!!, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-            || ActivityCompat.checkSelfPermission(context!!, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
+            || ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
 
-            mFusedLocationClient = getFusedLocationProviderClient(context!!)
+            mFusedLocationClient = getFusedLocationProviderClient(requireContext())
 
             //onSuccessListener()
             onFailedListener()
@@ -241,7 +245,7 @@ class FragmentSetting : Fragment() {
     }
 
     private fun onFailedListener() {
-        val lm: LocationManager = context!!.getSystemService(Context.LOCATION_SERVICE) as LocationManager
+        val lm: LocationManager = requireContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
         var gpsEnabled = false
         var networkEnabled = false
 
@@ -281,8 +285,8 @@ class FragmentSetting : Fragment() {
         mLocationRequest.interval = 10 * 10000 /* 1 minute */
         mLocationRequest.fastestInterval = 10 * 10000 /* 1 minute */
 
-        if (ActivityCompat.checkSelfPermission(context!!, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-            ActivityCompat.checkSelfPermission(context!!, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
+            ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
             // TODO: Consider calling
             //    ActivityCompat#requestPermissions
             // here to request the missing permissions, and then overriding
@@ -293,7 +297,7 @@ class FragmentSetting : Fragment() {
             return
         }
 
-        getFusedLocationProviderClient(context!!).requestLocationUpdates(mLocationRequest, object : LocationCallback() {
+        getFusedLocationProviderClient(requireContext()).requestLocationUpdates(mLocationRequest, object : LocationCallback() {
 
             override fun onLocationResult(locationResult: LocationResult) {
                 // do work here

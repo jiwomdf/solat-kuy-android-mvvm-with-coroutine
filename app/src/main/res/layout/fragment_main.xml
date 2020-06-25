@@ -6,7 +6,7 @@
     android:id="@+id/sl_main"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".ui.fragmentmain.view.FragmentMain">
+    tools:context=".ui.fragmentmain.FragmentMain">
 
     <ScrollView
         android:layout_width="match_parent"

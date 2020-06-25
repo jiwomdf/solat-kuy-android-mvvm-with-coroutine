@@ -1,0 +1,211 @@
+{
+  "formatVersion": 1,
+  "database": {
+    "version": 12,
+    "identityHash": "c19519c59f8be5a77b5b5933142fe73f",
+    "entities": [
+      {
+        "tableName": "notified_prayer",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`prayerID` INTEGER PRIMARY KEY AUTOINCREMENT NOT NULL, `prayerName` TEXT NOT NULL, `isNotified` INTEGER NOT NULL, `prayerTime` TEXT NOT NULL)",
+        "fields": [
+          {
+            "fieldPath": "prayerID",
+            "columnName": "prayerID",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "prayerName",
+            "columnName": "prayerName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isNotified",
+            "columnName": "isNotified",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "prayerTime",
+            "columnName": "prayerTime",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "prayerID"
+          ],
+          "autoGenerate": true
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "MsApi1",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`api1ID` INTEGER NOT NULL, `latitude` TEXT NOT NULL, `longitude` TEXT NOT NULL, `method` TEXT NOT NULL, `month` TEXT NOT NULL, `year` TEXT NOT NULL, PRIMARY KEY(`api1ID`))",
+        "fields": [
+          {
+            "fieldPath": "api1ID",
+            "columnName": "api1ID",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "latitude",
+            "columnName": "latitude",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "longitude",
+            "columnName": "longitude",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "method",
+            "columnName": "method",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "month",
+            "columnName": "month",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "year",
+            "columnName": "year",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "api1ID"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "MsSetting",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`no` INTEGER NOT NULL, `isHasOpenApp` INTEGER NOT NULL, `isUsingDBQuotes` INTEGER NOT NULL, PRIMARY KEY(`no`))",
+        "fields": [
+          {
+            "fieldPath": "no",
+            "columnName": "no",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isHasOpenApp",
+            "columnName": "isHasOpenApp",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "isUsingDBQuotes",
+            "columnName": "isUsingDBQuotes",
+            "affinity": "INTEGER",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "no"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "MsFavAyah",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`surahID` INTEGER NOT NULL, `ayahID` INTEGER NOT NULL, `surahName` TEXT, `ayahAr` TEXT, `ayahEn` TEXT, PRIMARY KEY(`surahID`, `ayahID`))",
+        "fields": [
+          {
+            "fieldPath": "surahID",
+            "columnName": "surahID",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "ayahID",
+            "columnName": "ayahID",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "surahName",
+            "columnName": "surahName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "ayahAr",
+            "columnName": "ayahAr",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "ayahEn",
+            "columnName": "ayahEn",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "surahID",
+            "ayahID"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      },
+      {
+        "tableName": "MsFavSurah",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`surahID` INTEGER, `surahName` TEXT, `surahTranslation` TEXT, PRIMARY KEY(`surahID`))",
+        "fields": [
+          {
+            "fieldPath": "surahID",
+            "columnName": "surahID",
+            "affinity": "INTEGER",
+            "notNull": false
+          },
+          {
+            "fieldPath": "surahName",
+            "columnName": "surahName",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "surahTranslation",
+            "columnName": "surahTranslation",
+            "affinity": "TEXT",
+            "notNull": false
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "surahID"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
+      }
+    ],
+    "views": [],
+    "setupQueries": [
+      "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'c19519c59f8be5a77b5b5933142fe73f')"
+    ]
+  }
+}

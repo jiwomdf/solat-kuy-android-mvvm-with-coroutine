@@ -1,6 +1,7 @@
 package com.programmergabut.solatkuy.ui.activityreadsurah
 
 import android.app.Application
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import com.programmergabut.solatkuy.data.Repository
 import com.programmergabut.solatkuy.data.local.localentity.MsFavAyah
@@ -9,7 +10,7 @@ import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonAr.Rea
 import com.programmergabut.solatkuy.util.Resource
 import kotlinx.coroutines.launch
 
-class ReadSurahViewModel(application: Application, private val repository: Repository): AndroidViewModel(application) {
+class ReadSurahViewModel @ViewModelInject constructor(val repository: Repository): ViewModel() {
 
     private var surahID = MutableLiveData<Int>()
     private var favSurahID = MutableLiveData<Int>()

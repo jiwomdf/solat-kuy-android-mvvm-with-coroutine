@@ -1,13 +1,15 @@
-package com.programmergabut.solatkuy.ui.main.viewmodel
+package com.programmergabut.solatkuy.ui.main
 
 import android.app.Application
+import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.ViewModel
 import com.programmergabut.solatkuy.data.Repository
 import com.programmergabut.solatkuy.data.local.localentity.MsSetting
 import com.programmergabut.solatkuy.util.Resource
 
-class MainActivityViewModel(application: Application, repository: Repository) : AndroidViewModel(application){
+class MainActivityViewModel @ViewModelInject constructor(repository: Repository) : ViewModel(){
 
     val msSetting: LiveData<Resource<MsSetting>> = repository.getMsSetting()
 

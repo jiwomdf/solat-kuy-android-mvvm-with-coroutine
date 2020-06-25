@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -17,15 +18,23 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.data.remote.remoteentity.quranallsurahJson.Data
 import com.programmergabut.solatkuy.ui.activityfavayah.FavAyahActivity
+import com.programmergabut.solatkuy.ui.fragmentmain.FragmentMainViewModel
 import com.programmergabut.solatkuy.util.Resource
 import com.programmergabut.solatkuy.util.enumclass.EnumStatus
-import com.programmergabut.solatkuy.viewmodel.ViewModelFactory
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_quran.*
 import java.util.*
 
+/*
+ * Created by Katili Jiwo Adi Wiyono on 25/06/20.
+ */
+
+@AndroidEntryPoint
 class QuranFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
-    private lateinit var fragmentQuranFragmentViewModel: QuranFragmentViewModel
+    //private lateinit var fragmentQuranFragmentViewModel: QuranFragmentViewModel
+    private val fragmentQuranFragmentViewModel: QuranFragmentViewModel by viewModels()
+
     private lateinit var allSurahAdapter: AllSurahAdapter
     private lateinit var staredSurahAdapter: StaredSurahAdapter
     private var allSurahDatas: MutableList<Data>? = null
@@ -33,8 +42,8 @@ class QuranFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        fragmentQuranFragmentViewModel = ViewModelProvider(this, ViewModelFactory
-            .getInstance(activity?.application!!))[QuranFragmentViewModel::class.java]
+        /* fragmentQuranFragmentViewModel = ViewModelProvider(this, ViewModelFactory
+            .getInstance(activity?.application!!))[QuranFragmentViewModel::class.java] */
 
     }
 
@@ -81,7 +90,7 @@ class QuranFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     private fun observeApi(){
-        fragmentQuranFragmentViewModel.allSurah.observe(this, Observer {
+        fragmentQuranFragmentViewModel.allSurah.observe(viewLifecycleOwner, Observer {
             when(it.status){
                 EnumStatus.SUCCESS -> {
                     val datas = it.data?.data!! as MutableList<Data>
@@ -115,7 +124,7 @@ class QuranFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
             }
         })
 
-        fragmentQuranFragmentViewModel.staredSurah.observe(this, Observer {
+        fragmentQuranFragmentViewModel.staredSurah.observe(viewLifecycleOwner, Observer {
             when(it.status){
                 EnumStatus.SUCCESS -> {
                     staredSurahAdapter.setData(it.data!!)
@@ -135,7 +144,7 @@ class QuranFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         arrJuzz.add("All Juzz")
         for (i in 1..30){ arrJuzz.add(i.toString()) }
 
-        s_juzz.adapter = ArrayAdapter(context!!, R.layout.spinner_item, arrJuzz)
+        s_juzz.adapter = ArrayAdapter(requireContext(), R.layout.spinner_item, arrJuzz)
 
         s_juzz.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
             override fun onNothingSelected(parent: AdapterView<*>?) {}
@@ -148,7 +157,7 @@ class QuranFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     private fun initRvAllSurah() {
-        allSurahAdapter = AllSurahAdapter(context!!)
+        allSurahAdapter = AllSurahAdapter(requireContext())
 
         rv_quran_surah.apply {
             adapter = allSurahAdapter
@@ -158,7 +167,7 @@ class QuranFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     private fun initRvStaredSurah() {
-        staredSurahAdapter = StaredSurahAdapter(context!!)
+        staredSurahAdapter = StaredSurahAdapter(requireContext())
 
         rv_stared_ayah.apply {
             adapter = staredSurahAdapter
