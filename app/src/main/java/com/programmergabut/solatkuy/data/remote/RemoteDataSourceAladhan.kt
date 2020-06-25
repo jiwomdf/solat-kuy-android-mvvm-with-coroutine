@@ -2,22 +2,21 @@ package com.programmergabut.solatkuy.data.remote
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.programmergabut.solatkuy.data.ContextProviders
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
 import com.programmergabut.solatkuy.data.remote.api.CalendarApiService
 import com.programmergabut.solatkuy.data.remote.api.QiblaApiService
-import com.programmergabut.solatkuy.data.remote.remoteentity.compassJson.CompassApi
-import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.PrayerApi
+import com.programmergabut.solatkuy.data.remote.remoteentity.compassJson.CompassResponse
+import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.PrayerResponse
 import com.programmergabut.solatkuy.util.Resource
-import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
 /*
  * Created by Katili Jiwo Adi Wiyono on 09/05/20.
  */
 
-class RemoteDataSourceAladhan(private val contextProviders: ContextProviders) {
+class RemoteDataSourceAladhan {
 
     private val strApi = "https://api.aladhan.com/v1/"
 
@@ -25,23 +24,25 @@ class RemoteDataSourceAladhan(private val contextProviders: ContextProviders) {
         @Volatile
         private var instance: RemoteDataSourceAladhan? = null
 
-        fun getInstance(contextProviders: ContextProviders) = instance
+        fun getInstance() = instance
             ?: synchronized(this){
             instance
-                ?: RemoteDataSourceAladhan(contextProviders)
+                ?: RemoteDataSourceAladhan()
         }
     }
 
     //Coroutine
-    fun fetchCompassApi(msApi1: MsApi1): LiveData<Resource<CompassApi>>{
-        val result = MutableLiveData<Resource<CompassApi>>()
+    fun fetchCompassApi(msApi1: MsApi1): LiveData<Resource<CompassResponse>>{
 
-        CoroutineScope(contextProviders.IO).launch{
+        val result = MutableLiveData<Resource<CompassResponse>>()
+        result.postValue(Resource.loading(null))
+
+        GlobalScope.launch(Dispatchers.IO){
             try {
                 result.postValue(Resource.success(
                     RetrofitBuilder
-                    .build<QiblaApiService>(strApi)
-                    .fetchQibla(msApi1.latitude, msApi1.longitude))
+                        .build<QiblaApiService>(strApi)
+                        .fetchQibla(msApi1.latitude, msApi1.longitude))
                 )
             }
             catch (ex: Exception){
@@ -55,7 +56,7 @@ class RemoteDataSourceAladhan(private val contextProviders: ContextProviders) {
     /* fun fetchAsmaAlHusnaApi(): LiveData<Resource<AsmaAlHusnaApi>>{
         val result = MutableLiveData<Resource<AsmaAlHusnaApi>>()
 
-        CoroutineScope(contextProviders.IO).launch {
+        _root_ide_package_.kotlinx.coroutines.GlobalScope(contextProviders.IO).launch {
             try {
                 result.postValue(Resource.success(
                     RetrofitBuilder
@@ -71,15 +72,16 @@ class RemoteDataSourceAladhan(private val contextProviders: ContextProviders) {
         return result
     } */
 
-    fun fetchPrayerApi(msApi1: MsApi1): LiveData<Resource<PrayerApi>> {
-        val result = MutableLiveData<Resource<PrayerApi>>()
+    fun fetchPrayerApi(msApi1: MsApi1): LiveData<Resource<PrayerResponse>> {
+        val result = MutableLiveData<Resource<PrayerResponse>>()
+        result.postValue(Resource.loading(null))
 
-        GlobalScope.launch(contextProviders.IO){
+        GlobalScope.launch(Dispatchers.IO) {
             try {
                 result.postValue(Resource.success(
                     RetrofitBuilder
-                    .build<CalendarApiService>(strApi)
-                    .fetchPrayer(msApi1.latitude, msApi1.longitude, msApi1.method, msApi1.month, msApi1.year))
+                        .build<CalendarApiService>(strApi)
+                        .fetchPrayer(msApi1.latitude, msApi1.longitude, msApi1.method, msApi1.month, msApi1.year))
                 )
             }
             catch (ex: Exception){

@@ -4,10 +4,10 @@ import android.content.Context
 import androidx.room.Database
 import androidx.room.Room
 import androidx.room.RoomDatabase
-import com.programmergabut.solatkuy.data.ContextProviders
 import com.programmergabut.solatkuy.data.local.dao.*
 import com.programmergabut.solatkuy.data.local.localentity.*
 import com.programmergabut.solatkuy.util.enumclass.EnumConfig
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 
@@ -172,8 +172,8 @@ abstract class SolatKuyRoom: RoomDatabase() {
             }
         } */
 
-        fun populateDatabase(contextProviders: ContextProviders){
-            GlobalScope.launch(contextProviders.IO) {
+        fun populateDatabase(){
+            GlobalScope.launch(Dispatchers.IO) {
                 populateMsSetting(INSTANCE?.msSettingDao()!!)
                 populateNotifiedPrayer(INSTANCE?.notifiedPrayerDao()!!)
                 populateMsApi1(INSTANCE?.msApi1Dao()!!)

@@ -1,7 +1,7 @@
-package com.programmergabut.solatkuy.di.component
+package com.programmergabut.solatkuy.di.timings.component
 
 import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.Data
-import com.programmergabut.solatkuy.di.module.DataModule
+import com.programmergabut.solatkuy.di.timings.module.DataModule
 import dagger.Component
 
 /*

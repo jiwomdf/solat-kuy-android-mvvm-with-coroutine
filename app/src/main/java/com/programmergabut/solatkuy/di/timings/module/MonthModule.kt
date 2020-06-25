@@ -1,4 +1,4 @@
-package com.programmergabut.solatkuy.di.module
+package com.programmergabut.solatkuy.di.timings.module
 
 import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.Month
 import dagger.Module

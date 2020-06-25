@@ -84,7 +84,7 @@ class ReadSurahActivity : AppCompatActivity() {
                     readSurahViewModel.deleteFavSurah(MsFavSurah(mSelSurahId.toInt(), mSelSurahName, mSelSurahTranslation))
                 true
             }
-            else -> super.onOptionsItemSelected(item)
+            else -> super.onOptionsItemSelected(item!!)
         }
     }
 
@@ -131,13 +131,12 @@ class ReadSurahActivity : AppCompatActivity() {
 
         readSurahViewModel.msFavAyahBySurahID.observe(this, Observer { local ->
 
-            /*
-            when(local.Status){
+            when(local.status){
                 EnumStatus.SUCCESS -> {
 
                     local.data?.forEach { ayah ->
                         data?.ayahs?.forEach out@{remoteAyah ->
-                            if(remoteAyah.numberInSurah == ayah.ayahID && selSurahId.toInt() == ayah.surahID){
+                            if(remoteAyah.numberInSurah == ayah.ayahID && mSelSurahId.toInt() == ayah.surahID){
                                 remoteAyah.isFav = true
                                 return@out
                             }
@@ -148,21 +147,9 @@ class ReadSurahActivity : AppCompatActivity() {
                     readSurahAdapter.notifyDataSetChanged()
 
                 }
-                EnumStatus.LOADING ->
-                EnumStatus.ERROR ->
-            }*/
-
-            local.forEach { ayah ->
-                data?.ayahs?.forEach out@{remoteAyah ->
-                    if(remoteAyah.numberInSurah == ayah.ayahID && mSelSurahId.toInt() == ayah.surahID){
-                        remoteAyah.isFav = true
-                        return@out
-                    }
-                }
+                EnumStatus.LOADING -> {}
+                EnumStatus.ERROR -> {}
             }
-
-            readSurahAdapter.setAyah(data?.ayahs!!)
-            readSurahAdapter.notifyDataSetChanged()
 
         })
 

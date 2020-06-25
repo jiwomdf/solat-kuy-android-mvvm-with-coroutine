@@ -50,7 +50,6 @@ class ReadSurahAdapter(private val context: Context, private val viewModel: Read
                 val msFavAyah = MsFavAyah(surahId.toInt(), data.numberInSurah, surahName, data.text, data.textEn!!)
 
                 if(itemView.iv_listFav_fav.drawable.constantState == context.getDrawable(R.drawable.ic_favorite_red_24)?.constantState){
-                    viewModel.selectedSurahAr.postValue(Resource.loading(null))
                     Toasty.info(context, "Unsaving the ayah", Toast.LENGTH_SHORT).show()
 
                     viewModel.deleteFavAyah(msFavAyah)

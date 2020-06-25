@@ -1,4 +1,4 @@
-package com.programmergabut.solatkuy.di.module
+package com.programmergabut.solatkuy.di.timings.module
 
 import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.Data
 import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.Date
@@ -15,7 +15,11 @@ import dagger.Provides
 class DataModule(private val timings: Timings, private val day: String, private val en: String, private val number: Int) {
 
     @Provides
-    fun date(): Date = DateModule(day, en, number).provideDate()
+    fun date(): Date = DateModule(
+        day,
+        en,
+        number
+    ).provideDate()
     @Provides
     fun meta(): Meta? = null
     @Provides

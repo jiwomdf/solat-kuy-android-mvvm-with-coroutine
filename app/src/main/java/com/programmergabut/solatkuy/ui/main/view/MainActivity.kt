@@ -28,10 +28,10 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.programmergabut.solatkuy.R
-import com.programmergabut.solatkuy.data.ContextProviders
 import com.programmergabut.solatkuy.data.local.SolatKuyRoom
 import com.programmergabut.solatkuy.ui.main.adapter.SwipeAdapter
 import com.programmergabut.solatkuy.ui.main.viewmodel.MainActivityViewModel
+import com.programmergabut.solatkuy.util.enumclass.EnumStatus
 import com.programmergabut.solatkuy.viewmodel.ViewModelFactory
 import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.activity_main.*
@@ -73,15 +73,19 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
     private fun checkFirstOpenApp() {
 
         mainActivityViewModel.msSetting.observe(this, Observer {
-
-            if(it != null)
-                if(it.isHasOpenApp)
-                    initViewPager()
-                else
-                    initDialog()
-            else
-                SolatKuyRoom.populateDatabase(ContextProviders.getInstance())
-
+            when(it.status){
+                EnumStatus.SUCCESS -> {
+                    if(it.data != null)
+                        if(it.data.isHasOpenApp)
+                            initViewPager()
+                        else
+                            initDialog()
+                    else
+                        SolatKuyRoom.populateDatabase()
+                }
+                EnumStatus.LOADING -> {}
+                EnumStatus.ERROR -> {}
+            }
         })
 
     }

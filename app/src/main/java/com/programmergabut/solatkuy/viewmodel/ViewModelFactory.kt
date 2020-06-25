@@ -14,6 +14,7 @@ import com.programmergabut.solatkuy.ui.fragmentquran.QuranFragmentViewModel
 import com.programmergabut.solatkuy.ui.fragmentsetting.viewmodel.FragmentSettingViewModel
 import com.programmergabut.solatkuy.ui.main.viewmodel.MainActivityViewModel
 
+@Suppress("UNCHECKED_CAST")
 class ViewModelFactory(private val application: Application, private val repository: Repository) : ViewModelProvider.NewInstanceFactory() {
 
     companion object{

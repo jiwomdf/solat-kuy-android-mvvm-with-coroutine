@@ -4,6 +4,7 @@ import android.annotation.SuppressLint
 import android.app.Dialog
 import android.graphics.drawable.Drawable
 import android.os.Bundle
+import android.util.Log
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
@@ -11,6 +12,7 @@ import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -22,11 +24,10 @@ import com.programmergabut.solatkuy.data.local.localentity.MsFavAyah
 import com.programmergabut.solatkuy.data.local.localentity.NotifiedPrayer
 import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.Data
 import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.Timings
-import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonEn.ReadSurahEnApi
-import com.programmergabut.solatkuy.di.component.DaggerIDataComponent
-import com.programmergabut.solatkuy.di.component.DaggerITimingsComponent
-import com.programmergabut.solatkuy.di.module.DataModule
-import com.programmergabut.solatkuy.ui.fragmentmain.CoroutineTimerProvider
+import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonEn.ReadSurahEnResponse
+import com.programmergabut.solatkuy.di.timings.component.DaggerIDataComponent
+import com.programmergabut.solatkuy.di.timings.component.DaggerITimingsComponent
+import com.programmergabut.solatkuy.di.timings.module.DataModule
 import com.programmergabut.solatkuy.ui.fragmentmain.viewmodel.FragmentMainViewModel
 import com.programmergabut.solatkuy.util.Resource
 import com.programmergabut.solatkuy.util.enumclass.EnumConfig
@@ -58,7 +59,7 @@ import kotlin.math.abs
 class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     private lateinit var fragmentMainViewModel: FragmentMainViewModel
-    private lateinit var coroutineTimerProvider: CoroutineTimerProvider
+    private var coroutineTimerJob: Job? = null
     private var dialogView: View? = null
     private var tempMsApi1: MsApi1? = null
     private var mCityName: String? = null
@@ -76,15 +77,12 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     override fun onPause() {
         super.onPause()
 
-        coroutineTimerProvider.Main.cancel()
-        coroutineTimerProvider.IO.cancel()
+        coroutineTimerJob?.cancel()
     }
 
 
     override fun onStart() {
         super.onStart()
-
-        coroutineTimerProvider = CoroutineTimerProvider.getInstance()
 
         if(tv_widget_prayer_countdown != null)
             tv_widget_prayer_countdown.text = getString(R.string.loading)
@@ -168,57 +166,70 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         }) */
 
         fragmentMainViewModel.msApi1Local.observe(this, androidx.lifecycle.Observer {
+            when(it.status){
+                EnumStatus.SUCCESS -> {
+                    if(it.data == null )
+                        return@Observer
 
-            if(it == null )
-                return@Observer
+                    /* save temp data */
+                    tempMsApi1 = it.data
 
-            /* save temp data */
-            tempMsApi1 = it
+                    bindWidgetLocation(tempMsApi1!!)
 
-            bindWidgetLocation(it)
-
-            /* fetching Prayer API */
-            fetchPrayerApi(it)
-            fetchQuranSurah()
+                    /* fetching Prayer API */
+                    fetchPrayerApi(tempMsApi1!!)
+                    fetchQuranSurah()
+                }
+                EnumStatus.LOADING -> {}
+                EnumStatus.ERROR -> {}
+            }
         })
 
         fragmentMainViewModel.msSetting.observe(this, androidx.lifecycle.Observer {
+            when(it.status){
+                EnumStatus.SUCCESS -> {
 
-            if(!it.isUsingDBQuotes){
-                fragmentMainViewModel.readSurahEn.observe(this, androidx.lifecycle.Observer { apiQuotes ->
-                    when(apiQuotes.status){
-                        EnumStatus.SUCCESS -> {
+                    if(it.data == null)
+                        return@Observer
 
-                            if(apiQuotes.data == null)
-                                bindQuranQuoteApiOffline()
-                            else
-                                bindQuranQuoteApiOnline(apiQuotes)
+                    if(!it.data.isUsingDBQuotes){
+                        fragmentMainViewModel.readSurahEn.observe(this, androidx.lifecycle.Observer { apiQuotes ->
+                            when(apiQuotes.status){
+                                EnumStatus.SUCCESS -> {
 
-                            fragmentMainViewModel.favAyah.removeObservers(this)
-                        }
-                        EnumStatus.LOADING -> tv_quran_ayah_quote_click.text = getString(R.string.loading)
-                        EnumStatus.ERROR -> bindQuranQuoteApiOffline()
+                                    if(apiQuotes.data == null)
+                                        bindQuranQuoteApiOffline()
+                                    else
+                                        bindQuranQuoteApiOnline(apiQuotes)
+
+                                    fragmentMainViewModel.favAyah.removeObservers(this)
+                                }
+                                EnumStatus.LOADING -> tv_quran_ayah_quote_click.text = getString(R.string.loading)
+                                EnumStatus.ERROR -> bindQuranQuoteApiOffline()
+                            }
+                        })
                     }
-                })
-            }
-            else{
-                fragmentMainViewModel.favAyah.observe(this, androidx.lifecycle.Observer { localQuotes ->
+                    else{
+                        fragmentMainViewModel.favAyah.observe(this, androidx.lifecycle.Observer { localQuotes ->
 
-                    when(localQuotes.status){
-                        EnumStatus.SUCCESS -> {
-                            if(localQuotes.data == null)
-                                throw Exception("favAyahViewModel.favAyah")
+                            when(localQuotes.status){
+                                EnumStatus.SUCCESS -> {
+                                    if(localQuotes.data == null)
+                                        throw Exception("favAyahViewModel.favAyah")
 
-                            bindQuranSurahDB(localQuotes.data)
-                            fragmentMainViewModel.readSurahEn.removeObservers(this)
-                        }
-                        EnumStatus.LOADING -> tv_quran_ayah_quote_click.text = getString(R.string.loading)
-                        EnumStatus.ERROR -> tv_quran_ayah_quote_click.text = getString(R.string.fetch_failed)
+                                    bindQuranSurahDB(localQuotes.data)
+                                    fragmentMainViewModel.readSurahEn.removeObservers(this)
+                                }
+                                EnumStatus.LOADING -> tv_quran_ayah_quote_click.text = getString(R.string.loading)
+                                EnumStatus.ERROR -> tv_quran_ayah_quote_click.text = getString(R.string.fetch_failed)
+                            }
+
+                        })
                     }
-
-                })
+                }
+                EnumStatus.LOADING -> {}
+                EnumStatus.ERROR -> {}
             }
-
         })
     }
 
@@ -249,12 +260,10 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     /* fetch API data */
     private fun fetchPrayerApi(msApi1: MsApi1) {
-        fragmentMainViewModel.notifiedPrayer.postValue(Resource.loading(null))
         fragmentMainViewModel.fetchPrayerApi(msApi1)
     }
 
     private fun fetchQuranSurah(){
-        fragmentMainViewModel.readSurahEn.postValue(Resource.loading(null))
 
         val randSurah = (1..114).random()
 
@@ -457,8 +466,8 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         if(period == null)
             return
 
-        GlobalScope.launch(coroutineTimerProvider.IO){
-            coroutineTimer(period.hours, period.minutes, 60 - nowTime.secondOfMinute)
+        lifecycleScope.launch(Dispatchers.IO){
+            coroutineTimer(this, period.hours, period.minutes, 60 - nowTime.secondOfMinute)
         }
 
     }
@@ -508,7 +517,7 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         tv_quran_ayah_quote.text = ayah
     }
 
-    private fun bindQuranQuoteApiOnline(retVal: Resource<ReadSurahEnApi>) {
+    private fun bindQuranQuoteApiOnline(retVal: Resource<ReadSurahEnResponse>) {
         val returnValue = retVal.data?.data!!
         val randAyah = (returnValue.ayahs.indices).random()
         val ayah = returnValue.ayahs[randAyah].text + " - QS " + returnValue.englishName + " Ayah " + returnValue.numberOfAyahs
@@ -536,7 +545,12 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     /* Coroutine Timer */
     @SuppressLint("SetTextI18n")
-    private suspend fun coroutineTimer(hour: Int, minute: Int, second: Int){
+    private suspend fun coroutineTimer(
+        scope: CoroutineScope,
+        hour: Int,
+        minute: Int,
+        second: Int
+    ){
         
         var tempHour = abs(hour)
         var tempMinute = abs(minute)
@@ -546,6 +560,15 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         var isMinuteZero = false
 
         while (isCountDownOn){
+
+            if(scope.isActive){
+                Log.d("CoroutineTimer", "$scope $tempSecond")
+            }
+            else{
+                Log.d("CoroutineTimer", "$scope $tempSecond")
+                break
+            }
+
             delay(1000)
             tempSecond--
 
@@ -571,12 +594,12 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
             /* fetching Prayer API */
             if(tempHour == 0 && tempMinute == 0 && tempSecond == 1){
 
-                GlobalScope.launch(coroutineTimerProvider.Main){
+                lifecycleScope.launch(Dispatchers.Main){
                     tempMsApi1?.let { fetchPrayerApi(it) }
                 }
             }
 
-            GlobalScope.launch(coroutineTimerProvider.Main){
+            lifecycleScope.launch(Dispatchers.Main){
                 if(tv_widget_prayer_countdown != null)
                     tv_widget_prayer_countdown.text = "$tempHour : $tempMinute : $tempSecond remaining"
                 else
@@ -632,12 +655,18 @@ class FragmentMain : Fragment(), SwipeRefreshLayout.OnRefreshListener {
             dialog.show()
 
             fragmentMainViewModel.msSetting.observe(this, androidx.lifecycle.Observer {
-
-                if(it.isUsingDBQuotes)
-                    dialogView?.rbg_quotesDataSource?.check(R.id.rb_fromFavQuote)
-                else
-                    dialogView?.rbg_quotesDataSource?.check(R.id.rb_fromApi)
-
+                when(it.status){
+                    EnumStatus.SUCCESS -> {
+                        if(it.data != null){
+                            if(it.data.isUsingDBQuotes)
+                                dialogView?.rbg_quotesDataSource?.check(R.id.rb_fromFavQuote)
+                            else
+                                dialogView?.rbg_quotesDataSource?.check(R.id.rb_fromApi)
+                        }
+                    }
+                    EnumStatus.LOADING -> {}
+                    EnumStatus.ERROR -> {}
+                }
             })
 
             dialogView?.rb_fromApi?.setOnClickListener {

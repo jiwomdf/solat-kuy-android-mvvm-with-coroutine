@@ -3,7 +3,7 @@ package com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson
 
 import com.google.gson.annotations.SerializedName
 
-data class PrayerApi(
+data class PrayerResponse(
     @SerializedName("code")
     val code: Int,
     @SerializedName("data")

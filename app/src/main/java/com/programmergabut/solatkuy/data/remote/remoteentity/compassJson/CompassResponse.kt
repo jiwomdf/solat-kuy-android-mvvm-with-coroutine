@@ -1,13 +1,13 @@
-package com.programmergabut.solatkuy.data.remote.remoteentity.quranallsurahJson
+package com.programmergabut.solatkuy.data.remote.remoteentity.compassJson
 
 
 import com.google.gson.annotations.SerializedName
 
-data class AllSurahApi(
+data class CompassResponse(
     @SerializedName("code")
     val code: Int,
     @SerializedName("data")
-    val `data`: List<Data>,
+    val `data`: Data,
     @SerializedName("status")
     val status: String
 )

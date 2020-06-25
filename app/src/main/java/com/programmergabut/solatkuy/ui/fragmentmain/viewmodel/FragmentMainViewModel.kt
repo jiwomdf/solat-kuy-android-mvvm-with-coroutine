@@ -4,11 +4,13 @@ import android.app.Application
 import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
+import androidx.lifecycle.viewModelScope
 import com.programmergabut.solatkuy.data.Repository
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
 import com.programmergabut.solatkuy.data.local.localentity.NotifiedPrayer
-import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonEn.ReadSurahEnApi
+import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonEn.ReadSurahEnResponse
 import com.programmergabut.solatkuy.util.Resource
+import kotlinx.coroutines.launch
 
 /*
  * Created by Katili Jiwo Adi Wiyono on 25/03/20.
@@ -21,9 +23,9 @@ class FragmentMainViewModel(application: Application, private val repository: Re
 
     val msApi1Local = repository.getMsApi1()
 
-    var readSurahEn : MutableLiveData<Resource<ReadSurahEnApi>> = Transformations.switchMap(quranSurahID){
+    var readSurahEn : MutableLiveData<Resource<ReadSurahEnResponse>> = Transformations.switchMap(quranSurahID){
         repository.fetchReadSurahEn(quranSurahID.value!!)
-    } as MutableLiveData<Resource<ReadSurahEnApi>>
+    } as MutableLiveData<Resource<ReadSurahEnResponse>>
 
     val notifiedPrayer : MutableLiveData<Resource<List<NotifiedPrayer>>> = Transformations.switchMap(msApi1Param){
         repository.syncNotifiedPrayer(it)
@@ -44,8 +46,12 @@ class FragmentMainViewModel(application: Application, private val repository: Re
         repository.updateNotifiedPrayer(NotifiedPrayer)
     }*/
 
-    fun updatePrayerIsNotified(prayerName: String, isNotified: Boolean) = repository.updatePrayerIsNotified(prayerName, isNotified)
+    fun updatePrayerIsNotified(prayerName: String, isNotified: Boolean) = viewModelScope.launch {
+        repository.updatePrayerIsNotified(prayerName, isNotified)
+    }
 
-    fun updateIsUsingDBQuotes(isUsingDBQuotes: Boolean) = repository.updateIsUsingDBQuotes(isUsingDBQuotes)
+    fun updateIsUsingDBQuotes(isUsingDBQuotes: Boolean) = viewModelScope.launch {
+        repository.updateIsUsingDBQuotes(isUsingDBQuotes)
+    }
 
 }

@@ -20,6 +20,14 @@
 
     </com.google.android.material.appbar.AppBarLayout>
 
+    <TextView
+        android:id="@+id/tv_fav_ayah_empty"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:layout_gravity="center"
+        android:gravity="center"
+        android:text="@string/youHaventFavAnyAyah"/>
+
     <androidx.recyclerview.widget.RecyclerView
         android:id="@+id/rv_fav_ayah"
         android:layout_width="match_parent"

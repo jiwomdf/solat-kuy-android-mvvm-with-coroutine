@@ -1,4 +1,4 @@
-package com.programmergabut.solatkuy.di.module
+package com.programmergabut.solatkuy.di.timings.module
 
 import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.Gregorian
 import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.Month
@@ -21,7 +21,10 @@ class GregorianModule(private val day: String, private val en: String, private v
     @Provides
     fun format() = null
     @Provides
-    fun month(): Month? = MonthModule(en, number).provideMonth()
+    fun month(): Month? = MonthModule(
+        en,
+        number
+    ).provideMonth()
     @Provides
     fun weekday() = null
     @Provides

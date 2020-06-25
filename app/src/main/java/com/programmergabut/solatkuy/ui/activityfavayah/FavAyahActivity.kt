@@ -2,6 +2,7 @@ package com.programmergabut.solatkuy.ui.activityfavayah
 
 import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
+import android.view.View
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -40,11 +41,17 @@ class FavAyahActivity : AppCompatActivity() {
                     if(it.data == null)
                         throw Exception("favAyahViewModel.favAyah")
 
-                    favAyahAdapter.setAyah(it.data)
-                    favAyahAdapter.notifyDataSetChanged()
+                    if(it.data.isEmpty())
+                        tv_fav_ayah_empty.visibility = View.VISIBLE
+                    else{
+                        favAyahAdapter.setAyah(it.data)
+                        favAyahAdapter.notifyDataSetChanged()
+                        tv_fav_ayah_empty.visibility = View.GONE
+                    }
+
                 }
-                EnumStatus.LOADING -> print("loading")
-                EnumStatus.ERROR -> print("error")
+                EnumStatus.LOADING -> {}
+                EnumStatus.ERROR -> {}
             }
 
         })

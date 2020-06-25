@@ -8,7 +8,7 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.programmergabut.solatkuy.data.Repository
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
-import com.programmergabut.solatkuy.data.remote.remoteentity.compassJson.CompassApi
+import com.programmergabut.solatkuy.data.remote.remoteentity.compassJson.CompassResponse
 import com.programmergabut.solatkuy.util.Resource
 import com.programmergabut.solatkuy.util.generator.DummyData
 import org.junit.Before
@@ -46,13 +46,13 @@ class FragmentCompassViewModelTest {
     @Test
     fun fetchCompassApi() {
 
-        val observer = mock<Observer<Resource<CompassApi>>>()
+        val observer = mock<Observer<Resource<CompassResponse>>>()
         val dummyCompass = Resource.success(DummyData.fetchCompassApi())
-        val compass = MutableLiveData<Resource<CompassApi>>()
+        val compass = MutableLiveData<Resource<CompassResponse>>()
 
         compass.value = dummyCompass
         `when`(repository.fetchCompass(msApi1)).thenReturn(compass)
-        viewModel.compassApi.observeForever(observer)
+        viewModel.compassResponse.observeForever(observer)
 
         verify(observer).onChanged(dummyCompass)
     }

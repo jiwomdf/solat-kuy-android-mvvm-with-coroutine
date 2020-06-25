@@ -30,6 +30,7 @@ import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
 import com.programmergabut.solatkuy.ui.fragmentsetting.viewmodel.FragmentSettingViewModel
 import com.programmergabut.solatkuy.util.enumclass.EnumConfig
+import com.programmergabut.solatkuy.util.enumclass.EnumStatus
 import com.programmergabut.solatkuy.util.helper.LocationHelper
 import com.programmergabut.solatkuy.viewmodel.ViewModelFactory
 import es.dmoral.toasty.Toasty
@@ -72,12 +73,20 @@ class FragmentSetting : Fragment() {
     @SuppressLint("SetTextI18n")
     private fun subscribeObserversDB() {
         fragmentSettingViewModel.msApi1.observe(this, Observer {
+            when(it.status){
+                EnumStatus.SUCCESS -> {
+                    val retVal = it.data
+                    if(retVal != null){
+                        val city = LocationHelper.getCity(context!!, retVal.latitude.toDouble(), retVal.longitude.toDouble())
 
-            val city = LocationHelper.getCity(context!!, it.latitude.toDouble(), it.longitude.toDouble())
-
-            tv_view_latitude.text = it.latitude + " °S"
-            tv_view_longitude.text = it.longitude + " °E"
-            tv_view_city.text = city ?: EnumConfig.lCity
+                        tv_view_latitude.text = retVal.latitude + " °S"
+                        tv_view_longitude.text = retVal.longitude + " °E"
+                        tv_view_city.text = city ?: EnumConfig.lCity
+                    }
+                }
+                EnumStatus.LOADING -> {}
+                EnumStatus.ERROR -> {}
+            }
         })
     }
 

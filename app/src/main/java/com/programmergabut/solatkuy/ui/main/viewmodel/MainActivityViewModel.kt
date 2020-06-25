@@ -5,11 +5,11 @@ import androidx.lifecycle.AndroidViewModel
 import androidx.lifecycle.LiveData
 import com.programmergabut.solatkuy.data.Repository
 import com.programmergabut.solatkuy.data.local.localentity.MsSetting
+import com.programmergabut.solatkuy.util.Resource
 
 class MainActivityViewModel(application: Application, repository: Repository) : AndroidViewModel(application){
 
-    val msSetting: LiveData<MsSetting> = repository.getMsSetting()
-    private var repository: Repository? = null
+    val msSetting: LiveData<Resource<MsSetting>> = repository.getMsSetting()
 
     /* fun updateMsApi1(msApi1: MsApi1) = viewModelScope.launch {
         repository?.updateMsApi1(msApi1, this)

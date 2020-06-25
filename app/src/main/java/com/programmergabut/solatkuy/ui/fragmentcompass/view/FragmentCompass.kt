@@ -21,7 +21,6 @@ import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
 import com.programmergabut.solatkuy.ui.fragmentcompass.viewmodel.FragmentCompassViewModel
 import com.programmergabut.solatkuy.util.enumclass.EnumStatus
-import com.programmergabut.solatkuy.util.Resource
 import com.programmergabut.solatkuy.viewmodel.ViewModelFactory
 import kotlinx.android.synthetic.main.fragment_compass.*
 import kotlinx.android.synthetic.main.layout_phone_tilt.*
@@ -64,7 +63,6 @@ class FragmentCompass : Fragment(), SensorEventListener, SwipeRefreshLayout.OnRe
 
     /* fetching Prayer Compass */
     private fun fetchCompassApi(msApi1: MsApi1) {
-        fragmentCompassViewModel.compassApi.postValue(Resource.loading(null))
         fragmentCompassViewModel.fetchCompassApi(msApi1)
     }
 
@@ -72,7 +70,7 @@ class FragmentCompass : Fragment(), SensorEventListener, SwipeRefreshLayout.OnRe
     @SuppressLint("SetTextI18n")
     private fun subscribeObserversAPI() {
 
-        fragmentCompassViewModel.compassApi.observe(this, Observer {retVal ->
+        fragmentCompassViewModel.compassResponse.observe(this, Observer { retVal ->
 
             when(retVal.status){
                 EnumStatus.SUCCESS -> {
@@ -94,8 +92,16 @@ class FragmentCompass : Fragment(), SensorEventListener, SwipeRefreshLayout.OnRe
 
     private fun subscribeObserversDB() {
         fragmentCompassViewModel.msApi1Local.observe(this, Observer {
-            mMsApi1 = it
-            fetchCompassApi(mMsApi1)
+            when(it.status){
+                EnumStatus.SUCCESS -> {
+                    if(it.data != null){
+                        mMsApi1 = it.data
+                        fetchCompassApi(mMsApi1)
+                    }
+                }
+                EnumStatus.LOADING -> {}
+                EnumStatus.ERROR -> {}
+            }
         })
     }
 

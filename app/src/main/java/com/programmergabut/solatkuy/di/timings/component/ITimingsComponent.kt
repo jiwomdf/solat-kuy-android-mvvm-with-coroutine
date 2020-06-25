@@ -1,4 +1,4 @@
-package com.programmergabut.solatkuy.di.component
+package com.programmergabut.solatkuy.di.timings.component
 
 import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.Timings
 import dagger.BindsInstance

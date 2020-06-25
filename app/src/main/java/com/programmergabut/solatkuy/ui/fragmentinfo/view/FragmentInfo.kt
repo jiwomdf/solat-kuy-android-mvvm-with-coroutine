@@ -13,10 +13,9 @@ import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
 import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.Data
-import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.PrayerApi
+import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.PrayerResponse
 import com.programmergabut.solatkuy.ui.fragmentinfo.adapter.DuaCollectionAdapter
 import com.programmergabut.solatkuy.ui.fragmentinfo.viewmodel.FragmentInfoViewModel
-import com.programmergabut.solatkuy.util.Resource
 import com.programmergabut.solatkuy.util.enumclass.EnumConfig
 import com.programmergabut.solatkuy.util.enumclass.EnumStatus
 import com.programmergabut.solatkuy.util.generator.DuaGenerator
@@ -68,15 +67,24 @@ class FragmentInfo : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     /* Subscribe live data */
     private fun subscribeObserversDB() {
-        fragmentInfoViewModel.msApi1Local.observe(this, Observer {
-            mMsApi1 = it
+        fragmentInfoViewModel.msApi1Local.observe(this, Observer { retval ->
+            when(retval.status){
+                EnumStatus.SUCCESS -> {
+                    mMsApi1 = retval.data
 
-            val city = LocationHelper.getCity(context!!, it.latitude.toDouble(), it.longitude.toDouble())
+                    retval.data?.let {
+                        val city = LocationHelper.getCity(context!!, it.latitude.toDouble(), it.longitude.toDouble())
 
-            tv_city.text = city ?: EnumConfig.lCity
+                        tv_city.text = city ?: EnumConfig.lCity
 
-            //fetchAsmaAlHusnaApi(it)
-            fetchPrayerApi(it)
+                        fetchPrayerApi(it)
+                    }
+
+
+                }
+                EnumStatus.LOADING -> {}
+                EnumStatus.ERROR -> {}
+            }
         })
     }
 
@@ -103,7 +111,7 @@ class FragmentInfo : Fragment(), SwipeRefreshLayout.OnRefreshListener {
             }
         }) */
 
-        fragmentInfoViewModel.prayerApi.observe(this, Observer {
+        fragmentInfoViewModel.prayerResponse.observe(this, Observer {
 
             when(it.status){
                 EnumStatus.SUCCESS -> {
@@ -165,18 +173,16 @@ class FragmentInfo : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
 
     /* Create data from API */
-    private fun createTodayData(it: PrayerApi?, currentDate: String): Data? {
+    private fun createTodayData(it: PrayerResponse?, currentDate: String): Data? {
         return it?.data?.find { obj -> obj.date.gregorian?.day == currentDate }
     }
 
     /* Fetch API Data */
     /* private fun fetchAsmaAlHusnaApi(mMsApi1: MsApi1) {
-        fragmentInfoViewModel.asmaAlHusnaApi.postValue(Resource.loading(null))
         fragmentInfoViewModel.fetchAsmaAlHusna(mMsApi1)
     }*/
 
     private fun fetchPrayerApi(mMsApi1: MsApi1) {
-        fragmentInfoViewModel.prayerApi.postValue(Resource.loading(null))
         fragmentInfoViewModel.fetchPrayerApi(mMsApi1)
     }
 

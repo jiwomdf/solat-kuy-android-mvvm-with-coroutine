@@ -5,11 +5,10 @@ import androidx.lifecycle.MediatorLiveData
 import com.programmergabut.solatkuy.util.enumclass.EnumStatus
 import com.programmergabut.solatkuy.util.Resource
 import kotlinx.coroutines.GlobalScope
+import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-abstract class NetworkBoundResource<ResultType, RequestType>
-
-constructor(private val contextProviders: ContextProviders) {
+abstract class NetworkBoundResource<ResultType, RequestType> {
 
     private val result = MediatorLiveData<Resource<ResultType>>()
 
@@ -21,8 +20,9 @@ constructor(private val contextProviders: ContextProviders) {
 
         result.addSource(dbSource) { data ->
             result.removeSource(dbSource)
-            if (shouldFetch(data))
+            if (shouldFetch(data)){
                 fetchFromNetwork(dbSource)
+            }
             else {
                 result.addSource(dbSource) { newData ->
                     setValue(Resource.success(newData))
@@ -54,24 +54,25 @@ constructor(private val contextProviders: ContextProviders) {
             result.removeSource(dbSource)
             when (response.status) {
                 EnumStatus.SUCCESS ->
-                    GlobalScope.launch(contextProviders.IO) {
+                    GlobalScope.launch(Dispatchers.IO){
                         //EspressoIdlingResource.increment()
                         saveCallResult(response.data!!)
 
-                        GlobalScope.launch(contextProviders.Main){
+                        GlobalScope.launch(Dispatchers.Main){
                             result.addSource(loadFromDB()) { newData ->
                                 setValue(Resource.success(newData))
                             }
                         }
                         //EspressoIdlingResource.decrement()
                     }
-                EnumStatus.LOADING -> GlobalScope.launch(contextProviders.Main) {
-                    //EspressoIdlingResource.increment()
-                    result.addSource(loadFromDB()) { newData ->
-                        setValue(Resource.success(newData))
+                EnumStatus.LOADING ->
+                    GlobalScope.launch(Dispatchers.Main) {
+                        //EspressoIdlingResource.increment()
+                        result.addSource(loadFromDB()) { newData ->
+                            setValue(Resource.success(newData))
+                        }
+                        //EspressoIdlingResource.decrement()
                     }
-                    //EspressoIdlingResource.decrement()
-                }
                 EnumStatus.ERROR -> {
                     //EspressoIdlingResource.increment()
                     onFetchFailed()

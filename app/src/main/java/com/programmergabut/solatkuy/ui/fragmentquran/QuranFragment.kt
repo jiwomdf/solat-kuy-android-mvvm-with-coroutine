@@ -116,8 +116,14 @@ class QuranFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         })
 
         fragmentQuranFragmentViewModel.staredSurah.observe(this, Observer {
-            staredSurahAdapter.setData(it)
-            staredSurahAdapter.notifyDataSetChanged()
+            when(it.status){
+                EnumStatus.SUCCESS -> {
+                    staredSurahAdapter.setData(it.data!!)
+                    staredSurahAdapter.notifyDataSetChanged()
+                }
+                EnumStatus.LOADING -> {}
+                EnumStatus.ERROR -> {}
+            }
 
         })
 
@@ -162,7 +168,6 @@ class QuranFragment : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     private fun fetchAllSurah(){
-        fragmentQuranFragmentViewModel.allSurah.postValue(Resource.loading(null))
         fragmentQuranFragmentViewModel.fetchAllSurah("triger")
     }
 

@@ -1,7 +1,7 @@
-package com.programmergabut.solatkuy.di.component
+package com.programmergabut.solatkuy.di.timings.component
 
 import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.Gregorian
-import com.programmergabut.solatkuy.di.module.GregorianModule
+import com.programmergabut.solatkuy.di.timings.module.GregorianModule
 import dagger.Component
 
 /*

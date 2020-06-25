@@ -1,9 +1,9 @@
-package com.programmergabut.solatkuy.data.remote.remoteentity.compassJson
+package com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonEn
 
 
 import com.google.gson.annotations.SerializedName
 
-data class CompassApi(
+data class ReadSurahEnResponse(
     @SerializedName("code")
     val code: Int,
     @SerializedName("data")

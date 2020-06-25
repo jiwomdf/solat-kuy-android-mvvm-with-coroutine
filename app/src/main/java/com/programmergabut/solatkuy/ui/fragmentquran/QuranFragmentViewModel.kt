@@ -7,7 +7,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Transformations
 import com.programmergabut.solatkuy.data.Repository
 import com.programmergabut.solatkuy.data.local.localentity.MsFavSurah
-import com.programmergabut.solatkuy.data.remote.remoteentity.quranallsurahJson.AllSurahApi
+import com.programmergabut.solatkuy.data.remote.remoteentity.quranallsurahJson.AllSurahResponse
 import com.programmergabut.solatkuy.util.Resource
 
 class QuranFragmentViewModel(application: Application, private val repository: Repository): AndroidViewModel(application) {
@@ -15,11 +15,11 @@ class QuranFragmentViewModel(application: Application, private val repository: R
     private var updateAllSurah = MutableLiveData<String>()
 
 
-    var allSurah : MutableLiveData<Resource<AllSurahApi>> =  Transformations.switchMap(updateAllSurah){
+    var allSurah : MutableLiveData<Resource<AllSurahResponse>> =  Transformations.switchMap(updateAllSurah){
         repository.fetchAllSurah()
-    } as MutableLiveData<Resource<AllSurahApi>>
+    } as MutableLiveData<Resource<AllSurahResponse>>
 
-    var staredSurah: LiveData<List<MsFavSurah>> =  repository.getMsFavSurah()
+    var staredSurah: LiveData<Resource<List<MsFavSurah>>> =  repository.getMsFavSurah()
 
     fun fetchAllSurah(updateAllSurah: String){
         this.updateAllSurah.value = updateAllSurah

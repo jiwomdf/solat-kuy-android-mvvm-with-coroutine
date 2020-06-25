@@ -1,15 +1,13 @@
 package com.programmergabut.solatkuy.ui.activityreadsurah
 
 import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
+import androidx.lifecycle.*
 import com.programmergabut.solatkuy.data.Repository
 import com.programmergabut.solatkuy.data.local.localentity.MsFavAyah
 import com.programmergabut.solatkuy.data.local.localentity.MsFavSurah
-import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonAr.ReadSurahArApi
+import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonAr.ReadSurahArResponse
 import com.programmergabut.solatkuy.util.Resource
+import kotlinx.coroutines.launch
 
 class ReadSurahViewModel(application: Application, private val repository: Repository): AndroidViewModel(application) {
 
@@ -17,11 +15,11 @@ class ReadSurahViewModel(application: Application, private val repository: Repos
     private var favSurahID = MutableLiveData<Int>()
     private var ayahID = MutableLiveData<Int>()
 
-    var selectedSurahAr : MutableLiveData<Resource<ReadSurahArApi>> = Transformations.switchMap(surahID){
+    var selectedSurahAr : MutableLiveData<Resource<ReadSurahArResponse>> = Transformations.switchMap(surahID){
         repository.fetchReadSurahAr(it)
-    } as MutableLiveData<Resource<ReadSurahArApi>>
+    } as MutableLiveData<Resource<ReadSurahArResponse>>
 
-    var msFavAyahBySurahID: LiveData<List<MsFavAyah>> = Transformations.switchMap(favSurahID){
+    var msFavAyahBySurahID: LiveData<Resource<List<MsFavAyah>>> = Transformations.switchMap(favSurahID){
         repository.getMsFavAyahBySurahID(it)
     }
 
@@ -41,9 +39,9 @@ class ReadSurahViewModel(application: Application, private val repository: Repos
         this.ayahID.value = ayahID
     }
 
-    fun insertFavAyah(msFavAyah: MsFavAyah) = repository.insertFavAyah(msFavAyah)
-    fun deleteFavAyah(msFavAyah: MsFavAyah) = repository.deleteFavAyah(msFavAyah)
+    fun insertFavAyah(msFavAyah: MsFavAyah) = viewModelScope.launch { repository.insertFavAyah(msFavAyah) }
+    fun deleteFavAyah(msFavAyah: MsFavAyah) = viewModelScope.launch { repository.deleteFavAyah(msFavAyah) }
 
-    fun insertFavSurah(msFavSurah: MsFavSurah) = repository.insertFavSurah(msFavSurah)
-    fun deleteFavSurah(msFavSurah: MsFavSurah) = repository.deleteFavSurah(msFavSurah)
+    fun insertFavSurah(msFavSurah: MsFavSurah) = viewModelScope.launch { repository.insertFavSurah(msFavSurah) }
+    fun deleteFavSurah(msFavSurah: MsFavSurah) = viewModelScope.launch { repository.deleteFavSurah(msFavSurah) }
 }

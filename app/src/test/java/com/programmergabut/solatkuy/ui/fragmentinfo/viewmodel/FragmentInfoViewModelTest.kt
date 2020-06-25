@@ -7,7 +7,7 @@ import androidx.lifecycle.Observer
 import com.nhaarman.mockitokotlin2.mock
 import com.programmergabut.solatkuy.data.Repository
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
-import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.PrayerApi
+import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.PrayerResponse
 import com.programmergabut.solatkuy.util.Resource
 import com.programmergabut.solatkuy.util.generator.DummyData
 import org.junit.Before
@@ -43,14 +43,14 @@ class FragmentInfoViewModelTest {
 
     @Test
     fun fetchPrayerApi(){
-        val observer = mock<Observer<Resource<PrayerApi>>>()
+        val observer = mock<Observer<Resource<PrayerResponse>>>()
         val dummyPrayerApi = Resource.success(DummyData.fetchPrayerApi())
 
-        val prayerApi = MutableLiveData<Resource<PrayerApi>>()
+        val prayerApi = MutableLiveData<Resource<PrayerResponse>>()
         prayerApi.value = dummyPrayerApi
         `when`(repository.fetchPrayerApi(msApi1)).thenReturn(prayerApi)
 
-        viewModel.prayerApi.observeForever(observer)
+        viewModel.prayerResponse.observeForever(observer)
 
         Mockito.verify(observer).onChanged(dummyPrayerApi)
     }

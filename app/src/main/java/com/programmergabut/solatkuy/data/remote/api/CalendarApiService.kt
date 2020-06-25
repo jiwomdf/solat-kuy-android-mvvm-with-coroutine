@@ -1,6 +1,6 @@
 package com.programmergabut.solatkuy.data.remote.api
 
-import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.PrayerApi
+import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.PrayerResponse
 import retrofit2.http.GET
 import retrofit2.http.Query
 
@@ -17,5 +17,5 @@ interface CalendarApiService {
                             @Query("longitude") longitude: String,
                             @Query("method") method: String,
                             @Query("month") month: String,
-                            @Query("year") year: String): PrayerApi
+                            @Query("year") year: String): PrayerResponse
 }

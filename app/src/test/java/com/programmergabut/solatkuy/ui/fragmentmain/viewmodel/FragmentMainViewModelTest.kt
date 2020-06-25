@@ -8,7 +8,7 @@ import com.nhaarman.mockitokotlin2.mock
 import com.programmergabut.solatkuy.data.Repository
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
 import com.programmergabut.solatkuy.data.local.localentity.NotifiedPrayer
-import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonEn.ReadSurahEnApi
+import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonEn.ReadSurahEnResponse
 import com.programmergabut.solatkuy.util.Resource
 import com.programmergabut.solatkuy.util.generator.DummyData
 import org.junit.Before
@@ -45,7 +45,7 @@ class FragmentMainViewModelTest {
     }
 
     @Test
-    fun getNotifiedPrayer(){
+    fun syncNotifiedPrayer(){
         val observer = mock<Observer<Resource<List<NotifiedPrayer>>>>()
         val dummyNotifiedPrayer = Resource.success(DummyData.getNotifiedPrayer())
 
@@ -59,10 +59,10 @@ class FragmentMainViewModelTest {
     }
 
     @Test
-    fun getQuranSurah(){
-        val observer = mock<Observer<Resource<ReadSurahEnApi>>>()
+    fun fetchReadSurahEn(){
+        val observer = mock<Observer<Resource<ReadSurahEnResponse>>>()
         val dummyQuranSurah = Resource.success(DummyData.fetchSurahApi())
-        val quranSurah = MutableLiveData<Resource<ReadSurahEnApi>>()
+        val quranSurah = MutableLiveData<Resource<ReadSurahEnResponse>>()
 
         quranSurah.value = dummyQuranSurah
         `when`(repository.fetchReadSurahEn(1)).thenReturn(quranSurah)
