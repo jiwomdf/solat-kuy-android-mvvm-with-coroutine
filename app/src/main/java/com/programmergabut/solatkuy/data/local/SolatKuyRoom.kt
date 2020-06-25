@@ -28,7 +28,7 @@ abstract class SolatKuyRoom: RoomDatabase() {
     companion object{
         @Volatile
         private var INSTANCE: SolatKuyRoom? = null
-        private const val dbName = "solatkuydb"
+        private const val dbName = EnumConfig.databaseName
 
         fun getDataBase(context: Context): SolatKuyRoom {
             val tempInstance =
@@ -80,7 +80,6 @@ abstract class SolatKuyRoom: RoomDatabase() {
                return instance
            }
        }*/
-
 
         /* class NotifiedPrayerCallBack(private val contextProviders: ContextProviders): RoomDatabase.Callback(){
 

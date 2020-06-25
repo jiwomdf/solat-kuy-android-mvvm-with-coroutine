@@ -11,8 +11,7 @@ import kotlinx.coroutines.launch
 import java.text.SimpleDateFormat
 import java.util.*
 
-class LocalDataSource private
-constructor(db: SolatKuyRoom) {
+class LocalDataSource constructor(db: SolatKuyRoom) {
 
     companion object {
         private var instance: LocalDataSource? = null
