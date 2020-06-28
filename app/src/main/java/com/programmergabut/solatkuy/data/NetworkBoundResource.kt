@@ -8,7 +8,7 @@ import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 
-abstract class NetworkBoundResource<ResultType, RequestType> {
+/* abstract class NetworkBoundResource<ResultType, RequestType> {
 
     private val result = MediatorLiveData<Resource<ResultType>>()
 
@@ -92,4 +92,4 @@ abstract class NetworkBoundResource<ResultType, RequestType> {
     }
 
     fun asLiveData(): LiveData<Resource<ResultType>> = result
-}
+}*/

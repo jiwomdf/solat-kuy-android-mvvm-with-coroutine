@@ -1,25 +1,13 @@
 package com.programmergabut.solatkuy.data
 
-import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
-import androidx.lifecycle.MutableLiveData
-import com.programmergabut.solatkuy.data.local.LocalDataSource
 import com.programmergabut.solatkuy.data.local.dao.*
 import com.programmergabut.solatkuy.data.local.localentity.*
 import com.programmergabut.solatkuy.data.remote.RemoteDataSourceAladhan
 import com.programmergabut.solatkuy.data.remote.RemoteDataSourceApiAlquran
-import com.programmergabut.solatkuy.data.remote.remoteentity.compassJson.CompassResponse
-import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.PrayerResponse
-import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonAr.ReadSurahArResponse
-import com.programmergabut.solatkuy.util.Resource
 import com.programmergabut.solatkuy.util.enumclass.EnumConfig
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
-import retrofit2.Response
+import kotlinx.coroutines.*
 import java.text.SimpleDateFormat
 import java.util.*
-import javax.inject.Inject
 
 /*
  * Created by Katili Jiwo Adi Wiyono on 26/03/20.
@@ -35,18 +23,28 @@ class Repository constructor(
     val msFavSurahDao: MsFavSurahDao
 ) {
 
-    /* companion object{
+    companion object{
         @Volatile
         private var instance: Repository? = null
 
         fun getInstance(remoteDataSourceAladhan: RemoteDataSourceAladhan,
                         remoteDataSourceApiAlquran: RemoteDataSourceApiAlquran,
-                        localDataSource: LocalDataSource) =
+                        notifiedPrayerDao: NotifiedPrayerDao,
+                        msApi1Dao: MsApi1Dao,
+                        msSettingDao: MsSettingDao,
+                        msFavAyahDao: MsFavAyahDao,
+                        msFavSurahDao: MsFavSurahDao) =
             instance ?: synchronized(this){
                 instance
-                    ?: Repository(remoteDataSourceAladhan, remoteDataSourceApiAlquran, localDataSource)
+                    ?: Repository(remoteDataSourceAladhan,
+                        remoteDataSourceApiAlquran,
+                        notifiedPrayerDao,
+                        msApi1Dao,
+                        msSettingDao,
+                        msFavAyahDao,
+                        msFavSurahDao)
             }
-    } */
+    }
 
     /* Room */
     /* NotifiedPrayer */
@@ -89,13 +87,14 @@ class Repository constructor(
 
     suspend fun syncNotifiedPrayer(msApi1: MsApi1): List<NotifiedPrayer> {
 
-        /* val data =  remoteDataSourceAladhan.fetchPrayerApi(msApi1)
+        val data = remoteDataSourceAladhan.fetchPrayerApi(msApi1)
 
         data.body().let {
             val sdf = SimpleDateFormat("dd", Locale.getDefault())
             val currentDate = sdf.format(Date())
 
-            val timings = it?.data?.find { obj -> obj.date.gregorian?.day == currentDate.toString() }?.timings
+            val timings =
+                it?.data?.find { obj -> obj.date.gregorian?.day == currentDate.toString() }?.timings
 
             val map = mutableMapOf<String, String>()
 
@@ -106,45 +105,43 @@ class Repository constructor(
             map[EnumConfig.isha] = timings?.isha.toString()
             map[EnumConfig.sunrise] = timings?.sunrise.toString()
 
-            CoroutineScope(Dispatchers.IO).launch {
-                map.forEach { p ->
-                    notifiedPrayerDao.updatePrayerTime(p.key, p.value)
-                }
+
+            map.forEach { p ->
+                notifiedPrayerDao.updatePrayerTime(p.key, p.value)
             }
-        } */
+        }
 
-        val retVal = notifiedPrayerDao.getNotifiedPrayer()
-        return retVal
+        return notifiedPrayerDao.getNotifiedPrayer()
 
-        /* return object : NetworkBoundResource<List<NotifiedPrayer>, PrayerResponse>(){
-            override fun loadFromDB(): LiveData<List<NotifiedPrayer>> = notifiedPrayerDao.getNotifiedPrayer()
+            /* return object : NetworkBoundResource<List<NotifiedPrayer>, PrayerResponse>(){
+                override fun loadFromDB(): LiveData<List<NotifiedPrayer>> = notifiedPrayerDao.getNotifiedPrayer()
 
-            override fun shouldFetch(data: List<NotifiedPrayer>?): Boolean = true
+                override fun shouldFetch(data: List<NotifiedPrayer>?): Boolean = true
 
-            override fun createCall(): LiveData<Resource<PrayerResponse>> = remoteDataSourceAladhan.fetchPrayerApi(msApi1)
+                override fun createCall(): LiveData<Resource<PrayerResponse>> = remoteDataSourceAladhan.fetchPrayerApi(msApi1)
 
-            override fun saveCallResult(data: PrayerResponse){
-                val sdf = SimpleDateFormat("dd", Locale.getDefault())
-                val currentDate = sdf.format(Date())
+                override fun saveCallResult(data: PrayerResponse){
+                    val sdf = SimpleDateFormat("dd", Locale.getDefault())
+                    val currentDate = sdf.format(Date())
 
-                val timings = data.data.find { obj -> obj.date.gregorian?.day == currentDate.toString() }?.timings
+                    val timings = data.data.find { obj -> obj.date.gregorian?.day == currentDate.toString() }?.timings
 
-                val map = mutableMapOf<String, String>()
+                    val map = mutableMapOf<String, String>()
 
-                map[EnumConfig.fajr] = timings?.fajr.toString()
-                map[EnumConfig.dhuhr] = timings?.dhuhr.toString()
-                map[EnumConfig.asr] = timings?.asr.toString()
-                map[EnumConfig.maghrib] = timings?.maghrib.toString()
-                map[EnumConfig.isha] = timings?.isha.toString()
-                map[EnumConfig.sunrise] = timings?.sunrise.toString()
+                    map[EnumConfig.fajr] = timings?.fajr.toString()
+                    map[EnumConfig.dhuhr] = timings?.dhuhr.toString()
+                    map[EnumConfig.asr] = timings?.asr.toString()
+                    map[EnumConfig.maghrib] = timings?.maghrib.toString()
+                    map[EnumConfig.isha] = timings?.isha.toString()
+                    map[EnumConfig.sunrise] = timings?.sunrise.toString()
 
-                CoroutineScope(Dispatchers.IO).launch {
-                    map.forEach { p ->
-                        notifiedPrayerDao.updatePrayerTime(p.key, p.value)
+                    CoroutineScope(Dispatchers.IO).launch {
+                        map.forEach { p ->
+                            notifiedPrayerDao.updatePrayerTime(p.key, p.value)
+                        }
                     }
                 }
-            }
-        }.asLiveData() */
+            }.asLiveData() */
     }
-
 }
+

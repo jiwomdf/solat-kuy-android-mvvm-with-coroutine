@@ -95,6 +95,11 @@ class FragmentMainViewModel constructor(val repository: Repository, val networkH
         }
     }
 
+    init {
+        getMsSetting()
+        getMsApi1()
+    }
+
     /*fun updateNotifiedPrayer(NotifiedPrayer: NotifiedPrayer){
         repository.updateNotifiedPrayer(NotifiedPrayer)
     }*/

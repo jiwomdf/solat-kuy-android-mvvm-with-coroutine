@@ -49,5 +49,9 @@ class QuranFragmentViewModel constructor(val repository: Repository, val network
         }
     }
 
+    init {
+        fetchAllSurah()
+    }
+
 
 }

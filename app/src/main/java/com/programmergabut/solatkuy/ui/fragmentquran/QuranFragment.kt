@@ -34,6 +34,12 @@ class QuranFragment : Fragment(R.layout.fragment_quran), SwipeRefreshLayout.OnRe
     private lateinit var staredSurahAdapter: StaredSurahAdapter
     private var allSurahDatas: MutableList<Data>? = null
 
+    override fun onStart() {
+        super.onStart()
+
+        fragmentQuranFragmentViewModel.getStaredSurah()
+    }
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
@@ -121,9 +127,6 @@ class QuranFragment : Fragment(R.layout.fragment_quran), SwipeRefreshLayout.OnRe
             }
 
         })
-
-        fetchAllSurah()
-        fragmentQuranFragmentViewModel.getStaredSurah()
     }
 
     private fun createJuzzSpinner(){

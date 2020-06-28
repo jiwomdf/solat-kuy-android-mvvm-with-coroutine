@@ -19,7 +19,7 @@ object Injection {
         //val localDataSource = LocalDataSource.getInstance(db)
 
 
-        return Repository(
+        return Repository.getInstance(
             remoteDataSourceAladhan,
             remoteDataSourceQuranApi,
             db.notifiedPrayerDao(),

@@ -26,7 +26,6 @@ import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonEn.Rea
 import com.programmergabut.solatkuy.util.Resource
 import com.programmergabut.solatkuy.util.enumclass.EnumConfig
 import com.programmergabut.solatkuy.util.enumclass.EnumStatus
-import com.programmergabut.solatkuy.util.generator.SurahQuoteGenerator
 import com.programmergabut.solatkuy.util.helper.LocationHelper
 import com.programmergabut.solatkuy.util.helper.PushNotificationHelper
 import com.programmergabut.solatkuy.util.helper.SelectPrayerHelper
@@ -38,15 +37,12 @@ import kotlinx.android.synthetic.main.layout_prayer_time.*
 import kotlinx.android.synthetic.main.layout_quran_quote.*
 import kotlinx.android.synthetic.main.layout_widget.*
 import kotlinx.coroutines.*
-import kotlinx.coroutines.channels.ticker
 import org.joda.time.DateTime
 import org.joda.time.LocalDate
 import org.joda.time.Period
 import java.text.SimpleDateFormat
 import java.util.*
-import kotlin.coroutines.CoroutineContext
 import kotlin.math.abs
-import kotlin.math.log
 
 /*
  * Created by Katili Jiwo Adi Wiyono on 25/03/20.
@@ -178,8 +174,6 @@ class FragmentMain : Fragment(R.layout.fragment_main), SwipeRefreshLayout.OnRefr
             }
         })
 
-        fragmentMainViewModel.getMsApi1()
-
         fragmentMainViewModel.msSetting.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             when(it.status){
                 EnumStatus.SUCCESS -> {
@@ -197,7 +191,6 @@ class FragmentMain : Fragment(R.layout.fragment_main), SwipeRefreshLayout.OnRefr
             }
         })
 
-        fragmentMainViewModel.getMsSetting()
     }
 
     private fun subscribeReadSurahEn(){
@@ -262,6 +255,10 @@ class FragmentMain : Fragment(R.layout.fragment_main), SwipeRefreshLayout.OnRefr
     /* fetch API data */
     private fun fetchPrayerApi(msApi1: MsApi1) {
         fragmentMainViewModel.fetchNotifiedPrayer(msApi1)
+    }
+
+    private fun getMsSetting(){
+        fragmentMainViewModel.getMsSetting()
     }
 
     private fun fetchQuranSurah(){
@@ -630,7 +627,7 @@ class FragmentMain : Fragment(R.layout.fragment_main), SwipeRefreshLayout.OnRefr
     }
 
     override fun onRefresh() {
-        fragmentMainViewModel.getMsSetting()
+        getMsSetting()
         sl_main.isRefreshing = false
     }
 
@@ -661,13 +658,21 @@ class FragmentMain : Fragment(R.layout.fragment_main), SwipeRefreshLayout.OnRefr
 
             dialogView?.rb_fromApi?.setOnClickListener {
                 fragmentMainViewModel.updateIsUsingDBQuotes(false)
+                dismissDialog(dialog)
             }
 
             dialogView?.rb_fromFavQuote?.setOnClickListener {
                 fragmentMainViewModel.updateIsUsingDBQuotes(true)
+                dismissDialog(dialog)
             }
 
         }
+    }
+
+    private fun dismissDialog(dialog: Dialog){
+        dialog.dismiss()
+        getMsSetting()
+        Toasty.success(requireContext(), "Success change the quotes source", Toast.LENGTH_SHORT).show()
     }
 
 }
