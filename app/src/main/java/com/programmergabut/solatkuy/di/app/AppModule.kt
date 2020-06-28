@@ -11,7 +11,7 @@ import dagger.hilt.android.components.ApplicationComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Singleton
 
-@Module
+/* @Module
 @InstallIn(ApplicationComponent::class)
 object AppModule {
 
@@ -42,7 +42,4 @@ object AppModule {
     @Provides
     fun provideMsFavAyahDao(db: SolatKuyRoom) = db.msFavAyahDao()
 
-    @Singleton
-    @Provides
-    fun provideMsFavSurahDao(db: SolatKuyRoom) = db.msFavSurahDao()
-}
+}*/

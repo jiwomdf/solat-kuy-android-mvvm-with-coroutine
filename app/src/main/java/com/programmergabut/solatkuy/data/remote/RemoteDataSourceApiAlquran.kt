@@ -11,14 +11,15 @@ import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonEn.Rea
 import com.programmergabut.solatkuy.util.EspressoIdlingResource
 import com.programmergabut.solatkuy.util.Resource
 import kotlinx.coroutines.*
+import retrofit2.Response
 import javax.inject.Inject
 import javax.inject.Singleton
 
-class RemoteDataSourceApiAlquran(){
+class RemoteDataSourceApiAlquran constructor(){
 
     private val strApi = "https://api.alquran.cloud/v1/"
 
-    /* companion object{
+    companion object{
         @Volatile
         private var instance: RemoteDataSourceApiAlquran? = null
 
@@ -27,102 +28,59 @@ class RemoteDataSourceApiAlquran(){
                 instance
                     ?: RemoteDataSourceApiAlquran()
             }
-    }*/
-
-
-    fun fetchReadSurahEn(surahID: Int): MutableLiveData<Resource<ReadSurahEnResponse>> {
-        val result = MutableLiveData<Resource<ReadSurahEnResponse>>()
-        result.postValue(Resource.loading(null))
-
-        GlobalScope.launch(Dispatchers.IO){
-            //EspressoIdlingResource.increment()
-            try {
-                result.postValue(
-                    Resource.success(
-                        RetrofitBuilder
-                            .build<ReadSurahEnService>(strApi)
-                            .fetchReadSurahEn(surahID))
-                )
-            }
-            catch (ex: Exception){
-                result.postValue(Resource.error(ex.message.toString(), null))
-            }
-            //EspressoIdlingResource.decrement()
-        }
-
-        return result
     }
 
 
-    fun fetchAllSurah(): MutableLiveData<Resource<AllSurahResponse>> {
-        val result = MutableLiveData<Resource<AllSurahResponse>>()
-        result.postValue(Resource.loading(null))
+    suspend fun fetchReadSurahEn(surahID: Int): Response<ReadSurahEnResponse> {
 
-        GlobalScope.launch(Dispatchers.IO) {
-            //EspressoIdlingResource.increment()
-            try {
-                result.postValue(
-                    Resource.success(
-                        RetrofitBuilder
-                            .build<AllSurahService>(strApi)
-                            .fetchAllSurah())
-                )
-            }
-            catch (ex: Exception){
-                result.postValue(Resource.error(ex.message.toString(), null))
-            }
-            //EspressoIdlingResource.decrement()
-        }
-
-        return result
+        return RetrofitBuilder
+                .build<ReadSurahEnService>(strApi)
+                .fetchReadSurahEn(surahID)
     }
 
-    fun fetchReadSurahAr(surahID: Int): MutableLiveData<Resource<ReadSurahArResponse>> {
-        val result = MutableLiveData<Resource<ReadSurahArResponse>>()
-        result.postValue(Resource.loading(null))
 
-        GlobalScope.launch(Dispatchers.IO) {
-            //EspressoIdlingResource.increment()
-            try {
-                val listAyah: MutableList<Ayah>
+    suspend fun fetchAllSurah(): Response<AllSurahResponse> {
 
-                val retValAr = withContext(Dispatchers.Default) {
-                    RetrofitBuilder.build<ReadSurahArService>(strApi).fetchReadSurahAr(surahID)
-                }
+        return RetrofitBuilder
+                .build<AllSurahService>(strApi)
+                .fetchAllSurah()
+    }
 
-                val retValEn = withContext(Dispatchers.Default) {
-                    RetrofitBuilder.build<ReadSurahEnService>(strApi).fetchReadSurahEn(surahID)
-                }
+    suspend fun fetchReadSurahAr(surahID: Int): ReadSurahArResponse {
+        //EspressoIdlingResource.increment()
 
-                listAyah = retValAr.data.ayahs.map { x -> Ayah(
-                    x.hizbQuarter,
-                    x.juz,
-                    x.manzil,
-                    x.number,
-                    x.numberInSurah,
-                    x.page,
-                    x.ruku,
-                    x.sajda,
-                    x.text,
-                    "",
-                    false)} as MutableList<Ayah>
+        val listAyah: MutableList<Ayah>
 
-                retValEn.data.ayahs.forEachIndexed { index, x ->
-                    listAyah[index].textEn = x.text
-                }
-
-
-                retValAr.data.ayahs = listAyah
-
-                result.postValue(Resource.success(retValAr))
-            }
-            catch (ex: Exception){
-                result.postValue(Resource.error(ex.message.toString(), null))
-            }
-            //EspressoIdlingResource.decrement()
+        val retValAr = withContext(Dispatchers.Default) {
+            RetrofitBuilder.build<ReadSurahArService>(strApi).fetchReadSurahAr(surahID)
         }
 
-        return result
+        val retValEn = withContext(Dispatchers.Default) {
+            RetrofitBuilder.build<ReadSurahEnService>(strApi).fetchReadSurahEn(surahID)
+        }
+
+        listAyah = retValAr.data.ayahs.map { x -> Ayah(
+            x.hizbQuarter,
+            x.juz,
+            x.manzil,
+            x.number,
+            x.numberInSurah,
+            x.page,
+            x.ruku,
+            x.text,
+            "",
+            false)} as MutableList<Ayah>
+
+        retValEn.body()?.data?.ayahs?.forEachIndexed { index, x ->
+            listAyah[index].textEn = x.text
+        }
+
+
+        retValAr.data.ayahs = listAyah
+
+        return retValAr
+
+        //EspressoIdlingResource.decrement()
     }
 
 }

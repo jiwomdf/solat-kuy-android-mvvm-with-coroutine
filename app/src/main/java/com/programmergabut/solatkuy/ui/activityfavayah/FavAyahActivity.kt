@@ -10,23 +10,24 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.fragment.app.viewModels
 import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.util.enumclass.EnumStatus
+import com.programmergabut.solatkuy.viewmodel.ViewModelFactory
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_fav_ayah.*
 import java.lang.Exception
 
-@AndroidEntryPoint
+//@AndroidEntryPoint
 class FavAyahActivity : AppCompatActivity() {
 
-    //private lateinit var favAyahViewModel: FavAyahViewModel
+    private lateinit var favAyahViewModel: FavAyahViewModel
     private lateinit var favAyahAdapter: FavAyahAdapter
-    private val favAyahViewModel: FavAyahViewModel by viewModels()
+    //private val favAyahViewModel: FavAyahViewModel by viewModels()
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_fav_ayah)
 
-        /* favAyahViewModel = ViewModelProvider(this,
-            ViewModelFactory.getInstance(this.application))[FavAyahViewModel::class.java] */
+        favAyahViewModel = ViewModelProvider(this,
+            ViewModelFactory.getInstance(this.application, this))[FavAyahViewModel::class.java]
 
         initAppBar()
         initRVFavAyah()
@@ -59,6 +60,8 @@ class FavAyahActivity : AppCompatActivity() {
             }
 
         })
+
+        favAyahViewModel.getFavAyah()
     }
 
     private fun initRVFavAyah() {

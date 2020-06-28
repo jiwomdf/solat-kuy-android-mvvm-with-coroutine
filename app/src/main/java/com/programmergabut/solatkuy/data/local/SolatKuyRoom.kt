@@ -26,11 +26,11 @@ abstract class SolatKuyRoom: RoomDatabase() {
 
 
     companion object{
-        /*@Volatile
+        @Volatile
         private var INSTANCE: SolatKuyRoom? = null
-        private const val dbName = EnumConfig.databaseName */
+        private const val dbName = EnumConfig.databaseName
 
-        /* fun getDataBase(context: Context): SolatKuyRoom {
+        fun getDataBase(context: Context): SolatKuyRoom {
             val tempInstance =
                 INSTANCE
 
@@ -45,7 +45,7 @@ abstract class SolatKuyRoom: RoomDatabase() {
                 INSTANCE = instance
                 return instance
             }
-        } */
+        }
 
         /* fun getDataBase(context: Context, contextProviders: ContextProviders): SolatKuyRoom {
            val tempInstance =

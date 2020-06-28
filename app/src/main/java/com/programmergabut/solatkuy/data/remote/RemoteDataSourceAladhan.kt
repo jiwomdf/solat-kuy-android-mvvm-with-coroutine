@@ -11,6 +11,7 @@ import com.programmergabut.solatkuy.util.Resource
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import retrofit2.Response
 import javax.inject.Inject
 import javax.inject.Singleton
 
@@ -18,11 +19,11 @@ import javax.inject.Singleton
  * Created by Katili Jiwo Adi Wiyono on 09/05/20.
  */
 
-class RemoteDataSourceAladhan(){
+class RemoteDataSourceAladhan constructor(){
 
     private val strApi = "https://api.aladhan.com/v1/"
 
-    /* companion object{
+    companion object{
         @Volatile
         private var instance: RemoteDataSourceAladhan? = null
 
@@ -31,28 +32,14 @@ class RemoteDataSourceAladhan(){
             instance
                 ?: RemoteDataSourceAladhan()
         }
-    } */
+    }
 
     //Coroutine
-    fun fetchCompassApi(msApi1: MsApi1): LiveData<Resource<CompassResponse>>{
+    suspend fun fetchCompassApi(msApi1: MsApi1): Response<CompassResponse> {
 
-        val result = MutableLiveData<Resource<CompassResponse>>()
-        result.postValue(Resource.loading(null))
-
-        GlobalScope.launch(Dispatchers.IO){
-            try {
-                result.postValue(Resource.success(
-                    RetrofitBuilder
-                        .build<QiblaApiService>(strApi)
-                        .fetchQibla(msApi1.latitude, msApi1.longitude))
-                )
-            }
-            catch (ex: Exception){
-                result.postValue(Resource.error(ex.message.toString(), null))
-            }
-        }
-
-        return result
+        return RetrofitBuilder
+                .build<QiblaApiService>(strApi)
+                .fetchQibla(msApi1.latitude, msApi1.longitude)
     }
 
     /* fun fetchAsmaAlHusnaApi(): LiveData<Resource<AsmaAlHusnaApi>>{
@@ -74,8 +61,14 @@ class RemoteDataSourceAladhan(){
         return result
     } */
 
-    fun fetchPrayerApi(msApi1: MsApi1): LiveData<Resource<PrayerResponse>> {
-        val result = MutableLiveData<Resource<PrayerResponse>>()
+    suspend fun fetchPrayerApi(msApi1: MsApi1): Response<PrayerResponse> {
+
+        return RetrofitBuilder
+                    .build<CalendarApiService>(strApi)
+                    .fetchPrayer(msApi1.latitude, msApi1.longitude, msApi1.method, msApi1.month, msApi1.year)
+
+
+        /*val result = MutableLiveData<Resource<PrayerResponse>>()
         result.postValue(Resource.loading(null))
 
         GlobalScope.launch(Dispatchers.IO) {
@@ -91,7 +84,7 @@ class RemoteDataSourceAladhan(){
             }
         }
 
-        return result
+        return result */
     }
 
 }

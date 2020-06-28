@@ -13,7 +13,7 @@ import com.programmergabut.solatkuy.data.local.localentity.NotifiedPrayer
 interface NotifiedPrayerDao {
 
     @Query("select * from notified_prayer order by prayerID asc")
-    fun getNotifiedPrayer(): LiveData<List<NotifiedPrayer>>
+    suspend fun getNotifiedPrayer(): List<NotifiedPrayer>
 
     @Query("select * from notified_prayer order by prayerID asc")
     suspend fun getNotifiedPrayerSync(): List<NotifiedPrayer>

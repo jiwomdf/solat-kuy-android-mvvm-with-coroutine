@@ -1,38 +1,56 @@
 package com.programmergabut.solatkuy.ui.fragmentinfo
 
-import android.app.Application
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import com.programmergabut.solatkuy.data.Repository
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
+import com.programmergabut.solatkuy.data.local.localentity.MsFavAyah
 import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.PrayerResponse
 import com.programmergabut.solatkuy.util.Resource
+import com.programmergabut.solatkuy.util.helper.NetworkHelper
+import kotlinx.coroutines.launch
 
 /*
  * Created by Katili Jiwo Adi Wiyono on 25/04/20.
  */
 
-class FragmentInfoViewModel @ViewModelInject constructor(val repository: Repository): ViewModel() {
+class FragmentInfoViewModel constructor(val repository: Repository, val networkHelper: NetworkHelper): ViewModel() {
 
-    private var msApi1Param = MutableLiveData<MsApi1>()
-    val prayerResponse : MutableLiveData<Resource<PrayerResponse>> = Transformations.switchMap(msApi1Param){
-        repository.fetchPrayerApi(it)
-    } as MutableLiveData<Resource<PrayerResponse>>
 
-    /* val asmaAlHusnaApi : MutableLiveData<Resource<AsmaAlHusnaApi>> = Transformations.switchMap(msApi1Param){
-        repository.fetchAsmaAlHusna()
-    } as MutableLiveData<Resource<AsmaAlHusnaApi>> */
+    private var _prayer = MutableLiveData<Resource<PrayerResponse>>()
+    val prayer: LiveData<Resource<PrayerResponse>>
+        get() = _prayer
 
-    val msApi1Local: LiveData<Resource<MsApi1>> = repository.getMsApi1()
+    private var _msApi1 = MutableLiveData<Resource<MsApi1>>()
+    val msApi1: LiveData<Resource<MsApi1>>
+        get() = _msApi1
 
-    //Room
+    fun getMsApi1() = viewModelScope.launch{
 
-    /* fun fetchAsmaAlHusna(msApi1: MsApi1){
-        this.msApi1Param.value = msApi1
-    } */
+        _msApi1.postValue(Resource.loading(null))
+
+        repository.getMsApi1().let {
+            _msApi1.postValue(Resource.success(it))
+        }
+    }
+
 
     fun fetchPrayerApi(msApi1: MsApi1){
-        this.msApi1Param.value = msApi1
+        viewModelScope.launch {
+
+            _prayer.postValue(Resource.loading(null))
+
+            if (networkHelper.isNetworkConnected()) {
+                repository.fetchPrayerApi(msApi1).let {
+                    if (it.isSuccessful)
+                        _prayer.postValue(Resource.success(it.body()))
+                    else
+                        _prayer.postValue(Resource.error(it.errorBody().toString(), null))
+                }
+            }
+            else
+                _prayer.postValue(Resource.error("No internet connection", null))
+        }
     }
 
 }

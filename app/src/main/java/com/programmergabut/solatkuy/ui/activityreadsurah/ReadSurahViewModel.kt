@@ -7,37 +7,58 @@ import com.programmergabut.solatkuy.data.Repository
 import com.programmergabut.solatkuy.data.local.localentity.MsFavAyah
 import com.programmergabut.solatkuy.data.local.localentity.MsFavSurah
 import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonAr.ReadSurahArResponse
+import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonEn.ReadSurahEnResponse
 import com.programmergabut.solatkuy.util.Resource
+import com.programmergabut.solatkuy.util.helper.NetworkHelper
 import kotlinx.coroutines.launch
 
-class ReadSurahViewModel @ViewModelInject constructor(val repository: Repository): ViewModel() {
+class ReadSurahViewModel constructor(val repository: Repository, val networkHelper: NetworkHelper): ViewModel() {
 
-    private var surahID = MutableLiveData<Int>()
-    private var favSurahID = MutableLiveData<Int>()
-    private var ayahID = MutableLiveData<Int>()
-
-    var selectedSurahAr : MutableLiveData<Resource<ReadSurahArResponse>> = Transformations.switchMap(surahID){
-        repository.fetchReadSurahAr(it)
-    } as MutableLiveData<Resource<ReadSurahArResponse>>
-
-    var msFavAyahBySurahID: LiveData<Resource<List<MsFavAyah>>> = Transformations.switchMap(favSurahID){
-        repository.getMsFavAyahBySurahID(it)
-    }
-
-    var msFavSurah = Transformations.switchMap(ayahID){
-        repository.getMsFavSurahByID(it)
-    }
+    private var _selectedSurahAr = MutableLiveData<Resource<ReadSurahArResponse>>()
+    val selectedSurahAr: LiveData<Resource<ReadSurahArResponse>>
+        get() = _selectedSurahAr
 
     fun fetchQuranSurah(surahID: Int){
-        this.surahID.value = surahID
+        viewModelScope.launch {
+
+            _selectedSurahAr.postValue(Resource.loading(null))
+
+            if (networkHelper.isNetworkConnected()) {
+                repository.fetchReadSurahAr(surahID).let {
+                    _selectedSurahAr.postValue(Resource.success(it))
+                }
+            }
+            else
+                _selectedSurahAr.postValue(Resource.error("No internet connection", null))
+        }
     }
 
-    fun fetchFavoriteData(surahID: Int){
-        this.favSurahID.value = surahID
+    private var _msFavAyahBySurahID = MutableLiveData<Resource<List<MsFavAyah>>>()
+    val msFavAyahBySurahID: LiveData<Resource<List<MsFavAyah>>>
+        get() = _msFavAyahBySurahID
+
+    fun getFavoriteData(surahID: Int){
+        viewModelScope.launch {
+            _msFavAyahBySurahID.postValue(Resource.loading(null))
+
+            repository.getMsFavAyahBySurahID(surahID).let {
+                _msFavAyahBySurahID.postValue(Resource.success(it))
+            }
+        }
     }
+
+    private var _msFavSurah = MutableLiveData<Resource<MsFavSurah>>()
+    val msFavSurah: LiveData<Resource<MsFavSurah>>
+        get() = _msFavSurah
 
     fun getFavSurah(ayahID: Int){
-        this.ayahID.value = ayahID
+        viewModelScope.launch {
+            _msFavSurah.postValue(Resource.loading(null))
+
+            repository.getMsFavSurahByID(ayahID).let {
+                _msFavSurah.postValue(Resource.success(it))
+            }
+        }
     }
 
     fun insertFavAyah(msFavAyah: MsFavAyah) = viewModelScope.launch { repository.insertFavAyah(msFavAyah) }

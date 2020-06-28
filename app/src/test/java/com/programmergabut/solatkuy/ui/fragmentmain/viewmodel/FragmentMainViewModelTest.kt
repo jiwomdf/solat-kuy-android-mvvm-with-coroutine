@@ -46,7 +46,7 @@ class FragmentMainViewModelTest {
                 repository
             )
         viewModel.fetchQuranSurah(1)
-        viewModel.fetchPrayerApi(msApi1)
+        viewModel.fetchNotifiedPrayer(msApi1)
     }
 
     @Test

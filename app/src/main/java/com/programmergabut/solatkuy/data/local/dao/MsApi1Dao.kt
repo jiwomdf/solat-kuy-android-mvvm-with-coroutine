@@ -16,7 +16,7 @@ import com.programmergabut.solatkuy.data.local.localentity.MsApi1
 interface MsApi1Dao {
 
     @Query("select * from MsApi1")
-    fun getMsApi1(): LiveData<MsApi1>
+    suspend fun getMsApi1(): MsApi1
 
     @Query("delete from MsApi1")
     suspend fun deleteAll()

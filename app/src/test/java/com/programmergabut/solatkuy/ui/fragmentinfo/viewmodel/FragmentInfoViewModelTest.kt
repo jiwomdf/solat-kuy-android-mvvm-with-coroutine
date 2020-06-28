@@ -55,7 +55,7 @@ class FragmentInfoViewModelTest {
         prayerApi.value = dummyPrayerApi
         `when`(repository.fetchPrayerApi(msApi1)).thenReturn(prayerApi)
 
-        viewModel.prayerResponse.observeForever(observer)
+        viewModel.prayer.observeForever(observer)
 
         Mockito.verify(observer).onChanged(dummyPrayerApi)
     }

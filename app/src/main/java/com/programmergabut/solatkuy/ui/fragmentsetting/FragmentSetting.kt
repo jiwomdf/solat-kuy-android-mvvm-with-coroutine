@@ -11,14 +11,12 @@ import android.location.Location
 import android.location.LocationManager
 import android.os.Bundle
 import android.os.Looper
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
-import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -29,11 +27,10 @@ import com.google.android.gms.location.LocationServices.getFusedLocationProvider
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
-import com.programmergabut.solatkuy.ui.fragmentquran.QuranFragmentViewModel
 import com.programmergabut.solatkuy.util.enumclass.EnumConfig
 import com.programmergabut.solatkuy.util.enumclass.EnumStatus
 import com.programmergabut.solatkuy.util.helper.LocationHelper
-import dagger.hilt.android.AndroidEntryPoint
+import com.programmergabut.solatkuy.viewmodel.ViewModelFactory
 import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.fragment_setting.*
 import kotlinx.android.synthetic.main.layout_bottomsheet_bygps.view.*
@@ -44,21 +41,17 @@ import org.joda.time.LocalDate
  * Created by Katili Jiwo Adi Wiyono on 25/03/20.
  */
 
-@AndroidEntryPoint
-class FragmentSetting : Fragment() {
+//@AndroidEntryPoint
+class FragmentSetting : Fragment(R.layout.fragment_setting) {
 
     private lateinit var dialog: BottomSheetDialog
     lateinit var dialogView: View
-    //private lateinit var fragmentSettingViewModel: FragmentSettingViewModel
-    private val fragmentSettingViewModel: FragmentSettingViewModel by viewModels()
+    private lateinit var fragmentSettingViewModel: FragmentSettingViewModel
+    //private val fragmentSettingViewModel: FragmentSettingViewModel by viewModels()
 
     private lateinit var mFusedLocationClient: FusedLocationProviderClient
 
     private val ALL_PERMISSIONS = 101
-
-
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? =
-        inflater.inflate(R.layout.fragment_setting, container, false)
 
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -67,8 +60,8 @@ class FragmentSetting : Fragment() {
         dialog = BottomSheetDialog(requireContext())
         btnSetLatitudeLongitude()
 
-        /* fragmentSettingViewModel = ViewModelProvider(this, ViewModelFactory
-            .getInstance(activity?.application!!))[FragmentSettingViewModel::class.java] */
+        fragmentSettingViewModel = ViewModelProvider(this, ViewModelFactory
+            .getInstance(activity?.application!!, requireContext()))[FragmentSettingViewModel::class.java]
 
         subscribeObserversDB()
     }
@@ -92,6 +85,8 @@ class FragmentSetting : Fragment() {
                 EnumStatus.ERROR -> {}
             }
         })
+
+        fragmentSettingViewModel.getMsApi1()
     }
 
 

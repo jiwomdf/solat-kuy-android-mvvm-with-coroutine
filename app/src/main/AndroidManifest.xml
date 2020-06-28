@@ -3,6 +3,8 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.programmergabut.solatkuy">
 
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
@@ -20,7 +22,7 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:targetApi="n">
-        <activity android:name=".ui.activityfavayah.FavAyahActivity"></activity>
+        <activity android:name=".ui.activityfavayah.FavAyahActivity" />
         <activity android:name=".ui.activityreadsurah.ReadSurahActivity" />
         <activity android:name=".ui.activityprayer.DuaActivity" />
         <activity

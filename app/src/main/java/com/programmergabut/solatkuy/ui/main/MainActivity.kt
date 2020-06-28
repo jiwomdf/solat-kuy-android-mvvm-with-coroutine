@@ -20,6 +20,7 @@ import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.Observer
+import androidx.lifecycle.ViewModelProvider
 import androidx.viewpager.widget.ViewPager
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
@@ -30,6 +31,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.data.local.SolatKuyRoom
 import com.programmergabut.solatkuy.util.enumclass.EnumStatus
+import com.programmergabut.solatkuy.viewmodel.ViewModelFactory
 import dagger.hilt.android.AndroidEntryPoint
 import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.activity_main.*
@@ -44,14 +46,14 @@ import javax.inject.Inject
 /*
  * Created by Katili Jiwo Adi Wiyono on 25/03/20.
  */
-@AndroidEntryPoint
+//@AndroidEntryPoint
 class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener {
 
     lateinit var mSubDialogView: View
     private lateinit var mSubDialog: Dialog
-    //private lateinit var mainActivityViewModel: MainActivityViewModel
-    private val mainActivityViewModel: MainActivityViewModel by viewModels()
-    @Inject lateinit var db : SolatKuyRoom
+    private lateinit var mainActivityViewModel: MainActivityViewModel
+    //private val mainActivityViewModel: MainActivityViewModel by viewModels()
+    /* @Inject */ lateinit var db : SolatKuyRoom
     private val ALL_PERMISSIONS = 101
 
 
@@ -60,9 +62,9 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         setContentView(R.layout.activity_main)
 
 
-        //db = SolatKuyRoom.getDataBase(this)
-        /* mainActivityViewModel = ViewModelProvider(this, ViewModelFactory
-            .getInstance(application))[MainActivityViewModel::class.java] */
+        db = SolatKuyRoom.getDataBase(this)
+        mainActivityViewModel = ViewModelProvider(this, ViewModelFactory
+            .getInstance(application, this))[MainActivityViewModel::class.java]
 
         bottom_navigation.setOnNavigationItemSelectedListener(this)
 
@@ -87,6 +89,8 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
                 EnumStatus.ERROR -> {}
             }
         })
+
+        mainActivityViewModel.getMsSetting()
 
     }
 

@@ -8,7 +8,7 @@ import com.programmergabut.solatkuy.data.local.SolatKuyRoom
 import com.programmergabut.solatkuy.data.remote.RemoteDataSourceApiAlquran
 import kotlinx.coroutines.GlobalScope
 
-/* object Injection {
+object Injection {
 
     fun provideRepository(application: Application): Repository {
 
@@ -16,13 +16,18 @@ import kotlinx.coroutines.GlobalScope
 
         val remoteDataSourceAladhan = RemoteDataSourceAladhan.getInstance()
         val remoteDataSourceQuranApi = RemoteDataSourceApiAlquran.getInstance()
-        val localDataSource = LocalDataSource.getInstance(db)
+        //val localDataSource = LocalDataSource.getInstance(db)
 
 
         return Repository(
             remoteDataSourceAladhan,
-            remoteDataSourceQuranApi
+            remoteDataSourceQuranApi,
+            db.notifiedPrayerDao(),
+            db.msApi1Dao(),
+            db.msSettingDao(),
+            db.msFavAyahDao(),
+            db.msFavSurahDao()
         )
     }
 
-}*/
+}
