@@ -17,6 +17,7 @@ import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -30,7 +31,7 @@ import com.programmergabut.solatkuy.data.local.localentity.MsApi1
 import com.programmergabut.solatkuy.util.enumclass.EnumConfig
 import com.programmergabut.solatkuy.util.enumclass.EnumStatus
 import com.programmergabut.solatkuy.util.helper.LocationHelper
-import com.programmergabut.solatkuy.viewmodel.ViewModelFactory
+import dagger.hilt.android.AndroidEntryPoint
 import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.fragment_setting.*
 import kotlinx.android.synthetic.main.layout_bottomsheet_bygps.view.*
@@ -41,13 +42,13 @@ import org.joda.time.LocalDate
  * Created by Katili Jiwo Adi Wiyono on 25/03/20.
  */
 
-//@AndroidEntryPoint
+@AndroidEntryPoint
 class FragmentSetting : Fragment(R.layout.fragment_setting) {
 
     private lateinit var dialog: BottomSheetDialog
     lateinit var dialogView: View
-    private lateinit var fragmentSettingViewModel: FragmentSettingViewModel
-    //private val fragmentSettingViewModel: FragmentSettingViewModel by viewModels()
+
+    private val fragmentSettingViewModel: FragmentSettingViewModel by viewModels()
 
     private lateinit var mFusedLocationClient: FusedLocationProviderClient
 
@@ -59,9 +60,6 @@ class FragmentSetting : Fragment(R.layout.fragment_setting) {
 
         dialog = BottomSheetDialog(requireContext())
         btnSetLatitudeLongitude()
-
-        fragmentSettingViewModel = ViewModelProvider(this, ViewModelFactory
-            .getInstance(activity?.application!!, requireContext()))[FragmentSettingViewModel::class.java]
 
         subscribeObserversDB()
     }
@@ -85,8 +83,6 @@ class FragmentSetting : Fragment(R.layout.fragment_setting) {
                 EnumStatus.ERROR -> {}
             }
         })
-
-        fragmentSettingViewModel.getMsApi1()
     }
 
 

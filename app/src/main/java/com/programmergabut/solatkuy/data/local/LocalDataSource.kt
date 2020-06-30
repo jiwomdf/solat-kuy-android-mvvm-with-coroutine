@@ -27,7 +27,7 @@ class LocalDataSource constructor(db: SolatKuyRoom) {
     private var msFavSurahDao = db.msFavSurahDao()
 
     /* Notified Prayer */
-    suspend fun getNotifiedPrayer() = notifiedPrayerDao.getNotifiedPrayer()
+    suspend fun getNotifiedPrayer() = notifiedPrayerDao.getListNotifiedPrayer()
     suspend fun updatePrayerTime(prayerName: String, prayerTime: String) = notifiedPrayerDao.updatePrayerTime(prayerName, prayerTime)
     suspend fun updatePrayerIsNotified(prayerName: String, isNotified: Boolean) = notifiedPrayerDao.updatePrayerIsNotified(prayerName, isNotified)
     fun updateListPrayerTime(data: PrayerResponse){
@@ -63,14 +63,14 @@ class LocalDataSource constructor(db: SolatKuyRoom) {
     suspend fun updateIsUsingDBQuotes(isUsingDBQuotes: Boolean) = msSettingDao.updateIsUsingDBQuotes(isUsingDBQuotes)
 
     /* MsFavAyah */
-    suspend fun getMsFavAyah() = msFavAyahDao.getMsFavAyah()
-    suspend fun getMsFavAyahBySurahID(surahID: Int) = msFavAyahDao.getMsFavAyahBySurahID(surahID)
+    suspend fun getMsFavAyah() = msFavAyahDao.getListFavAyah()
+    suspend fun getMsFavAyahBySurahID(surahID: Int) = msFavAyahDao.getListFavAyahBySurahID(surahID)
     suspend fun insertFavAyah(msFavAyah: MsFavAyah) = msFavAyahDao.insertMsAyah(msFavAyah)
     suspend fun deleteFavAyah(msFavAyah: MsFavAyah) = msFavAyahDao.deleteMsFavAyah(msFavAyah)
 
     /* MsFavSurah */
-    suspend fun getMsFavSurahByID(surahID: Int) = msFavSurahDao.getMsFavSurahBySurahID(surahID)
-    suspend fun getMsFavSurah() = msFavSurahDao.getMsFavSurah()
+    suspend fun getMsFavSurahByID(surahID: Int) = msFavSurahDao.getFavSurahBySurahID(surahID)
+    suspend fun getMsFavSurah() = msFavSurahDao.getListFavSurah()
     suspend fun insertFavSurah(msFavSurah: MsFavSurah) = msFavSurahDao.insertMsSurah(msFavSurah)
     suspend fun deleteFavSurah(msFavSurah: MsFavSurah) = msFavSurahDao.deleteMsFavSurah(msFavSurah)
 

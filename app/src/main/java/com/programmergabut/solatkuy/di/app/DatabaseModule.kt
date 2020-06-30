@@ -11,20 +11,17 @@ import dagger.hilt.android.components.ApplicationComponent
 import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Singleton
 
-/* @Module
+@Module
 @InstallIn(ApplicationComponent::class)
-object AppModule {
+object DatabaseModule {
 
 
+    /* DAO */
     @Singleton
     @Provides
-    fun provideRunningDatabase(
-        @ApplicationContext context: Context
-    ) = Room.databaseBuilder(
-        context,
-        SolatKuyRoom::class.java,
-        EnumConfig.databaseName
-    ).build()
+    fun provideRunningDatabase(@ApplicationContext context: Context): SolatKuyRoom {
+      return Room.databaseBuilder(context, SolatKuyRoom::class.java, EnumConfig.databaseName).build()
+    }
 
     @Singleton
     @Provides
@@ -42,4 +39,8 @@ object AppModule {
     @Provides
     fun provideMsFavAyahDao(db: SolatKuyRoom) = db.msFavAyahDao()
 
-}*/
+    @Singleton
+    @Provides
+    fun provideMsFavSurahDao(db: SolatKuyRoom) = db.msFavSurahDao()
+
+}

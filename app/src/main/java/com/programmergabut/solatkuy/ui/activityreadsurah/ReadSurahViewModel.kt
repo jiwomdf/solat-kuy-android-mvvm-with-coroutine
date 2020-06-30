@@ -1,18 +1,16 @@
 package com.programmergabut.solatkuy.ui.activityreadsurah
 
-import android.app.Application
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import com.programmergabut.solatkuy.data.Repository
 import com.programmergabut.solatkuy.data.local.localentity.MsFavAyah
 import com.programmergabut.solatkuy.data.local.localentity.MsFavSurah
 import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonAr.ReadSurahArResponse
-import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonEn.ReadSurahEnResponse
 import com.programmergabut.solatkuy.util.Resource
 import com.programmergabut.solatkuy.util.helper.NetworkHelper
 import kotlinx.coroutines.launch
 
-class ReadSurahViewModel constructor(val repository: Repository, val networkHelper: NetworkHelper): ViewModel() {
+class ReadSurahViewModel @ViewModelInject constructor(val repository: Repository, val networkHelper: NetworkHelper): ViewModel() {
 
     private var _selectedSurahAr = MutableLiveData<Resource<ReadSurahArResponse>>()
     val selectedSurahAr: LiveData<Resource<ReadSurahArResponse>>
@@ -33,33 +31,22 @@ class ReadSurahViewModel constructor(val repository: Repository, val networkHelp
         }
     }
 
-    private var _msFavAyahBySurahID = MutableLiveData<Resource<List<MsFavAyah>>>()
-    val msFavAyahBySurahID: LiveData<Resource<List<MsFavAyah>>>
-        get() = _msFavAyahBySurahID
-
-    fun getFavoriteData(surahID: Int){
-        viewModelScope.launch {
-            _msFavAyahBySurahID.postValue(Resource.loading(null))
-
-            repository.getMsFavAyahBySurahID(surahID).let {
-                _msFavAyahBySurahID.postValue(Resource.success(it))
-            }
-        }
+    private var favSurahID = MutableLiveData<Int>()
+    val msFavAyahBySurahID: LiveData<Resource<List<MsFavAyah>>> = Transformations.switchMap(favSurahID){
+        repository.getListFavAyahBySurahID(it)
+    }
+    fun fetchFavoriteData(surahID: Int){
+        this.favSurahID.value = surahID
     }
 
-    private var _msFavSurah = MutableLiveData<Resource<MsFavSurah>>()
-    val msFavSurah: LiveData<Resource<MsFavSurah>>
-        get() = _msFavSurah
-
+    private var ayahID = MutableLiveData<Int>()
+    var msFavSurah = Transformations.switchMap(ayahID){
+        repository.getFavSurahBySurahID(it)
+    }
     fun getFavSurah(ayahID: Int){
-        viewModelScope.launch {
-            _msFavSurah.postValue(Resource.loading(null))
-
-            repository.getMsFavSurahByID(ayahID).let {
-                _msFavSurah.postValue(Resource.success(it))
-            }
-        }
+        this.ayahID.value = ayahID
     }
+
 
     fun insertFavAyah(msFavAyah: MsFavAyah) = viewModelScope.launch { repository.insertFavAyah(msFavAyah) }
     fun deleteFavAyah(msFavAyah: MsFavAyah) = viewModelScope.launch { repository.deleteFavAyah(msFavAyah) }

@@ -16,6 +16,7 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.Observer
@@ -31,7 +32,7 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.data.local.SolatKuyRoom
 import com.programmergabut.solatkuy.util.enumclass.EnumStatus
-import com.programmergabut.solatkuy.viewmodel.ViewModelFactory
+import dagger.hilt.android.AndroidEntryPoint
 import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.layout_bottomsheet_bygps.view.*
@@ -39,29 +40,24 @@ import kotlinx.android.synthetic.main.layout_bottomsheet_bylatitudelongitude.vie
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.joda.time.LocalDate
+import javax.inject.Inject
 
 /*
  * Created by Katili Jiwo Adi Wiyono on 25/03/20.
  */
-//@AndroidEntryPoint
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener {
 
     lateinit var mSubDialogView: View
     private lateinit var mSubDialog: Dialog
-    private lateinit var mainActivityViewModel: MainActivityViewModel
-    //private val mainActivityViewModel: MainActivityViewModel by viewModels()
-    /* @Inject */ lateinit var db : SolatKuyRoom
+    private val mainActivityViewModel: MainActivityViewModel by viewModels()
+    @Inject lateinit var db : SolatKuyRoom
     private val ALL_PERMISSIONS = 101
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-
-        db = SolatKuyRoom.getDataBase(this)
-        mainActivityViewModel = ViewModelProvider(this, ViewModelFactory
-            .getInstance(application, this))[MainActivityViewModel::class.java]
 
         bottom_navigation.setOnNavigationItemSelectedListener(this)
 
@@ -86,8 +82,6 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
                 EnumStatus.ERROR -> {}
             }
         })
-
-        mainActivityViewModel.getMsSetting()
 
     }
 
@@ -228,7 +222,6 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
                 currDate.year.toString())
         }
 
-        //mainActivityViewModel.updateMsApi1(data)
     }
 
     /* Permission */

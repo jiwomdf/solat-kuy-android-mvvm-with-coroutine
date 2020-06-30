@@ -13,13 +13,14 @@ import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.RotateAnimation
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
 import com.programmergabut.solatkuy.util.enumclass.EnumStatus
-import com.programmergabut.solatkuy.viewmodel.ViewModelFactory
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_compass.*
 import kotlinx.android.synthetic.main.layout_phone_tilt.*
 
@@ -27,11 +28,11 @@ import kotlinx.android.synthetic.main.layout_phone_tilt.*
  * Created by Katili Jiwo Adi Wiyono on 31/03/20.
  */
 
-//@AndroidEntryPoint
+@AndroidEntryPoint
 class FragmentCompass : Fragment(R.layout.fragment_compass), SensorEventListener, SwipeRefreshLayout.OnRefreshListener {
 
-    private lateinit var fragmentCompassViewModel: FragmentCompassViewModel
-    //private val fragmentCompassViewModel: FragmentCompassViewModel by viewModels()
+    private val fragmentCompassViewModel: FragmentCompassViewModel by viewModels()
+    private lateinit var mMsApi1: MsApi1
 
     private var mGravity = FloatArray(3)
     private var mGeomagnetic = FloatArray(3)
@@ -44,10 +45,6 @@ class FragmentCompass : Fragment(R.layout.fragment_compass), SensorEventListener
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         mSensorManager = activity?.getSystemService(SENSOR_SERVICE) as SensorManager
-
-        fragmentCompassViewModel = ViewModelProvider(this, ViewModelFactory
-            .getInstance(activity?.application!!, requireContext()))[FragmentCompassViewModel::class.java]
-
 
         subscribeObserversDB()
         subscribeObserversAPI()
@@ -85,15 +82,16 @@ class FragmentCompass : Fragment(R.layout.fragment_compass), SensorEventListener
         fragmentCompassViewModel.msApi1.observe(viewLifecycleOwner, Observer {
             when(it.status){
                 EnumStatus.SUCCESS -> {
-                    if(it.data != null)
-                        fragmentCompassViewModel.fetchCompassApi(it.data)
+                    if(it.data == null)
+                        throw Exception("MsApi1 for Compass Null")
+
+                    mMsApi1 = it.data
+                    fragmentCompassViewModel.fetchCompassApi(it.data)
                 }
                 EnumStatus.LOADING -> {}
                 EnumStatus.ERROR -> {}
             }
         })
-
-        fragmentCompassViewModel.getMsApi1()
     }
 
     /* Compass */
@@ -167,7 +165,7 @@ class FragmentCompass : Fragment(R.layout.fragment_compass), SensorEventListener
     }
 
     override fun onRefresh() {
-        fragmentCompassViewModel.getMsApi1()
+        fragmentCompassViewModel.fetchCompassApi(mMsApi1)
         sl_compass.isRefreshing = false
     }
 

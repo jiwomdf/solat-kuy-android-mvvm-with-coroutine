@@ -5,7 +5,7 @@ import android.content.Context
 import androidx.multidex.MultiDex
 import dagger.hilt.android.HiltAndroidApp
 
-//@HiltAndroidApp
+@HiltAndroidApp
 class BaseApplication : Application() {
 
     override fun attachBaseContext(base: Context?) {

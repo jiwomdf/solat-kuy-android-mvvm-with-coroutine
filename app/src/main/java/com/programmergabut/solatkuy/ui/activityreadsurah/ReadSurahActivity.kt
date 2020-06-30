@@ -1,22 +1,22 @@
 package com.programmergabut.solatkuy.ui.activityreadsurah
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.data.local.localentity.MsFavSurah
 import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonAr.Data
 import com.programmergabut.solatkuy.util.enumclass.EnumStatus
-import com.programmergabut.solatkuy.viewmodel.ViewModelFactory
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_read_surah.*
 
-//@AndroidEntryPoint
+@AndroidEntryPoint
 class ReadSurahActivity : AppCompatActivity() {
 
     companion object{
@@ -25,8 +25,7 @@ class ReadSurahActivity : AppCompatActivity() {
         const val surahTranslation = "surahTranslation"
     }
 
-    private lateinit var readSurahViewModel: ReadSurahViewModel
-    //private val readSurahViewModel: ReadSurahViewModel by viewModels()
+    private val readSurahViewModel: ReadSurahViewModel by viewModels()
 
     private lateinit var readSurahAdapter: ReadSurahAdapter
 
@@ -39,10 +38,6 @@ class ReadSurahActivity : AppCompatActivity() {
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_read_surah)
-
-        readSurahViewModel = ViewModelProvider(this,
-            ViewModelFactory.getInstance(this.application, this))[ReadSurahViewModel::class.java]
-
 
         getIntentExtra()
 
@@ -92,7 +87,7 @@ class ReadSurahActivity : AppCompatActivity() {
                 else
                     readSurahViewModel.deleteFavSurah(MsFavSurah(mSelSurahId.toInt(), mSelSurahName, mSelSurahTranslation))
 
-                readSurahViewModel.getFavSurah(mSelSurahId.toInt())
+                //readSurahViewModel.getFavSurah(mSelSurahId.toInt())
                 true
             }
             else -> super.onOptionsItemSelected(item!!)
@@ -121,7 +116,7 @@ class ReadSurahActivity : AppCompatActivity() {
 
                     cc_readQuran_loading.visibility = View.GONE
 
-                    readSurahViewModel.getFavoriteData(mSelSurahId.toInt())
+                    readSurahViewModel.fetchFavoriteData(mSelSurahId.toInt())
                 }
                 EnumStatus.LOADING -> {
                     ab_readQuran.visibility = View.INVISIBLE

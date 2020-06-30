@@ -9,7 +9,7 @@ import javax.inject.Inject
  * Created by Katili Jiwo Adi Wiyono on 02/06/20.
  */
 
-class RetrofitBuilder constructor(){
+/* class RetrofitBuilder @Inject constructor(){
 
     companion object{
         inline fun <reified T> build(strApi: String): T {
@@ -21,4 +21,4 @@ class RetrofitBuilder constructor(){
         }
     }
 
-}
+} */

@@ -14,25 +14,14 @@ import kotlinx.coroutines.launch
  * Created by Katili Jiwo Adi Wiyono on 25/04/20.
  */
 
-class FragmentInfoViewModel constructor(val repository: Repository, val networkHelper: NetworkHelper): ViewModel() {
+class FragmentInfoViewModel @ViewModelInject constructor(val repository: Repository, val networkHelper: NetworkHelper): ViewModel() {
 
 
     private var _prayer = MutableLiveData<Resource<PrayerResponse>>()
     val prayer: LiveData<Resource<PrayerResponse>>
         get() = _prayer
 
-    private var _msApi1 = MutableLiveData<Resource<MsApi1>>()
-    val msApi1: LiveData<Resource<MsApi1>>
-        get() = _msApi1
-
-    fun getMsApi1() = viewModelScope.launch{
-
-        _msApi1.postValue(Resource.loading(null))
-
-        repository.getMsApi1().let {
-            _msApi1.postValue(Resource.success(it))
-        }
-    }
+    val msApi1 = repository.getMsApi1()
 
 
     fun fetchPrayerApi(msApi1: MsApi1){

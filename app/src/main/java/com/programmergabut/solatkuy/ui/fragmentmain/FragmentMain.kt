@@ -10,6 +10,7 @@ import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.ViewModelProvider
 import androidx.lifecycle.lifecycleScope
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
@@ -29,7 +30,7 @@ import com.programmergabut.solatkuy.util.enumclass.EnumStatus
 import com.programmergabut.solatkuy.util.helper.LocationHelper
 import com.programmergabut.solatkuy.util.helper.PushNotificationHelper
 import com.programmergabut.solatkuy.util.helper.SelectPrayerHelper
-import com.programmergabut.solatkuy.viewmodel.ViewModelFactory
+import dagger.hilt.android.AndroidEntryPoint
 import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.fragment_main.*
 import kotlinx.android.synthetic.main.layout_popup_choose_quote_setting.view.*
@@ -48,11 +49,10 @@ import kotlin.math.abs
  * Created by Katili Jiwo Adi Wiyono on 25/03/20.
  */
 
-//@AndroidEntryPoint
+@AndroidEntryPoint
 class FragmentMain : Fragment(R.layout.fragment_main), SwipeRefreshLayout.OnRefreshListener  {
 
-    private lateinit var fragmentMainViewModel: FragmentMainViewModel
-    //private val fragmentMainViewModel: FragmentMainViewModel by viewModels()
+    private val fragmentMainViewModel: FragmentMainViewModel by viewModels()
 
     private var coroutineTimerJob: Job? = null
     private var isTimerHasBinded: Boolean = false
@@ -84,9 +84,6 @@ class FragmentMain : Fragment(R.layout.fragment_main), SwipeRefreshLayout.OnRefr
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        fragmentMainViewModel = ViewModelProvider(this, ViewModelFactory
-            .getInstance(activity?.application!!, requireContext()))[FragmentMainViewModel::class.java]
 
         subscribeObserversAPI()
 
@@ -227,7 +224,6 @@ class FragmentMain : Fragment(R.layout.fragment_main), SwipeRefreshLayout.OnRefr
 
         })
 
-        fragmentMainViewModel.getFavAyah()
     }
 
     private fun createData(prayer: List<NotifiedPrayer>): MsTimings {
@@ -257,9 +253,9 @@ class FragmentMain : Fragment(R.layout.fragment_main), SwipeRefreshLayout.OnRefr
         fragmentMainViewModel.fetchNotifiedPrayer(msApi1)
     }
 
-    private fun getMsSetting(){
+    /* private fun getMsSetting(){
         fragmentMainViewModel.getMsSetting()
-    }
+    } */
 
     private fun fetchQuranSurah(){
 
@@ -627,7 +623,7 @@ class FragmentMain : Fragment(R.layout.fragment_main), SwipeRefreshLayout.OnRefr
     }
 
     override fun onRefresh() {
-        getMsSetting()
+        fragmentMainViewModel.fetchMsSetting(0)
         sl_main.isRefreshing = false
     }
 
@@ -671,7 +667,7 @@ class FragmentMain : Fragment(R.layout.fragment_main), SwipeRefreshLayout.OnRefr
 
     private fun dismissDialog(dialog: Dialog){
         dialog.dismiss()
-        getMsSetting()
+        //getMsSetting()
         Toasty.success(requireContext(), "Success change the quotes source", Toast.LENGTH_SHORT).show()
     }
 

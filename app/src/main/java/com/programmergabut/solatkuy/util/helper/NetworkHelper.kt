@@ -8,9 +8,9 @@ import dagger.hilt.android.qualifiers.ApplicationContext
 import javax.inject.Inject
 import javax.inject.Singleton
 
-class NetworkHelper constructor(private val context: Context) {
+class NetworkHelper @Inject constructor(@ApplicationContext private val context: Context) {
 
-    companion object {
+    /* companion object {
         @Volatile
         private var instance: NetworkHelper? = null
 
@@ -20,7 +20,7 @@ class NetworkHelper constructor(private val context: Context) {
                     instance
                         ?: NetworkHelper(context)
                 }
-    }
+    } */
 
     fun isNetworkConnected(): Boolean {
         var result = false

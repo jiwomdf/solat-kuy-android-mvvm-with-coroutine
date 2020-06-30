@@ -20,7 +20,6 @@ import com.programmergabut.solatkuy.util.enumclass.EnumConfig
 import com.programmergabut.solatkuy.util.enumclass.EnumStatus
 import com.programmergabut.solatkuy.util.generator.DuaGenerator
 import com.programmergabut.solatkuy.util.helper.LocationHelper
-import com.programmergabut.solatkuy.viewmodel.ViewModelFactory
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_info.*
 import java.text.SimpleDateFormat
@@ -30,20 +29,16 @@ import java.util.*
  * Created by Katili Jiwo Adi Wiyono on 24/04/20.
  */
 
-//@AndroidEntryPoint
+@AndroidEntryPoint
 class FragmentInfo : Fragment(R.layout.fragment_info), SwipeRefreshLayout.OnRefreshListener {
 
-    private lateinit var fragmentInfoViewModel: FragmentInfoViewModel
-    //private val fragmentInfoViewModel: FragmentInfoViewModel by viewModels()
+    private val fragmentInfoViewModel: FragmentInfoViewModel by viewModels()
 
     private lateinit var duaCollectionAdapter: DuaCollectionAdapter
     private var mMsApi1: MsApi1? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
-        fragmentInfoViewModel = ViewModelProvider(this, ViewModelFactory
-            .getInstance(activity?.application!!, requireContext()))[FragmentInfoViewModel::class.java]
 
         subscribeObserversDB()
 
@@ -85,8 +80,6 @@ class FragmentInfo : Fragment(R.layout.fragment_info), SwipeRefreshLayout.OnRefr
                 EnumStatus.ERROR -> {}
             }
         })
-
-        fragmentInfoViewModel.getMsApi1()
     }
 
     @SuppressLint("SetTextI18n")
@@ -198,11 +191,7 @@ class FragmentInfo : Fragment(R.layout.fragment_info), SwipeRefreshLayout.OnRefr
         if(mMsApi1 == null)
             throw Exception("null mMsApi1")
 
-        //fetch Prayer Api
         fetchPrayerApi(mMsApi1!!)
-
-        //fetch Asma Al Husna
-        //fetchAsmaAlHusnaApi(mMsApi1!!)
 
         sl_info.isRefreshing = false
     }

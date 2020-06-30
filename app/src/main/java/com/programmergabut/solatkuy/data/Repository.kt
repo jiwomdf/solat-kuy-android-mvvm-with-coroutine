@@ -1,29 +1,33 @@
 package com.programmergabut.solatkuy.data
 
+import android.util.Log
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MediatorLiveData
 import com.programmergabut.solatkuy.data.local.dao.*
 import com.programmergabut.solatkuy.data.local.localentity.*
-import com.programmergabut.solatkuy.data.remote.RemoteDataSourceAladhan
-import com.programmergabut.solatkuy.data.remote.RemoteDataSourceApiAlquran
+import com.programmergabut.solatkuy.data.remote.RemoteDataSourceAladhanImpl
+import com.programmergabut.solatkuy.data.remote.RemoteDataSourceApiAlquranImpl
+import com.programmergabut.solatkuy.util.Resource
 import com.programmergabut.solatkuy.util.enumclass.EnumConfig
-import kotlinx.coroutines.*
 import java.text.SimpleDateFormat
 import java.util.*
+import javax.inject.Inject
 
 /*
  * Created by Katili Jiwo Adi Wiyono on 26/03/20.
  */
 
-class Repository constructor(
-    val remoteDataSourceAladhan: RemoteDataSourceAladhan,
-    val remoteDataSourceApiAlquran: RemoteDataSourceApiAlquran,
-    val notifiedPrayerDao: NotifiedPrayerDao,
-    val msApi1Dao: MsApi1Dao,
-    val msSettingDao: MsSettingDao,
-    val msFavAyahDao: MsFavAyahDao,
-    val msFavSurahDao: MsFavSurahDao
+class Repository @Inject constructor(
+    private val remoteDataSourceAladhanImpl: RemoteDataSourceAladhanImpl,
+    private val remoteDataSourceApiAlquranImpl: RemoteDataSourceApiAlquranImpl,
+    private val notifiedPrayerDao: NotifiedPrayerDao,
+    private val msApi1Dao: MsApi1Dao,
+    private val msSettingDao: MsSettingDao,
+    private val msFavAyahDao: MsFavAyahDao,
+    private val msFavSurahDao: MsFavSurahDao
 ) {
 
-    companion object{
+    /* companion object{
         @Volatile
         private var instance: Repository? = null
 
@@ -44,50 +48,116 @@ class Repository constructor(
                         msFavAyahDao,
                         msFavSurahDao)
             }
-    }
+    } */
 
     /* Room */
     /* NotifiedPrayer */
     suspend fun updatePrayerIsNotified(prayerName: String, isNotified: Boolean) = notifiedPrayerDao.updatePrayerIsNotified(prayerName, isNotified)
 
     /* MsApi1 */
-    suspend fun getMsApi1() = msApi1Dao.getMsApi1()
-    suspend fun updateMsApi1(msApi1: MsApi1) = msApi1Dao.updateMsApi1(
-        msApi1.api1ID, msApi1.latitude, msApi1.longitude, msApi1.method, msApi1.month, msApi1.year
-    )
+    fun getMsApi1(): LiveData<Resource<MsApi1>> {
+        val data = MediatorLiveData<Resource<MsApi1>>()
+        val msApi1 = msApi1Dao.getMsApi1()
+
+        data.value = Resource.loading(null)
+
+        data.addSource(msApi1) {
+            data.value = Resource.success(it)
+        }
+
+        return data
+    }
+    suspend fun updateMsApi1(msApi1: MsApi1) = msApi1Dao.updateMsApi1(msApi1.api1ID, msApi1.latitude,
+        msApi1.longitude, msApi1.method, msApi1.month, msApi1.year)
 
     /* MsFavAyah */
-    suspend fun getMsFavAyah() = msFavAyahDao.getMsFavAyah()
-    suspend fun getMsFavAyahBySurahID(surahID: Int) = msFavAyahDao.getMsFavAyahBySurahID(surahID)
+    fun getListFavAyah(): LiveData<Resource<List<MsFavAyah>>> {
+        val data = MediatorLiveData<Resource<List<MsFavAyah>>>()
+        val listfavAyah = msFavAyahDao.getListFavAyah()
+
+        data.value = Resource.loading(null)
+
+        data.addSource(listfavAyah) {
+            data.value = Resource.success(it)
+        }
+
+        return data
+    }
+    fun getListFavAyahBySurahID(surahID: Int): LiveData<Resource<List<MsFavAyah>>> {
+        val data = MediatorLiveData<Resource<List<MsFavAyah>>>()
+        val listfavAyah = msFavAyahDao.getListFavAyahBySurahID(surahID)
+
+        data.value = Resource.loading(null)
+
+        data.addSource(listfavAyah) {
+            data.value = Resource.success(it)
+        }
+
+        return data
+    }
     suspend fun insertFavAyah(msFavAyah: MsFavAyah) = msFavAyahDao.insertMsAyah(msFavAyah)
     suspend fun deleteFavAyah(msFavAyah: MsFavAyah) = msFavAyahDao.deleteMsFavAyah(msFavAyah)
 
     /* MsFavSurah */
-    suspend fun getMsFavSurah() = msFavSurahDao.getMsFavSurah()
-    suspend fun getMsFavSurahByID(ayahID: Int) = msFavSurahDao.getMsFavSurahBySurahID(ayahID)
+    fun getListFavSurah(): LiveData<Resource<List<MsFavSurah>>> {
+        val data = MediatorLiveData<Resource<List<MsFavSurah>>>()
+        val listfavSurah = msFavSurahDao.getListFavSurah()
+
+        data.value = Resource.loading(null)
+
+        data.addSource(listfavSurah) {
+            data.value = Resource.success(it)
+        }
+
+        return data
+    }
+    fun getFavSurahBySurahID(ayahID: Int): LiveData<Resource<MsFavSurah>> {
+        val data = MediatorLiveData<Resource<MsFavSurah>>()
+        val listfavSurah = msFavSurahDao.getFavSurahBySurahID(ayahID)
+
+        data.value = Resource.loading(null)
+
+        data.addSource(listfavSurah) {
+            data.value = Resource.success(it)
+        }
+
+        return data
+    }
     suspend fun insertFavSurah(msFavSurah: MsFavSurah) = msFavSurahDao.insertMsSurah(msFavSurah)
     suspend fun deleteFavSurah(msFavSurah: MsFavSurah) = msFavSurahDao.deleteMsFavSurah(msFavSurah)
 
     /* MsSetting */
-    suspend fun getMsSetting() =  msSettingDao.getMsSetting()
+    fun getMsSetting(): LiveData<Resource<MsSetting>> {
+        val data = MediatorLiveData<Resource<MsSetting>>()
+        val msSetting = msSettingDao.getMsSetting()
+
+        data.value = Resource.loading(null)
+
+        data.addSource(msSetting) {
+            data.value = Resource.success(it)
+        }
+
+        return data
+    }
     suspend fun updateIsUsingDBQuotes(isUsingDBQuotes: Boolean) = msSettingDao.updateIsUsingDBQuotes(isUsingDBQuotes)
 
     /*
      * Retrofit
      */
-    suspend fun fetchCompass(msApi1: MsApi1) = remoteDataSourceAladhan.fetchCompassApi(msApi1)
+    suspend fun fetchCompass(msApi1: MsApi1) = remoteDataSourceAladhanImpl.fetchCompassApi(msApi1)
 
-    suspend fun fetchPrayerApi(msApi1: MsApi1) = remoteDataSourceAladhan.fetchPrayerApi(msApi1)
+    suspend fun fetchPrayerApi(msApi1: MsApi1) = remoteDataSourceAladhanImpl.fetchPrayerApi(msApi1)
 
-    suspend fun fetchReadSurahEn(surahID: Int) = remoteDataSourceApiAlquran.fetchReadSurahEn(surahID)
+    suspend fun fetchReadSurahEn(surahID: Int) = remoteDataSourceApiAlquranImpl.fetchReadSurahEn(surahID)
 
-    suspend fun fetchAllSurah() = remoteDataSourceApiAlquran.fetchAllSurah()
+    suspend fun fetchAllSurah() = remoteDataSourceApiAlquranImpl.fetchAllSurah()
 
-    suspend fun fetchReadSurahAr(surahID: Int) = remoteDataSourceApiAlquran.fetchReadSurahAr(surahID)
+    suspend fun fetchReadSurahAr(surahID: Int) = remoteDataSourceApiAlquranImpl.fetchReadSurahAr(surahID)
 
     suspend fun syncNotifiedPrayer(msApi1: MsApi1): List<NotifiedPrayer> {
 
-        val data = remoteDataSourceAladhan.fetchPrayerApi(msApi1)
+        val data = remoteDataSourceAladhanImpl.fetchPrayerApi(msApi1)
+        Log.d("syncNotifiedPrayer", "fetch")
 
         data.body().let {
             val sdf = SimpleDateFormat("dd", Locale.getDefault())
@@ -108,40 +178,45 @@ class Repository constructor(
 
             map.forEach { p ->
                 notifiedPrayerDao.updatePrayerTime(p.key, p.value)
+                Log.d("syncNotifiedPrayer", "updated")
             }
         }
 
-        return notifiedPrayerDao.getNotifiedPrayer()
+        val ret = notifiedPrayerDao.getListNotifiedPrayerSync()
 
-            /* return object : NetworkBoundResource<List<NotifiedPrayer>, PrayerResponse>(){
-                override fun loadFromDB(): LiveData<List<NotifiedPrayer>> = notifiedPrayerDao.getNotifiedPrayer()
+        Log.d("syncNotifiedPrayer", "Ret")
 
-                override fun shouldFetch(data: List<NotifiedPrayer>?): Boolean = true
+        return ret
 
-                override fun createCall(): LiveData<Resource<PrayerResponse>> = remoteDataSourceAladhan.fetchPrayerApi(msApi1)
+        /* return object : NetworkBoundResource<List<NotifiedPrayer>, PrayerResponse>(){
+            override fun loadFromDB(): LiveData<List<NotifiedPrayer>> = notifiedPrayerDao.getNotifiedPrayer()
 
-                override fun saveCallResult(data: PrayerResponse){
-                    val sdf = SimpleDateFormat("dd", Locale.getDefault())
-                    val currentDate = sdf.format(Date())
+            override fun shouldFetch(data: List<NotifiedPrayer>?): Boolean = true
 
-                    val timings = data.data.find { obj -> obj.date.gregorian?.day == currentDate.toString() }?.timings
+            override fun createCall(): LiveData<Resource<PrayerResponse>> = remoteDataSourceAladhan.fetchPrayerApi(msApi1)
 
-                    val map = mutableMapOf<String, String>()
+            override fun saveCallResult(data: PrayerResponse){
+                val sdf = SimpleDateFormat("dd", Locale.getDefault())
+                val currentDate = sdf.format(Date())
 
-                    map[EnumConfig.fajr] = timings?.fajr.toString()
-                    map[EnumConfig.dhuhr] = timings?.dhuhr.toString()
-                    map[EnumConfig.asr] = timings?.asr.toString()
-                    map[EnumConfig.maghrib] = timings?.maghrib.toString()
-                    map[EnumConfig.isha] = timings?.isha.toString()
-                    map[EnumConfig.sunrise] = timings?.sunrise.toString()
+                val timings = data.data.find { obj -> obj.date.gregorian?.day == currentDate.toString() }?.timings
 
-                    CoroutineScope(Dispatchers.IO).launch {
-                        map.forEach { p ->
-                            notifiedPrayerDao.updatePrayerTime(p.key, p.value)
-                        }
+                val map = mutableMapOf<String, String>()
+
+                map[EnumConfig.fajr] = timings?.fajr.toString()
+                map[EnumConfig.dhuhr] = timings?.dhuhr.toString()
+                map[EnumConfig.asr] = timings?.asr.toString()
+                map[EnumConfig.maghrib] = timings?.maghrib.toString()
+                map[EnumConfig.isha] = timings?.isha.toString()
+                map[EnumConfig.sunrise] = timings?.sunrise.toString()
+
+                CoroutineScope(Dispatchers.IO).launch {
+                    map.forEach { p ->
+                        notifiedPrayerDao.updatePrayerTime(p.key, p.value)
                     }
                 }
-            }.asLiveData() */
+            }
+        }.asLiveData() */
     }
 }
 

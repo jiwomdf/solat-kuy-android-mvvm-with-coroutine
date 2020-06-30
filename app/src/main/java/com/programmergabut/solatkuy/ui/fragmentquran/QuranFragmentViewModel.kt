@@ -1,18 +1,15 @@
 package com.programmergabut.solatkuy.ui.fragmentquran
 
-import android.app.Application
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import com.programmergabut.solatkuy.data.Repository
-import com.programmergabut.solatkuy.data.local.localentity.MsFavAyah
 import com.programmergabut.solatkuy.data.local.localentity.MsFavSurah
 import com.programmergabut.solatkuy.data.remote.remoteentity.quranallsurahJson.AllSurahResponse
-import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonEn.ReadSurahEnResponse
 import com.programmergabut.solatkuy.util.Resource
 import com.programmergabut.solatkuy.util.helper.NetworkHelper
 import kotlinx.coroutines.launch
 
-class QuranFragmentViewModel constructor(val repository: Repository, val networkHelper: NetworkHelper): ViewModel() {
+class QuranFragmentViewModel @ViewModelInject constructor(val repository: Repository, val networkHelper: NetworkHelper): ViewModel() {
 
 
     private var _allSurah = MutableLiveData<Resource<AllSurahResponse>>()
@@ -36,18 +33,7 @@ class QuranFragmentViewModel constructor(val repository: Repository, val network
         }
     }
 
-    private var _staredSurah = MutableLiveData<Resource<List<MsFavSurah>>>()
-    val staredSurah: LiveData<Resource<List<MsFavSurah>>>
-        get() = _staredSurah
-
-    fun getStaredSurah() = viewModelScope.launch {
-
-        _staredSurah.postValue(Resource.loading(null))
-
-        repository.getMsFavSurah().let {
-            _staredSurah.postValue(Resource.success(it))
-        }
-    }
+    val staredSurah = repository.getListFavSurah()
 
     init {
         fetchAllSurah()

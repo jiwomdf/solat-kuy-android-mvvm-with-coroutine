@@ -5,7 +5,6 @@ import android.content.Context
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.programmergabut.solatkuy.data.Repository
-import com.programmergabut.solatkuy.di.Injection
 import com.programmergabut.solatkuy.ui.activityfavayah.FavAyahViewModel
 import com.programmergabut.solatkuy.ui.activityreadsurah.ReadSurahViewModel
 import com.programmergabut.solatkuy.ui.fragmentcompass.FragmentCompassViewModel
@@ -16,7 +15,7 @@ import com.programmergabut.solatkuy.ui.fragmentsetting.FragmentSettingViewModel
 import com.programmergabut.solatkuy.ui.main.MainActivityViewModel
 import com.programmergabut.solatkuy.util.helper.NetworkHelper
 
-@Suppress("UNCHECKED_CAST")
+/* @Suppress("UNCHECKED_CAST")
 class ViewModelFactory(private val repository: Repository,
                        private val context: Context) : ViewModelProvider.NewInstanceFactory() {
 
@@ -48,4 +47,4 @@ class ViewModelFactory(private val repository: Repository,
         }
 
     }
-}
+} */

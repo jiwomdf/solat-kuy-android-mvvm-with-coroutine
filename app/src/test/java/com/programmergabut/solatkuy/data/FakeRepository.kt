@@ -5,8 +5,8 @@ import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import com.programmergabut.solatkuy.data.local.LocalDataSource
 import com.programmergabut.solatkuy.data.local.localentity.*
-import com.programmergabut.solatkuy.data.remote.RemoteDataSourceAladhan
-import com.programmergabut.solatkuy.data.remote.RemoteDataSourceApiAlquran
+import com.programmergabut.solatkuy.data.remote.RemoteDataSourceAladhanImpl
+import com.programmergabut.solatkuy.data.remote.RemoteDataSourceApiAlquranImpl
 import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.PrayerResponse
 import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonAr.ReadSurahArResponse
 import com.programmergabut.solatkuy.util.Resource
@@ -15,8 +15,8 @@ import com.programmergabut.solatkuy.util.Resource
  * Created by Katili Jiwo Adi Wiyono on 26/03/20.
  */
 
-class FakeRepository(private val remoteDataSourceAladhan: RemoteDataSourceAladhan,
-                     private val remoteDataSourceApiAlquran: RemoteDataSourceApiAlquran,
+class FakeRepository(private val remoteDataSourceAladhanImpl: RemoteDataSourceAladhanImpl,
+                     private val remoteDataSourceApiAlquranImpl: RemoteDataSourceApiAlquranImpl,
                      private val localDataSource: LocalDataSource
 ) {
 
@@ -113,15 +113,15 @@ class FakeRepository(private val remoteDataSourceAladhan: RemoteDataSourceAladha
     /*
      * Retrofit
      */
-    fun fetchCompass(msApi1: MsApi1) = remoteDataSourceAladhan.fetchCompassApi(msApi1)
+    fun fetchCompass(msApi1: MsApi1) = remoteDataSourceAladhanImpl.fetchCompassApi(msApi1)
 
-    fun fetchPrayerApi(msApi1: MsApi1) = remoteDataSourceAladhan.fetchPrayerApi(msApi1)
+    fun fetchPrayerApi(msApi1: MsApi1) = remoteDataSourceAladhanImpl.fetchPrayerApi(msApi1)
 
-    fun fetchReadSurahEn(surahID: Int) = remoteDataSourceApiAlquran.fetchReadSurahEn(surahID)
+    fun fetchReadSurahEn(surahID: Int) = remoteDataSourceApiAlquranImpl.fetchReadSurahEn(surahID)
 
-    fun fetchAllSurah() = remoteDataSourceApiAlquran.fetchAllSurah()
+    fun fetchAllSurah() = remoteDataSourceApiAlquranImpl.fetchAllSurah()
 
-    fun fetchReadSurahAr(surahID: Int): MutableLiveData<Resource<ReadSurahArResponse>> = remoteDataSourceApiAlquran.fetchReadSurahAr(surahID)
+    fun fetchReadSurahAr(surahID: Int): MutableLiveData<Resource<ReadSurahArResponse>> = remoteDataSourceApiAlquranImpl.fetchReadSurahAr(surahID)
 
     fun syncNotifiedPrayer(msApi1: MsApi1): LiveData<Resource<List<NotifiedPrayer>>> {
 
@@ -130,7 +130,7 @@ class FakeRepository(private val remoteDataSourceAladhan: RemoteDataSourceAladha
 
             override fun shouldFetch(data: List<NotifiedPrayer>?): Boolean = true
 
-            override fun createCall(): LiveData<Resource<PrayerResponse>> = remoteDataSourceAladhan.fetchPrayerApi(msApi1)
+            override fun createCall(): LiveData<Resource<PrayerResponse>> = remoteDataSourceAladhanImpl.fetchPrayerApi(msApi1)
 
             override fun saveCallResult(data: PrayerResponse) = localDataSource.updateListPrayerTime(data)
         }.asLiveData()
