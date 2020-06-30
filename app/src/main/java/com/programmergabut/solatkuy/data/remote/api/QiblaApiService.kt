@@ -1,6 +1,7 @@
 package com.programmergabut.solatkuy.data.remote.api
 
 import com.programmergabut.solatkuy.data.remote.remoteentity.compassJson.CompassResponse
+import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
 
@@ -14,5 +15,5 @@ interface QiblaApiService {
 
     @GET("qibla/{latitude}/{longitude}")
     suspend fun fetchQibla(@Path("latitude") latitude: String,
-                           @Path("longitude") longitude: String): CompassResponse
+                           @Path("longitude") longitude: String): Response<CompassResponse>
 }

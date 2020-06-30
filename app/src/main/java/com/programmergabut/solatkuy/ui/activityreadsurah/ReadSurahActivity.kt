@@ -1,21 +1,22 @@
 package com.programmergabut.solatkuy.ui.activityreadsurah
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
+import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.data.local.localentity.MsFavSurah
 import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonAr.Data
 import com.programmergabut.solatkuy.util.enumclass.EnumStatus
-import com.programmergabut.solatkuy.viewmodel.ViewModelFactory
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_read_surah.*
 
+@AndroidEntryPoint
 class ReadSurahActivity : AppCompatActivity() {
 
     companion object{
@@ -24,7 +25,8 @@ class ReadSurahActivity : AppCompatActivity() {
         const val surahTranslation = "surahTranslation"
     }
 
-    private lateinit var readSurahViewModel: ReadSurahViewModel
+    private val readSurahViewModel: ReadSurahViewModel by viewModels()
+
     private lateinit var readSurahAdapter: ReadSurahAdapter
 
     private lateinit var mSelSurahId: String
@@ -37,13 +39,7 @@ class ReadSurahActivity : AppCompatActivity() {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_read_surah)
 
-        readSurahViewModel = ViewModelProvider(this, ViewModelFactory.getInstance(
-            this.application))[ReadSurahViewModel::class.java]
-
-
         getIntentExtra()
-
-        readSurahViewModel.getFavSurah(mSelSurahId.toInt())
 
         setupToolbar()
         initRVReadSurah()
@@ -62,11 +58,19 @@ class ReadSurahActivity : AppCompatActivity() {
         menuInflater.inflate(R.menu.read_surah_menu, menu)
 
         readSurahViewModel.msFavSurah.observe(this, Observer {
-            if(it == null)
-                menu?.findItem(R.id.i_star_surah)?.icon = ContextCompat.getDrawable(this, R.drawable.ic_star_24)
-            else
-                menu?.findItem(R.id.i_star_surah)?.icon = ContextCompat.getDrawable(this, R.drawable.ic_star_yellow_24)
+            when(it.status){
+                EnumStatus.SUCCESS -> {
+                    if(it.data == null)
+                        menu?.findItem(R.id.i_star_surah)?.icon = ContextCompat.getDrawable(this, R.drawable.ic_star_24)
+                    else
+                        menu?.findItem(R.id.i_star_surah)?.icon = ContextCompat.getDrawable(this, R.drawable.ic_star_yellow_24)
+                }
+                EnumStatus.LOADING -> {}
+                EnumStatus.ERROR -> {}
+            }
         })
+
+        readSurahViewModel.getFavSurah(mSelSurahId.toInt())
 
         return super.onCreateOptionsMenu(menu)
     }
@@ -82,6 +86,8 @@ class ReadSurahActivity : AppCompatActivity() {
                     readSurahViewModel.insertFavSurah(MsFavSurah(mSelSurahId.toInt(), mSelSurahName, mSelSurahTranslation))
                 else
                     readSurahViewModel.deleteFavSurah(MsFavSurah(mSelSurahId.toInt(), mSelSurahName, mSelSurahTranslation))
+
+                //readSurahViewModel.getFavSurah(mSelSurahId.toInt())
                 true
             }
             else -> super.onOptionsItemSelected(item!!)

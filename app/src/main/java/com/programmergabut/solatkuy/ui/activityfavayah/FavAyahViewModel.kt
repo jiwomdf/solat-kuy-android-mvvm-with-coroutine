@@ -1,15 +1,15 @@
 package com.programmergabut.solatkuy.ui.activityfavayah
 
-import android.app.Application
-import androidx.lifecycle.AndroidViewModel
-import androidx.lifecycle.viewModelScope
+import androidx.hilt.lifecycle.ViewModelInject
+import androidx.lifecycle.*
 import com.programmergabut.solatkuy.data.Repository
 import com.programmergabut.solatkuy.data.local.localentity.MsFavAyah
+import com.programmergabut.solatkuy.util.Resource
 import kotlinx.coroutines.launch
 
-class FavAyahViewModel(application: Application,private val repository: Repository): AndroidViewModel(application) {
+class FavAyahViewModel @ViewModelInject constructor(val repository: Repository): ViewModel() {
 
-    val favAyah = repository.getMsFavAyah()
+    val favAyah = repository.getListFavAyah()
 
     fun deleteFavAyah(msFavAyah: MsFavAyah) = viewModelScope.launch { repository.deleteFavAyah(msFavAyah) }
 

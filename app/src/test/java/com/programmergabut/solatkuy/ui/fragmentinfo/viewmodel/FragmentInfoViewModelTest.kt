@@ -8,6 +8,7 @@ import com.nhaarman.mockitokotlin2.mock
 import com.programmergabut.solatkuy.data.Repository
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
 import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.PrayerResponse
+import com.programmergabut.solatkuy.ui.fragmentinfo.FragmentInfoViewModel
 import com.programmergabut.solatkuy.util.Resource
 import com.programmergabut.solatkuy.util.generator.DummyData
 import org.junit.Before
@@ -37,7 +38,11 @@ class FragmentInfoViewModelTest {
 
     @Before
     fun setUp() {
-        viewModel = FragmentInfoViewModel(context, repository)
+        viewModel =
+            FragmentInfoViewModel(
+                context,
+                repository
+            )
         viewModel.fetchPrayerApi(msApi1)
     }
 
@@ -50,7 +55,7 @@ class FragmentInfoViewModelTest {
         prayerApi.value = dummyPrayerApi
         `when`(repository.fetchPrayerApi(msApi1)).thenReturn(prayerApi)
 
-        viewModel.prayerResponse.observeForever(observer)
+        viewModel.prayer.observeForever(observer)
 
         Mockito.verify(observer).onChanged(dummyPrayerApi)
     }

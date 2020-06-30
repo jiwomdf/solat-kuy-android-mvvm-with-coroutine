@@ -4,8 +4,8 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import com.programmergabut.solatkuy.data.local.LocalDataSource
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
-import com.programmergabut.solatkuy.data.remote.RemoteDataSourceAladhan
-import com.programmergabut.solatkuy.data.remote.RemoteDataSourceApiAlquran
+import com.programmergabut.solatkuy.data.remote.RemoteDataSourceAladhanImpl
+import com.programmergabut.solatkuy.data.remote.RemoteDataSourceApiAlquranImpl
 import com.programmergabut.solatkuy.data.remote.remoteentity.compassJson.CompassResponse
 import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.PrayerResponse
 import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonEn.ReadSurahEnResponse
@@ -21,8 +21,8 @@ class RepositoryTest{
     @get:Rule
     var instantTaskExecutorRule = InstantTaskExecutorRule()
 
-    private val remoteDataSourceApiAlquran = mock(RemoteDataSourceApiAlquran::class.java)
-    private val remoteDataSourceAladhan = mock(RemoteDataSourceAladhan::class.java)
+    private val remoteDataSourceApiAlquran = mock(RemoteDataSourceApiAlquranImpl::class.java)
+    private val remoteDataSourceAladhan = mock(RemoteDataSourceAladhanImpl::class.java)
     private val local = mock(LocalDataSource::class.java)
     private val repository = FakeRepository(remoteDataSourceAladhan, remoteDataSourceApiAlquran, local)
 

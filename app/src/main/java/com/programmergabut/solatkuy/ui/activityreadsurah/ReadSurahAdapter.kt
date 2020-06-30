@@ -56,6 +56,8 @@ class ReadSurahAdapter(private val context: Context, private val viewModel: Read
                     itemView.iv_listFav_fav.setImageDrawable(context.getDrawable(R.drawable.ic_favorite_24))
                 }
                 else{
+                    Toasty.info(context, "Saving the ayah", Toast.LENGTH_SHORT).show()
+
                     viewModel.insertFavAyah(msFavAyah)
                     itemView.iv_listFav_fav.setImageDrawable(context.getDrawable(R.drawable.ic_favorite_red_24))
                 }

@@ -1,6 +1,8 @@
 package com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonEn
 
 
+import androidx.room.Ignore
+import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
 data class Ayah(
@@ -18,8 +20,6 @@ data class Ayah(
     val page: Int,
     @SerializedName("ruku")
     val ruku: Int,
-    @SerializedName("sajda")
-    val sajda: Boolean,
     @SerializedName("text")
     val text: String
 )

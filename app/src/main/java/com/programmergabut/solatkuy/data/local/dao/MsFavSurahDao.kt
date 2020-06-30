@@ -8,10 +8,10 @@ import com.programmergabut.solatkuy.data.local.localentity.MsFavSurah
 interface MsFavSurahDao {
 
     @Query("select * from MsFavSurah")
-    fun getMsFavSurah(): LiveData<List<MsFavSurah>>
+    fun getListFavSurah(): LiveData<List<MsFavSurah>>
 
     @Query("select * from MsFavSurah where surahID like :surahID")
-    fun getMsFavSurahBySurahID(surahID: Int): LiveData<MsFavSurah>
+    fun getFavSurahBySurahID(surahID: Int): LiveData<MsFavSurah>
 
     @Query("delete from MsFavSurah")
     suspend fun deleteAll()

@@ -1,4 +1,4 @@
-package com.programmergabut.solatkuy.ui.fragmentcompass.view
+package com.programmergabut.solatkuy.ui.fragmentcompass
 
 import android.annotation.SuppressLint
 import android.app.Dialog
@@ -8,20 +8,19 @@ import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.RotateAnimation
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
-import com.programmergabut.solatkuy.ui.fragmentcompass.viewmodel.FragmentCompassViewModel
 import com.programmergabut.solatkuy.util.enumclass.EnumStatus
-import com.programmergabut.solatkuy.viewmodel.ViewModelFactory
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_compass.*
 import kotlinx.android.synthetic.main.layout_phone_tilt.*
 
@@ -29,9 +28,10 @@ import kotlinx.android.synthetic.main.layout_phone_tilt.*
  * Created by Katili Jiwo Adi Wiyono on 31/03/20.
  */
 
-class FragmentCompass : Fragment(), SensorEventListener, SwipeRefreshLayout.OnRefreshListener {
+@AndroidEntryPoint
+class FragmentCompass : Fragment(R.layout.fragment_compass), SensorEventListener, SwipeRefreshLayout.OnRefreshListener {
 
-    private lateinit var fragmentCompassViewModel: FragmentCompassViewModel
+    private val fragmentCompassViewModel: FragmentCompassViewModel by viewModels()
     private lateinit var mMsApi1: MsApi1
 
     private var mGravity = FloatArray(3)
@@ -42,35 +42,23 @@ class FragmentCompass : Fragment(), SensorEventListener, SwipeRefreshLayout.OnRe
 
     private var animationHasOpen: Boolean = false
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         mSensorManager = activity?.getSystemService(SENSOR_SERVICE) as SensorManager
-
-        fragmentCompassViewModel = ViewModelProvider(this, ViewModelFactory
-            .getInstance(activity?.application!!))[FragmentCompassViewModel::class.java]
-
 
         subscribeObserversDB()
         subscribeObserversAPI()
 
-        return inflater.inflate(R.layout.fragment_compass, container, false)
-    }
-
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
         refreshLayout()
     }
 
-    /* fetching Prayer Compass */
-    private fun fetchCompassApi(msApi1: MsApi1) {
-        fragmentCompassViewModel.fetchCompassApi(msApi1)
-    }
 
     /* Subscribe live data */
     @SuppressLint("SetTextI18n")
     private fun subscribeObserversAPI() {
 
-        fragmentCompassViewModel.compassResponse.observe(this, Observer { retVal ->
+        fragmentCompassViewModel.compass.observe(viewLifecycleOwner, Observer { retVal ->
 
             when(retVal.status){
                 EnumStatus.SUCCESS -> {
@@ -91,13 +79,14 @@ class FragmentCompass : Fragment(), SensorEventListener, SwipeRefreshLayout.OnRe
     }
 
     private fun subscribeObserversDB() {
-        fragmentCompassViewModel.msApi1Local.observe(this, Observer {
+        fragmentCompassViewModel.msApi1.observe(viewLifecycleOwner, Observer {
             when(it.status){
                 EnumStatus.SUCCESS -> {
-                    if(it.data != null){
-                        mMsApi1 = it.data
-                        fetchCompassApi(mMsApi1)
-                    }
+                    if(it.data == null)
+                        throw Exception("MsApi1 for Compass Null")
+
+                    mMsApi1 = it.data
+                    fragmentCompassViewModel.fetchCompassApi(it.data)
                 }
                 EnumStatus.LOADING -> {}
                 EnumStatus.ERROR -> {}
@@ -176,14 +165,14 @@ class FragmentCompass : Fragment(), SensorEventListener, SwipeRefreshLayout.OnRe
     }
 
     override fun onRefresh() {
-        fetchCompassApi(mMsApi1)
+        fragmentCompassViewModel.fetchCompassApi(mMsApi1)
         sl_compass.isRefreshing = false
     }
 
     /* Lottie Animation */
     private fun createLottieAnimation() {
         val dialogView = layoutInflater.inflate(R.layout.layout_phone_tilt, null)
-        val dialog =  Dialog(context!!)
+        val dialog =  Dialog(requireContext())
         dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
         dialog.setCancelable(false)
         dialog.setContentView(dialogView)

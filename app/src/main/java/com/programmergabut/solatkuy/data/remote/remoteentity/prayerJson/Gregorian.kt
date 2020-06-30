@@ -2,9 +2,8 @@ package com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson
 
 
 import com.google.gson.annotations.SerializedName
-import javax.inject.Inject
 
-data class Gregorian @Inject constructor(
+data class Gregorian(
     @SerializedName("date")
     val date: String?,
     @SerializedName("day")

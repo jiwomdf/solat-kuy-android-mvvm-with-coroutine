@@ -1,4 +1,4 @@
-package com.programmergabut.solatkuy.ui.main.view
+package com.programmergabut.solatkuy.ui.main
 
 import android.Manifest
 import android.app.AlertDialog
@@ -16,10 +16,12 @@ import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
+import androidx.activity.viewModels
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.lifecycleScope
 import androidx.viewpager.widget.ViewPager
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
@@ -29,40 +31,33 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.data.local.SolatKuyRoom
-import com.programmergabut.solatkuy.ui.main.adapter.SwipeAdapter
-import com.programmergabut.solatkuy.ui.main.viewmodel.MainActivityViewModel
 import com.programmergabut.solatkuy.util.enumclass.EnumStatus
-import com.programmergabut.solatkuy.viewmodel.ViewModelFactory
+import dagger.hilt.android.AndroidEntryPoint
 import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.layout_bottomsheet_bygps.view.*
 import kotlinx.android.synthetic.main.layout_bottomsheet_bylatitudelongitude.view.*
 import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import org.joda.time.LocalDate
+import javax.inject.Inject
 
 /*
  * Created by Katili Jiwo Adi Wiyono on 25/03/20.
  */
-
+@AndroidEntryPoint
 class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener {
 
     lateinit var mSubDialogView: View
     private lateinit var mSubDialog: Dialog
-    private lateinit var mainActivityViewModel: MainActivityViewModel
-    private lateinit var db : SolatKuyRoom
+    private val mainActivityViewModel: MainActivityViewModel by viewModels()
+    @Inject lateinit var db : SolatKuyRoom
     private val ALL_PERMISSIONS = 101
 
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
-
-
-        db = SolatKuyRoom.getDataBase(this)
-        mainActivityViewModel = ViewModelProvider(this, ViewModelFactory
-            .getInstance(application))[MainActivityViewModel::class.java]
 
         bottom_navigation.setOnNavigationItemSelectedListener(this)
 
@@ -81,7 +76,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
                         else
                             initDialog()
                     else
-                        SolatKuyRoom.populateDatabase()
+                        SolatKuyRoom.populateDatabase(db)
                 }
                 EnumStatus.LOADING -> {}
                 EnumStatus.ERROR -> {}
@@ -103,7 +98,9 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
     }
 
     private fun initViewPager() {
-        vp2_main.adapter = SwipeAdapter(supportFragmentManager)
+        vp2_main.adapter = SwipeAdapter(
+            supportFragmentManager
+        )
         vp2_main.setPageTransformer(true, ZoomOutPageTransformer())
         vp2_main.addOnPageChangeListener( object : ViewPager.OnPageChangeListener{
             override fun onPageScrollStateChanged(state: Int) {}
@@ -196,7 +193,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         mSubDialog.dismiss()
         dialog.dismiss()
 
-        GlobalScope.launch(Dispatchers.IO){
+        lifecycleScope.launch(Dispatchers.IO){
             db.msSettingDao().updateIsHasOpenApp(true)
         }
 
@@ -216,7 +213,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
 
         val currDate = LocalDate()
 
-        GlobalScope.launch(Dispatchers.IO){
+        lifecycleScope.launch(Dispatchers.IO){
             db.msApi1Dao().updateMsApi1(1,
                 latitude,
                 longitude,
@@ -225,7 +222,6 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
                 currDate.year.toString())
         }
 
-        //mainActivityViewModel.updateMsApi1(data)
     }
 
     /* Permission */

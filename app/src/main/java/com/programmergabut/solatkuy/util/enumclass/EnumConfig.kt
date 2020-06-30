@@ -8,6 +8,8 @@ package com.programmergabut.solatkuy.util.enumclass
 class EnumConfig {
     companion object{
 
+        const val databaseName = "solatkuydb"
+
         const val fajr = "Fajr"
         const val dhuhr = "Dhuhr"
         const val asr = "Asr"

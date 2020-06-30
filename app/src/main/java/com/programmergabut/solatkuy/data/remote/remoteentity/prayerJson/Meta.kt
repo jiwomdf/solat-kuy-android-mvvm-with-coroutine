@@ -5,19 +5,19 @@ import com.google.gson.annotations.SerializedName
 
 data class Meta(
     @SerializedName("latitude")
-    val latitude: Double,
+    var latitude: Double,
     @SerializedName("latitudeAdjustmentMethod")
-    val latitudeAdjustmentMethod: String,
+    var latitudeAdjustmentMethod: String,
     @SerializedName("longitude")
-    val longitude: Double,
+    var longitude: Double,
     @SerializedName("method")
-    val method: Method,
+    var method: Method,
     @SerializedName("midnightMode")
-    val midnightMode: String,
+    var midnightMode: String,
     @SerializedName("offset")
-    val offset: Offset,
+    var offset: Offset,
     @SerializedName("school")
-    val school: String,
+    var school: String,
     @SerializedName("timezone")
-    val timezone: String
+    var timezone: String
 )

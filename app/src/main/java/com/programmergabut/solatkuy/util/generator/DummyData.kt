@@ -77,7 +77,7 @@ object DummyData {
 
     fun fetchSurahApi(): ReadSurahEnResponse{
         val listAyah = mutableListOf<Ayah>()
-        listAyah.add(Ayah(0,0,0,0,0,0,0,false,"test"))
+        listAyah.add(Ayah(0,0,0,0,0,0,0,"test"))
         return ReadSurahEnResponse(0,
             com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonEn.Data(listAyah,
                 Edition("","","","","","",""),

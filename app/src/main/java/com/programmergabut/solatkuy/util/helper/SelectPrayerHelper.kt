@@ -1,5 +1,6 @@
 package com.programmergabut.solatkuy.util.helper
 
+import com.programmergabut.solatkuy.data.local.localentity.MsTimings
 import com.programmergabut.solatkuy.data.local.localentity.NotifiedPrayer
 import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.Timings
 import com.programmergabut.solatkuy.util.enumclass.EnumConfig
@@ -12,7 +13,7 @@ import java.util.*
 class SelectPrayerHelper {
 
     companion object{
-        fun selectNextPrayerToInt(timings: Timings): Int {
+        fun selectNextPrayerToInt(timings: MsTimings): Int {
 
             var prayer: Int = -1
 

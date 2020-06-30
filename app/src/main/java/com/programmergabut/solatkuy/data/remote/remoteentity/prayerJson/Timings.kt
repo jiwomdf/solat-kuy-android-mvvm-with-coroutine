@@ -5,7 +5,7 @@ import com.google.gson.annotations.SerializedName
 import javax.inject.Inject
 import javax.inject.Named
 
-data class Timings @Inject constructor(
+data class Timings(
     @SerializedName("Asr")
     @Named("asr")
     var asr: String,

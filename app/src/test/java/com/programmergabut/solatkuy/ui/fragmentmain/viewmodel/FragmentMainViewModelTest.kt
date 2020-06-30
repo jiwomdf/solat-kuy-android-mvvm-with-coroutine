@@ -9,6 +9,7 @@ import com.programmergabut.solatkuy.data.Repository
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
 import com.programmergabut.solatkuy.data.local.localentity.NotifiedPrayer
 import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonEn.ReadSurahEnResponse
+import com.programmergabut.solatkuy.ui.fragmentmain.FragmentMainViewModel
 import com.programmergabut.solatkuy.util.Resource
 import com.programmergabut.solatkuy.util.generator.DummyData
 import org.junit.Before
@@ -39,9 +40,13 @@ class FragmentMainViewModelTest {
 
     @Before
     fun setUp() {
-        viewModel = FragmentMainViewModel(context, repository)
+        viewModel =
+            FragmentMainViewModel(
+                context,
+                repository
+            )
         viewModel.fetchQuranSurah(1)
-        viewModel.fetchPrayerApi(msApi1)
+        viewModel.fetchNotifiedPrayer(msApi1)
     }
 
     @Test

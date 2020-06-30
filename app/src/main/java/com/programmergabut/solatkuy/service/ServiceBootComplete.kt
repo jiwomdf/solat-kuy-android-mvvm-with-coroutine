@@ -25,7 +25,7 @@ class ServiceBootComplete: Service() {
 
         CoroutineScope(Dispatchers.IO).launch {
             val db = SolatKuyRoom.getDataBase(this@ServiceBootComplete)
-            val data = db.notifiedPrayerDao().getNotifiedPrayerSync() as MutableList
+            val data = db.notifiedPrayerDao().getListNotifiedPrayerSync() as MutableList
 
             PushNotificationHelper(
                 this@ServiceBootComplete,

@@ -9,6 +9,7 @@ import com.nhaarman.mockitokotlin2.verify
 import com.programmergabut.solatkuy.data.Repository
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
 import com.programmergabut.solatkuy.data.remote.remoteentity.compassJson.CompassResponse
+import com.programmergabut.solatkuy.ui.fragmentcompass.FragmentCompassViewModel
 import com.programmergabut.solatkuy.util.Resource
 import com.programmergabut.solatkuy.util.generator.DummyData
 import org.junit.Before
@@ -37,7 +38,11 @@ class FragmentCompassViewModelTest {
 
     @Before
     fun setUp() {
-        viewModel = FragmentCompassViewModel(context, repository)
+        viewModel =
+            FragmentCompassViewModel(
+                context,
+                repository
+            )
 
         //invoke fetchCompassApi
         viewModel.fetchCompassApi(msApi1)

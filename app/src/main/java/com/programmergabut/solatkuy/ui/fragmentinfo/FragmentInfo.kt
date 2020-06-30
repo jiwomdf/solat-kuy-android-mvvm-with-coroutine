@@ -1,4 +1,4 @@
-package com.programmergabut.solatkuy.ui.fragmentinfo.view
+package com.programmergabut.solatkuy.ui.fragmentinfo
 
 import android.annotation.SuppressLint
 import android.os.Bundle
@@ -6,6 +6,7 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
+import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
@@ -15,12 +16,11 @@ import com.programmergabut.solatkuy.data.local.localentity.MsApi1
 import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.Data
 import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.PrayerResponse
 import com.programmergabut.solatkuy.ui.fragmentinfo.adapter.DuaCollectionAdapter
-import com.programmergabut.solatkuy.ui.fragmentinfo.viewmodel.FragmentInfoViewModel
 import com.programmergabut.solatkuy.util.enumclass.EnumConfig
 import com.programmergabut.solatkuy.util.enumclass.EnumStatus
 import com.programmergabut.solatkuy.util.generator.DuaGenerator
 import com.programmergabut.solatkuy.util.helper.LocationHelper
-import com.programmergabut.solatkuy.viewmodel.ViewModelFactory
+import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_info.*
 import java.text.SimpleDateFormat
 import java.util.*
@@ -29,24 +29,18 @@ import java.util.*
  * Created by Katili Jiwo Adi Wiyono on 24/04/20.
  */
 
-class FragmentInfo : Fragment(), SwipeRefreshLayout.OnRefreshListener {
+@AndroidEntryPoint
+class FragmentInfo : Fragment(R.layout.fragment_info), SwipeRefreshLayout.OnRefreshListener {
 
-    private lateinit var fragmentInfoViewModel: FragmentInfoViewModel
+    private val fragmentInfoViewModel: FragmentInfoViewModel by viewModels()
+
     private lateinit var duaCollectionAdapter: DuaCollectionAdapter
     private var mMsApi1: MsApi1? = null
 
-    override fun onCreateView(inflater: LayoutInflater, container: ViewGroup?, savedInstanceState: Bundle?): View? {
-
-        fragmentInfoViewModel = ViewModelProvider(this, ViewModelFactory
-            .getInstance(activity?.application!!))[FragmentInfoViewModel::class.java]
-
-        subscribeObserversDB()
-
-        return inflater.inflate(R.layout.fragment_info, container, false)
-    }
-
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
+
+        subscribeObserversDB()
 
         refreshLayout()
         subscribeObserversAPI()
@@ -54,7 +48,7 @@ class FragmentInfo : Fragment(), SwipeRefreshLayout.OnRefreshListener {
     }
 
     private fun initRvDuaCollection() {
-        duaCollectionAdapter = DuaCollectionAdapter(this@FragmentInfo.context!!)
+        duaCollectionAdapter = DuaCollectionAdapter(requireContext())
         duaCollectionAdapter.setData(DuaGenerator.getListDua())
 
         rvDuaCollection.apply {
@@ -67,13 +61,13 @@ class FragmentInfo : Fragment(), SwipeRefreshLayout.OnRefreshListener {
 
     /* Subscribe live data */
     private fun subscribeObserversDB() {
-        fragmentInfoViewModel.msApi1Local.observe(this, Observer { retval ->
+        fragmentInfoViewModel.msApi1.observe(viewLifecycleOwner, Observer { retval ->
             when(retval.status){
                 EnumStatus.SUCCESS -> {
                     mMsApi1 = retval.data
 
                     retval.data?.let {
-                        val city = LocationHelper.getCity(context!!, it.latitude.toDouble(), it.longitude.toDouble())
+                        val city = LocationHelper.getCity(requireContext(), it.latitude.toDouble(), it.longitude.toDouble())
 
                         tv_city.text = city ?: EnumConfig.lCity
 
@@ -111,7 +105,7 @@ class FragmentInfo : Fragment(), SwipeRefreshLayout.OnRefreshListener {
             }
         }) */
 
-        fragmentInfoViewModel.prayerResponse.observe(this, Observer {
+        fragmentInfoViewModel.prayer.observe(viewLifecycleOwner, Observer {
 
             when(it.status){
                 EnumStatus.SUCCESS -> {
@@ -156,6 +150,7 @@ class FragmentInfo : Fragment(), SwipeRefreshLayout.OnRefreshListener {
                 }
             }
         })
+
     }
 
     /* private fun initAHAdapter(datas: List<com.programmergabut.solatkuy.data.remote.remoteentity.asmaalhusnaJson.Data>) {
@@ -196,11 +191,7 @@ class FragmentInfo : Fragment(), SwipeRefreshLayout.OnRefreshListener {
         if(mMsApi1 == null)
             throw Exception("null mMsApi1")
 
-        //fetch Prayer Api
         fetchPrayerApi(mMsApi1!!)
-
-        //fetch Asma Al Husna
-        //fetchAsmaAlHusnaApi(mMsApi1!!)
 
         sl_info.isRefreshing = false
     }
