@@ -9,7 +9,7 @@ created with:
 - Live Data 
 - Coroutine
 - Retrofit 
-- Dagger 2 (some part)
+- Dagger Hilt
 - Material Design 
 - Testing with Mockito, espresso, & Junit4
 
