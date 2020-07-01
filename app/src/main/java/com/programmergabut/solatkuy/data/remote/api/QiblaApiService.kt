@@ -15,5 +15,5 @@ interface QiblaApiService {
 
     @GET("qibla/{latitude}/{longitude}")
     suspend fun fetchQibla(@Path("latitude") latitude: String,
-                           @Path("longitude") longitude: String): Response<CompassResponse>
+                           @Path("longitude") longitude: String): CompassResponse
 }

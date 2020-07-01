@@ -4,17 +4,18 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import com.programmergabut.solatkuy.data.Repository
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
+import com.programmergabut.solatkuy.data.local.localentity.MsSetting
 import com.programmergabut.solatkuy.data.local.localentity.NotifiedPrayer
 import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonEn.ReadSurahEnResponse
 import com.programmergabut.solatkuy.util.Resource
-import com.programmergabut.solatkuy.util.helper.NetworkHelper
 import kotlinx.coroutines.launch
+import java.lang.Exception
 
 /*
  * Created by Katili Jiwo Adi Wiyono on 25/03/20.
  */
 
-class FragmentMainViewModel @ViewModelInject constructor(val repository: Repository, val networkHelper: NetworkHelper): ViewModel() {
+class FragmentMainViewModel @ViewModelInject constructor(val repository: Repository): ViewModel() {
 
     private var _notifiedPrayer = MutableLiveData<Resource<List<NotifiedPrayer>>>()
     val notifiedPrayer: LiveData<Resource<List<NotifiedPrayer>>>
@@ -25,20 +26,22 @@ class FragmentMainViewModel @ViewModelInject constructor(val repository: Reposit
 
             _notifiedPrayer.postValue(Resource.loading(null))
 
-            if (networkHelper.isNetworkConnected()) {
+            try {
                 repository.syncNotifiedPrayer(msApi1).let {
                     _notifiedPrayer.postValue(Resource.success(it))
                 }
             }
-            else
-                _notifiedPrayer.postValue(Resource.error("No internet connection", null))
+            catch (e: Exception){
+                _notifiedPrayer.postValue(Resource.error(e.message.toString(), null))
+            }
+
         }
     }
 
     val msApi1 = repository.getMsApi1()
 
     private var _setting = MutableLiveData<Int>()
-    var msSetting = Transformations.switchMap(_setting){
+    var msSetting: LiveData<Resource<MsSetting>> = Transformations.switchMap(_setting){
         repository.getMsSetting()
     }
     fun fetchMsSetting(ayahID: Int){
@@ -51,21 +54,20 @@ class FragmentMainViewModel @ViewModelInject constructor(val repository: Reposit
     val readSurahEn: LiveData<Resource<ReadSurahEnResponse>>
         get() = _readSurahEn
 
-    fun fetchQuranSurah(nInSurah: Int){
-        viewModelScope.launch{
-            _readSurahEn.postValue(Resource.loading(null))
+    fun fetchQuranSurah(nInSurah: Int) = viewModelScope.launch{
 
-            if (networkHelper.isNetworkConnected()) {
-                repository.fetchReadSurahEn(nInSurah).let {
-                    if (it.isSuccessful)
-                        _readSurahEn.postValue(Resource.success(it.body()))
-                    else
-                        _readSurahEn.postValue(Resource.error(it.errorBody().toString(), null))
-                }
-            }
-            else
-                _readSurahEn.postValue(Resource.error("No internet connection", null))
+        _readSurahEn.postValue(Resource.loading(null))
+
+        repository.fetchReadSurahEn(nInSurah).let {
+            _readSurahEn.postValue(Resource.success(it))
         }
+//        if (networkHelper.isNetworkConnected()) {
+//            repository.fetchReadSurahEn(nInSurah).let {
+//                _readSurahEn.postValue(it)
+//            }
+//        }
+//        else
+//            _readSurahEn.postValue(Resource.error("No internet connection", null))
     }
 
 

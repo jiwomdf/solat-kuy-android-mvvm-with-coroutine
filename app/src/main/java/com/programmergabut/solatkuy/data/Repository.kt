@@ -27,29 +27,6 @@ class Repository @Inject constructor(
     private val msFavSurahDao: MsFavSurahDao
 ) {
 
-    /* companion object{
-        @Volatile
-        private var instance: Repository? = null
-
-        fun getInstance(remoteDataSourceAladhan: RemoteDataSourceAladhan,
-                        remoteDataSourceApiAlquran: RemoteDataSourceApiAlquran,
-                        notifiedPrayerDao: NotifiedPrayerDao,
-                        msApi1Dao: MsApi1Dao,
-                        msSettingDao: MsSettingDao,
-                        msFavAyahDao: MsFavAyahDao,
-                        msFavSurahDao: MsFavSurahDao) =
-            instance ?: synchronized(this){
-                instance
-                    ?: Repository(remoteDataSourceAladhan,
-                        remoteDataSourceApiAlquran,
-                        notifiedPrayerDao,
-                        msApi1Dao,
-                        msSettingDao,
-                        msFavAyahDao,
-                        msFavSurahDao)
-            }
-    } */
-
     /* Room */
     /* NotifiedPrayer */
     suspend fun updatePrayerIsNotified(prayerName: String, isNotified: Boolean) = notifiedPrayerDao.updatePrayerIsNotified(prayerName, isNotified)
@@ -159,12 +136,12 @@ class Repository @Inject constructor(
         val data = remoteDataSourceAladhanImpl.fetchPrayerApi(msApi1)
         Log.d("syncNotifiedPrayer", "fetch")
 
-        data.body().let {
+        data.let {
             val sdf = SimpleDateFormat("dd", Locale.getDefault())
             val currentDate = sdf.format(Date())
 
             val timings =
-                it?.data?.find { obj -> obj.date.gregorian?.day == currentDate.toString() }?.timings
+                it.data.find { obj -> obj.date.gregorian?.day == currentDate.toString() }?.timings
 
             val map = mutableMapOf<String, String>()
 

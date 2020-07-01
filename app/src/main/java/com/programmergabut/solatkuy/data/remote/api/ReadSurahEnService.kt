@@ -14,5 +14,5 @@ interface ReadSurahEnService {
     //http://api.alquran.cloud/v1/surah/110/en.asad
 
     @GET("surah/{nInSurah}/en.asad")
-    suspend fun fetchReadSurahEn(@Path("nInSurah") nInSurah: Int): Response<ReadSurahEnResponse>
+    suspend fun fetchReadSurahEn(@Path("nInSurah") nInSurah: Int): ReadSurahEnResponse
 }

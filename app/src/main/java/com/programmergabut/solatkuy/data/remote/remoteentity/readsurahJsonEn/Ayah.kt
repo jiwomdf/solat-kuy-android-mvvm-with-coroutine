@@ -1,8 +1,6 @@
 package com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonEn
 
 
-import androidx.room.Ignore
-import com.google.gson.annotations.Expose
 import com.google.gson.annotations.SerializedName
 
 data class Ayah(

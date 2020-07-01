@@ -6,6 +6,6 @@ import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.PrayerRe
 import retrofit2.Response
 
 interface RemoteDataSourceAladhan {
-    suspend fun fetchCompassApi(msApi1: MsApi1): Response<CompassResponse>
-    suspend fun fetchPrayerApi(msApi1: MsApi1):  Response<PrayerResponse>
+    suspend fun fetchCompassApi(msApi1: MsApi1): CompassResponse
+    suspend fun fetchPrayerApi(msApi1: MsApi1):  PrayerResponse
 }

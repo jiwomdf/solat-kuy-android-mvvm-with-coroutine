@@ -1,15 +1,17 @@
 package com.programmergabut.solatkuy.ui.fragmentquran
 
 import androidx.hilt.lifecycle.ViewModelInject
-import androidx.lifecycle.*
+import androidx.lifecycle.LiveData
+import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.viewModelScope
 import com.programmergabut.solatkuy.data.Repository
-import com.programmergabut.solatkuy.data.local.localentity.MsFavSurah
 import com.programmergabut.solatkuy.data.remote.remoteentity.quranallsurahJson.AllSurahResponse
 import com.programmergabut.solatkuy.util.Resource
-import com.programmergabut.solatkuy.util.helper.NetworkHelper
 import kotlinx.coroutines.launch
+import java.lang.Exception
 
-class QuranFragmentViewModel @ViewModelInject constructor(val repository: Repository, val networkHelper: NetworkHelper): ViewModel() {
+class QuranFragmentViewModel @ViewModelInject constructor(val repository: Repository): ViewModel() {
 
 
     private var _allSurah = MutableLiveData<Resource<AllSurahResponse>>()
@@ -20,24 +22,18 @@ class QuranFragmentViewModel @ViewModelInject constructor(val repository: Reposi
         viewModelScope.launch {
             _allSurah.postValue(Resource.loading(null))
 
-            if (networkHelper.isNetworkConnected()) {
+            try{
                 repository.fetchAllSurah().let {
-                    if (it.isSuccessful)
-                        _allSurah.postValue(Resource.success(it.body()))
-                    else
-                        _allSurah.postValue(Resource.error(it.errorBody().toString(), null))
+                    _allSurah.postValue(Resource.success(it))
                 }
             }
-            else
+            catch (ex: Exception){
                 _allSurah.postValue(Resource.error("No internet connection", null))
+            }
+
         }
     }
 
     val staredSurah = repository.getListFavSurah()
-
-    init {
-        fetchAllSurah()
-    }
-
 
 }

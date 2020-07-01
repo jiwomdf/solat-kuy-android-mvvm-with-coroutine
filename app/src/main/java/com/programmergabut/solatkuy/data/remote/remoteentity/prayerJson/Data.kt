@@ -2,7 +2,6 @@ package com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson
 
 
 import com.google.gson.annotations.SerializedName
-import javax.inject.Inject
 
 data class Data(
     @SerializedName("date")

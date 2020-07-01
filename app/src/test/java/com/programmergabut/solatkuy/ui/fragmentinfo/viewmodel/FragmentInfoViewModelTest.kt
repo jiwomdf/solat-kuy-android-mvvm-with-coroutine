@@ -9,8 +9,17 @@ import com.programmergabut.solatkuy.data.Repository
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
 import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.PrayerResponse
 import com.programmergabut.solatkuy.ui.fragmentinfo.FragmentInfoViewModel
+import com.programmergabut.solatkuy.ui.fragmentsetting.FragmentSettingViewModel
 import com.programmergabut.solatkuy.util.Resource
 import com.programmergabut.solatkuy.util.generator.DummyData
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.runBlocking
+import kotlinx.coroutines.test.TestCoroutineDispatcher
+import kotlinx.coroutines.test.resetMain
+import kotlinx.coroutines.test.runBlockingTest
+import kotlinx.coroutines.test.setMain
+import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -19,7 +28,9 @@ import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 import org.mockito.junit.MockitoJUnitRunner
+import retrofit2.Response
 
+@ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
 class FragmentInfoViewModelTest {
 
@@ -31,29 +42,35 @@ class FragmentInfoViewModelTest {
     @Mock
     private lateinit var repository: Repository
 
-    @Mock
-    private lateinit var context: Application
-
     private val msApi1 = MsApi1(0, "", "", "","","")
 
+    @ExperimentalCoroutinesApi
+    val dispatcher = TestCoroutineDispatcher()
+
+    @ExperimentalCoroutinesApi
     @Before
     fun setUp() {
-        viewModel =
-            FragmentInfoViewModel(
-                context,
-                repository
-            )
+        Dispatchers.setMain(dispatcher)
+        viewModel = FragmentInfoViewModel(repository)
+
         viewModel.fetchPrayerApi(msApi1)
     }
 
+    @ExperimentalCoroutinesApi
+    @After
+    fun tearDown() {
+        Dispatchers.resetMain()
+    }
+
     @Test
-    fun fetchPrayerApi(){
+    fun fetchPrayerApi() = runBlockingTest{
         val observer = mock<Observer<Resource<PrayerResponse>>>()
         val dummyPrayerApi = Resource.success(DummyData.fetchPrayerApi())
 
-        val prayerApi = MutableLiveData<Resource<PrayerResponse>>()
-        prayerApi.value = dummyPrayerApi
-        `when`(repository.fetchPrayerApi(msApi1)).thenReturn(prayerApi)
+        /* val prayerApi = MutableLiveData<Resource<PrayerResponse>>()
+        prayerApi.value = dummyPrayerApi */
+
+        `when`(repository.fetchPrayerApi(msApi1)).thenReturn(dummyPrayerApi.data)
 
         viewModel.prayer.observeForever(observer)
 

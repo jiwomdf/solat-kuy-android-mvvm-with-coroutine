@@ -1,7 +1,6 @@
 package com.programmergabut.solatkuy.data.remote
 
 import android.util.Log
-import androidx.lifecycle.MutableLiveData
 import com.programmergabut.solatkuy.data.remote.api.AllSurahService
 import com.programmergabut.solatkuy.data.remote.api.ReadSurahArService
 import com.programmergabut.solatkuy.data.remote.api.ReadSurahEnService
@@ -9,12 +8,8 @@ import com.programmergabut.solatkuy.data.remote.remoteentity.quranallsurahJson.A
 import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonAr.Ayah
 import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonAr.ReadSurahArResponse
 import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonEn.ReadSurahEnResponse
-import com.programmergabut.solatkuy.util.EspressoIdlingResource
-import com.programmergabut.solatkuy.util.Resource
-import kotlinx.coroutines.*
 import retrofit2.Response
 import javax.inject.Inject
-import javax.inject.Singleton
 
 class RemoteDataSourceApiAlquranImpl @Inject constructor(
     private val readSurahEnService: ReadSurahEnService,
@@ -22,12 +17,11 @@ class RemoteDataSourceApiAlquranImpl @Inject constructor(
     private val readSurahArService: ReadSurahArService
 ): RemoteDataSourceApiAlquran{
 
-    override suspend fun fetchReadSurahEn(surahID: Int): Response<ReadSurahEnResponse> {
+    override suspend fun fetchReadSurahEn(surahID: Int): ReadSurahEnResponse {
         return readSurahEnService.fetchReadSurahEn(surahID)
     }
 
-
-    override suspend fun fetchAllSurah(): Response<AllSurahResponse> {
+    override suspend fun fetchAllSurah(): AllSurahResponse {
 
         return allSurahService.fetchAllSurah()
     }
@@ -55,7 +49,7 @@ class RemoteDataSourceApiAlquranImpl @Inject constructor(
             "",
             false)} as MutableList<Ayah>
 
-        retValEn.body()?.data?.ayahs?.forEachIndexed { index, x ->
+        retValEn.data.ayahs.forEachIndexed { index, x ->
             listAyah[index].textEn = x.text
         }
 

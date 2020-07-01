@@ -18,5 +18,5 @@ interface CalendarApiService {
                             @Query("longitude") longitude: String,
                             @Query("method") method: String,
                             @Query("month") month: String,
-                            @Query("year") year: String): Response<PrayerResponse>
+                            @Query("year") year: String): PrayerResponse
 }

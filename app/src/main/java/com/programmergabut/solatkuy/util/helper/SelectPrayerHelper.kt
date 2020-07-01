@@ -1,13 +1,9 @@
 package com.programmergabut.solatkuy.util.helper
 
 import com.programmergabut.solatkuy.data.local.localentity.MsTimings
-import com.programmergabut.solatkuy.data.local.localentity.NotifiedPrayer
-import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.Timings
-import com.programmergabut.solatkuy.util.enumclass.EnumConfig
 import org.joda.time.DateTime
 import org.joda.time.LocalTime
 import java.text.SimpleDateFormat
-
 import java.util.*
 
 class SelectPrayerHelper {

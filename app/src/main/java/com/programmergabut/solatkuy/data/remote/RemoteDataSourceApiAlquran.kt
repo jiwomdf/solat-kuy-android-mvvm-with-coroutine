@@ -6,7 +6,7 @@ import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonEn.Rea
 import retrofit2.Response
 
 interface RemoteDataSourceApiAlquran {
-    suspend fun fetchReadSurahEn(surahID: Int): Response<ReadSurahEnResponse>
-    suspend fun fetchAllSurah(): Response<AllSurahResponse>
+    suspend fun fetchReadSurahEn(surahID: Int): ReadSurahEnResponse
+    suspend fun fetchAllSurah(): AllSurahResponse
     suspend fun fetchReadSurahAr(surahID: Int): ReadSurahArResponse
 }

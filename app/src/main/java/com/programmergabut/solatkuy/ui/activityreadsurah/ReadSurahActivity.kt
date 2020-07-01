@@ -151,7 +151,6 @@ class ReadSurahActivity : AppCompatActivity() {
 
                     readSurahAdapter.setAyah(data?.ayahs!!)
                     readSurahAdapter.notifyDataSetChanged()
-
                 }
                 EnumStatus.LOADING -> {}
                 EnumStatus.ERROR -> {}

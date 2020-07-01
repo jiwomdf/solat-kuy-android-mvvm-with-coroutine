@@ -9,7 +9,6 @@ import android.content.ContextWrapper
 import android.graphics.BitmapFactory
 import android.media.RingtoneManager
 import android.os.Build
-import android.os.Bundle
 import android.os.VibrationEffect
 import android.os.Vibrator
 import androidx.core.app.NotificationCompat

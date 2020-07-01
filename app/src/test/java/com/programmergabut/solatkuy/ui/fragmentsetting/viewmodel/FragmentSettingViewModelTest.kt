@@ -35,9 +35,6 @@ class FragmentSettingViewModelTest {
     @Mock
     private lateinit var repository: Repository
 
-    @Mock
-    private lateinit var context: Application
-
     private val msApi1 = MsApi1(0, "", "", "","","")
 
     @ExperimentalCoroutinesApi
@@ -49,7 +46,6 @@ class FragmentSettingViewModelTest {
         Dispatchers.setMain(dispatcher)
         viewModel =
             FragmentSettingViewModel(
-                context,
                 repository
             )
         viewModel.updateMsApi1(msApi1)
@@ -79,11 +75,8 @@ class FragmentSettingViewModelTest {
     }
 
     @Test
-    fun updateMsApi1(){
-        runBlocking{
-            verify(repository).updateMsApi1(msApi1)
-        }
-
+    fun updateMsApi1() = runBlocking{
+        verify(repository).updateMsApi1(msApi1)
     }
 
 }

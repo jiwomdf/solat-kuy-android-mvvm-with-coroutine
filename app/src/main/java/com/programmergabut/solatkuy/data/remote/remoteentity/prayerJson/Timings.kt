@@ -2,7 +2,6 @@ package com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson
 
 
 import com.google.gson.annotations.SerializedName
-import javax.inject.Inject
 import javax.inject.Named
 
 data class Timings(

@@ -1,18 +1,15 @@
 package com.programmergabut.solatkuy.ui.activityfavayah
 
-import androidx.appcompat.app.AppCompatActivity
 import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
+import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
-import androidx.lifecycle.ViewModelProvider
 import androidx.recyclerview.widget.LinearLayoutManager
-import androidx.fragment.app.viewModels
 import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.util.enumclass.EnumStatus
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_fav_ayah.*
-import java.lang.Exception
 
 @AndroidEntryPoint
 class FavAyahActivity : AppCompatActivity() {

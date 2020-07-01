@@ -7,10 +7,10 @@ import com.programmergabut.solatkuy.data.local.localentity.MsFavAyah
 import com.programmergabut.solatkuy.data.local.localentity.MsFavSurah
 import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonAr.ReadSurahArResponse
 import com.programmergabut.solatkuy.util.Resource
-import com.programmergabut.solatkuy.util.helper.NetworkHelper
 import kotlinx.coroutines.launch
+import java.lang.Exception
 
-class ReadSurahViewModel @ViewModelInject constructor(val repository: Repository, val networkHelper: NetworkHelper): ViewModel() {
+class ReadSurahViewModel @ViewModelInject constructor(val repository: Repository): ViewModel() {
 
     private var _selectedSurahAr = MutableLiveData<Resource<ReadSurahArResponse>>()
     val selectedSurahAr: LiveData<Resource<ReadSurahArResponse>>
@@ -21,13 +21,15 @@ class ReadSurahViewModel @ViewModelInject constructor(val repository: Repository
 
             _selectedSurahAr.postValue(Resource.loading(null))
 
-            if (networkHelper.isNetworkConnected()) {
+            try {
                 repository.fetchReadSurahAr(surahID).let {
                     _selectedSurahAr.postValue(Resource.success(it))
                 }
             }
-            else
-                _selectedSurahAr.postValue(Resource.error("No internet connection", null))
+            catch (ex: Exception){
+                _selectedSurahAr.postValue(Resource.error(ex.message.toString(), null))
+            }
+
         }
     }
 
@@ -40,7 +42,7 @@ class ReadSurahViewModel @ViewModelInject constructor(val repository: Repository
     }
 
     private var ayahID = MutableLiveData<Int>()
-    var msFavSurah = Transformations.switchMap(ayahID){
+    var msFavSurah: LiveData<Resource<MsFavSurah>> = Transformations.switchMap(ayahID){
         repository.getFavSurahBySurahID(it)
     }
     fun getFavSurah(ayahID: Int){

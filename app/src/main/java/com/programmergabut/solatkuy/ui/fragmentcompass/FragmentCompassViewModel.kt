@@ -9,10 +9,10 @@ import com.programmergabut.solatkuy.data.Repository
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
 import com.programmergabut.solatkuy.data.remote.remoteentity.compassJson.CompassResponse
 import com.programmergabut.solatkuy.util.Resource
-import com.programmergabut.solatkuy.util.helper.NetworkHelper
 import kotlinx.coroutines.launch
+import java.lang.Exception
 
-class FragmentCompassViewModel @ViewModelInject constructor(val repository: Repository, val networkHelper: NetworkHelper): ViewModel() {
+class FragmentCompassViewModel @ViewModelInject constructor(val repository: Repository): ViewModel() {
 
     val msApi1 = repository.getMsApi1()
 
@@ -24,18 +24,15 @@ class FragmentCompassViewModel @ViewModelInject constructor(val repository: Repo
 
         viewModelScope.launch {
             _compass.postValue(Resource.loading(null))
-            if (networkHelper.isNetworkConnected()) {
+            try {
                 repository.fetchCompass(msApi1).let {
-                    if (it.isSuccessful)
-                        _compass.postValue(Resource.success(it.body()))
-                    else
-                        _compass.postValue(Resource.error(it.errorBody().toString(), null))
+                    _compass.postValue(Resource.success(it))
                 }
             }
-            else
-                _compass.postValue(Resource.error("No internet connection", null))
+            catch (ex: Exception){
+                _compass.postValue(Resource.error(ex.message.toString(), null))
+            }
         }
-
     }
 
 }

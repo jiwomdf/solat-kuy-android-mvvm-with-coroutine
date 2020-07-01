@@ -1,10 +1,5 @@
 package com.programmergabut.solatkuy.data.remote
 
-import com.google.gson.GsonBuilder
-import retrofit2.Retrofit
-import retrofit2.converter.gson.GsonConverterFactory
-import javax.inject.Inject
-
 /*
  * Created by Katili Jiwo Adi Wiyono on 02/06/20.
  */

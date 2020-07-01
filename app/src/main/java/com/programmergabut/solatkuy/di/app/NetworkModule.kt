@@ -60,37 +60,31 @@ object NetworkModule {
             .build()
     }
 
-    //@AladhanApi
     @Provides
     @Singleton
     fun provideAsmaAlHusnaService(@AladhanApi retrofit: Retrofit): AsmaAlHusnaService = retrofit.create(
         AsmaAlHusnaService::class.java)
 
-    //@AladhanApi
     @Provides
     @Singleton
     fun provideCalendarApiService(@AladhanApi retrofit: Retrofit): CalendarApiService = retrofit.create(
         CalendarApiService::class.java)
 
-    //@AladhanApi
     @Provides
     @Singleton
     fun provideQiblaApiService(@AladhanApi retrofit: Retrofit): QiblaApiService = retrofit.create(
         QiblaApiService::class.java)
 
-    //@QuranApi
     @Provides
     @Singleton
     fun provideAllSurahService(@QuranApi retrofit: Retrofit): AllSurahService = retrofit.create(
         AllSurahService::class.java)
 
-    //@QuranApi
     @Provides
     @Singleton
     fun provideReadSurahArService(@QuranApi retrofit: Retrofit): ReadSurahArService = retrofit.create(
         ReadSurahArService::class.java)
 
-    //@QuranApi
     @Provides
     @Singleton
     fun provideReadSurahEnService(@QuranApi retrofit: Retrofit): ReadSurahEnService = retrofit.create(
@@ -98,11 +92,12 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideRemoteDataSourceAladhan(remoteDataSourceAladhan: RemoteDataSourceAladhan): RemoteDataSourceAladhan = remoteDataSourceAladhan
+    fun provideRemoteDataSourceAladhan(remoteDataSourceAladhan: RemoteDataSourceAladhan): RemoteDataSourceAladhan =
+        remoteDataSourceAladhan
 
     @Provides
     @Singleton
-    fun provideRemoteDataSourceApiAlquran(remoteDataSourceApiAlquran: RemoteDataSourceApiAlquran): RemoteDataSourceApiAlquran = remoteDataSourceApiAlquran
-
+    fun provideRemoteDataSourceApiAlquran(remoteDataSourceApiAlquran: RemoteDataSourceApiAlquran): RemoteDataSourceApiAlquran =
+        remoteDataSourceApiAlquran
 
 }

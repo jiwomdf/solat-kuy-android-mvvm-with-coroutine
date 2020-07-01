@@ -9,7 +9,6 @@ import androidx.recyclerview.widget.RecyclerView
 import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.data.local.localentity.MsFavAyah
 import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonAr.Ayah
-import com.programmergabut.solatkuy.util.Resource
 import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.layout_read_surah.view.*
 

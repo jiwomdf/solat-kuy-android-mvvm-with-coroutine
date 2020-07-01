@@ -9,6 +9,6 @@ interface AllSurahService {
     //http://api.alquran.cloud/v1/juz/30/en.asad
 
     @GET("surah")
-    suspend fun fetchAllSurah(): Response<AllSurahResponse>
+    suspend fun fetchAllSurah(): AllSurahResponse
 
 }
