@@ -8,10 +8,11 @@
     android:orientation="vertical"
     tools:context=".ui.main.MainActivity">
 
-    <com.programmergabut.solatkuy.customview.NonSwipeAbleViewPager
+    <androidx.viewpager2.widget.ViewPager2
         android:id="@+id/vp2_main"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content" />
+        android:layout_height="wrap_content"
+        android:overScrollMode="never"/>
 
     <com.google.android.material.bottomnavigation.BottomNavigationView
         android:id="@+id/bottom_navigation"

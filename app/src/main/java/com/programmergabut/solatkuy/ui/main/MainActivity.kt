@@ -21,7 +21,9 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.RecyclerView
 import androidx.viewpager.widget.ViewPager
+import androidx.viewpager2.widget.ViewPager2
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
@@ -30,6 +32,11 @@ import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.data.local.SolatKuyRoom
+import com.programmergabut.solatkuy.ui.fragmentcompass.FragmentCompass
+import com.programmergabut.solatkuy.ui.fragmentinfo.FragmentInfo
+import com.programmergabut.solatkuy.ui.fragmentmain.FragmentMain
+import com.programmergabut.solatkuy.ui.fragmentquran.QuranFragment
+import com.programmergabut.solatkuy.ui.fragmentsetting.FragmentSetting
 import com.programmergabut.solatkuy.util.enumclass.EnumStatus
 import dagger.hilt.android.AndroidEntryPoint
 import es.dmoral.toasty.Toasty
@@ -97,11 +104,22 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
     }
 
     private fun initViewPager() {
-        vp2_main.adapter = SwipeAdapter(
-            supportFragmentManager
-        )
-        vp2_main.setPageTransformer(true, ZoomOutPageTransformer())
-        vp2_main.addOnPageChangeListener( object : ViewPager.OnPageChangeListener{
+        val adapter = SwipeAdapter(supportFragmentManager, lifecycle)
+        adapter.addFragment(FragmentMain(false))
+        adapter.addFragment(FragmentCompass())
+        adapter.addFragment(QuranFragment())
+        adapter.addFragment(FragmentInfo())
+        adapter.addFragment(FragmentSetting())
+
+        vp2_main.let {
+            it.adapter = adapter
+            it.orientation = ViewPager2.ORIENTATION_HORIZONTAL
+            it.setPageTransformer(ZoomOutPageTransformer())
+            it.isUserInputEnabled = false
+            (it.getChildAt(0) as RecyclerView).overScrollMode = RecyclerView.OVER_SCROLL_NEVER
+        }
+
+        /* addOnLayoutChangeListener( object : ViewPager.OnPageChangeListener{
             override fun onPageScrollStateChanged(state: Int) {}
 
             override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
@@ -117,7 +135,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
                 }
             }
 
-        })
+        }) */
     }
 
     /* Function listener */
@@ -346,7 +364,8 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
     }
 
     /* Animation */
-    private inner class ZoomOutPageTransformer : ViewPager.PageTransformer {
+    private inner class ZoomOutPageTransformer : ViewPager.PageTransformer, ViewPager2.PageTransformer {
+
         private val MIN_SCALE = 0.85f
         private val MIN_ALPHA = 0.5f
         override fun transformPage(view: View, position: Float) {

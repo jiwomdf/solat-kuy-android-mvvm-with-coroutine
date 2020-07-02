@@ -51,27 +51,25 @@ import kotlin.math.abs
  */
 
 @AndroidEntryPoint
-class FragmentMain : Fragment(R.layout.fragment_main), SwipeRefreshLayout.OnRefreshListener  {
+class FragmentMain(private var isTimerHasBinded: Boolean) : Fragment(R.layout.fragment_main), SwipeRefreshLayout.OnRefreshListener  {
 
     private val fragmentMainViewModel: FragmentMainViewModel by viewModels()
 
     @Inject lateinit var db: SolatKuyRoom
 
     private var coroutineTimerJob: Job? = null
-    private var isTimerHasBinded: Boolean = false
 
     private var dialogView: View? = null
     private var tempMsApi1: MsApi1? = null
     private var mCityName: String? = null
 
-    override fun onPause() {
-        super.onPause()
+    override fun onStop() {
+        super.onStop()
 
         isTimerHasBinded = false
         coroutineTimerJob?.cancel()
         Log.d("CoroutineTimer", "CANCELED.. $coroutineTimerJob ${Thread.currentThread().id}")
     }
-
 
     override fun onStart() {
         super.onStart()
@@ -116,7 +114,7 @@ class FragmentMain : Fragment(R.layout.fragment_main), SwipeRefreshLayout.OnRefr
                     updateAlarmManager(retVal.data)
 
                     /* Bind Widget*/
-                    val data = createData(retVal.data)
+                    val data = createWidgetData(retVal.data)
                     bindWidget(data)
                 }
                 EnumStatus.LOADING -> {
@@ -136,7 +134,7 @@ class FragmentMain : Fragment(R.layout.fragment_main), SwipeRefreshLayout.OnRefr
                     updateAlarmManager(retVal.data)
 
                     /* Bind Widget*/
-                    val data = createData(retVal.data)
+                    val data = createWidgetData(retVal.data)
                     bindWidget(data)
 
                 }
@@ -238,7 +236,7 @@ class FragmentMain : Fragment(R.layout.fragment_main), SwipeRefreshLayout.OnRefr
 
     }
 
-    private fun createData(prayer: List<NotifiedPrayer>): MsTimings {
+    private fun createWidgetData(prayer: List<NotifiedPrayer>): MsTimings {
         /* Dagger Injection */
         /* based from sync API data */
 
@@ -462,7 +460,6 @@ class FragmentMain : Fragment(R.layout.fragment_main), SwipeRefreshLayout.OnRefr
 
         if(period == null)
             return
-
 
         if(!isTimerHasBinded) {
             coroutineTimerJob = lifecycleScope.launch(Dispatchers.IO) {

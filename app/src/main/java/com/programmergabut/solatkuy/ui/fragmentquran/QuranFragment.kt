@@ -117,6 +117,8 @@ class QuranFragment : Fragment(R.layout.fragment_quran), SwipeRefreshLayout.OnRe
             }
 
         })
+
+        fetchAllSurah()
     }
 
     private fun createJuzzSpinner(){
