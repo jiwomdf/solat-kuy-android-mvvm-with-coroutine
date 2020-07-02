@@ -21,7 +21,7 @@ class FragmentMainViewModel @ViewModelInject constructor(val repository: Reposit
     val notifiedPrayer: LiveData<Resource<List<NotifiedPrayer>>>
         get() = _notifiedPrayer
 
-    fun fetchNotifiedPrayer(msApi1: MsApi1){
+    fun syncNotifiedPrayer(msApi1: MsApi1){
         viewModelScope.launch {
 
             _notifiedPrayer.postValue(Resource.loading(null))
@@ -61,19 +61,16 @@ class FragmentMainViewModel @ViewModelInject constructor(val repository: Reposit
         repository.fetchReadSurahEn(nInSurah).let {
             _readSurahEn.postValue(Resource.success(it))
         }
-//        if (networkHelper.isNetworkConnected()) {
-//            repository.fetchReadSurahEn(nInSurah).let {
-//                _readSurahEn.postValue(it)
-//            }
-//        }
-//        else
-//            _readSurahEn.postValue(Resource.error("No internet connection", null))
     }
 
 
     /*fun updateNotifiedPrayer(NotifiedPrayer: NotifiedPrayer){
         repository.updateNotifiedPrayer(NotifiedPrayer)
     }*/
+
+    fun updateMsApi1(msApi1: MsApi1) = viewModelScope.launch {
+        repository.updateMsApi1(msApi1)
+    }
 
     fun updatePrayerIsNotified(prayerName: String, isNotified: Boolean) = viewModelScope.launch {
         repository.updatePrayerIsNotified(prayerName, isNotified)

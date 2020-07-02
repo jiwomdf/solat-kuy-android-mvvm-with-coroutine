@@ -18,6 +18,7 @@ import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.transition.DrawableCrossFadeFactory
 import com.programmergabut.solatkuy.R
+import com.programmergabut.solatkuy.data.local.SolatKuyRoom
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
 import com.programmergabut.solatkuy.data.local.localentity.MsFavAyah
 import com.programmergabut.solatkuy.data.local.localentity.MsTimings
@@ -42,6 +43,7 @@ import org.joda.time.LocalDate
 import org.joda.time.Period
 import java.text.SimpleDateFormat
 import java.util.*
+import javax.inject.Inject
 import kotlin.math.abs
 
 /*
@@ -52,6 +54,8 @@ import kotlin.math.abs
 class FragmentMain : Fragment(R.layout.fragment_main), SwipeRefreshLayout.OnRefreshListener  {
 
     private val fragmentMainViewModel: FragmentMainViewModel by viewModels()
+
+    @Inject lateinit var db: SolatKuyRoom
 
     private var coroutineTimerJob: Job? = null
     private var isTimerHasBinded: Boolean = false
@@ -90,6 +94,8 @@ class FragmentMain : Fragment(R.layout.fragment_main), SwipeRefreshLayout.OnRefr
         refreshLayout()
         tvQuranQuoteClick()
         openPopupQuote()
+
+        updateMonthAndYearMsApi1()
     }
 
 
@@ -112,7 +118,6 @@ class FragmentMain : Fragment(R.layout.fragment_main), SwipeRefreshLayout.OnRefr
                     /* Bind Widget*/
                     val data = createData(retVal.data)
                     bindWidget(data)
-
                 }
                 EnumStatus.LOADING -> {
                     Toasty.info(requireContext(), "syncing data..", Toast.LENGTH_SHORT).show()
@@ -190,6 +195,13 @@ class FragmentMain : Fragment(R.layout.fragment_main), SwipeRefreshLayout.OnRefr
 
     }
 
+    private fun updateMonthAndYearMsApi1() {
+        lifecycleScope.launch {
+            val arrDate = LocalDate.now().toString("dd/M/yyyy").split("/")
+            db.msApi1Dao().updateMsApi1MonthAndYear(1, arrDate[1], arrDate[2])
+        }
+    }
+
     private fun subscribeReadSurahEn(){
         fragmentMainViewModel.readSurahEn.observe(viewLifecycleOwner, androidx.lifecycle.Observer { apiQuotes ->
             when(apiQuotes.status){
@@ -234,11 +246,11 @@ class FragmentMain : Fragment(R.layout.fragment_main), SwipeRefreshLayout.OnRefr
 
         return MsTimings(
             prayer[0].prayerTime,
-                prayer[1].prayerTime,
-                prayer[2].prayerTime,
-                prayer[3].prayerTime,
-                prayer[4].prayerTime,
-                prayer[5].prayerTime,
+            prayer[1].prayerTime,
+            prayer[2].prayerTime,
+            prayer[3].prayerTime,
+            prayer[4].prayerTime,
+            prayer[5].prayerTime,
         "",
         "",
         "",
@@ -250,7 +262,7 @@ class FragmentMain : Fragment(R.layout.fragment_main), SwipeRefreshLayout.OnRefr
 
     /* fetch API data */
     private fun fetchPrayerApi(msApi1: MsApi1) {
-        fragmentMainViewModel.fetchNotifiedPrayer(msApi1)
+        fragmentMainViewModel.syncNotifiedPrayer(msApi1)
     }
 
     /* private fun getMsSetting(){

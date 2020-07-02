@@ -27,4 +27,7 @@ interface MsApi1Dao {
     @Query("update MsApi1 set latitude = :latitude, longitude = :longitude, method = :method, month = :month, year = :year where api1ID = :api1ID")
     suspend fun updateMsApi1(api1ID: Int, latitude: String, longitude: String, method: String, month: String, year:String)
 
+    @Query("update MsApi1 set month = :month, year = :year where api1ID = :api1ID")
+    suspend fun updateMsApi1MonthAndYear(api1ID: Int, month: String, year:String)
+
 }

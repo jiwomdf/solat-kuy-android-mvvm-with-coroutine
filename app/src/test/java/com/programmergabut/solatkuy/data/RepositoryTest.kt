@@ -2,11 +2,13 @@ package com.programmergabut.solatkuy.data
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
+import com.programmergabut.solatkuy.CoroutinesTestRule
+import com.programmergabut.solatkuy.DummyArgument
 import com.programmergabut.solatkuy.data.local.dao.*
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
 import com.programmergabut.solatkuy.data.remote.RemoteDataSourceAladhanImpl
 import com.programmergabut.solatkuy.data.remote.RemoteDataSourceApiAlquranImpl
-import com.programmergabut.solatkuy.util.generator.DummyData
+import com.programmergabut.solatkuy.DummyRetValue
 import junit.framework.Assert.assertNotNull
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
@@ -20,6 +22,9 @@ class RepositoryTest{
     @get:Rule
     var instantTaskExecutorRule = InstantTaskExecutorRule()
 
+    @get:Rule
+    val coroutinesTestRule: CoroutinesTestRule = CoroutinesTestRule()
+
     private val remoteDataSourceApiAlquran = mock(RemoteDataSourceApiAlquranImpl::class.java)
     private val remoteDataSourceAladhan = mock(RemoteDataSourceAladhanImpl::class.java)
     private val notifiedPrayerDao = mock(NotifiedPrayerDao::class.java)
@@ -30,13 +35,14 @@ class RepositoryTest{
     private val repository = FakeRepository(remoteDataSourceAladhan, remoteDataSourceApiAlquran, notifiedPrayerDao,
             msApi1Dao, msSettingDao, msFavAyahDao, msFavSurahDao)
 
-    private val msApi1 = MsApi1(0, "", "", "","","")
+    private val msApi1 = DummyArgument.msApi1
+    private val surahID = DummyArgument.surahID
 
     @Test
-    fun fetchPrayerApi() = runBlockingTest {
+    fun fetchPrayerApi() = coroutinesTestRule.testDispatcher.runBlockingTest {
         repository.fetchPrayerApi(msApi1)
 
-        val dummyPrayerApi = DummyData.fetchPrayerApi()
+        val dummyPrayerApi = DummyRetValue.fetchPrayerApi()
 
         /* val prayerApi = MutableLiveData<PrayerResponse>()
         prayerApi.value = dummyPrayerApi */
@@ -48,10 +54,10 @@ class RepositoryTest{
     }
 
     @Test
-    fun fetchCompass() = runBlockingTest {
+    fun fetchCompass() = coroutinesTestRule.testDispatcher.runBlockingTest {
         repository.fetchCompass(msApi1)
 
-        val dummyCompassApi = DummyData.fetchCompassApi()
+        val dummyCompassApi = DummyRetValue.fetchCompassApi()
         /* val compassApi = MutableLiveData<Resource<CompassResponse>>()
         compassApi.value = dummyCompassApi */
 
@@ -76,15 +82,15 @@ class RepositoryTest{
     } */
 
     @Test
-    fun fetchQuranSurah() = runBlockingTest {
-        repository.fetchReadSurahEn(1)
+    fun fetchQuranSurah() = coroutinesTestRule.testDispatcher.runBlockingTest {
+        repository.fetchReadSurahEn(surahID)
 
-        val dummyQuranSurah = DummyData.fetchSurahApi()
+        val dummyQuranSurah = DummyRetValue.surahEnID_1()
         /* val quranSurahApi = MutableLiveData<Resource<ReadSurahEnResponse>>()
         quranSurahApi.value = dummyQuranSurah */
 
-        Mockito.`when`(remoteDataSourceApiAlquran.fetchReadSurahEn(1)).thenReturn(dummyQuranSurah)
-        Mockito.verify(remoteDataSourceApiAlquran).fetchReadSurahEn(1)
+        Mockito.`when`(remoteDataSourceApiAlquran.fetchReadSurahEn(surahID)).thenReturn(dummyQuranSurah)
+        Mockito.verify(remoteDataSourceApiAlquran).fetchReadSurahEn(surahID)
 
         assertNotNull(dummyQuranSurah)
     }
@@ -93,7 +99,7 @@ class RepositoryTest{
     fun getMsApi1(){
         repository.getMsApi1()
 
-        val dummyMsApi1 = DummyData.getMsApi1()
+        val dummyMsApi1 = DummyRetValue.getMsApi1()
         val msApi1 = MutableLiveData<MsApi1>()
         msApi1.value = dummyMsApi1
         Mockito.`when`(msApi1Dao.getMsApi1()).thenReturn(msApi1)

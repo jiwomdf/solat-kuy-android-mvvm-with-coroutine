@@ -1,4 +1,4 @@
-package com.programmergabut.solatkuy.util.generator
+package com.programmergabut.solatkuy
 
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
 import com.programmergabut.solatkuy.data.local.localentity.NotifiedPrayer
@@ -14,7 +14,9 @@ import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonEn.Edi
 import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonEn.ReadSurahEnResponse
 import com.programmergabut.solatkuy.util.enumclass.EnumConfig
 
-object DummyData {
+object DummyRetValue {
+
+    /* Last update : 2 July 2020 */
 
     fun getNotifiedPrayer(): List<NotifiedPrayer> {
         val listNotifiedPrayer = mutableListOf<NotifiedPrayer>()
@@ -23,42 +25,42 @@ object DummyData {
             NotifiedPrayer(
                 EnumConfig.fajr,
                 true,
-                "00:00"
+                "04:29"
             )
         )
         listNotifiedPrayer.add(
             NotifiedPrayer(
                 EnumConfig.dhuhr,
                 true,
-                "00:00"
+                "11:35"
             )
         )
         listNotifiedPrayer.add(
             NotifiedPrayer(
                 EnumConfig.asr,
                 true,
-                "00:00"
+                "14:56"
             )
         )
         listNotifiedPrayer.add(
             NotifiedPrayer(
                 EnumConfig.maghrib,
                 true,
-                "00:00"
+                "17:26"
             )
         )
         listNotifiedPrayer.add(
             NotifiedPrayer(
                 EnumConfig.isha,
                 true,
-                "00:00"
+                "18:36"
             )
         )
         listNotifiedPrayer.add(
             NotifiedPrayer(
                 EnumConfig.sunrise,
                 true,
-                "00:00"
+                "05:00"
             )
         )
 
@@ -75,7 +77,7 @@ object DummyData {
         return AsmaAlHusnaResponse(0, list, "testing")
     }
 
-    fun fetchSurahApi(): ReadSurahEnResponse{
+    fun surahEnID_1(): ReadSurahEnResponse{
         val listAyah = mutableListOf<Ayah>()
         listAyah.add(Ayah(0,0,0,0,0,0,0,"test"))
         return ReadSurahEnResponse(0,
