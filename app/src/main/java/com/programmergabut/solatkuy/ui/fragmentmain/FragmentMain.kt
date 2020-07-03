@@ -141,7 +141,7 @@ class FragmentMain(private var isTimerHasBinded: Boolean) : Fragment(R.layout.fr
             }
         })
 
-        fragmentMainViewModel.fetchMsSetting(0)
+        fragmentMainViewModel.getMsSetting(0)
     }
 
     private fun subscribeObserversDB() {
@@ -209,8 +209,14 @@ class FragmentMain(private var isTimerHasBinded: Boolean) : Fragment(R.layout.fr
 
                     fragmentMainViewModel.favAyah.removeObservers(this)
                 }
-                EnumStatus.LOADING -> tv_quran_ayah_quote_click.text = getString(R.string.loading)
-                EnumStatus.ERROR -> tv_quran_ayah_quote_click.text = getString(R.string.fetch_failed)
+                EnumStatus.LOADING -> {
+                    tv_quran_ayah_quote_click.text = getString(R.string.loading)
+                    tv_quran_ayah_quote.text = getString(R.string.loading)
+                }
+                EnumStatus.ERROR -> {
+                    tv_quran_ayah_quote.text = getString(R.string.fetch_failed)
+                    tv_quran_ayah_quote_click.text = getString(R.string.fetch_failed)
+                }
             }
         })
 
@@ -271,7 +277,7 @@ class FragmentMain(private var isTimerHasBinded: Boolean) : Fragment(R.layout.fr
 
         val randSurah = (1..114).random()
 
-        fragmentMainViewModel.fetchQuranSurah(randSurah)
+        fragmentMainViewModel.fetchReadSurahEn(randSurah)
     }
 
     /* Database Transaction */
@@ -632,7 +638,7 @@ class FragmentMain(private var isTimerHasBinded: Boolean) : Fragment(R.layout.fr
     }
 
     override fun onRefresh() {
-        fragmentMainViewModel.fetchMsSetting(0)
+        fragmentMainViewModel.getMsSetting(0)
         sl_main.isRefreshing = false
     }
 

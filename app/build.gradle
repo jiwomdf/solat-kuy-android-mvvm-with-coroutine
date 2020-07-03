@@ -111,11 +111,6 @@ dependencies {
     //GPS
     implementation 'com.google.android.gms:play-services-location:17.0.0'
 
-    //Dagger 2
-    api 'com.google.dagger:dagger:2.28.1'
-    annotationProcessor 'com.google.dagger:dagger-compiler:2.28.1'
-    kapt 'com.google.dagger:dagger-compiler:2.28.1'
-
     // Activity KTX for viewModels()
     implementation "androidx.fragment:fragment-ktx:1.2.5"
 
@@ -133,7 +128,6 @@ dependencies {
 
     //Unit Testing
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
-    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     testImplementation "org.mockito:mockito-core:3.3.3"
     testImplementation 'org.mockito:mockito-inline:3.3.3'
     testImplementation "androidx.arch.core:core-testing:2.1.0"
@@ -145,5 +139,8 @@ dependencies {
     androidTestImplementation "androidx.test.espresso:espresso-contrib:3.2.0"
 
     //espresso
+    androidTestImplementation 'androidx.test.espresso:espresso-core:3.2.0'
     implementation "com.android.support.test.espresso:espresso-idling-resource:3.0.2"
+    debugImplementation 'androidx.fragment:fragment-testing:1.2.5'
+
 }

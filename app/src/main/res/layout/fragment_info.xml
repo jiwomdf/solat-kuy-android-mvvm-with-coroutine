@@ -76,6 +76,7 @@
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintTop_toTopOf="parent"
+                        android:text="@string/loading"
                         tools:text="04:34 (WIB)" />
 
                 </androidx.constraintlayout.widget.ConstraintLayout>
@@ -147,6 +148,7 @@
                                 android:layout_height="match_parent"
                                 android:textColor="@color/colorBlack"
                                 android:layout_margin="@dimen/smaller_margin"
+                                android:text="@string/loading"
                                 tools:text="01-03-2020"/>
                             <TextView
                                 android:id="@+id/tv_hijri_date"
@@ -154,6 +156,7 @@
                                 android:layout_height="match_parent"
                                 android:textColor="@color/colorBlack"
                                 android:layout_margin="@dimen/smaller_margin"
+                                android:text="@string/loading"
                                 tools:text="06-07-1441"/>
                         </TableRow>
                         <TableRow
@@ -170,6 +173,7 @@
                                 android:layout_height="match_parent"
                                 android:textColor="@color/colorBlack"
                                 android:layout_margin="@dimen/smaller_margin"
+                                android:text="@string/loading"
                                 tools:text="March"/>
                             <TextView
                                 android:id="@+id/tv_hijri_month"
@@ -177,6 +181,7 @@
                                 android:layout_height="match_parent"
                                 android:textColor="@color/colorBlack"
                                 android:layout_margin="@dimen/smaller_margin"
+                                android:text="@string/loading"
                                 tools:text="Rajab / رَجَب"/>
                         </TableRow>
                         <TableRow
@@ -194,6 +199,7 @@
                                 android:layout_height="match_parent"
                                 android:textColor="@color/colorBlack"
                                 android:layout_margin="@dimen/smaller_margin"
+                                android:text="@string/loading"
                                 tools:text="Sunday"/>
                             <TextView
                                 android:id="@+id/tv_hijri_day"
@@ -201,6 +207,7 @@
                                 android:layout_height="match_parent"
                                 android:textColor="@color/colorBlack"
                                 android:layout_margin="@dimen/smaller_margin"
+                                android:text="@string/loading"
                                 tools:text="Al Ahad / الاحد"/>
                         </TableRow>
                     </TableLayout>

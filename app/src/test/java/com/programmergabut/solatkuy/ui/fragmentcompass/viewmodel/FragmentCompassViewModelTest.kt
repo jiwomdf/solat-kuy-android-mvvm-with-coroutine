@@ -1,12 +1,15 @@
 package com.programmergabut.solatkuy.ui.fragmentcompass.viewmodel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.verify
 import com.programmergabut.solatkuy.CoroutinesTestRule
 import com.programmergabut.solatkuy.DummyRetValue
 import com.programmergabut.solatkuy.data.Repository
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
+import com.programmergabut.solatkuy.data.local.localentity.MsFavSurah
 import com.programmergabut.solatkuy.data.remote.remoteentity.compassJson.CompassResponse
 import com.programmergabut.solatkuy.ui.fragmentcompass.FragmentCompassViewModel
 import com.programmergabut.solatkuy.util.Resource
@@ -42,6 +45,8 @@ class FragmentCompassViewModelTest {
     @Before
     fun before(){
         viewModel = FragmentCompassViewModel(repository)
+
+        Mockito.verify(repository).getMsApi1()
     }
 
     @Test

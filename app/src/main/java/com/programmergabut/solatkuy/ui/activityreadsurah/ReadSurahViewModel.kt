@@ -16,7 +16,7 @@ class ReadSurahViewModel @ViewModelInject constructor(val repository: Repository
     val selectedSurahAr: LiveData<Resource<ReadSurahArResponse>>
         get() = _selectedSurahAr
 
-    fun fetchQuranSurah(surahID: Int){
+    fun fetchReadSurahAr(surahID: Int){
         viewModelScope.launch {
 
             _selectedSurahAr.postValue(Resource.loading(null))
@@ -37,7 +37,7 @@ class ReadSurahViewModel @ViewModelInject constructor(val repository: Repository
     val msFavAyahBySurahID: LiveData<Resource<List<MsFavAyah>>> = Transformations.switchMap(favSurahID){
         repository.getListFavAyahBySurahID(it)
     }
-    fun fetchFavoriteData(surahID: Int){
+    fun getListFavAyahBySurahID(surahID: Int){
         this.favSurahID.value = surahID
     }
 
@@ -45,7 +45,7 @@ class ReadSurahViewModel @ViewModelInject constructor(val repository: Repository
     var msFavSurah: LiveData<Resource<MsFavSurah>> = Transformations.switchMap(ayahID){
         repository.getFavSurahBySurahID(it)
     }
-    fun getFavSurah(ayahID: Int){
+    fun getFavSurahBySurahID(ayahID: Int){
         this.ayahID.value = ayahID
     }
 

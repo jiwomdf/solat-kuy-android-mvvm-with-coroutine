@@ -70,7 +70,7 @@ class ReadSurahActivity : AppCompatActivity() {
             }
         })
 
-        readSurahViewModel.getFavSurah(mSelSurahId.toInt())
+        readSurahViewModel.getFavSurahBySurahID(mSelSurahId.toInt())
 
         return super.onCreateOptionsMenu(menu)
     }
@@ -116,7 +116,7 @@ class ReadSurahActivity : AppCompatActivity() {
 
                     cc_readQuran_loading.visibility = View.GONE
 
-                    readSurahViewModel.fetchFavoriteData(mSelSurahId.toInt())
+                    readSurahViewModel.getListFavAyahBySurahID(mSelSurahId.toInt())
                 }
                 EnumStatus.LOADING -> {
                     ab_readQuran.visibility = View.INVISIBLE
@@ -159,7 +159,7 @@ class ReadSurahActivity : AppCompatActivity() {
         })
 
 
-        readSurahViewModel.fetchQuranSurah(mSelSurahId.toInt())
+        readSurahViewModel.fetchReadSurahAr(mSelSurahId.toInt())
     }
 
     private fun setupToolbar() {

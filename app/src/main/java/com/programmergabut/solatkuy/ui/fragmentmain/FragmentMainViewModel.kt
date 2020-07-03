@@ -17,44 +17,30 @@ import java.lang.Exception
 
 class FragmentMainViewModel @ViewModelInject constructor(val repository: Repository): ViewModel() {
 
+    val msApi1 = repository.getMsApi1()
+    val favAyah = repository.getListFavAyah()
+
     private var _notifiedPrayer = MutableLiveData<Resource<List<NotifiedPrayer>>>()
     val notifiedPrayer: LiveData<Resource<List<NotifiedPrayer>>>
         get() = _notifiedPrayer
 
-    fun syncNotifiedPrayer(msApi1: MsApi1){
-        viewModelScope.launch {
-
-            _notifiedPrayer.postValue(Resource.loading(null))
-
-            try {
-                repository.syncNotifiedPrayer(msApi1).let {
-                    _notifiedPrayer.postValue(Resource.success(it))
-                }
+    fun syncNotifiedPrayer(msApi1: MsApi1) = viewModelScope.launch {
+        _notifiedPrayer.postValue(Resource.loading(null))
+        try {
+            repository.syncNotifiedPrayer(msApi1).let {
+                _notifiedPrayer.postValue(Resource.success(it))
             }
-            catch (e: Exception){
-                _notifiedPrayer.postValue(Resource.error(e.message.toString(), null))
-            }
-
+        }
+        catch (e: Exception){
+            _notifiedPrayer.postValue(Resource.error(e.message.toString(), null))
         }
     }
-
-    val msApi1 = repository.getMsApi1()
-
-    private var _setting = MutableLiveData<Int>()
-    var msSetting: LiveData<Resource<MsSetting>> = Transformations.switchMap(_setting){
-        repository.getMsSetting()
-    }
-    fun fetchMsSetting(ayahID: Int){
-        this._setting.value = ayahID
-    }
-
-    val favAyah = repository.getListFavAyah()
 
     private var _readSurahEn = MutableLiveData<Resource<ReadSurahEnResponse>>()
     val readSurahEn: LiveData<Resource<ReadSurahEnResponse>>
         get() = _readSurahEn
 
-    fun fetchQuranSurah(nInSurah: Int) = viewModelScope.launch{
+    fun fetchReadSurahEn(nInSurah: Int) = viewModelScope.launch{
 
         _readSurahEn.postValue(Resource.loading(null))
 
@@ -63,6 +49,13 @@ class FragmentMainViewModel @ViewModelInject constructor(val repository: Reposit
         }
     }
 
+    private var _setting = MutableLiveData<Int>()
+    var msSetting: LiveData<Resource<MsSetting>> = Transformations.switchMap(_setting){
+        repository.getMsSetting()
+    }
+    fun getMsSetting(ayahID: Int){
+        this._setting.value = ayahID
+    }
 
     /*fun updateNotifiedPrayer(NotifiedPrayer: NotifiedPrayer){
         repository.updateNotifiedPrayer(NotifiedPrayer)

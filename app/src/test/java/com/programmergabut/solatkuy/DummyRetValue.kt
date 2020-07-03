@@ -1,7 +1,7 @@
 package com.programmergabut.solatkuy
 
-import com.programmergabut.solatkuy.data.local.localentity.MsApi1
-import com.programmergabut.solatkuy.data.local.localentity.NotifiedPrayer
+import androidx.lifecycle.MutableLiveData
+import com.programmergabut.solatkuy.data.local.localentity.*
 import com.programmergabut.solatkuy.data.remote.remoteentity.asmaalhusnaJson.AsmaAlHusnaResponse
 import com.programmergabut.solatkuy.data.remote.remoteentity.asmaalhusnaJson.Data
 import com.programmergabut.solatkuy.data.remote.remoteentity.asmaalhusnaJson.En
@@ -9,15 +9,19 @@ import com.programmergabut.solatkuy.data.remote.remoteentity.compassJson.Compass
 import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.Date
 import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.PrayerResponse
 import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.Timings
+import com.programmergabut.solatkuy.data.remote.remoteentity.quranallsurahJson.AllSurahResponse
+import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonAr.ReadSurahArResponse
 import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonEn.Ayah
 import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonEn.Edition
 import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonEn.ReadSurahEnResponse
+import com.programmergabut.solatkuy.util.Resource
 import com.programmergabut.solatkuy.util.enumclass.EnumConfig
 
 object DummyRetValue {
 
     /* Last update : 2 July 2020 */
 
+    /* Remote */
     fun getNotifiedPrayer(): List<NotifiedPrayer> {
         val listNotifiedPrayer = mutableListOf<NotifiedPrayer>()
 
@@ -88,6 +92,19 @@ object DummyRetValue {
             ,"")
     }
 
+    fun surahArID_1(): ReadSurahArResponse{
+        val listAyah = mutableListOf<com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonAr.Ayah>()
+        listAyah.add(com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonAr.Ayah(
+            0,0,0,0,0,0,0,"test","test",false))
+        return ReadSurahArResponse(0,
+            com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonAr.Data(listAyah,
+                com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonAr.Edition(
+                    "","","","","","",""),
+                "", "", "", 0,0, ""
+            )
+            ,"")
+    }
+
     fun fetchPrayerApi(): PrayerResponse{
         val listData = mutableListOf<com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.Data>()
         listData.add(com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.Data(
@@ -101,8 +118,40 @@ object DummyRetValue {
         return CompassResponse(0,com.programmergabut.solatkuy.data.remote.remoteentity.compassJson.Data(0.0,0.0,0.0),"testing")
     }
 
+    fun fetchAllSurah(): AllSurahResponse{
+        return AllSurahResponse(0,
+            mutableListOf(
+                com.programmergabut.solatkuy.data.remote.remoteentity.quranallsurahJson.Data(
+                    "","","","",0,0,"")
+            )
+        ,"test")
+    }
+
+    /* Database */
     fun getMsApi1(): MsApi1 {
-        return MsApi1(0, "","","","", "")
+        return MsApi1(0, "-7.5633548", "110.8041806", "3","7","2020")
+    }
+
+    fun getListMsFavAyah(): List<MsFavAyah> {
+        return mutableListOf(MsFavAyah(1, 2,"","",""))
+    }
+
+    fun getListMsFavSurah(surahid: Int): MutableLiveData<Resource<MsFavSurah>> {
+        val liveData: MutableLiveData<Resource<MsFavSurah>> = MutableLiveData()
+        liveData.value = Resource.success(
+            MsFavSurah(1, "test","test")
+        )
+        return liveData
+    }
+
+    fun getFavSurahBySurahID(surahid: Int): MutableList<MsFavSurah> {
+        return mutableListOf(
+            MsFavSurah(1, "test","test")
+        )
+    }
+
+    fun getMsSetting(): MsSetting {
+        return MsSetting(1, true, isUsingDBQuotes = true)
     }
 
 }

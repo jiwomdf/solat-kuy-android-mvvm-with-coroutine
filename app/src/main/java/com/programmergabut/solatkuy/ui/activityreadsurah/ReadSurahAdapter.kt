@@ -61,7 +61,7 @@ class ReadSurahAdapter(private val context: Context, private val viewModel: Read
                     itemView.iv_listFav_fav.setImageDrawable(context.getDrawable(R.drawable.ic_favorite_red_24))
                 }
 
-                viewModel.fetchQuranSurah(surahId.toInt())
+                viewModel.fetchReadSurahAr(surahId.toInt())
             }
         }
     }

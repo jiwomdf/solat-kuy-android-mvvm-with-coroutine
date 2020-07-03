@@ -88,9 +88,9 @@ class Repository @Inject constructor(
 
         return data
     }
-    fun getFavSurahBySurahID(ayahID: Int): LiveData<Resource<MsFavSurah>> {
+    fun getFavSurahBySurahID(surahID: Int): LiveData<Resource<MsFavSurah>> {
         val data = MediatorLiveData<Resource<MsFavSurah>>()
-        val listfavSurah = msFavSurahDao.getFavSurahBySurahID(ayahID)
+        val listfavSurah = msFavSurahDao.getFavSurahBySurahID(surahID)
 
         data.value = Resource.loading(null)
 

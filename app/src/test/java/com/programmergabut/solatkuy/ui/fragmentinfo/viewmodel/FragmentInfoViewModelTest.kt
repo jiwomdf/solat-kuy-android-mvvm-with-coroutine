@@ -3,6 +3,7 @@ package com.programmergabut.solatkuy.ui.fragmentinfo.viewmodel
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import com.nhaarman.mockitokotlin2.mock
+import com.nhaarman.mockitokotlin2.verify
 import com.programmergabut.solatkuy.CoroutinesTestRule
 import com.programmergabut.solatkuy.DummyArgument
 import com.programmergabut.solatkuy.DummyRetValue
@@ -44,6 +45,8 @@ class FragmentInfoViewModelTest {
     @Before
     fun before(){
         viewModel = FragmentInfoViewModel(repository)
+
+        Mockito.verify(repository).getMsApi1()
     }
 
     @Test

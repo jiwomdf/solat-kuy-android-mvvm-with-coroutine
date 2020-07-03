@@ -16,7 +16,7 @@ import org.junit.Rule
 import org.junit.Test
 
 
-class MainActivityTest{
+class MainFragmentTest{
 
     @get:Rule
     var activityRule = ActivityTestRule(MainActivity::class.java)

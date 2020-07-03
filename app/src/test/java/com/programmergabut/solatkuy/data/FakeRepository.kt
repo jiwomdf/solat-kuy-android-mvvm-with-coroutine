@@ -1,6 +1,5 @@
 package com.programmergabut.solatkuy.data
 
-import android.util.Log
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import com.programmergabut.solatkuy.data.local.dao.*
@@ -133,7 +132,7 @@ class FakeRepository constructor(
     suspend fun syncNotifiedPrayer(msApi1: MsApi1): List<NotifiedPrayer> {
 
         val data = remoteDataSourceAladhanImpl.fetchPrayerApi(msApi1)
-        Log.d("syncNotifiedPrayer", "fetch")
+        //.d("syncNotifiedPrayer", "fetch")
 
         data.let {
             val sdf = SimpleDateFormat("dd", Locale.getDefault())
@@ -154,13 +153,13 @@ class FakeRepository constructor(
 
             map.forEach { p ->
                 notifiedPrayerDao.updatePrayerTime(p.key, p.value)
-                Log.d("syncNotifiedPrayer", "updated")
+                //.d("syncNotifiedPrayer", "updated")
             }
         }
 
         val ret = notifiedPrayerDao.getListNotifiedPrayerSync()
 
-        Log.d("syncNotifiedPrayer", "Ret")
+        //.d("syncNotifiedPrayer", "Ret")
 
         return ret
     }
