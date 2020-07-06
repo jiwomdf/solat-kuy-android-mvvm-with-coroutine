@@ -2,7 +2,9 @@ package com.programmergabut.solatkuy.ui.fragmentcompass
 
 import android.annotation.SuppressLint
 import android.app.Dialog
+import android.content.Context
 import android.content.Context.SENSOR_SERVICE
+import android.content.SharedPreferences
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
@@ -38,8 +40,29 @@ class FragmentCompass : Fragment(R.layout.fragment_compass), SensorEventListener
     private var azimuth = 0f
     private var currentAzimuth = 0f
     private lateinit var mSensorManager: SensorManager
+    private var sharedPref: SharedPreferences? = null
 
-    private var animationHasOpen: Boolean = false
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        initSharedPref()
+    }
+
+    /* Compass */
+    override fun onResume() {
+        super.onResume()
+
+        mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD),
+            SensorManager.SENSOR_DELAY_GAME)
+        mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
+            SensorManager.SENSOR_DELAY_GAME)
+    }
+
+    override fun onPause() {
+        super.onPause()
+        mSensorManager.unregisterListener(this)
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
 
@@ -47,11 +70,29 @@ class FragmentCompass : Fragment(R.layout.fragment_compass), SensorEventListener
 
         subscribeObserversDB()
         subscribeObserversAPI()
-
+        openLottieAnimation()
 
         refreshLayout()
     }
 
+    private fun initSharedPref() {
+        sharedPref = requireContext().getSharedPreferences("SolatKuy_fragmentCompass", Context.MODE_PRIVATE)
+    }
+
+    private fun openLottieAnimation() {
+        sharedPref?.let {
+            val isHasNotOpenAnimation = it.getBoolean("isHasNotOpenAnimation", true)
+            if(isHasNotOpenAnimation)
+                createLottieAnimation()
+        } ?: createLottieAnimation()
+    }
+
+    private fun saveSharedPreferences() {
+        sharedPref?.edit()?.apply{
+            putBoolean("isHasNotOpenAnimation", false)
+            apply()
+        }
+    }
 
     /* Subscribe live data */
     @SuppressLint("SetTextI18n")
@@ -93,27 +134,7 @@ class FragmentCompass : Fragment(R.layout.fragment_compass), SensorEventListener
         })
     }
 
-    /* Compass */
-    override fun onResume() {
-        super.onResume()
-
-        mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD),
-            SensorManager.SENSOR_DELAY_GAME)
-        mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
-            SensorManager.SENSOR_DELAY_GAME)
-    }
-
-    override fun onPause() {
-        super.onPause()
-        mSensorManager.unregisterListener(this)
-    }
-
     override fun onSensorChanged(event: SensorEvent?) {
-
-        if(!animationHasOpen){
-            createLottieAnimation()
-            animationHasOpen = true
-        }
 
         val alpha = 0.97f
         synchronized(this){
@@ -178,6 +199,7 @@ class FragmentCompass : Fragment(R.layout.fragment_compass), SensorEventListener
         dialog.show()
 
         dialog.btn_hideAnimation.setOnClickListener {
+            saveSharedPreferences()
             dialog.hide()
         }
     }

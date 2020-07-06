@@ -69,7 +69,7 @@ class FragmentMain : Fragment(R.layout.fragment_main), SwipeRefreshLayout.OnRefr
 
         isTimerHasBinded = false
         coroutineTimerJob?.cancel()
-        Log.d("CoroutineTimer", "CANCELED.. $coroutineTimerJob ${Thread.currentThread().id}")
+        Log.d("CoroutineTimer", "Canceled.. $coroutineTimerJob ${Thread.currentThread().id}")
     }
 
     override fun onStart() {
@@ -274,7 +274,6 @@ class FragmentMain : Fragment(R.layout.fragment_main), SwipeRefreshLayout.OnRefr
 
         fragmentMainViewModel.updatePrayerIsNotified(prayer, isNotified)
     }
-
 
     /* private fun createModelPrayer(it: List<NotifiedPrayer>): MutableList<NotifiedPrayer>? {
 

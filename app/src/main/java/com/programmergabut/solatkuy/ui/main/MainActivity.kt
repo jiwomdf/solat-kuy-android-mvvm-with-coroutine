@@ -60,6 +60,13 @@ class MainActivity : AppCompatActivity() {
         checkFirstOpenApp()
     }
 
+    override fun onDestroy() {
+        super.onDestroy()
+
+        val sharedPref = getSharedPreferences("SolatKuy_fragmentCompass", Context.MODE_PRIVATE)
+        sharedPref.edit().clear().apply()
+    }
+
     /* First load activity */
     private fun checkFirstOpenApp() {
 
