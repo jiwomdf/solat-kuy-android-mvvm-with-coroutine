@@ -10,6 +10,7 @@ created with:
 - Coroutine
 - Retrofit 
 - Dagger Hilt
+- Navigation Component
 - Material Design 
 - Testing with Mockito, espresso, & Junit4
 
