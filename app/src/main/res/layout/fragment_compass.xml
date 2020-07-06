@@ -75,14 +75,18 @@
                 android:text="@string/please_tilt_your_phone_until_the_image_is_balanced"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/iv_compass" />
+                app:layout_constraintTop_toBottomOf="@+id/iv_compass"
+                app:layout_constraintBottom_toTopOf="@+id/ll_UselessLeaf"/>
 
             <LinearLayout
+                android:id="@+id/ll_UselessLeaf"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
-                app:layout_constraintTop_toBottomOf="@+id/textView4" />
+                tools:ignore="UselessLeaf"
+                android:orientation="vertical" />
 
         </androidx.constraintlayout.widget.ConstraintLayout>
 

@@ -10,7 +10,6 @@ import android.location.Location
 import android.location.LocationManager
 import android.os.Bundle
 import android.os.Looper
-import android.view.MenuItem
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
@@ -21,22 +20,15 @@ import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
-import androidx.recyclerview.widget.RecyclerView
-import androidx.viewpager.widget.ViewPager
-import androidx.viewpager2.widget.ViewPager2
+import androidx.navigation.findNavController
+import androidx.navigation.ui.setupWithNavController
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
-import com.google.android.material.bottomnavigation.BottomNavigationView
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.data.local.SolatKuyRoom
-import com.programmergabut.solatkuy.ui.fragmentcompass.FragmentCompass
-import com.programmergabut.solatkuy.ui.fragmentinfo.FragmentInfo
-import com.programmergabut.solatkuy.ui.fragmentmain.FragmentMain
-import com.programmergabut.solatkuy.ui.fragmentquran.QuranFragment
-import com.programmergabut.solatkuy.ui.fragmentsetting.FragmentSetting
 import com.programmergabut.solatkuy.util.enumclass.EnumStatus
 import dagger.hilt.android.AndroidEntryPoint
 import es.dmoral.toasty.Toasty
@@ -52,7 +44,7 @@ import javax.inject.Inject
  * Created by Katili Jiwo Adi Wiyono on 25/03/20.
  */
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemSelectedListener {
+class MainActivity : AppCompatActivity() {
 
     lateinit var mSubDialogView: View
     private lateinit var mSubDialog: Dialog
@@ -65,8 +57,6 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
         super.onCreate(savedInstanceState)
         setContentView(R.layout.activity_main)
 
-        bottom_navigation.setOnNavigationItemSelectedListener(this)
-
         checkFirstOpenApp()
     }
 
@@ -77,8 +67,10 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
             when(it.status){
                 EnumStatus.SUCCESS -> {
                     if(it.data != null)
-                        if(it.data.isHasOpenApp)
-                            initViewPager()
+                        if(it.data.isHasOpenApp){
+                            //initViewPager()
+                            initBottomNav()
+                        }
                         else
                             initDialog()
                     else
@@ -104,7 +96,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
     }
 
     private fun initViewPager() {
-        val adapter = SwipeAdapter(supportFragmentManager, lifecycle)
+        /* val adapter = SwipeAdapter(supportFragmentManager, lifecycle)
         adapter.addFragment(FragmentMain(false))
         adapter.addFragment(FragmentCompass())
         adapter.addFragment(QuranFragment())
@@ -117,7 +109,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
             it.setPageTransformer(ZoomOutPageTransformer())
             it.isUserInputEnabled = false
             (it.getChildAt(0) as RecyclerView).overScrollMode = RecyclerView.OVER_SCROLL_NEVER
-        }
+        } */
 
         /* addOnLayoutChangeListener( object : ViewPager.OnPageChangeListener{
             override fun onPageScrollStateChanged(state: Int) {}
@@ -136,6 +128,20 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
             }
 
         }) */
+    }
+
+    private fun initBottomNav() {
+
+        bottom_navigation.setupWithNavController(navHostFragment.findNavController())
+
+        navHostFragment.findNavController()
+            .addOnDestinationChangedListener { _, destination, _ ->
+                when(destination.id){
+                    R.id.fragmentMain, R.id.fragmentCompass, R.id.quranFragment, R.id.fragmentInfo, R.id.fragmentSetting ->
+                        bottom_navigation.visibility = View.VISIBLE
+                    else -> bottom_navigation.visibility = View.GONE
+                }
+            }
     }
 
     /* Function listener */
@@ -352,7 +358,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
     }
 
     /* VIEW PAGER */
-    override fun onNavigationItemSelected(item: MenuItem): Boolean {
+    /* override fun onNavigationItemSelected(item: MenuItem): Boolean {
         when(item.itemId) {
             R.id.i_prayer_time -> vp2_main.currentItem = 0
             R.id.i_compass -> vp2_main.currentItem = 1
@@ -361,10 +367,10 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
             R.id.i_setting -> vp2_main.currentItem = 4
         }
         return true
-    }
+    } */
 
     /* Animation */
-    private inner class ZoomOutPageTransformer : ViewPager.PageTransformer, ViewPager2.PageTransformer {
+    /* private inner class ZoomOutPageTransformer : ViewPager.PageTransformer, ViewPager2.PageTransformer {
 
         private val MIN_SCALE = 0.85f
         private val MIN_ALPHA = 0.5f
@@ -390,7 +396,7 @@ class MainActivity : AppCompatActivity(), BottomNavigationView.OnNavigationItemS
                 }
             }
         }
-    }
+    } */
 
 
 }

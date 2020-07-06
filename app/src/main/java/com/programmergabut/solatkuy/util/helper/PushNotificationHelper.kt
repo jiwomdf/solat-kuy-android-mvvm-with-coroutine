@@ -73,7 +73,7 @@ class PushNotificationHelper(context: Context, selList: MutableList<NotifiedPray
         /*
         * Deprecated, 4 June 2020
         * because change the notification mechanism to fire all the data
-        * then cancel all alarm manager it when notification come, then fire it all again
+        * then cancel all alarm manager when the notification come, then fire it all again
         * also remove the more time feature
 
         val selPrayer = SelectPrayerHelper.selectNextPrayerToLocalPrayer(selList)

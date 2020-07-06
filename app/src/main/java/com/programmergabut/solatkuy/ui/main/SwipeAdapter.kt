@@ -14,7 +14,7 @@ import com.programmergabut.solatkuy.ui.fragmentsetting.FragmentSetting
  * Created by Katili Jiwo Adi Wiyono on 31/03/20.
  */
 
-class SwipeAdapter(fm: FragmentManager, lifecycle: Lifecycle): FragmentStateAdapter(fm, lifecycle) {
+/* class SwipeAdapter(fm: FragmentManager, lifecycle: Lifecycle): FragmentStateAdapter(fm, lifecycle) {
 
     private val arrayList: ArrayList<Fragment> = ArrayList()
 
@@ -35,4 +35,4 @@ class SwipeAdapter(fm: FragmentManager, lifecycle: Lifecycle): FragmentStateAdap
         }
     }
 
-}
+} */

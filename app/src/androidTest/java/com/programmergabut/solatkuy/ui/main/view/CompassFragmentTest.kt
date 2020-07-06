@@ -1,21 +1,15 @@
 package com.programmergabut.solatkuy.ui.main.view
 
-import androidx.fragment.app.testing.launchFragmentInContainer
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingRegistry
-import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.contrib.NavigationViewActions
-import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.SmallTest
 import androidx.test.rule.ActivityTestRule
 import com.programmergabut.solatkuy.R
-import com.programmergabut.solatkuy.ui.fragmentcompass.FragmentCompass
 import com.programmergabut.solatkuy.ui.main.MainActivity
 import com.programmergabut.solatkuy.util.EspressoIdlingResource
-import org.hamcrest.CoreMatchers.allOf
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
@@ -51,7 +45,7 @@ class CompassFragmentTest {
 
         onView(withId(R.id.bottom_navigation)).check(matches(isDisplayed()))
 
-        onView(withId(R.id.i_compass)).check(matches(isDisplayed()))
+        onView(withId(R.id.fragmentCompass)).check(matches(isDisplayed()))
 
         /* Still Error
 

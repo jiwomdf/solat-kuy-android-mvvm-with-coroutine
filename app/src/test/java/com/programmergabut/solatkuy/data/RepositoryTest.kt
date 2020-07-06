@@ -42,7 +42,6 @@ class RepositoryTest{
     private val msApi1 = DummyArgument.msApi1
     private val msFavSurah = DummyArgument.msfavSurah
     private val surahID = DummyArgument.surahID
-    private val prayerMap = DummyArgument.getMapPrayer()
 
     /* Remote */
     @Test

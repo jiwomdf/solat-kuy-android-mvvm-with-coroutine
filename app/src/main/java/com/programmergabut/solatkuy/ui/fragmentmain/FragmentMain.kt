@@ -51,11 +51,12 @@ import kotlin.math.abs
  */
 
 @AndroidEntryPoint
-class FragmentMain(private var isTimerHasBinded: Boolean) : Fragment(R.layout.fragment_main), SwipeRefreshLayout.OnRefreshListener  {
+class FragmentMain : Fragment(R.layout.fragment_main), SwipeRefreshLayout.OnRefreshListener  {
 
     private val fragmentMainViewModel: FragmentMainViewModel by viewModels()
 
     @Inject lateinit var db: SolatKuyRoom
+    private var isTimerHasBinded = false
 
     private var coroutineTimerJob: Job? = null
 
@@ -63,8 +64,8 @@ class FragmentMain(private var isTimerHasBinded: Boolean) : Fragment(R.layout.fr
     private var tempMsApi1: MsApi1? = null
     private var mCityName: String? = null
 
-    override fun onStop() {
-        super.onStop()
+    override fun onPause() {
+        super.onPause()
 
         isTimerHasBinded = false
         coroutineTimerJob?.cancel()

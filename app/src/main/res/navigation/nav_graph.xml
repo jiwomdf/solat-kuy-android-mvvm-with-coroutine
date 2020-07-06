@@ -1,0 +1,33 @@
+<?xml version="1.0" encoding="utf-8"?>
+<navigation xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/nav_graph"
+    app:startDestination="@id/fragmentMain">
+
+    <fragment
+        android:id="@+id/fragmentCompass"
+        android:name="com.programmergabut.solatkuy.ui.fragmentcompass.FragmentCompass"
+        android:label="fragment_compass"
+        tools:layout="@layout/fragment_compass" />
+    <fragment
+        android:id="@+id/fragmentInfo"
+        android:name="com.programmergabut.solatkuy.ui.fragmentinfo.FragmentInfo"
+        android:label="fragment_info"
+        tools:layout="@layout/fragment_info" />
+    <fragment
+        android:id="@+id/fragmentMain"
+        android:name="com.programmergabut.solatkuy.ui.fragmentmain.FragmentMain"
+        android:label="fragment_main"
+        tools:layout="@layout/fragment_main" />
+    <fragment
+        android:id="@+id/fragmentSetting"
+        android:name="com.programmergabut.solatkuy.ui.fragmentsetting.FragmentSetting"
+        android:label="fragment_setting"
+        tools:layout="@layout/fragment_setting" />
+    <fragment
+        android:id="@+id/quranFragment"
+        android:name="com.programmergabut.solatkuy.ui.fragmentquran.QuranFragment"
+        android:label="fragment_quran"
+        tools:layout="@layout/fragment_quran" />
+</navigation>
