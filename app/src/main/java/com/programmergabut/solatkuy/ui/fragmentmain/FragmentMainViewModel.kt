@@ -44,8 +44,13 @@ class FragmentMainViewModel @ViewModelInject constructor(val repository: Reposit
 
         _readSurahEn.postValue(Resource.loading(null))
 
-        repository.fetchReadSurahEn(nInSurah).let {
-            _readSurahEn.postValue(Resource.success(it))
+        try {
+            repository.fetchReadSurahEn(nInSurah).let {
+                _readSurahEn.postValue(Resource.success(it))
+            }
+        }
+        catch (e: Exception){
+            _readSurahEn.postValue(Resource.error(e.message.toString(), null))
         }
     }
 

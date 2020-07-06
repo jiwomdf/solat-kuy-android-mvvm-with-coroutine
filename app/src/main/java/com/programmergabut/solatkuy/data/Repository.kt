@@ -9,6 +9,7 @@ import com.programmergabut.solatkuy.data.remote.RemoteDataSourceAladhanImpl
 import com.programmergabut.solatkuy.data.remote.RemoteDataSourceApiAlquranImpl
 import com.programmergabut.solatkuy.util.Resource
 import com.programmergabut.solatkuy.util.enumclass.EnumConfig
+import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
@@ -133,30 +134,35 @@ class Repository @Inject constructor(
 
     suspend fun syncNotifiedPrayer(msApi1: MsApi1): List<NotifiedPrayer> {
 
-        val data = remoteDataSourceAladhanImpl.fetchPrayerApi(msApi1)
-        Log.d("syncNotifiedPrayer", "fetch")
+        try {
+            val data = remoteDataSourceAladhanImpl.fetchPrayerApi(msApi1)
+            Log.d("syncNotifiedPrayer", "fetch")
 
-        data.let {
-            val sdf = SimpleDateFormat("dd", Locale.getDefault())
-            val currentDate = sdf.format(Date())
+            data.let {
+                val sdf = SimpleDateFormat("dd", Locale.getDefault())
+                val currentDate = sdf.format(Date())
 
-            val timings =
-                it.data.find { obj -> obj.date.gregorian?.day == currentDate.toString() }?.timings
+                val timings =
+                    it.data.find { obj -> obj.date.gregorian?.day == currentDate.toString() }?.timings
 
-            val map = mutableMapOf<String, String>()
+                val map = mutableMapOf<String, String>()
 
-            map[EnumConfig.fajr] = timings?.fajr.toString()
-            map[EnumConfig.dhuhr] = timings?.dhuhr.toString()
-            map[EnumConfig.asr] = timings?.asr.toString()
-            map[EnumConfig.maghrib] = timings?.maghrib.toString()
-            map[EnumConfig.isha] = timings?.isha.toString()
-            map[EnumConfig.sunrise] = timings?.sunrise.toString()
+                map[EnumConfig.fajr] = timings?.fajr.toString()
+                map[EnumConfig.dhuhr] = timings?.dhuhr.toString()
+                map[EnumConfig.asr] = timings?.asr.toString()
+                map[EnumConfig.maghrib] = timings?.maghrib.toString()
+                map[EnumConfig.isha] = timings?.isha.toString()
+                map[EnumConfig.sunrise] = timings?.sunrise.toString()
 
 
-            map.forEach { p ->
-                notifiedPrayerDao.updatePrayerTime(p.key, p.value)
-                Log.d("syncNotifiedPrayer", "updated")
+                map.forEach { p ->
+                    notifiedPrayerDao.updatePrayerTime(p.key, p.value)
+                    Log.d("syncNotifiedPrayer", "updated")
+                }
             }
+        }
+        catch (ex :Exception){
+            print("not connected to internet and using the offline data")
         }
 
         val ret = notifiedPrayerDao.getListNotifiedPrayerSync()

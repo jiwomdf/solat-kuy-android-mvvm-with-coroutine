@@ -76,8 +76,12 @@ class MainActivity : AppCompatActivity() {
                     else
                         SolatKuyRoom.populateDatabase(db)
                 }
-                EnumStatus.LOADING -> {}
-                EnumStatus.ERROR -> {}
+                EnumStatus.LOADING -> {
+                    print("loading")
+                }
+                EnumStatus.ERROR -> {
+                    print("error")
+                }
             }
         })
 
@@ -132,16 +136,21 @@ class MainActivity : AppCompatActivity() {
 
     private fun initBottomNav() {
 
-        bottom_navigation.setupWithNavController(navHostFragment.findNavController())
+        try{
+            bottom_navigation.setupWithNavController(navHostFragment.findNavController())
 
-        navHostFragment.findNavController()
-            .addOnDestinationChangedListener { _, destination, _ ->
-                when(destination.id){
-                    R.id.fragmentMain, R.id.fragmentCompass, R.id.quranFragment, R.id.fragmentInfo, R.id.fragmentSetting ->
-                        bottom_navigation.visibility = View.VISIBLE
-                    else -> bottom_navigation.visibility = View.GONE
+            navHostFragment.findNavController()
+                .addOnDestinationChangedListener { _, destination, _ ->
+                    when(destination.id){
+                        R.id.fragmentMain, R.id.fragmentCompass, R.id.quranFragment, R.id.fragmentInfo, R.id.fragmentSetting ->
+                            bottom_navigation.visibility = View.VISIBLE
+                        else -> bottom_navigation.visibility = View.GONE
+                    }
                 }
-            }
+        }catch (ex: Exception){
+            print(ex.message)
+        }
+
     }
 
     /* Function listener */

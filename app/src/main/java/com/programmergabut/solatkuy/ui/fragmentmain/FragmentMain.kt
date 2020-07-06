@@ -75,11 +75,10 @@ class FragmentMain : Fragment(R.layout.fragment_main), SwipeRefreshLayout.OnRefr
     override fun onStart() {
         super.onStart()
 
-        if(tv_widget_prayer_countdown != null)
-            tv_widget_prayer_countdown.text = getString(R.string.loading)
+        tv_widget_prayer_countdown?.text = getString(R.string.loading)
 
-        tv_quran_ayah_quote.visibility = View.GONE
-        tv_quran_ayah_quote_click.visibility = View.VISIBLE
+        tv_quran_ayah_quote?.visibility = View.GONE
+        tv_quran_ayah_quote_click?.visibility = View.VISIBLE
 
         subscribeObserversDB()
     }
@@ -119,26 +118,10 @@ class FragmentMain : Fragment(R.layout.fragment_main), SwipeRefreshLayout.OnRefr
                     bindWidget(data)
                 }
                 EnumStatus.LOADING -> {
-                    Toasty.info(requireContext(), "syncing data..", Toast.LENGTH_SHORT).show()
+                    Toasty.info(requireContext(), "Syncing data..", Toast.LENGTH_SHORT).show()
                     bindPrayerText(null)
                 }
-                EnumStatus.ERROR -> {
-                    if(retVal.data == null)
-                        throw Exception("notifiedPrayer return null")
-
-                    Toasty.warning(requireContext(), "using offline data", Toast.LENGTH_SHORT).show()
-
-                    /* Bind Checkbox*/
-                    bindCheckBox(retVal.data)
-
-                    /* Update Alarm Manager*/
-                    updateAlarmManager(retVal.data)
-
-                    /* Bind Widget*/
-                    val data = createWidgetData(retVal.data)
-                    bindWidget(data)
-
-                }
+                EnumStatus.ERROR -> Toasty.error(requireContext(), "Please reopen the app").show()
             }
         })
 
