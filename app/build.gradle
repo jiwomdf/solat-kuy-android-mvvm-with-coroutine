@@ -6,12 +6,12 @@ apply plugin: 'dagger.hilt.android.plugin'
 
 android {
     signingConfigs {
-        release {
-            storeFile file('D:\\Code\\PlayStore\\Solat Kuy.jks')
-            storePassword 'MantapDjiwa123'
-            keyAlias 'key0'
-            keyPassword 'MantapDjiwa123'
-        }
+//        release {
+//            storeFile file('D:\\Code\\PlayStore\\Solat Kuy.jks')
+//            storePassword 'MantapDjiwa123'
+//            keyAlias 'key0'
+//            keyPassword 'MantapDjiwa123'
+//        }
     }
     compileSdkVersion 29
     buildToolsVersion "29.0.3"
@@ -20,12 +20,12 @@ android {
         applicationId "com.programmergabut.solatkuy"
         minSdkVersion 21
         targetSdkVersion 29
-        versionCode 38
+        versionCode 40
         versionName "3.0"
         multiDexEnabled true
 
         testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
-        signingConfig signingConfigs.release
+        //signingConfig signingConfigs.release
 
         javaCompileOptions {
             annotationProcessorOptions {
@@ -48,7 +48,7 @@ android {
     buildTypes {
         release {
             minifyEnabled true
-            debuggable true
+            debuggable false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
     }
