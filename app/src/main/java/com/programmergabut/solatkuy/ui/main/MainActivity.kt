@@ -5,6 +5,7 @@ import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
+import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationManager
@@ -50,6 +51,7 @@ class MainActivity : AppCompatActivity() {
     private lateinit var mSubDialog: Dialog
     private val mainActivityViewModel: MainActivityViewModel by viewModels()
     @Inject lateinit var db : SolatKuyRoom
+    @Inject lateinit var sharedPref: SharedPreferences
     private val ALL_PERMISSIONS = 101
 
 
@@ -62,8 +64,6 @@ class MainActivity : AppCompatActivity() {
 
     override fun onDestroy() {
         super.onDestroy()
-
-        val sharedPref = getSharedPreferences("SolatKuy_fragmentCompass", Context.MODE_PRIVATE)
         sharedPref.edit().clear().apply()
     }
 

@@ -24,6 +24,7 @@ import com.programmergabut.solatkuy.util.enumclass.EnumStatus
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_compass.*
 import kotlinx.android.synthetic.main.layout_phone_tilt.*
+import javax.inject.Inject
 
 /*
  * Created by Katili Jiwo Adi Wiyono on 31/03/20.
@@ -40,14 +41,7 @@ class FragmentCompass : Fragment(R.layout.fragment_compass), SensorEventListener
     private var azimuth = 0f
     private var currentAzimuth = 0f
     private lateinit var mSensorManager: SensorManager
-    private var sharedPref: SharedPreferences? = null
-
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        initSharedPref()
-    }
+    @Inject lateinit var sharedPref: SharedPreferences
 
     /* Compass */
     override fun onResume() {
@@ -75,20 +69,15 @@ class FragmentCompass : Fragment(R.layout.fragment_compass), SensorEventListener
         refreshLayout()
     }
 
-    private fun initSharedPref() {
-        sharedPref = requireContext().getSharedPreferences("SolatKuy_fragmentCompass", Context.MODE_PRIVATE)
-    }
 
     private fun openLottieAnimation() {
-        sharedPref?.let {
-            val isHasNotOpenAnimation = it.getBoolean("isHasNotOpenAnimation", true)
-            if(isHasNotOpenAnimation)
-                createLottieAnimation()
-        } ?: createLottieAnimation()
+        val isHasNotOpenAnimation = sharedPref.getBoolean("isHasNotOpenAnimation", true)
+        if(isHasNotOpenAnimation)
+            createLottieAnimation()
     }
 
     private fun saveSharedPreferences() {
-        sharedPref?.edit()?.apply{
+        sharedPref.edit()?.apply{
             putBoolean("isHasNotOpenAnimation", false)
             apply()
         }
