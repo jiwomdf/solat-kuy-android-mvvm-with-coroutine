@@ -111,8 +111,8 @@ class ReadSurahActivity : AppCompatActivity() {
                     rv_read_surah.visibility = View.VISIBLE
 
                     ab_readQuran.visibility = View.VISIBLE
-                    tb_readQuran.title = data!!.englishName
-                    tb_readQuran.subtitle = data!!.revelationType + " - " + data!!.numberOfAyahs + " Ayahs"
+                    tb_readSurah.title = data!!.englishName
+                    tb_readSurah.subtitle = data!!.revelationType + " - " + data!!.numberOfAyahs + " Ayahs"
 
                     cc_readQuran_loading.visibility = View.GONE
 
@@ -121,7 +121,7 @@ class ReadSurahActivity : AppCompatActivity() {
                 EnumStatus.LOADING -> {
                     ab_readQuran.visibility = View.INVISIBLE
                     cc_readQuran_loading.visibility = View.VISIBLE
-                    tb_readQuran.title = ""
+                    tb_readSurah.title = ""
 
                     rv_read_surah.visibility = View.INVISIBLE
                 }
@@ -163,7 +163,7 @@ class ReadSurahActivity : AppCompatActivity() {
     }
 
     private fun setupToolbar() {
-        setSupportActionBar(tb_readQuran)
+        setSupportActionBar(tb_readSurah)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
     }
 

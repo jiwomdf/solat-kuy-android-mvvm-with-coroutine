@@ -16,8 +16,9 @@ android {
         versionName "3.0"
         multiDexEnabled true
 
-        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
         //signingConfig signingConfigs.release
+        testInstrumentationRunner "androidx.test.runner.AndroidJUnitRunner"
+        testInstrumentationRunner "com.programmergabut.solatkuy.ui.CustomTestRunner"
 
         javaCompileOptions {
             annotationProcessorOptions {
@@ -119,24 +120,34 @@ dependencies {
     kapt "com.google.dagger:hilt-android-compiler:2.28.1-alpha"
     implementation "androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha01"
     kapt "androidx.hilt:hilt-compiler:1.0.0-alpha01"
+    // For instrumented tests.
+    androidTestImplementation 'com.google.dagger:hilt-android-testing:2.28.1-alpha'
+    // ...with Kotlin.
+    kaptAndroidTest 'com.google.dagger:hilt-android-compiler:2.28.1-alpha'
+
 
     //Multidex
     implementation 'androidx.multidex:multidex:2.0.1'
 
     //Navigation Component
-    implementation 'androidx.navigation:navigation-fragment-ktx:2.3.0'
-    implementation 'androidx.navigation:navigation-ui-ktx:2.3.0'
+    def nav_version = "2.3.0"
+    androidTestImplementation "androidx.navigation:navigation-testing:$nav_version"
+    implementation "androidx.navigation:navigation-fragment-ktx:$nav_version"
+    implementation "androidx.navigation:navigation-ui-ktx:$nav_version"
 
     //espresso idling source
     implementation "androidx.test.espresso:espresso-idling-resource:3.2.0"
 
     //Unit Testing
     androidTestImplementation 'androidx.test.ext:junit:1.1.1'
+    testImplementation "androidx.arch.core:core-testing:2.1.0"
+    testImplementation 'junit:junit:4.13'
+
+    // Mockito
     testImplementation "org.mockito:mockito-core:3.3.3"
     testImplementation 'org.mockito:mockito-inline:3.3.3'
-    testImplementation "androidx.arch.core:core-testing:2.1.0"
+    androidTestImplementation 'org.mockito:mockito-android:2.24.5'
     testImplementation "com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0"
-    testImplementation 'junit:junit:4.13'
 
     // Instrumental Testing
     androidTestImplementation "androidx.test:rules:1.2.0"

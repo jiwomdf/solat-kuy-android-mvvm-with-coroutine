@@ -7,6 +7,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.programmergabut.solatkuy.data.Repository
 import com.programmergabut.solatkuy.data.remote.remoteentity.quranallsurahJson.AllSurahResponse
+import com.programmergabut.solatkuy.util.EspressoIdlingResource
 import com.programmergabut.solatkuy.util.Resource
 import kotlinx.coroutines.launch
 import java.lang.Exception
@@ -22,9 +23,11 @@ class QuranFragmentViewModel @ViewModelInject constructor(val repository: Reposi
         viewModelScope.launch {
             _allSurah.postValue(Resource.loading(null))
 
+            EspressoIdlingResource.increment()
             try{
                 repository.fetchAllSurah().let {
                     _allSurah.postValue(Resource.success(it))
+                    EspressoIdlingResource.decrement()
                 }
             }
             catch (ex: Exception){

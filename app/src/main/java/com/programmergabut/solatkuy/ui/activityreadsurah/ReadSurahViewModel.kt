@@ -6,6 +6,7 @@ import com.programmergabut.solatkuy.data.Repository
 import com.programmergabut.solatkuy.data.local.localentity.MsFavAyah
 import com.programmergabut.solatkuy.data.local.localentity.MsFavSurah
 import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonAr.ReadSurahArResponse
+import com.programmergabut.solatkuy.util.EspressoIdlingResource
 import com.programmergabut.solatkuy.util.Resource
 import kotlinx.coroutines.launch
 import java.lang.Exception
@@ -22,8 +23,11 @@ class ReadSurahViewModel @ViewModelInject constructor(val repository: Repository
             _selectedSurahAr.postValue(Resource.loading(null))
 
             try {
+                EspressoIdlingResource.increment()
+
                 repository.fetchReadSurahAr(surahID).let {
                     _selectedSurahAr.postValue(Resource.success(it))
+                    EspressoIdlingResource.decrement()
                 }
             }
             catch (ex: Exception){

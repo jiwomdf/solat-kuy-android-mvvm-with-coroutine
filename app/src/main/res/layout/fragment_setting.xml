@@ -137,7 +137,7 @@
                     android:contentDescription="@string/locationicon" />
 
                 <TextView
-                    android:id="@+id/textView2"
+                    android:id="@+id/tv_changeLocation"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="@dimen/small_margin"

@@ -27,7 +27,7 @@ class FavAyahActivity : AppCompatActivity() {
     }
 
     private fun initAppBar() {
-        tb_readQuran.title = "Ayahs you've been liked"
+        tb_favAyah.title = "Ayahs you've been liked"
     }
 
     private fun observeDB() {
