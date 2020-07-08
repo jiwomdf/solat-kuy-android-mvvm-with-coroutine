@@ -7,6 +7,7 @@ import com.programmergabut.solatkuy.data.local.localentity.MsApi1
 import com.programmergabut.solatkuy.data.local.localentity.MsSetting
 import com.programmergabut.solatkuy.data.local.localentity.NotifiedPrayer
 import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonEn.ReadSurahEnResponse
+import com.programmergabut.solatkuy.util.EspressoIdlingResource
 import com.programmergabut.solatkuy.util.Resource
 import kotlinx.coroutines.launch
 import java.lang.Exception
@@ -25,14 +26,17 @@ class FragmentMainViewModel @ViewModelInject constructor(val repository: Reposit
         get() = _notifiedPrayer
 
     fun syncNotifiedPrayer(msApi1: MsApi1) = viewModelScope.launch {
+        EspressoIdlingResource.increment()
         _notifiedPrayer.postValue(Resource.loading(null))
         try {
             repository.syncNotifiedPrayer(msApi1).let {
                 _notifiedPrayer.postValue(Resource.success(it))
+                EspressoIdlingResource.decrement()
             }
         }
         catch (e: Exception){
             _notifiedPrayer.postValue(Resource.error(e.message.toString(), null))
+            EspressoIdlingResource.decrement()
         }
     }
 
@@ -42,15 +46,18 @@ class FragmentMainViewModel @ViewModelInject constructor(val repository: Reposit
 
     fun fetchReadSurahEn(nInSurah: Int) = viewModelScope.launch{
 
+        EspressoIdlingResource.increment()
         _readSurahEn.postValue(Resource.loading(null))
 
         try {
             repository.fetchReadSurahEn(nInSurah).let {
                 _readSurahEn.postValue(Resource.success(it))
+                EspressoIdlingResource.decrement()
             }
         }
         catch (e: Exception){
             _readSurahEn.postValue(Resource.error(e.message.toString(), null))
+            EspressoIdlingResource.decrement()
         }
     }
 

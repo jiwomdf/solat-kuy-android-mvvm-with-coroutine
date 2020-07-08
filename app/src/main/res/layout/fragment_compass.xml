@@ -67,7 +67,7 @@
                 app:layout_constraintTop_toBottomOf="@+id/cv_qiblaDegrees" />
 
             <TextView
-                android:id="@+id/textView4"
+                android:id="@+id/tv_compass_cuation"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/large_margin"

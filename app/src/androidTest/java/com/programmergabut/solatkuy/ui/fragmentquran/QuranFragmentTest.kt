@@ -6,6 +6,7 @@ import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onData
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingRegistry
+import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.replaceText
 import androidx.test.espresso.assertion.ViewAssertions.matches
@@ -13,6 +14,7 @@ import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.filters.MediumTest
 import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.ui.MyViewAction
 import com.programmergabut.solatkuy.ui.main.MainActivity
@@ -29,6 +31,7 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 @HiltAndroidTest
+@MediumTest
 class QuranFragmentTest{
 
     @get:Rule
@@ -160,6 +163,14 @@ class QuranFragmentTest{
             .actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click())) //click first surah
     }
 
+    @Test
+    fun test_refreshLayout(){
+        val activityScenario = ActivityScenario.launch(MainActivity::class.java)
+        activityScenario.onActivity {
+            it.findNavController(R.id.navHostFragment).navigate(R.id.quranFragment)
+        }
 
+        onView(withId(R.id.sl_quran)).perform(ViewActions.swipeDown())
+    }
 
 }

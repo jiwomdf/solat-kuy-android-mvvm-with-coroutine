@@ -11,7 +11,7 @@ object DummyRetval {
         val expectedData = mutableMapOf<String, String>()
 
         expectedData["tv_imsak_info_title"] = "Imsak Info"
-        expectedData["tv_imsak_date"] = "08 Jul 2020"
+        expectedData["tv_imsak_date"] = "09 Jul 2020"
         expectedData["tv_city"] = "Kota Surakarta"
         expectedData["tv_imsak_time"] = "04:26 (WIB)"
 

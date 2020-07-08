@@ -32,6 +32,7 @@ class QuranFragmentViewModel @ViewModelInject constructor(val repository: Reposi
             }
             catch (ex: Exception){
                 _allSurah.postValue(Resource.error("No internet connection", null))
+                EspressoIdlingResource.decrement()
             }
 
         }
