@@ -128,42 +128,42 @@ abstract class SolatKuyRoom: RoomDatabase() {
 
                 notifiedPrayerDao.insertNotifiedPrayer(
                     NotifiedPrayer(
-                        EnumConfig.fajr,
+                        EnumConfig.img_fajr,
                         true,
                         "00:00"
                     )
                 )
                 notifiedPrayerDao.insertNotifiedPrayer(
                     NotifiedPrayer(
-                        EnumConfig.dhuhr,
+                        EnumConfig.img_dhuhr,
                         true,
                         "00:00"
                     )
                 )
                 notifiedPrayerDao.insertNotifiedPrayer(
                     NotifiedPrayer(
-                        EnumConfig.asr,
+                        EnumConfig.img_asr,
                         true,
                         "00:00"
                     )
                 )
                 notifiedPrayerDao.insertNotifiedPrayer(
                     NotifiedPrayer(
-                        EnumConfig.maghrib,
+                        EnumConfig.img_maghrib,
                         true,
                         "00:00"
                     )
                 )
                 notifiedPrayerDao.insertNotifiedPrayer(
                     NotifiedPrayer(
-                        EnumConfig.isha,
+                        EnumConfig.img_isha,
                         true,
                         "00:00"
                     )
                 )
                 notifiedPrayerDao.insertNotifiedPrayer(
                     NotifiedPrayer(
-                        EnumConfig.sunrise,
+                        EnumConfig.img_sunrise,
                         true,
                         "00:00"
                     )

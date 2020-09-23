@@ -39,12 +39,12 @@ import java.util.*
 
         val map = mutableMapOf<String, String>()
 
-        map[EnumConfig.fajr] = timings?.fajr.toString()
-        map[EnumConfig.dhuhr] = timings?.dhuhr.toString()
-        map[EnumConfig.asr] = timings?.asr.toString()
-        map[EnumConfig.maghrib] = timings?.maghrib.toString()
-        map[EnumConfig.isha] = timings?.isha.toString()
-        map[EnumConfig.sunrise] = timings?.sunrise.toString()
+        map[EnumConfig.img_fajr] = timings?.img_fajr.toString()
+        map[EnumConfig.img_dhuhr] = timings?.img_dhuhr.toString()
+        map[EnumConfig.img_asr] = timings?.img_asr.toString()
+        map[EnumConfig.img_maghrib] = timings?.img_maghrib.toString()
+        map[EnumConfig.img_isha] = timings?.img_isha.toString()
+        map[EnumConfig.img_sunrise] = timings?.img_sunrise.toString()
 
         CoroutineScope(Dispatchers.IO).launch {
             map.forEach { p ->

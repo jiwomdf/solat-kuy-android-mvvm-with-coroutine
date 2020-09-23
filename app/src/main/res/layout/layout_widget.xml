@@ -10,11 +10,13 @@
         android:layout_width="match_parent"
         android:layout_height="250dp"
         android:background="@color/colorDarkGrey"
+        android:contentDescription="@string/widgetwallpaper"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
+        app:layout_constraintHorizontal_bias="0.0"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
-        android:contentDescription="@string/widgetwallpaper" />
+        app:layout_constraintVertical_bias="0.0" />
 
     <TextView
         android:id="@+id/tv_view_latitude"
@@ -56,9 +58,10 @@
         android:id="@+id/tv_widget_prayer_name"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="10dp"
+        android:layout_marginStart="10dp"
         android:text="@string/loading"
         android:textColor="@color/colorWhite"
+        android:textStyle="bold"
         android:textSize="@dimen/large_text_size"
         app:layout_constraintBottom_toTopOf="@id/tv_widget_prayer_countdown"
         app:layout_constraintBottom_toBottomOf="parent"

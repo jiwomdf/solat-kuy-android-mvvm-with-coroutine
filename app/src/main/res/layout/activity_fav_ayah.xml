@@ -16,6 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/colorWhite"
+            app:titleTextAppearance="@style/ActionBar.nameText"
             app:layout_scrollFlags="scroll|enterAlways" />
 
     </com.google.android.material.appbar.AppBarLayout>
@@ -32,6 +33,7 @@
         android:id="@+id/rv_fav_ayah"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        tools:listitem="@layout/layout_listfav_surah"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"

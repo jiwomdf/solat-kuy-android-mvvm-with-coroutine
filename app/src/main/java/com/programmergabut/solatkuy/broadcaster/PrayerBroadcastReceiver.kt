@@ -106,7 +106,7 @@ class PrayerBroadcastReceiver: BroadcastReceiver() {
         val intent = Intent(context, PrayerBroadcastReceiver::class.java)
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
-        /* remove sunrise */
+        /* remove img_sunrise */
         val newList = listData.filter { x -> x.prayerName !=  EnumConfig.sunrise} as MutableList<NotifiedPrayer>
 
         newList.sortBy { x -> x.prayerID }

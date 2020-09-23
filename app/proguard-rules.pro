@@ -128,3 +128,7 @@
 }
 
 ##---------------End: proguard configuration for Gson  ----------
+
+## disable on boot complete and push notificationHelper
+-keep class com.programmergabut.solatkuy.broadcaster.BootCompleteReceiver.* { *; }
+-keep class com.programmergabut.solatkuy.util.helper.PushNotificationHelper.* { *; }

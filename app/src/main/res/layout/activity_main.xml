@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:fitsSystemWindows="true"
     tools:context=".ui.main.MainActivity">
 
     <FrameLayout
@@ -32,6 +33,7 @@
         android:id="@+id/bottom_navigation"
         android:layout_width="match_parent"
         android:layout_height="?attr/actionBarSize"
+        app:itemIconTint="@drawable/style_bottom_nav_selector"
         app:elevation="@dimen/elevation"
         app:labelVisibilityMode="unlabeled"
         app:layout_anchor="@+id/fl_navHostFragment"

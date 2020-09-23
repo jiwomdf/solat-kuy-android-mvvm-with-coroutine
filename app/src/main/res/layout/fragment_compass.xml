@@ -5,6 +5,7 @@
     android:id="@+id/sl_compass"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/colorDarkWhite"
     tools:context=".ui.fragmentcompass.FragmentCompass">
 
     <ScrollView
@@ -13,15 +14,14 @@
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            >
+            android:layout_height="wrap_content">
 
             <com.google.android.material.card.MaterialCardView
                 android:id="@+id/cv_qiblaDegrees"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="@dimen/medium_margin"
-                app:cardBackgroundColor="@color/colorDarkWhite"
+                app:cardBackgroundColor="@color/colorWhite"
                 android:layout_marginTop="@dimen/medium_margin"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
@@ -38,6 +38,7 @@
                         android:layout_marginStart="@dimen/smaller_margin"
                         android:layout_marginEnd="@dimen/smaller_margin"
                         android:layout_marginBottom="@dimen/smaller_margin"
+                        android:textColor="@color/colorBlack"
                         android:gravity="center"
                         android:layout_gravity="center"
                         android:text="@string/qibla"
@@ -61,7 +62,7 @@
                 android:layout_centerInParent="true"
                 android:layout_marginTop="@dimen/large_margin"
                 android:contentDescription="@string/compass"
-                android:src="@drawable/degree"
+                android:src="@drawable/img_degree"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/cv_qiblaDegrees" />
@@ -70,13 +71,18 @@
                 android:id="@+id/tv_compass_cuation"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/large_margin"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="32dp"
                 android:gravity="center"
                 android:text="@string/please_tilt_your_phone_until_the_image_is_balanced"
+                android:textColor="@color/colorBlack"
+                android:textStyle="bold"
+                app:layout_constraintBottom_toTopOf="@+id/ll_UselessLeaf"
                 app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.461"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/iv_compass"
-                app:layout_constraintBottom_toTopOf="@+id/ll_UselessLeaf"/>
+                app:layout_constraintVertical_bias="0.0" />
 
             <LinearLayout
                 android:id="@+id/ll_UselessLeaf"

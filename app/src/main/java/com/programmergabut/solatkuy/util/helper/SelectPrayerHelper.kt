@@ -21,25 +21,25 @@ class SelectPrayerHelper {
             val maghribTime =  DateTime(sdfPrayer.parse(timings.maghrib.split(" ")[0].trim()))
             val ishaTime =  DateTime(sdfPrayer.parse(timings.isha.split(" ")[0].trim()))
 
-            //sunrise & next fajr time
+            //img_sunrise & next img_fajr time
             val sunriseTime =  DateTime(sdfPrayer.parse(timings.sunrise.split(" ")[0].trim()))
             val nextfajrTime = DateTime(sdfPrayer.parse(timings.fajr.split(" ")[0].trim())).plusDays(1)
             val zerozeroTime = DateTime(sdfPrayer.parse("00:00"))
 
             val nowTime = DateTime(sdfPrayer.parse(LocalTime.now().toString()))
 
-            if(nowTime.isAfter(zerozeroTime) && nowTime.isBefore(fajrTime)) //--> isha time
+            if(nowTime.isAfter(zerozeroTime) && nowTime.isBefore(fajrTime)) //--> img_isha time
                 prayer = 6
 
-            if(fajrTime.isBefore(nowTime) && nowTime.isBefore(sunriseTime)) //--> fajr time
+            if(fajrTime.isBefore(nowTime) && nowTime.isBefore(sunriseTime)) //--> img_fajr time
                 prayer = 1
-            else if(dhuhrTime.isBefore(nowTime) && nowTime.isBefore(asrTime)) //--> dhuhr time
+            else if(dhuhrTime.isBefore(nowTime) && nowTime.isBefore(asrTime)) //--> img_dhuhr time
                 prayer = 2
-            else if(asrTime.isBefore(nowTime) && nowTime.isBefore(maghribTime)) //--> asr time
+            else if(asrTime.isBefore(nowTime) && nowTime.isBefore(maghribTime)) //--> img_asr time
                 prayer = 3
-            else if(maghribTime.isBefore(nowTime) && nowTime.isBefore(ishaTime)) //--> maghrib time
+            else if(maghribTime.isBefore(nowTime) && nowTime.isBefore(ishaTime)) //--> img_maghrib time
                 prayer = 4
-            else if(ishaTime.isBefore(nowTime) && nowTime.isBefore(nextfajrTime)) //--> isha time
+            else if(ishaTime.isBefore(nowTime) && nowTime.isBefore(nextfajrTime)) //--> img_isha time
                 prayer = 5
 
             return prayer
@@ -64,61 +64,61 @@ class SelectPrayerHelper {
             val maghribTime =  DateTime(sdfPrayer.parse(strMaghribTime.split(" ")[0].trim()))
             val ishaTime =  DateTime(sdfPrayer.parse(strIshaTime.split(" ")[0].trim()))
 
-            //sunrise & next fajr time
+            //img_sunrise & next img_fajr time
             val sunriseTime =  DateTime(sdfPrayer.parse(strSunriseTime.split(" ")[0].trim()))
             val nextfajrTime = DateTime(sdfPrayer.parse(strFajrTime.split(" ")[0].trim())).plusDays(1)
             val zerozeroTime = DateTime(sdfPrayer.parse("00:00"))
 
             val nowTime = DateTime(sdfPrayer.parse(LocalTime.now().toString()))
 
-            if(nowTime.isAfter(zerozeroTime) && nowTime.isBefore(fajrTime)) //--> isha time
-                prayer = 1 //fajr
+            if(nowTime.isAfter(zerozeroTime) && nowTime.isBefore(fajrTime)) //--> img_isha time
+                prayer = 1 //img_fajr
 
-            if(fajrTime.isBefore(nowTime) && nowTime.isBefore(sunriseTime)) //--> fajr time
-                prayer = 2 //dhuhr
-            else if(dhuhrTime.isBefore(nowTime) && nowTime.isBefore(asrTime)) //--> dhuhr time
-                prayer = 3 //asr
-            else if(asrTime.isBefore(nowTime) && nowTime.isBefore(maghribTime)) //--> asr time
-                prayer = 4 //maghrib
-            else if(maghribTime.isBefore(nowTime) && nowTime.isBefore(ishaTime)) //--> maghrib time
-                prayer = 5 //isha
-            else if(ishaTime.isBefore(nowTime) && nowTime.isBefore(nextfajrTime)) //--> isha time
-                prayer = 1 //fajr
+            if(fajrTime.isBefore(nowTime) && nowTime.isBefore(sunriseTime)) //--> img_fajr time
+                prayer = 2 //img_dhuhr
+            else if(dhuhrTime.isBefore(nowTime) && nowTime.isBefore(asrTime)) //--> img_dhuhr time
+                prayer = 3 //img_asr
+            else if(asrTime.isBefore(nowTime) && nowTime.isBefore(maghribTime)) //--> img_asr time
+                prayer = 4 //img_maghrib
+            else if(maghribTime.isBefore(nowTime) && nowTime.isBefore(ishaTime)) //--> img_maghrib time
+                prayer = 5 //img_isha
+            else if(ishaTime.isBefore(nowTime) && nowTime.isBefore(nextfajrTime)) //--> img_isha time
+                prayer = 1 //img_fajr
 
             return when(prayer){
                 6 -> NotifiedPrayer(
                     5,
-                    EnumConfig.isha,
+                    EnumConfig.img_isha,
                     true,
                     strIshaTime
                 )
                 1 -> NotifiedPrayer(
                     1,
-                    EnumConfig.fajr,
+                    EnumConfig.img_fajr,
                     true,
                     strFajrTime
                 )
                 2 -> NotifiedPrayer(
                     2,
-                    EnumConfig.dhuhr,
+                    EnumConfig.img_dhuhr,
                     true,
                     strDhuhrTime
                 )
                 3 -> NotifiedPrayer(
                     3,
-                    EnumConfig.asr,
+                    EnumConfig.img_asr,
                     true,
                     strAsrTime
                 )
                 4 -> NotifiedPrayer(
                     4,
-                    EnumConfig.maghrib,
+                    EnumConfig.img_maghrib,
                     true,
                     strMaghribTime
                 )
                 5 -> NotifiedPrayer(
                     5,
-                    EnumConfig.isha,
+                    EnumConfig.img_isha,
                     true,
                     strIshaTime
                 )

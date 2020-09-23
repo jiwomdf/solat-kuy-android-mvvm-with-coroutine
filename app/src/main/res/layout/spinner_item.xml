@@ -3,9 +3,9 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/colorPrimary"
     android:textSize="@dimen/medium_text_size"
     android:gravity="start"
-    android:textColor="#fff"
+    android:textColor="@color/colorBlack"
+    android:textStyle="bold"
     android:padding="5dip"
     />

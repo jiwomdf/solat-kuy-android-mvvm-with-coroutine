@@ -5,6 +5,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/colorDarkWhite"
     tools:context=".ui.fragmentsetting.FragmentSetting">
 
     <LinearLayout
@@ -15,7 +16,6 @@
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:cardBackgroundColor="@color/colorDarkWhite"
             app:cardCornerRadius="@dimen/medium_margin"
             android:layout_margin="@dimen/small_margin">
 
@@ -35,6 +35,8 @@
                     android:id="@+id/tv_cur_loc"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/colorBlack"
+                    android:textStyle="bold"
                     android:layout_marginBottom="@dimen/small_margin"
                     android:text="@string/current_location"
                     android:textSize="@dimen/medium_text_size"
@@ -114,7 +116,6 @@
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:cardBackgroundColor="@color/colorDarkWhite"
             app:cardCornerRadius="@dimen/medium_margin"
             android:layout_margin="@dimen/small_margin">
 
@@ -140,6 +141,8 @@
                     android:id="@+id/tv_changeLocation"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/colorBlack"
+                    android:textStyle="bold"
                     android:layout_marginStart="@dimen/small_margin"
                     android:text="@string/changelocation"
                     android:textSize="@dimen/medium_text_size"
@@ -181,7 +184,6 @@
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:cardBackgroundColor="@color/colorDarkWhite"
             app:cardCornerRadius="@dimen/medium_margin"
             android:layout_margin="@dimen/small_margin">
 
@@ -206,6 +208,8 @@
                     android:id="@+id/tv_authorCredit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
+                    android:textColor="@color/colorBlack"
+                    android:textStyle="bold"
                     android:layout_marginStart="8dp"
                     android:text="@string/author_credit"
                     android:textSize="@dimen/large_text_size"

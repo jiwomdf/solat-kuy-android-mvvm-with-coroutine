@@ -61,13 +61,23 @@ class PushNotificationHelper(context: Context, selList: MutableList<NotifiedPray
             if(c.before(Calendar.getInstance()))
                 c.add(Calendar.DATE, 1)
 
-            if(it.isNotified)
+            /* if(it.isNotified){
+                val pushNotificationWork: WorkRequest = OneTimeWorkRequestBuilder<PushNotificationWorker>().build()
+
+                WorkManager
+                    .getInstance(context)
+                    .enqueue(pushNotificationWork)
+            } */
+
+            if(it.isNotified){
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
                     alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, c.timeInMillis, pendingIntent)
                 else
                     alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.timeInMillis, pendingIntent)
+            }
             else
                 alarmManager.cancel(pendingIntent)
+
         }
 
         /*

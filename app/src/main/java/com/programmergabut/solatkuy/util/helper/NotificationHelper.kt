@@ -42,8 +42,6 @@ class NotificationHelper(c: Context): ContextWrapper(c) {
             channel1.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
 
             getManager()?.createNotificationChannel(channel1)
-        } else {
-            //no notification channel
         }
 
     }
@@ -77,12 +75,12 @@ class NotificationHelper(c: Context): ContextWrapper(c) {
             PendingIntent.FLAG_UPDATE_CURRENT) */
 
         val lIcon = when(pName){
-            getString(R.string.fajr) -> R.drawable.fajr
-            getString(R.string.dhuhr) -> R.drawable.dhuhr
-            getString(R.string.asr) -> R.drawable.asr
-            getString(R.string.maghrib) -> R.drawable.maghrib
-            getString(R.string.isha) -> R.drawable.isha
-            else -> R.drawable.fajr
+            getString(R.string.fajr) -> R.drawable.img_fajr
+            getString(R.string.dhuhr) -> R.drawable.img_dhuhr
+            getString(R.string.asr) -> R.drawable.img_asr
+            getString(R.string.maghrib) -> R.drawable.img_maghrib
+            getString(R.string.isha) -> R.drawable.img_isha
+            else -> R.drawable.img_fajr
         }
 
         val bitmap = BitmapFactory.decodeResource(resources, lIcon)

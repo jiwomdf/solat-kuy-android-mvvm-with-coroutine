@@ -17,6 +17,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/small_margin"
+        android:textColor="@color/colorBlack"
+        android:textStyle="bold"
         android:gravity="center"
         android:text="@string/select_the_quotes_from"
         android:textSize="@dimen/medium_text_size" />

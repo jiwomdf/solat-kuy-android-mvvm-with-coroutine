@@ -6,15 +6,15 @@ import javax.inject.Named
 
 data class Timings(
     @SerializedName("Asr")
-    @Named("asr")
+    @Named("img_asr")
     var asr: String,
 
     @SerializedName("Dhuhr")
-    @Named("dhuhr")
+    @Named("img_dhuhr")
     var dhuhr: String,
 
     @SerializedName("Fajr")
-    @Named("fajr")
+    @Named("img_fajr")
     var fajr: String,
 
     @SerializedName("Imsak")
@@ -22,11 +22,11 @@ data class Timings(
     val imsak: String,
 
     @SerializedName("Isha")
-    @Named("isha")
+    @Named("img_isha")
     var isha: String,
 
     @SerializedName("Maghrib")
-    @Named("maghrib")
+    @Named("img_maghrib")
     var maghrib: String,
 
     @SerializedName("Midnight")
@@ -34,7 +34,7 @@ data class Timings(
     val midnight: String,
 
     @SerializedName("Sunrise")
-    @Named("sunrise")
+    @Named("img_sunrise")
     val sunrise: String,
 
     @SerializedName("Sunset")

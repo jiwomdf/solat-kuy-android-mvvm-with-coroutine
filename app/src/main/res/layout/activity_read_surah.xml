@@ -24,6 +24,7 @@
         android:id="@+id/rv_read_surah"
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        tools:listitem="@layout/layout_read_surah"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"/>
 
     <androidx.constraintlayout.widget.ConstraintLayout
@@ -51,6 +52,8 @@
             android:layout_height="wrap_content"
             android:gravity="center"
             android:text="@string/please_wait_for_a_while"
+            android:textColor="@color/colorBlack"
+            android:textStyle="bold"
             android:textSize="@dimen/large_text_size"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

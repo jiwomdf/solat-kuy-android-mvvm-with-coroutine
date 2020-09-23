@@ -7,7 +7,9 @@
     <color name="colorDarkWhite">#fcfcfc</color>
     <color name="colorLightGrey">#f1f1f1</color>
     <color name="colorGrey">#bebebe</color>
+    <color name="colorGrey2">#888888</color>
     <color name="colorDarkGrey">#616161</color>
+    <color name="colorSilver">#373737</color>
     <color name="colorBlack">#000</color>
     <color name="halfTransparentBackground">#aacccccc</color>
     <color name="colorRed">#FF6374</color>

@@ -3,7 +3,6 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
-    app:cardBackgroundColor="@color/colorDarkWhite"
     app:cardCornerRadius="@dimen/medium_margin"
     android:orientation="vertical">
 
@@ -29,12 +28,16 @@
             <TextView
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@color/colorBlack"
+                android:textStyle="bold"
                 android:text="@string/prayer_name"/>
 
             <TextView
                 android:id="@+id/tv_year_change"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
+                android:textColor="@color/colorBlack"
+                android:textStyle="bold"
                 android:gravity="end"
                 android:layout_marginEnd="@dimen/medium_margin"
                 android:text="@string/loading"/>
@@ -46,7 +49,7 @@
             <CheckBox
                 android:id="@+id/cb_fajr"/>
 
-            <com.google.android.material.textview.MaterialTextView
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="start|center"
@@ -55,7 +58,7 @@
                 android:textStyle="bold"
                 />
 
-            <com.google.android.material.textview.MaterialTextView
+            <TextView
                 android:id="@+id/tv_fajr_time"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
@@ -73,7 +76,7 @@
                 android:layout_width="@dimen/list_width_size"
                 android:layout_height="@dimen/list_width_size"/>
 
-            <com.google.android.material.textview.MaterialTextView
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:gravity="start|center"
@@ -81,7 +84,7 @@
                 android:text="@string/dhuhr"
                 android:textStyle="bold" />
 
-            <com.google.android.material.textview.MaterialTextView
+            <TextView
                 android:id="@+id/tv_dhuhr_time"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
@@ -99,14 +102,15 @@
                 android:layout_width="@dimen/list_width_size"
                 android:layout_height="@dimen/list_width_size"/>
 
-            <com.google.android.material.textview.MaterialTextView
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="start|center"                    android:layout_marginStart="@dimen/smaller_margin"
+                android:gravity="start|center"
+                android:layout_marginStart="@dimen/smaller_margin"
                 android:text="@string/asr"
                 android:textStyle="bold" />
 
-            <com.google.android.material.textview.MaterialTextView
+            <TextView
                 android:id="@+id/tv_asr_time"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
@@ -121,15 +125,16 @@
             <CheckBox
                 android:id="@+id/cb_maghrib"/>
 
-            <com.google.android.material.textview.MaterialTextView
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="start|center"                    android:layout_marginStart="@dimen/smaller_margin"
+                android:gravity="start|center"
+                android:layout_marginStart="@dimen/smaller_margin"
                 android:text="@string/maghrib"
                 android:textStyle="bold"
                 />
 
-            <com.google.android.material.textview.MaterialTextView
+            <TextView
                 android:id="@+id/tv_maghrib_time"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
@@ -144,14 +149,15 @@
             <CheckBox
                 android:id="@+id/cb_isha"/>
 
-            <com.google.android.material.textview.MaterialTextView
+            <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:gravity="start|center"                    android:layout_marginStart="@dimen/smaller_margin"
+                android:gravity="start|center"
+                android:layout_marginStart="@dimen/smaller_margin"
                 android:text="@string/isha"
                 android:textStyle="bold" />
 
-            <com.google.android.material.textview.MaterialTextView
+            <TextView
                 android:id="@+id/tv_isha_time"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"

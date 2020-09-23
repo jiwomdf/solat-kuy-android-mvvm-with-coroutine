@@ -7,6 +7,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
+    android:background="@color/colorDarkWhite"
     tools:context=".ui.fragmentinfo.FragmentInfo">
 
     <ScrollView
@@ -34,6 +35,7 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:textColor="@color/colorWhite"
+                        android:textStyle="bold"
                         android:layout_marginStart="@dimen/medium_margin"
                         android:layout_marginTop="@dimen/medium_margin"
                         android:text="@string/imsak_info"
@@ -86,7 +88,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="@dimen/medium_margin"
-                app:cardBackgroundColor="@color/colorDarkWhite"
                 android:layout_margin="@dimen/small_margin">
 
                 <androidx.constraintlayout.widget.ConstraintLayout
@@ -95,120 +96,157 @@
                     android:paddingTop="@dimen/small_margin"
                     android:orientation="vertical">
 
-                    <TextView
-                        android:id="@+id/textView3"
+
+
+                    <LinearLayout
+                        android:id="@+id/ll_title_date_info"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/medium_margin"
-                        android:text="@string/gregorian_to_hijri"
-                        android:textSize="@dimen/large_text_size"
+                        android:gravity="center"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent" />
+                        app:layout_constraintTop_toTopOf="parent">
+
+                        <ImageView
+                            android:id="@+id/iv_calendar_info"
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:layout_marginStart="@dimen/small_margin"
+                            android:contentDescription="@string/locationicon"
+                            android:src="@drawable/ic_baseline_date_range_24" />
+
+                        <TextView
+                            android:id="@+id/textView3"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/medium_margin"
+                            android:text="@string/gregorian_to_hijri"
+                            android:textSize="@dimen/large_text_size"
+                            android:textColor="@color/colorBlack"
+                            android:textStyle="bold"/>
+                    </LinearLayout>
+
 
                     <TableLayout
+                        android:id="@+id/tableLayout"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:stretchColumns="*"
                         android:layout_marginStart="@dimen/medium_margin"
                         android:layout_marginTop="@dimen/small_margin"
+                        android:stretchColumns="*"
                         app:layout_constraintEnd_toEndOf="parent"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/textView3">
+                        app:layout_constraintTop_toBottomOf="@+id/ll_title_date_info">
+
                         <TableRow
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_marginTop="@dimen/small_margin">
+
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:layout_margin="@dimen/smaller_margin"
-                                android:text="@string/type"/>
+                                android:text="@string/type" />
+
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:layout_margin="@dimen/smaller_margin"
-                                android:text="@string/gregorian"/>
+                                android:text="@string/gregorian" />
+
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:layout_margin="@dimen/smaller_margin"
-                                android:text="@string/hijri"/>
+                                android:text="@string/hijri" />
                         </TableRow>
+
                         <TableRow
                             android:layout_width="match_parent"
                             android:layout_height="match_parent">
+
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:layout_margin="@dimen/smaller_margin"
-                                android:text="@string/date"/>
+                                android:text="@string/date" />
+
                             <TextView
                                 android:id="@+id/tv_gregorian_date"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:textColor="@color/colorBlack"
                                 android:layout_margin="@dimen/smaller_margin"
                                 android:text="@string/loading"
-                                tools:text="01-03-2020"/>
+                                android:textColor="@color/colorBlack"
+                                tools:text="01-03-2020" />
+
                             <TextView
                                 android:id="@+id/tv_hijri_date"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:textColor="@color/colorBlack"
                                 android:layout_margin="@dimen/smaller_margin"
                                 android:text="@string/loading"
-                                tools:text="06-07-1441"/>
+                                android:textColor="@color/colorBlack"
+                                tools:text="06-07-1441" />
                         </TableRow>
+
                         <TableRow
                             android:layout_width="match_parent"
                             android:layout_height="match_parent">
+
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:layout_margin="@dimen/smaller_margin"
-                                android:text="@string/month"/>
+                                android:text="@string/month" />
+
                             <TextView
                                 android:id="@+id/tv_gregorian_month"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:textColor="@color/colorBlack"
                                 android:layout_margin="@dimen/smaller_margin"
                                 android:text="@string/loading"
-                                tools:text="March"/>
+                                android:textColor="@color/colorBlack"
+                                tools:text="March" />
+
                             <TextView
                                 android:id="@+id/tv_hijri_month"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:textColor="@color/colorBlack"
                                 android:layout_margin="@dimen/smaller_margin"
                                 android:text="@string/loading"
-                                tools:text="Rajab / رَجَب"/>
+                                android:textColor="@color/colorBlack"
+                                tools:text="Rajab / رَجَب" />
                         </TableRow>
+
                         <TableRow
                             android:layout_width="match_parent"
                             android:layout_height="match_parent"
                             android:layout_marginBottom="@dimen/small_margin">
+
                             <TextView
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
                                 android:layout_margin="@dimen/smaller_margin"
-                                android:text="@string/day"/>
+                                android:text="@string/day" />
+
                             <TextView
                                 android:id="@+id/tv_gregorian_day"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:textColor="@color/colorBlack"
                                 android:layout_margin="@dimen/smaller_margin"
                                 android:text="@string/loading"
-                                tools:text="Sunday"/>
+                                android:textColor="@color/colorBlack"
+                                tools:text="Sunday" />
+
                             <TextView
                                 android:id="@+id/tv_hijri_day"
                                 android:layout_width="match_parent"
                                 android:layout_height="match_parent"
-                                android:textColor="@color/colorBlack"
                                 android:layout_margin="@dimen/smaller_margin"
                                 android:text="@string/loading"
-                                tools:text="Al Ahad / الاحد"/>
+                                android:textColor="@color/colorBlack"
+                                tools:text="Al Ahad / الاحد" />
                         </TableRow>
                     </TableLayout>
 
@@ -256,7 +294,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 app:cardCornerRadius="@dimen/medium_margin"
-                app:cardBackgroundColor="@color/colorDarkWhite"
                 android:layout_margin="@dimen/small_margin">
 
                 <LinearLayout
@@ -264,18 +301,33 @@
                     android:layout_height="match_parent"
                     android:orientation="vertical">
 
-                    <TextView
-                        android:text="@string/dua_collection"
+                    <LinearLayout
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textSize="@dimen/large_text_size"
-                        android:layout_marginTop="@dimen/medium_margin"
-                        android:layout_marginStart="@dimen/medium_margin"/>
+                        android:gravity="center"
+                        android:layout_margin="@dimen/small_margin"
+                        android:orientation="horizontal">
+                        <ImageView
+                            android:layout_width="20dp"
+                            android:layout_height="20dp"
+                            android:src="@drawable/ic_baseline_menu_book_24"
+                            android:contentDescription="@string/abouticon" />
 
-                        <androidx.recyclerview.widget.RecyclerView
-                            android:id="@+id/rvDuaCollection"
+                        <TextView
+                            android:text="@string/dua_collection"
                             android:layout_width="match_parent"
-                            android:layout_height="match_parent" />
+                            android:layout_height="wrap_content"
+                            android:textSize="@dimen/large_text_size"
+                            android:textColor="@color/colorBlack"
+                            android:layout_marginStart="@dimen/medium_margin"
+                            android:textStyle="bold"/>
+                    </LinearLayout>
+
+                    <androidx.recyclerview.widget.RecyclerView
+                        android:id="@+id/rvDuaCollection"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        tools:listitem="@layout/layout_dua_button"/>
 
                 </LinearLayout>
             </androidx.cardview.widget.CardView>

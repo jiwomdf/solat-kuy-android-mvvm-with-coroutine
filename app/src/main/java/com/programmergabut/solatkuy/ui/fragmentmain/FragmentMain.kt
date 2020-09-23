@@ -3,10 +3,12 @@ package com.programmergabut.solatkuy.ui.fragmentmain
 import android.annotation.SuppressLint
 import android.app.Dialog
 import android.graphics.drawable.Drawable
+import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import android.view.ViewGroup
+import android.view.WindowManager
 import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.fragment.app.Fragment
@@ -17,6 +19,7 @@ import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
 import com.bumptech.glide.request.transition.DrawableCrossFadeFactory
+import com.programmergabut.solatkuy.BuildConfig
 import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.data.local.SolatKuyRoom
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
@@ -63,7 +66,7 @@ class FragmentMain : Fragment(R.layout.fragment_main), SwipeRefreshLayout.OnRefr
     private var dialogView: View? = null
     private var tempMsApi1: MsApi1? = null
     private var mCityName: String? = null
-
+    
     override fun onPause() {
         super.onPause()
 
@@ -79,13 +82,16 @@ class FragmentMain : Fragment(R.layout.fragment_main), SwipeRefreshLayout.OnRefr
 
         tv_quran_ayah_quote?.visibility = View.GONE
         tv_quran_ayah_quote_click?.visibility = View.VISIBLE
-
-        subscribeObserversDB()
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        /* Testing */
+        val base_url_aladhan = BuildConfig.BASE_URL_ALADHAN
+        print(base_url_aladhan)
+
+        subscribeObserversDB()
         subscribeObserversAPI()
 
         cbClickListener()
@@ -95,6 +101,7 @@ class FragmentMain : Fragment(R.layout.fragment_main), SwipeRefreshLayout.OnRefr
 
         updateMonthAndYearMsApi1()
     }
+
 
 
     /* Subscribe live data */
@@ -178,10 +185,17 @@ class FragmentMain : Fragment(R.layout.fragment_main), SwipeRefreshLayout.OnRefr
     }
 
     private fun updateMonthAndYearMsApi1() {
+
         lifecycleScope.launch {
             val arrDate = LocalDate.now().toString("dd/M/yyyy").split("/")
-            db.msApi1Dao().updateMsApi1MonthAndYear(1, arrDate[1], arrDate[2])
+
+            if(arrDate[2] == db.msApi1Dao().getMsApi1().value?.year &&
+                arrDate[1] == db.msApi1Dao().getMsApi1().value?.month){
+
+                db.msApi1Dao().updateMsApi1MonthAndYear(1, arrDate[1], arrDate[2])
+            }
         }
+
     }
 
     private fun subscribeReadSurahEn(){
@@ -285,47 +299,47 @@ class FragmentMain : Fragment(R.layout.fragment_main), SwipeRefreshLayout.OnRefr
 
         it.forEach con@{ p ->
             when (p.prayerName) {
-                getString(R.string.fajr) -> modelNotifiedPrayer =
+                getString(R.string.img_fajr) -> modelNotifiedPrayer =
                     NotifiedPrayer(
                         1,
                         p.prayerName,
                         p.isNotified,
-                        tempApiData?.timings?.fajr!!
+                        tempApiData?.timings?.img_fajr!!
                     )
-                getString(R.string.dhuhr) -> modelNotifiedPrayer =
+                getString(R.string.img_dhuhr) -> modelNotifiedPrayer =
                     NotifiedPrayer(
                         2,
                         p.prayerName,
                         p.isNotified,
-                        tempApiData?.timings?.dhuhr!!
+                        tempApiData?.timings?.img_dhuhr!!
                     )
-                getString(R.string.asr) -> modelNotifiedPrayer =
+                getString(R.string.img_asr) -> modelNotifiedPrayer =
                     NotifiedPrayer(
                         3,
                         p.prayerName,
                         p.isNotified,
-                        tempApiData?.timings?.asr!!
+                        tempApiData?.timings?.img_asr!!
                     )
-                getString(R.string.maghrib) -> modelNotifiedPrayer =
+                getString(R.string.img_maghrib) -> modelNotifiedPrayer =
                     NotifiedPrayer(
                         4,
                         p.prayerName,
                         p.isNotified,
-                        tempApiData?.timings?.maghrib!!
+                        tempApiData?.timings?.img_maghrib!!
                     )
-                getString(R.string.isha) -> modelNotifiedPrayer =
+                getString(R.string.img_isha) -> modelNotifiedPrayer =
                     NotifiedPrayer(
                         5,
                         p.prayerName,
                         p.isNotified,
-                        tempApiData?.timings?.isha!!
+                        tempApiData?.timings?.img_isha!!
                     )
-                getString(R.string.sunrise) -> modelNotifiedPrayer =
+                getString(R.string.img_sunrise) -> modelNotifiedPrayer =
                     NotifiedPrayer(
                         6,
                         p.prayerName,
                         p.isNotified,
-                        tempApiData?.timings?.sunrise!!
+                        tempApiData?.timings?.img_sunrise!!
                     )
             }
 
@@ -476,13 +490,13 @@ class FragmentMain : Fragment(R.layout.fragment_main), SwipeRefreshLayout.OnRefr
         var widgetDrawable: Drawable? = null
 
         when(selPrayer){
-            -1 -> widgetDrawable = getDrawable(context?.applicationContext!!,R.drawable.sunrise)
-            1 -> widgetDrawable = getDrawable(context?.applicationContext!!,R.drawable.fajr)
-            2 -> widgetDrawable = getDrawable(context?.applicationContext!!,R.drawable.dhuhr)
-            3 -> widgetDrawable = getDrawable(context?.applicationContext!!,R.drawable.asr)
-            4 -> widgetDrawable = getDrawable(context?.applicationContext!!,R.drawable.maghrib)
-            5 -> widgetDrawable = getDrawable(context?.applicationContext!!,R.drawable.isha)
-            6 -> widgetDrawable = getDrawable(context?.applicationContext!!,R.drawable.isha)
+            -1 -> widgetDrawable = getDrawable(context?.applicationContext!!,R.drawable.img_sunrise)
+            1 -> widgetDrawable = getDrawable(context?.applicationContext!!,R.drawable.img_fajr)
+            2 -> widgetDrawable = getDrawable(context?.applicationContext!!,R.drawable.img_dhuhr)
+            3 -> widgetDrawable = getDrawable(context?.applicationContext!!,R.drawable.img_asr)
+            4 -> widgetDrawable = getDrawable(context?.applicationContext!!,R.drawable.img_maghrib)
+            5 -> widgetDrawable = getDrawable(context?.applicationContext!!,R.drawable.img_isha)
+            6 -> widgetDrawable = getDrawable(context?.applicationContext!!,R.drawable.img_isha)
         }
 
         if(widgetDrawable != null){

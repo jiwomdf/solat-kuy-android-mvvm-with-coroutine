@@ -2,6 +2,7 @@ package com.programmergabut.solatkuy.di.app
 
 import com.google.gson.Gson
 import com.google.gson.GsonBuilder
+import com.programmergabut.solatkuy.BuildConfig
 import com.programmergabut.solatkuy.data.remote.RemoteDataSourceAladhan
 import com.programmergabut.solatkuy.data.remote.RemoteDataSourceApiAlquran
 import com.programmergabut.solatkuy.data.remote.api.*
@@ -21,12 +22,12 @@ object NetworkModule {
     @AladhanEndPoint
     @Provides
     @Singleton
-    fun provideAladhanEndPoint() = "https://api.aladhan.com/v1/"
+    fun provideAladhanEndPoint() = BuildConfig.BASE_URL_ALADHAN
 
     @QuranApiEndPoint
     @Provides
     @Singleton
-    fun provideQuranApiEndPoint() = "https://api.alquran.cloud/v1/"
+    fun provideQuranApiEndPoint() = BuildConfig.BASE_URL_QURAN_API
 
     @Provides
     @Singleton
