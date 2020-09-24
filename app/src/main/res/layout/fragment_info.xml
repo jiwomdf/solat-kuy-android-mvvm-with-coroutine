@@ -106,14 +106,6 @@
                         app:layout_constraintStart_toStartOf="parent"
                         app:layout_constraintTop_toTopOf="parent">
 
-                        <ImageView
-                            android:id="@+id/iv_calendar_info"
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:layout_marginStart="@dimen/small_margin"
-                            android:contentDescription="@string/locationicon"
-                            android:src="@drawable/ic_baseline_date_range_24" />
-
                         <TextView
                             android:id="@+id/textView3"
                             android:layout_width="wrap_content"
@@ -307,19 +299,12 @@
                         android:gravity="center"
                         android:layout_margin="@dimen/small_margin"
                         android:orientation="horizontal">
-                        <ImageView
-                            android:layout_width="20dp"
-                            android:layout_height="20dp"
-                            android:src="@drawable/ic_baseline_menu_book_24"
-                            android:contentDescription="@string/abouticon" />
-
                         <TextView
                             android:text="@string/dua_collection"
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:textSize="@dimen/large_text_size"
                             android:textColor="@color/colorBlack"
-                            android:layout_marginStart="@dimen/medium_margin"
                             android:textStyle="bold"/>
                     </LinearLayout>
 
