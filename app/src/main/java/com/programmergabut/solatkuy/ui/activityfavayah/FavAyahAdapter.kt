@@ -5,9 +5,12 @@ import android.content.Context
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.AsyncListDiffer
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.data.local.localentity.MsFavAyah
+import com.programmergabut.solatkuy.data.local.localentity.MsFavSurah
 import kotlinx.android.synthetic.main.layout_delete.view.*
 import kotlinx.android.synthetic.main.layout_listfav_surah.view.*
 
@@ -15,12 +18,17 @@ class FavAyahAdapter(private val context: Context,
                      private val favAyahViewModel: FavAyahViewModel)
     : RecyclerView.Adapter<FavAyahAdapter.FavAyahAdapterViewHolder>() {
 
-    private var listAyah = mutableListOf<MsFavAyah>()
+    private val diffCallback = object: DiffUtil.ItemCallback<MsFavAyah>(){
+        override fun areItemsTheSame(oldItem: MsFavAyah, newItem: MsFavAyah) = oldItem == newItem
 
-    fun setAyah(datas: List<MsFavAyah>){
-        listAyah.clear()
-        listAyah.addAll(datas)
+        override fun areContentsTheSame(oldItem: MsFavAyah, newItem: MsFavAyah) = oldItem == newItem
     }
+
+    private val differ = AsyncListDiffer(this, diffCallback)
+
+    var listAyah : List<MsFavAyah>
+        get() = differ.currentList
+        set(value) = differ.submitList(value)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavAyahAdapterViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.layout_listfav_surah, parent, false)

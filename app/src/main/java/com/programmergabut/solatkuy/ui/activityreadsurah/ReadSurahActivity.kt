@@ -149,7 +149,7 @@ class ReadSurahActivity : AppCompatActivity() {
                         }
                     }
 
-                    readSurahAdapter.setAyah(data?.ayahs!!)
+                    readSurahAdapter.listAyah = data?.ayahs!!
                     readSurahAdapter.notifyDataSetChanged()
                 }
                 EnumStatus.LOADING -> {}

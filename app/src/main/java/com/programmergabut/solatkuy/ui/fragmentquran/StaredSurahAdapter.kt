@@ -5,20 +5,28 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.recyclerview.widget.AsyncListDiffer
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.data.local.localentity.MsFavSurah
+import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonAr.Ayah
 import com.programmergabut.solatkuy.ui.activityreadsurah.ReadSurahActivity
 import kotlinx.android.synthetic.main.layout_stared_surah.view.*
 
 class StaredSurahAdapter(private val c: Context) : RecyclerView.Adapter<StaredSurahAdapter.StaredSurahViewHolder>() {
 
-    private var listData = mutableListOf<MsFavSurah>()
+    private val diffCallback = object: DiffUtil.ItemCallback<MsFavSurah>(){
+        override fun areItemsTheSame(oldItem: MsFavSurah, newItem: MsFavSurah) = oldItem == newItem
 
-    fun setData(datas: List<MsFavSurah>){
-        listData.clear()
-        listData.addAll(datas)
+        override fun areContentsTheSame(oldItem: MsFavSurah, newItem: MsFavSurah) = oldItem == newItem
     }
+
+    private val differ = AsyncListDiffer(this, diffCallback)
+
+    var listData : List<MsFavSurah>
+        get() = differ.currentList
+        set(value) = differ.submitList(value)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StaredSurahViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.layout_stared_surah, parent, false)

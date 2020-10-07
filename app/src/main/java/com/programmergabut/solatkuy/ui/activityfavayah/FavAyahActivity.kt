@@ -41,7 +41,7 @@ class FavAyahActivity : AppCompatActivity() {
                     if(it.data.isEmpty())
                         tv_fav_ayah_empty.visibility = View.VISIBLE
                     else{
-                        favAyahAdapter.setAyah(it.data)
+                        favAyahAdapter.listAyah = it.data
                         favAyahAdapter.notifyDataSetChanged()
                         tv_fav_ayah_empty.visibility = View.GONE
                     }

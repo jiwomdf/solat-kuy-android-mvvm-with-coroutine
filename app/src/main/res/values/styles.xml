@@ -4,13 +4,19 @@
     <style name="AppTheme" parent="Theme.MaterialComponents.Light.NoActionBar">
         <!-- Customize your theme here. -->
         <item name="colorPrimary">@color/colorPrimary</item>
-        <item name="colorPrimaryDark">@color/colorPrimaryDark</item>
+        <item name="colorPrimaryDark">@color/colorLightGrey</item>
         <item name="colorAccent">@color/colorAccent</item>
+        <item name="android:windowLightStatusBar">true</item>
+<!--        <item name="android:textViewStyle">@style/PoppinsTextStyle</item>-->
     </style>
 
     <style name="ActionBar.nameText" parent="TextAppearance.AppCompat.Widget.ActionBar.Title">
         <item name="android:textColor">@color/colorBlack</item>
         <item name="android:textStyle">bold</item>
+    </style>
+
+    <style name="PoppinsTextStyle" parent="android:Widget.TextView">
+        <item name="fontFamily">@font/poppins_regular</item>
     </style>
 
 

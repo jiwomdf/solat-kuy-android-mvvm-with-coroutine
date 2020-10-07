@@ -5,6 +5,8 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Toast
+import androidx.recyclerview.widget.AsyncListDiffer
+import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.data.local.localentity.MsFavAyah
@@ -16,12 +18,17 @@ class ReadSurahAdapter(private val context: Context, private val viewModel: Read
                        private val surahId: String, private val surahName: String)
     : RecyclerView.Adapter<ReadSurahAdapter.ReadSurahViewHolder>() {
 
-    private var listAyah = mutableListOf<Ayah>()
+    private val diffCallback = object: DiffUtil.ItemCallback<Ayah>(){
+        override fun areItemsTheSame(oldItem: Ayah, newItem: Ayah) = oldItem == newItem
 
-    fun setAyah(datas: List<Ayah>){
-        listAyah.clear()
-        listAyah.addAll(datas)
+        override fun areContentsTheSame(oldItem: Ayah, newItem: Ayah) = oldItem == newItem
     }
+
+    private val differ = AsyncListDiffer(this, diffCallback)
+
+    var listAyah : List<Ayah>
+        get() = differ.currentList
+        set(value) = differ.submitList(value)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReadSurahViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.layout_read_surah, parent, false)
