@@ -28,7 +28,7 @@ class PushNotificationHelper(context: Context, selList: MutableList<NotifiedPray
 
         val listPrayerBundle = bundleCreator(selList)
 
-        val newList = selList.filter { x -> x.prayerName !=  EnumConfig.sunrise} as MutableList<NotifiedPrayer>
+        val newList = selList.filter { x -> x.prayerName !=  EnumConfig.SUNRISE} as MutableList<NotifiedPrayer>
 
         newList.sortBy { x -> x.prayerID }
         newList.forEachIndexed { _, it ->

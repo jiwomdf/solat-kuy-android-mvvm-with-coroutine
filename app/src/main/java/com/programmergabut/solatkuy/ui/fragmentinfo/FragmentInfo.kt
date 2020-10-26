@@ -1,14 +1,10 @@
 package com.programmergabut.solatkuy.ui.fragmentinfo
 
-import android.annotation.SuppressLint
-import android.os.Bundle
-import android.view.View
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.programmergabut.solatkuy.R
+import com.programmergabut.solatkuy.base.BaseFragment
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
 import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.Data
 import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.PrayerResponse
@@ -27,21 +23,22 @@ import java.util.*
  */
 
 @AndroidEntryPoint
-class FragmentInfo : Fragment(R.layout.fragment_info), SwipeRefreshLayout.OnRefreshListener {
+class FragmentInfo : BaseFragment(R.layout.fragment_info), SwipeRefreshLayout.OnRefreshListener {
 
     private val fragmentInfoViewModel: FragmentInfoViewModel by viewModels()
-
     private lateinit var duaCollectionAdapter: DuaCollectionAdapter
     private var mMsApi1: MsApi1? = null
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-
-        subscribeObserversDB()
-
-        refreshLayout()
-        subscribeObserversAPI()
+    override fun setIntentExtra() {}
+    override fun setFirstView() {
         initRvDuaCollection()
+    }
+    override fun setObserver() {
+        observeDB()
+        observeAPI()
+    }
+    override fun setListener() {
+        sl_info.setOnRefreshListener(this)
     }
 
     private fun initRvDuaCollection() {
@@ -57,30 +54,25 @@ class FragmentInfo : Fragment(R.layout.fragment_info), SwipeRefreshLayout.OnRefr
 
 
     /* Subscribe live data */
-    private fun subscribeObserversDB() {
-        fragmentInfoViewModel.msApi1.observe(viewLifecycleOwner, Observer { retval ->
+    private fun observeDB() {
+        fragmentInfoViewModel.msApi1.observe(viewLifecycleOwner, { retval ->
             when(retval.status){
                 EnumStatus.SUCCESS -> {
+                    if(retval.data == null)
+                        throw Exception("retval.data == null")
+
                     mMsApi1 = retval.data
+                    val city = LocationHelper.getCity(requireContext(), retval.data.latitude.toDouble(), retval.data.longitude.toDouble())
 
-                    retval.data?.let {
-                        val city = LocationHelper.getCity(requireContext(), it.latitude.toDouble(), it.longitude.toDouble())
-
-                        tv_city.text = city ?: EnumConfig.lCity
-
-                        fetchPrayerApi(it)
-                    }
-
-
+                    tv_city.text = city ?: EnumConfig.CITY_NOT_FOUND_STR
+                    fetchPrayerApi(retval.data)
                 }
-                EnumStatus.LOADING -> {}
-                EnumStatus.ERROR -> {}
+                else -> {}
             }
         })
     }
 
-    @SuppressLint("SetTextI18n")
-    private fun subscribeObserversAPI(){
+    private fun observeAPI(){
 
         /* fragmentInfoViewModel.asmaAlHusnaApi.observe(this, Observer {
             when(it.Status) {
@@ -102,11 +94,10 @@ class FragmentInfo : Fragment(R.layout.fragment_info), SwipeRefreshLayout.OnRefr
             }
         }) */
 
-        fragmentInfoViewModel.prayer.observe(viewLifecycleOwner, Observer {
+        fragmentInfoViewModel.prayer.observe(viewLifecycleOwner, {
 
             when(it.status){
                 EnumStatus.SUCCESS -> {
-
                     val sdf = SimpleDateFormat("dd", Locale.getDefault())
                     val currentDate = sdf.format(Date())
                     val data = createTodayData(it.data!!, currentDate)
@@ -125,29 +116,40 @@ class FragmentInfo : Fragment(R.layout.fragment_info), SwipeRefreshLayout.OnRefr
                     tv_hijri_day.text = hijriDate?.weekday?.en + " / " + hijriDate?.weekday?.ar
                 }
                 EnumStatus.LOADING -> {
-                    tv_imsak_date.text = getString(R.string.loading)
-                    tv_imsak_time.text = getString(R.string.loading)
-
-                    tv_gregorian_date.text = getString(R.string.loading)
-                    tv_hijri_date.text = getString(R.string.loading)
-                    tv_gregorian_month.text = getString(R.string.loading)
-                    tv_hijri_month.text = getString(R.string.loading)
-                    tv_gregorian_day.text = getString(R.string.loading)
-                    tv_hijri_day.text = getString(R.string.loading)
+                    setState(it.status)
                 }
                 EnumStatus.ERROR ->{
-                    tv_imsak_date.text = getString(R.string.fetch_failed)
-                    tv_imsak_time.text = getString(R.string.fetch_failed_sort)
-                    tv_gregorian_date.text = getString(R.string.fetch_failed_sort)
-                    tv_hijri_date.text = getString(R.string.fetch_failed_sort)
-                    tv_gregorian_month.text = getString(R.string.fetch_failed_sort)
-                    tv_hijri_month.text = getString(R.string.fetch_failed_sort)
-                    tv_gregorian_day.text = getString(R.string.fetch_failed_sort)
-                    tv_hijri_day.text = getString(R.string.fetch_failed_sort)
+                    setState(it.status)
                 }
             }
         })
 
+    }
+
+    private fun setState(status: EnumStatus){
+        when(status){
+            EnumStatus.SUCCESS -> { }
+            EnumStatus.LOADING -> {
+                tv_imsak_date.text = getString(R.string.loading)
+                tv_imsak_time.text = getString(R.string.loading)
+                tv_gregorian_date.text = getString(R.string.loading)
+                tv_hijri_date.text = getString(R.string.loading)
+                tv_gregorian_month.text = getString(R.string.loading)
+                tv_hijri_month.text = getString(R.string.loading)
+                tv_gregorian_day.text = getString(R.string.loading)
+                tv_hijri_day.text = getString(R.string.loading)
+            }
+            EnumStatus.ERROR ->{
+                tv_imsak_date.text = getString(R.string.fetch_failed)
+                tv_imsak_time.text = getString(R.string.fetch_failed_sort)
+                tv_gregorian_date.text = getString(R.string.fetch_failed_sort)
+                tv_hijri_date.text = getString(R.string.fetch_failed_sort)
+                tv_gregorian_month.text = getString(R.string.fetch_failed_sort)
+                tv_hijri_month.text = getString(R.string.fetch_failed_sort)
+                tv_gregorian_day.text = getString(R.string.fetch_failed_sort)
+                tv_hijri_day.text = getString(R.string.fetch_failed_sort)
+            }
+        }
     }
 
     /* private fun initAHAdapter(datas: List<com.programmergabut.solatkuy.data.remote.remoteentity.asmaalhusnaJson.Data>) {
@@ -178,18 +180,11 @@ class FragmentInfo : Fragment(R.layout.fragment_info), SwipeRefreshLayout.OnRefr
         fragmentInfoViewModel.fetchPrayerApi(mMsApi1)
     }
 
-    /* Refresher */
-    private fun refreshLayout() {
-        sl_info.setOnRefreshListener(this)
-    }
-
     override fun onRefresh() {
-
         if(mMsApi1 == null)
             throw Exception("null mMsApi1")
 
         fetchPrayerApi(mMsApi1!!)
-
         sl_info.isRefreshing = false
     }
 

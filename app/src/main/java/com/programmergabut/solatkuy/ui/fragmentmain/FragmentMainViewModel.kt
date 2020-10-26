@@ -26,17 +26,17 @@ class FragmentMainViewModel @ViewModelInject constructor(val repository: Reposit
         get() = _notifiedPrayer
 
     fun syncNotifiedPrayer(msApi1: MsApi1) = viewModelScope.launch {
-        EspressoIdlingResource.increment()
+        //EspressoIdlingResource.increment()
         _notifiedPrayer.postValue(Resource.loading(null))
         try {
             repository.syncNotifiedPrayer(msApi1).let {
                 _notifiedPrayer.postValue(Resource.success(it))
-                EspressoIdlingResource.decrement()
+                //EspressoIdlingResource.decrement()
             }
         }
         catch (e: Exception){
             _notifiedPrayer.postValue(Resource.error(e.message.toString(), null))
-            EspressoIdlingResource.decrement()
+            //EspressoIdlingResource.decrement()
         }
     }
 
@@ -46,18 +46,18 @@ class FragmentMainViewModel @ViewModelInject constructor(val repository: Reposit
 
     fun fetchReadSurahEn(nInSurah: Int) = viewModelScope.launch{
 
-        EspressoIdlingResource.increment()
+        //EspressoIdlingResource.increment()
         _readSurahEn.postValue(Resource.loading(null))
 
         try {
             repository.fetchReadSurahEn(nInSurah).let {
                 _readSurahEn.postValue(Resource.success(it))
-                EspressoIdlingResource.decrement()
+                //EspressoIdlingResource.decrement()
             }
         }
         catch (e: Exception){
             _readSurahEn.postValue(Resource.error(e.message.toString(), null))
-            EspressoIdlingResource.decrement()
+            //EspressoIdlingResource.decrement()
         }
     }
 
@@ -83,6 +83,10 @@ class FragmentMainViewModel @ViewModelInject constructor(val repository: Reposit
 
     fun updateIsUsingDBQuotes(isUsingDBQuotes: Boolean) = viewModelScope.launch {
         repository.updateIsUsingDBQuotes(isUsingDBQuotes)
+    }
+
+    fun updateMsApi1MonthAndYear(api1ID: Int, month: String, year:String) = viewModelScope.launch{
+        repository.updateMsApi1MonthAndYear(api1ID, month, year)
     }
 
 }

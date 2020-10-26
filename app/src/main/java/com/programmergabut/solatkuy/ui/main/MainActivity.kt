@@ -5,11 +5,9 @@ import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
-import android.content.SharedPreferences
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationManager
-import android.os.Bundle
 import android.os.Looper
 import android.view.View
 import android.view.ViewGroup
@@ -17,9 +15,7 @@ import android.widget.Button
 import android.widget.TextView
 import android.widget.Toast
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.lifecycle.Observer
 import androidx.lifecycle.lifecycleScope
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
@@ -29,7 +25,10 @@ import com.google.android.gms.location.LocationResult
 import com.google.android.gms.location.LocationServices
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.programmergabut.solatkuy.R
+import com.programmergabut.solatkuy.base.BaseActivity
 import com.programmergabut.solatkuy.data.local.SolatKuyRoom
+import com.programmergabut.solatkuy.data.local.localentity.MsApi1
+import com.programmergabut.solatkuy.ui.fragmentsetting.FragmentSettingViewModel
 import com.programmergabut.solatkuy.util.enumclass.EnumStatus
 import dagger.hilt.android.AndroidEntryPoint
 import es.dmoral.toasty.Toasty
@@ -39,59 +38,54 @@ import kotlinx.android.synthetic.main.layout_bottomsheet_bylatitudelongitude.vie
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.joda.time.LocalDate
-import javax.inject.Inject
 
 /*
  * Created by Katili Jiwo Adi Wiyono on 25/03/20.
  */
 @AndroidEntryPoint
-class MainActivity : AppCompatActivity() {
+class MainActivity : BaseActivity(R.layout.activity_main) {
 
-    lateinit var mSubDialogView: View
+    private lateinit var mSubDialogView: View
     private lateinit var mSubDialog: Dialog
-    private val mainActivityViewModel: MainActivityViewModel by viewModels()
-    @Inject lateinit var db : SolatKuyRoom
-    @Inject lateinit var sharedPref: SharedPreferences
+    private val viewModel: MainActivityViewModel by viewModels()
     private val ALL_PERMISSIONS = 101
 
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_main)
-
-        checkFirstOpenApp()
-    }
-
+    override fun setIntentExtra() {}
+    override fun setFirstView() {}
+    override fun setListener() {}
     override fun onDestroy() {
         super.onDestroy()
         sharedPref.edit().clear().apply()
     }
+    override fun setObserver() {
+        observeDb()
+        observeErrorMsg()
+    }
 
-    /* First load activity */
-    private fun checkFirstOpenApp() {
-
-        mainActivityViewModel.msSetting.observe(this, Observer {
+    private fun observeDb(){
+        viewModel.msSetting.observe(this, {
             when(it.status){
                 EnumStatus.SUCCESS -> {
                     if(it.data != null)
-                        if(it.data.isHasOpenApp){
-                            //initViewPager()
+                        if(it.data.isHasOpenApp)
                             initBottomNav()
-                        }
                         else
                             initDialog()
                     else
                         SolatKuyRoom.populateDatabase(db)
                 }
-                EnumStatus.LOADING -> {
-                    print("loading")
-                }
-                EnumStatus.ERROR -> {
-                    print("error")
-                }
+                else -> {}
             }
         })
+    }
 
+    private fun observeErrorMsg() {
+        viewModel.errMessage.observe(this, {
+            if(it == FragmentSettingViewModel.SUCCESS_CHANGE_COORDINATE)
+                Toasty.success(this, it, Toasty.LENGTH_SHORT).show()
+            else
+                Toasty.error(this, it, Toasty.LENGTH_SHORT).show()
+        })
     }
 
     /* DIALOG */
@@ -104,41 +98,6 @@ class MainActivity : AppCompatActivity() {
         dialog.show()
 
         btnSetLatitudeLongitude(dialog)
-    }
-
-    private fun initViewPager() {
-        /* val adapter = SwipeAdapter(supportFragmentManager, lifecycle)
-        adapter.addFragment(FragmentMain(false))
-        adapter.addFragment(FragmentCompass())
-        adapter.addFragment(QuranFragment())
-        adapter.addFragment(FragmentInfo())
-        adapter.addFragment(FragmentSetting())
-
-        vp2_main.let {
-            it.adapter = adapter
-            it.orientation = ViewPager2.ORIENTATION_HORIZONTAL
-            it.setPageTransformer(ZoomOutPageTransformer())
-            it.isUserInputEnabled = false
-            (it.getChildAt(0) as RecyclerView).overScrollMode = RecyclerView.OVER_SCROLL_NEVER
-        } */
-
-        /* addOnLayoutChangeListener( object : ViewPager.OnPageChangeListener{
-            override fun onPageScrollStateChanged(state: Int) {}
-
-            override fun onPageScrolled(position: Int, positionOffset: Float, positionOffsetPixels: Int) {}
-
-            override fun onPageSelected(position: Int) {
-                when(position){
-                    0 -> bottom_navigation.menu.findItem(R.id.i_prayer_time).isChecked  = true
-                    1 -> bottom_navigation.menu.findItem(R.id.i_compass).isChecked = true
-                    2 -> bottom_navigation.menu.findItem(R.id.i_quran).isChecked = true
-                    3 -> bottom_navigation.menu.findItem(R.id.i_info).isChecked = true
-                    4 -> bottom_navigation.menu.findItem(R.id.i_setting).isChecked = true
-                    else -> error("MainActivity")
-                }
-            }
-
-        }) */
     }
 
     private fun initBottomNav() {
@@ -154,7 +113,8 @@ class MainActivity : AppCompatActivity() {
                         else -> bottom_navigation.visibility = View.GONE
                     }
                 }
-        }catch (ex: Exception){
+        }
+        catch (ex: Exception){
             print(ex.message)
         }
 
@@ -171,7 +131,6 @@ class MainActivity : AppCompatActivity() {
         btnByLatitudeLongitude.setOnClickListener {
 
             mSubDialogView = layoutInflater.inflate(R.layout.layout_bottomsheet_bylatitudelongitude,null)
-            mSubDialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
             mSubDialog.setContentView(mSubDialogView)
             mSubDialog.show()
 
@@ -180,24 +139,6 @@ class MainActivity : AppCompatActivity() {
                 val latitude = mSubDialogView.et_llDialog_latitude.text.toString().trim()
                 val longitude = mSubDialogView.et_llDialog_longitude.text.toString().trim()
 
-                if(latitude.isEmpty() || longitude.isEmpty() || latitude == "." || longitude == "."){
-                    Toasty.warning(this@MainActivity,"latitude and longitude cannot be empty", Toast.LENGTH_SHORT).show()
-                    return@byLl
-                }
-
-                val arrLatitude = latitude.toCharArray()
-                val arrLongitude = longitude.toCharArray()
-
-                if(arrLatitude[arrLatitude.size - 1] == '.' || arrLongitude[arrLongitude.size - 1] == '.'){
-                    Toasty.warning(this@MainActivity,"latitude and longitude cannot be ended by .", Toast.LENGTH_SHORT).show()
-                    return@byLl
-                }
-
-                if(arrLatitude[0] == '.' || arrLongitude[0] == '.'){
-                    Toasty.warning(this@MainActivity,"latitude and longitude cannot be started by .", Toast.LENGTH_SHORT).show()
-                    return@byLl
-                }
-
                 insertLocationSettingToDb(latitude, longitude)
                 updateIsHasOpenApp(dialog)
             }
@@ -205,7 +146,6 @@ class MainActivity : AppCompatActivity() {
 
         btnByGps.setOnClickListener{
             mSubDialogView = layoutInflater.inflate(R.layout.layout_bottomsheet_bygps,null)
-            mSubDialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
             mSubDialog.setContentView(mSubDialogView)
             mSubDialog.show()
 
@@ -215,11 +155,6 @@ class MainActivity : AppCompatActivity() {
 
                 val latitude = mSubDialogView.tv_gpsDialog_latitude.text.toString().trim()
                 val longitude = mSubDialogView.tv_gpsDialog_longitude.text.toString().trim()
-
-                if(latitude.isEmpty() || longitude.isEmpty()){
-                    Toasty.warning(this@MainActivity,"Action failed, please enable your location", Toast.LENGTH_SHORT).show()
-                    return@byGps
-                }
 
                 insertLocationSettingToDb(latitude, longitude)
                 updateIsHasOpenApp(dialog)
@@ -232,35 +167,21 @@ class MainActivity : AppCompatActivity() {
         mSubDialog.dismiss()
         dialog.dismiss()
 
-        lifecycleScope.launch(Dispatchers.IO){
-            db.msSettingDao().updateIsHasOpenApp(true)
-        }
-
-        /* mainActivityViewModel.updateSetting(
-            MsSetting(
-                1,
-                true
-            )
-        )*/
-        Toasty.success(this@MainActivity,"Success change the coordinate", Toast.LENGTH_SHORT).show()
-
-        initViewPager()
+        viewModel.updateIsHasOpenApp(true)
     }
 
     /* Database Transaction */
     private fun insertLocationSettingToDb(latitude: String, longitude: String) {
 
         val currDate = LocalDate()
+        val data = MsApi1(1,
+            latitude,
+            longitude,
+            "3",
+            currDate.monthOfYear.toString(),
+            currDate.year.toString())
 
-        lifecycleScope.launch(Dispatchers.IO){
-            db.msApi1Dao().updateMsApi1(1,
-                latitude,
-                longitude,
-                "3",
-                currDate.monthOfYear.toString(),
-                currDate.year.toString())
-        }
-
+        viewModel.updateMsApi1(data)
     }
 
     /* Permission */

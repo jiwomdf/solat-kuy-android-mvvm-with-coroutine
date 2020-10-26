@@ -72,6 +72,9 @@
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rv_stared_ayah"
+                tools:orientation="horizontal"
+                tools:layoutManager="androidx.recyclerview.widget.LinearLayoutManager"
+                tools:listitem="@layout/layout_stared_surah"
                 android:layout_width="match_parent"
                 android:layout_height="match_parent" />
 

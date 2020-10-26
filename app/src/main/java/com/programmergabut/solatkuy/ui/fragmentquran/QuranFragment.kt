@@ -1,18 +1,16 @@
 package com.programmergabut.solatkuy.ui.fragmentquran
 
 import android.content.Intent
-import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.programmergabut.solatkuy.R
+import com.programmergabut.solatkuy.base.BaseFragment
 import com.programmergabut.solatkuy.data.remote.remoteentity.quranallsurahJson.Data
 import com.programmergabut.solatkuy.ui.activityfavayah.FavAyahActivity
 import com.programmergabut.solatkuy.util.enumclass.EnumStatus
@@ -25,23 +23,28 @@ import java.util.*
  */
 
 @AndroidEntryPoint
-class QuranFragment : Fragment(R.layout.fragment_quran), SwipeRefreshLayout.OnRefreshListener {
+class QuranFragment : BaseFragment(R.layout.fragment_quran), SwipeRefreshLayout.OnRefreshListener {
 
     private val fragmentQuranFragmentViewModel: QuranFragmentViewModel by viewModels()
-
     private lateinit var allSurahAdapter: AllSurahAdapter
     private lateinit var staredSurahAdapter: StaredSurahAdapter
     private var allSurahDatas: MutableList<Data>? = null
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun setIntentExtra() {}
 
+    override fun setFirstView() {
         initRvAllSurah()
         initRvStaredSurah()
-        observeApi()
-        refreshLayout()
         searchSurah()
         createJuzzSpinner()
+    }
+
+    override fun setObserver() {
+        observeApi()
+    }
+
+    override fun setListener() {
+        sl_quran.setOnRefreshListener(this)
 
         cv_fav_ayah.setOnClickListener {
             val i = Intent(context, FavAyahActivity::class.java)
@@ -55,7 +58,7 @@ class QuranFragment : Fragment(R.layout.fragment_quran), SwipeRefreshLayout.OnRe
             override fun afterTextChanged(s: Editable?) {
                 val newData = allSurahDatas!!.filter { x -> x.englishNameLC!!.contains(s.toString()) }
 
-                allSurahAdapter.listData = newData ?: listOf()
+                allSurahAdapter.listData = newData
                 allSurahAdapter.notifyDataSetChanged()
 
                 s_juzz.setSelection(0)
@@ -71,46 +74,54 @@ class QuranFragment : Fragment(R.layout.fragment_quran), SwipeRefreshLayout.OnRe
     }
 
     private fun observeApi(){
-        fragmentQuranFragmentViewModel.allSurah.observe(viewLifecycleOwner, Observer {
+        fragmentQuranFragmentViewModel.allSurah.observe(viewLifecycleOwner, {
             when(it.status){
                 EnumStatus.SUCCESS -> {
                     val datas = it.data?.data!! as MutableList<Data>
-                    allSurahAdapter.listData = datas ?: listOf()
+                    allSurahAdapter.listData = datas
                     allSurahAdapter.notifyDataSetChanged()
 
                     createAllSurahDatas(datas)
-
-                    tv_loading_all_surah.visibility = View.GONE
-                    rv_quran_surah.visibility = View.VISIBLE
-
-                    sl_quran.isRefreshing = false
+                    setVisibility(it.status)
                 }
-                EnumStatus.LOADING -> {
-                    rv_quran_surah.visibility = View.INVISIBLE
-                    tv_loading_all_surah.visibility = View.VISIBLE
-                    tv_loading_all_surah.text = getString(R.string.loading)
-                }
-                EnumStatus.ERROR -> {
-                    rv_quran_surah.visibility = View.INVISIBLE
-                    tv_loading_all_surah.text = getString(R.string.fetch_failed)
-
-                    sl_quran.isRefreshing = false
-                }
+                EnumStatus.LOADING -> setVisibility(it.status)
+                EnumStatus.ERROR -> setVisibility(it.status)
             }
         })
 
-        fragmentQuranFragmentViewModel.staredSurah.observe(viewLifecycleOwner, Observer {
+        fragmentQuranFragmentViewModel.staredSurah.observe(viewLifecycleOwner, {
             when(it.status){
                 EnumStatus.SUCCESS -> {
                     staredSurahAdapter.listData = it.data!!
                     staredSurahAdapter.notifyDataSetChanged()
                 }
-                EnumStatus.LOADING -> {}
-                EnumStatus.ERROR -> {}
+                else -> {}
             }
         })
 
         fragmentQuranFragmentViewModel.fetchAllSurah()
+    }
+
+    private fun setVisibility(status: EnumStatus){
+
+        when(status){
+            EnumStatus.SUCCESS -> {
+                tv_loading_all_surah.text = getString(R.string.loading)
+                tv_loading_all_surah.visibility = View.GONE
+                rv_quran_surah.visibility = View.VISIBLE
+                sl_quran.isRefreshing = false
+            }
+            EnumStatus.LOADING -> {
+                rv_quran_surah.visibility = View.INVISIBLE
+                tv_loading_all_surah.visibility = View.VISIBLE
+            }
+            EnumStatus.ERROR -> {
+                tv_loading_all_surah.text = getString(R.string.fetch_failed)
+                rv_quran_surah.visibility = View.INVISIBLE
+                sl_quran.isRefreshing = false
+            }
+        }
+
     }
 
     private fun createAllSurahDatas(datas: MutableList<Data>) {
@@ -130,10 +141,11 @@ class QuranFragment : Fragment(R.layout.fragment_quran), SwipeRefreshLayout.OnRe
     private fun createJuzzSpinner(){
         val arrJuzz = mutableListOf<String>()
         arrJuzz.add("All Juzz")
-        for (i in 1..30){ arrJuzz.add(i.toString()) }
+        for (i in 1..30){
+            arrJuzz.add(i.toString())
+        }
 
         s_juzz.adapter = ArrayAdapter(requireContext(), R.layout.spinner_item, arrJuzz)
-
         s_juzz.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
             override fun onNothingSelected(parent: AdapterView<*>?) {}
 
@@ -149,7 +161,6 @@ class QuranFragment : Fragment(R.layout.fragment_quran), SwipeRefreshLayout.OnRe
         rv_quran_surah.apply {
             adapter = allSurahAdapter
             layoutManager = LinearLayoutManager(this@QuranFragment.context)
-            setHasFixedSize(true)
         }
     }
 
@@ -159,7 +170,6 @@ class QuranFragment : Fragment(R.layout.fragment_quran), SwipeRefreshLayout.OnRe
         rv_stared_ayah.apply {
             adapter = staredSurahAdapter
             layoutManager = LinearLayoutManager(this@QuranFragment.context, LinearLayoutManager.HORIZONTAL, false)
-            setHasFixedSize(true)
         }
     }
 
@@ -208,15 +218,10 @@ class QuranFragment : Fragment(R.layout.fragment_quran), SwipeRefreshLayout.OnRe
             }
         }
 
-        if(!datas.isEmpty()){
+        if(datas.isNotEmpty()){
             allSurahAdapter.listData = datas ?: listOf()
             allSurahAdapter.notifyDataSetChanged()
         }
-    }
-
-    /* Refresher */
-    private fun refreshLayout() {
-        sl_quran.setOnRefreshListener(this)
     }
 
     override fun onRefresh() {

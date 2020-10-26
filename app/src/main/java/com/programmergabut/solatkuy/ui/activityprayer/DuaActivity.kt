@@ -1,11 +1,10 @@
 package com.programmergabut.solatkuy.ui.activityprayer
 
-import androidx.appcompat.app.AppCompatActivity
-import android.os.Bundle
 import com.programmergabut.solatkuy.R
+import com.programmergabut.solatkuy.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_dua.*
 
-class DuaActivity : AppCompatActivity() {
+class DuaActivity : BaseActivity(R.layout.activity_dua) {
 
     companion object{
         const val duaTitle = "duaTitle"
@@ -16,10 +15,11 @@ class DuaActivity : AppCompatActivity() {
         const val duaRef = "duaRef"
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_dua)
+    override fun setIntentExtra() {}
+    override fun setObserver() {}
+    override fun setListener() {}
 
+    override fun setFirstView() {
         tv_prayer_title.text = intent.getStringExtra(duaTitle)!!
         tv_prayer_ar.text = intent.getStringExtra(duaAr)!!
         tv_prayer_lt.text = intent.getStringExtra(duaLt)!!
@@ -27,5 +27,7 @@ class DuaActivity : AppCompatActivity() {
         tv_prayer_in.text = intent.getStringExtra(duaIn)!!
         tv_prayer_ref.text = intent.getStringExtra(duaRef)!!
     }
+
+
 
 }

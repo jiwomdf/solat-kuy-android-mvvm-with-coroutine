@@ -53,7 +53,6 @@ class ReadSurahViewModel @ViewModelInject constructor(val repository: Repository
         this.ayahID.value = ayahID
     }
 
-
     fun insertFavAyah(msFavAyah: MsFavAyah) = viewModelScope.launch { repository.insertFavAyah(msFavAyah) }
     fun deleteFavAyah(msFavAyah: MsFavAyah) = viewModelScope.launch { repository.deleteFavAyah(msFavAyah) }
 

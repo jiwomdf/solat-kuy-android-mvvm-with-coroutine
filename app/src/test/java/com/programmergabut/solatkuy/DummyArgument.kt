@@ -18,12 +18,12 @@ object DummyArgument {
     fun getMapPrayer(): MutableMap<String, String> {
         val map = mutableMapOf<String, String>()
 
-        map[EnumConfig.fajr] = "04:35"
-        map[EnumConfig.dhuhr] = "11:41"
-        map[EnumConfig.asr] = "15:02"
-        map[EnumConfig.maghrib] = "17:32"
-        map[EnumConfig.isha] = "18:42"
-        map[EnumConfig.sunrise] = "05:00"
+        map[EnumConfig.FAJR] = "04:35"
+        map[EnumConfig.DHUHR] = "11:41"
+        map[EnumConfig.ASR] = "15:02"
+        map[EnumConfig.MAGHRIB] = "17:32"
+        map[EnumConfig.ISHA] = "18:42"
+        map[EnumConfig.SUNRISE] = "05:00"
 
         return map
     }

@@ -1,37 +1,30 @@
 package com.programmergabut.solatkuy.ui.activityfavayah
 
-import android.os.Bundle
 import android.view.View
 import androidx.activity.viewModels
-import androidx.appcompat.app.AppCompatActivity
 import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.programmergabut.solatkuy.R
+import com.programmergabut.solatkuy.base.BaseActivity
 import com.programmergabut.solatkuy.util.enumclass.EnumStatus
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_fav_ayah.*
 
 @AndroidEntryPoint
-class FavAyahActivity : AppCompatActivity() {
+class FavAyahActivity : BaseActivity(R.layout.activity_fav_ayah) {
 
     private lateinit var favAyahAdapter: FavAyahAdapter
     private val favAyahViewModel: FavAyahViewModel by viewModels()
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        setContentView(R.layout.activity_fav_ayah)
-
-        initAppBar()
-        initRVFavAyah()
-        observeDB()
-    }
-
-    private fun initAppBar() {
+    override fun setIntentExtra() {}
+    override fun setListener() {}
+    override fun setFirstView() {
         tb_favAyah.title = "Ayahs you've been liked"
+        initRVFavAyah()
     }
 
-    private fun observeDB() {
-        favAyahViewModel.favAyah.observe(this, Observer {
+    override fun setObserver() {
+        favAyahViewModel.favAyah.observe(this, {
 
             when(it.status){
                 EnumStatus.SUCCESS -> {
@@ -45,7 +38,6 @@ class FavAyahActivity : AppCompatActivity() {
                         favAyahAdapter.notifyDataSetChanged()
                         tv_fav_ayah_empty.visibility = View.GONE
                     }
-
                 }
                 EnumStatus.LOADING -> {}
                 EnumStatus.ERROR -> {}

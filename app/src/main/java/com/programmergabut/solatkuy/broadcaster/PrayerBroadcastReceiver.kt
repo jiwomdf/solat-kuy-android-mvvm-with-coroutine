@@ -82,10 +82,10 @@ class PrayerBroadcastReceiver: BroadcastReceiver() {
             }
         } */
 
-        val pendingIntent = PendingIntent.getActivity(context, EnumConfig.nIdDua, duaIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val pendingIntent = PendingIntent.getActivity(context, EnumConfig.ID_DUA, duaIntent, PendingIntent.FLAG_UPDATE_CURRENT)
 
         val nb = mNotificationHelper.getPrayerReminderNC(/* pID!!,*/ pTime!!, pCity!!, pName!!, /* listPrayerBundle, */ pendingIntent)
-        mNotificationHelper.getManager()?.notify(EnumConfig.nIdMain, nb.build())
+        mNotificationHelper.getManager()?.notify(EnumConfig.ID_MAIN, nb.build())
 
         executeNextNotification(listData, listPrayerBundle, context, pCity!!)
 
@@ -107,7 +107,7 @@ class PrayerBroadcastReceiver: BroadcastReceiver() {
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
         /* remove img_sunrise */
-        val newList = listData.filter { x -> x.prayerName !=  EnumConfig.sunrise} as MutableList<NotifiedPrayer>
+        val newList = listData.filter { x -> x.prayerName !=  EnumConfig.SUNRISE} as MutableList<NotifiedPrayer>
 
         newList.sortBy { x -> x.prayerID }
         newList.forEachIndexed { _, it ->

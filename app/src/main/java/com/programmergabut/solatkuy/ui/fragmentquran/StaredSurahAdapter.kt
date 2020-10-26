@@ -33,7 +33,7 @@ class StaredSurahAdapter(private val c: Context) : RecyclerView.Adapter<StaredSu
         return StaredSurahViewHolder(view)
     }
 
-    override fun getItemCount(): Int = listData.size
+    override fun getItemCount(): Int = differ.currentList.size
 
     override fun onBindViewHolder(holder: StaredSurahViewHolder, position: Int) = holder.bind(listData[position])
 

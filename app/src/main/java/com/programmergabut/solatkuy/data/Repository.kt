@@ -118,6 +118,8 @@ class Repository @Inject constructor(
         return data
     }
     suspend fun updateIsUsingDBQuotes(isUsingDBQuotes: Boolean) = msSettingDao.updateIsUsingDBQuotes(isUsingDBQuotes)
+    suspend fun updateMsApi1MonthAndYear(api1ID: Int, month: String, year:String) = msApi1Dao.updateMsApi1MonthAndYear(api1ID, month, year)
+    suspend fun updateIsHasOpenApp(isHasOpen: Boolean) = msSettingDao.updateIsHasOpenApp(isHasOpen)
 
     /*
      * Retrofit
@@ -147,13 +149,12 @@ class Repository @Inject constructor(
 
                 val map = mutableMapOf<String, String>()
 
-                map[EnumConfig.fajr] = timings?.fajr.toString()
-                map[EnumConfig.dhuhr] = timings?.dhuhr.toString()
-                map[EnumConfig.asr] = timings?.asr.toString()
-                map[EnumConfig.maghrib] = timings?.maghrib.toString()
-                map[EnumConfig.isha] = timings?.isha.toString()
-                map[EnumConfig.sunrise] = timings?.sunrise.toString()
-
+                map[EnumConfig.FAJR] = timings?.fajr.toString()
+                map[EnumConfig.DHUHR] = timings?.dhuhr.toString()
+                map[EnumConfig.ASR] = timings?.asr.toString()
+                map[EnumConfig.MAGHRIB] = timings?.maghrib.toString()
+                map[EnumConfig.ISHA] = timings?.isha.toString()
+                map[EnumConfig.SUNRISE] = timings?.sunrise.toString()
 
                 map.forEach { p ->
                     notifiedPrayerDao.updatePrayerTime(p.key, p.value)
@@ -165,11 +166,7 @@ class Repository @Inject constructor(
             print("not connected to internet and using the offline data")
         }
 
-        val ret = notifiedPrayerDao.getListNotifiedPrayerSync()
-
-        Log.d("syncNotifiedPrayer", "Ret")
-
-        return ret
+        return notifiedPrayerDao.getListNotifiedPrayerSync()
 
         /* return object : NetworkBoundResource<List<NotifiedPrayer>, PrayerResponse>(){
             override fun loadFromDB(): LiveData<List<NotifiedPrayer>> = notifiedPrayerDao.getNotifiedPrayer()

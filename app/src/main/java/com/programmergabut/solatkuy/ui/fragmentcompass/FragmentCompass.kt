@@ -2,9 +2,7 @@ package com.programmergabut.solatkuy.ui.fragmentcompass
 
 import android.annotation.SuppressLint
 import android.app.Dialog
-import android.content.Context
 import android.content.Context.SENSOR_SERVICE
-import android.content.SharedPreferences
 import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
@@ -14,24 +12,23 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.RotateAnimation
-import androidx.fragment.app.Fragment
 import androidx.fragment.app.viewModels
 import androidx.lifecycle.Observer
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.programmergabut.solatkuy.R
+import com.programmergabut.solatkuy.base.BaseFragment
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
 import com.programmergabut.solatkuy.util.enumclass.EnumStatus
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_compass.*
 import kotlinx.android.synthetic.main.layout_phone_tilt.*
-import javax.inject.Inject
 
 /*
  * Created by Katili Jiwo Adi Wiyono on 31/03/20.
  */
 
 @AndroidEntryPoint
-class FragmentCompass : Fragment(R.layout.fragment_compass), SensorEventListener, SwipeRefreshLayout.OnRefreshListener {
+class FragmentCompass : BaseFragment(R.layout.fragment_compass), SensorEventListener, SwipeRefreshLayout.OnRefreshListener {
 
     private val fragmentCompassViewModel: FragmentCompassViewModel by viewModels()
     private lateinit var mMsApi1: MsApi1
@@ -41,7 +38,6 @@ class FragmentCompass : Fragment(R.layout.fragment_compass), SensorEventListener
     private var azimuth = 0f
     private var currentAzimuth = 0f
     private lateinit var mSensorManager: SensorManager
-    @Inject lateinit var sharedPref: SharedPreferences
 
     /* Compass */
     override fun onResume() {
@@ -58,15 +54,20 @@ class FragmentCompass : Fragment(R.layout.fragment_compass), SensorEventListener
         mSensorManager.unregisterListener(this)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun setIntentExtra() {}
 
+    override fun setFirstView() {
         mSensorManager = activity?.getSystemService(SENSOR_SERVICE) as SensorManager
+        openLottieAnimation()
+    }
 
+    override fun setObserver() {
         subscribeObserversDB()
         subscribeObserversAPI()
-        openLottieAnimation()
+    }
 
-        refreshLayout()
+    override fun setListener() {
+        sl_compass.setOnRefreshListener(this)
     }
 
 
@@ -167,11 +168,6 @@ class FragmentCompass : Fragment(R.layout.fragment_compass), SensorEventListener
     }
 
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
-
-    /* Refresher */
-    private fun refreshLayout() {
-        sl_compass.setOnRefreshListener(this)
-    }
 
     override fun onRefresh() {
         fragmentCompassViewModel.fetchCompassApi(mMsApi1)

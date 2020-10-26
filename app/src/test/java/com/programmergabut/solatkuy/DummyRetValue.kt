@@ -27,42 +27,42 @@ object DummyRetValue {
 
         listNotifiedPrayer.add(
             NotifiedPrayer(
-                EnumConfig.fajr,
+                EnumConfig.FAJR,
                 true,
                 "04:29"
             )
         )
         listNotifiedPrayer.add(
             NotifiedPrayer(
-                EnumConfig.dhuhr,
+                EnumConfig.DHUHR,
                 true,
                 "11:35"
             )
         )
         listNotifiedPrayer.add(
             NotifiedPrayer(
-                EnumConfig.asr,
+                EnumConfig.ASR,
                 true,
                 "14:56"
             )
         )
         listNotifiedPrayer.add(
             NotifiedPrayer(
-                EnumConfig.maghrib,
+                EnumConfig.MAGHRIB,
                 true,
                 "17:26"
             )
         )
         listNotifiedPrayer.add(
             NotifiedPrayer(
-                EnumConfig.isha,
+                EnumConfig.ISHA,
                 true,
                 "18:36"
             )
         )
         listNotifiedPrayer.add(
             NotifiedPrayer(
-                EnumConfig.sunrise,
+                EnumConfig.SUNRISE,
                 true,
                 "05:00"
             )

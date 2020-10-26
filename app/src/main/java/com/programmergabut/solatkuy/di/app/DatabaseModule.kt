@@ -4,6 +4,7 @@ import android.content.Context
 import androidx.room.Room
 import com.programmergabut.solatkuy.data.local.SolatKuyRoom
 import com.programmergabut.solatkuy.util.enumclass.EnumConfig
+import com.programmergabut.solatkuy.util.enumclass.EnumConfig.Companion.DATABASE_NAME
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -15,14 +16,13 @@ import javax.inject.Singleton
 @InstallIn(ApplicationComponent::class)
 object DatabaseModule {
 
-
-    /* DAO */
     @Singleton
     @Provides
-    fun provideRunningDatabase(@ApplicationContext context: Context): SolatKuyRoom {
-      return Room.databaseBuilder(context, SolatKuyRoom::class.java, EnumConfig.databaseName).build()
-    }
+    fun provideSolatKuyDatabase(
+        @ApplicationContext context: Context
+    ) = Room.databaseBuilder(context, SolatKuyRoom::class.java, DATABASE_NAME).build()
 
+    /* DAO */
     @Singleton
     @Provides
     fun provideNotifiedPrayerDao(db: SolatKuyRoom) = db.notifiedPrayerDao()

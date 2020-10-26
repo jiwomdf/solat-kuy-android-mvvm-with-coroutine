@@ -32,7 +32,7 @@ class AllSurahAdapter(private val c: Context): RecyclerView.Adapter<AllSurahAdap
         return AllSurahViewHolder(view)
     }
 
-    override fun getItemCount(): Int = listData.size
+    override fun getItemCount(): Int = differ.currentList.size
 
     override fun onBindViewHolder(holder: AllSurahViewHolder, position: Int) = holder.bind(listData[position])
 

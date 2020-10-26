@@ -14,9 +14,9 @@ import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonAr.Aya
 import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.layout_read_surah.view.*
 
-class ReadSurahAdapter(private val context: Context, private val viewModel: ReadSurahViewModel,
-                       private val surahId: String, private val surahName: String)
-    : RecyclerView.Adapter<ReadSurahAdapter.ReadSurahViewHolder>() {
+class ReadSurahAdapter(private val viewModel: ReadSurahViewModel,
+                       private val surahId: String, private val surahName: String,
+                       private val context: Context) : RecyclerView.Adapter<ReadSurahAdapter.ReadSurahViewHolder>() {
 
     private val diffCallback = object: DiffUtil.ItemCallback<Ayah>(){
         override fun areItemsTheSame(oldItem: Ayah, newItem: Ayah) = oldItem == newItem
