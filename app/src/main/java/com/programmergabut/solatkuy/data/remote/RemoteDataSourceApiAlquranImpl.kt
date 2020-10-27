@@ -47,7 +47,9 @@ class RemoteDataSourceApiAlquranImpl @Inject constructor(
             x.ruku,
             x.text,
             "",
-            false)} as MutableList<Ayah>
+            isFav = false,
+            isLastRead = false
+        )} as MutableList<Ayah>
 
         retValEn.data.ayahs.forEachIndexed { index, x ->
             listAyah[index].textEn = x.text

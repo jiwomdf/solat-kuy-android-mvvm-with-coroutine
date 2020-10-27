@@ -37,13 +37,33 @@
 
             <Spinner
                 android:id="@+id/s_juzz"
-                android:layout_width="300dp"
+                android:layout_width="200dp"
                 android:layout_height="wrap_content"
                 android:layout_margin="@dimen/small_margin"
                 android:layout_alignParentStart="true"
                 android:layout_alignParentTop="true"/>
 
             <androidx.cardview.widget.CardView
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_alignParentTop="true"
+                android:layout_marginTop="@dimen/small_margin"
+                android:layout_marginEnd="@dimen/small_margin"
+                android:layout_toStartOf="@+id/cv_fav_ayah"
+                app:cardBackgroundColor="@color/colorDarkWhite"
+                app:cardCornerRadius="@dimen/medium_margin">
+
+                <androidx.appcompat.widget.AppCompatImageView
+                    android:id="@+id/cv_last_read_ayah"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_margin="@dimen/smaller_margin"
+                    android:src="@drawable/ic_baseline_menu_book_accent" />
+
+            </androidx.cardview.widget.CardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cv_fav_ayah"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_marginTop="@dimen/small_margin"
@@ -54,7 +74,6 @@
                 app:cardCornerRadius="@dimen/medium_margin">
 
                 <androidx.appcompat.widget.AppCompatImageView
-                    android:id="@+id/cv_fav_ayah"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_margin="@dimen/smaller_margin"

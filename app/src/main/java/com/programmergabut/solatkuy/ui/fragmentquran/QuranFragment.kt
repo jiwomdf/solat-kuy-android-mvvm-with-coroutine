@@ -13,6 +13,8 @@ import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.base.BaseFragment
 import com.programmergabut.solatkuy.data.remote.remoteentity.quranallsurahJson.Data
 import com.programmergabut.solatkuy.ui.activityfavayah.FavAyahActivity
+import com.programmergabut.solatkuy.ui.activityreadsurah.ReadSurahActivity
+import com.programmergabut.solatkuy.util.enumclass.EnumConfig.Companion.LAST_READ_SURAH
 import com.programmergabut.solatkuy.util.enumclass.EnumStatus
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_quran.*
@@ -31,18 +33,15 @@ class QuranFragment : BaseFragment(R.layout.fragment_quran), SwipeRefreshLayout.
     private var allSurahDatas: MutableList<Data>? = null
 
     override fun setIntentExtra() {}
-
     override fun setFirstView() {
         initRvAllSurah()
         initRvStaredSurah()
-        searchSurah()
-        createJuzzSpinner()
+        initSearchSurah()
+        initJuzzSpinner()
     }
-
     override fun setObserver() {
         observeApi()
     }
-
     override fun setListener() {
         sl_quran.setOnRefreshListener(this)
 
@@ -50,24 +49,32 @@ class QuranFragment : BaseFragment(R.layout.fragment_quran), SwipeRefreshLayout.
             val i = Intent(context, FavAyahActivity::class.java)
             context?.startActivities(arrayOf(i))
         }
+
+        cv_last_read_ayah.setOnClickListener {
+            val surahID = sharedPref.getInt(LAST_READ_SURAH, -1)
+            val selSurah = allSurahDatas?.find { x -> x.number == surahID }
+            val intent = Intent(requireContext(), ReadSurahActivity::class.java)
+            intent.apply {
+                putExtra(ReadSurahActivity.SURAH_ID, selSurah?.number.toString())
+                putExtra(ReadSurahActivity.SURAH_NAME, selSurah?.englishName)
+                putExtra(ReadSurahActivity.SURAH_TRANSLATION, selSurah?.englishNameTranslation)
+                putExtra(ReadSurahActivity.IS_AUTO_SCROLL, true)
+            }
+            requireContext().startActivities(arrayOf(intent))
+        }
     }
 
-    private fun searchSurah() {
+    private fun initSearchSurah() {
         et_search.addTextChangedListener(object: TextWatcher{
 
             override fun afterTextChanged(s: Editable?) {
                 val newData = allSurahDatas!!.filter { x -> x.englishNameLC!!.contains(s.toString()) }
-
                 allSurahAdapter.listData = newData
                 allSurahAdapter.notifyDataSetChanged()
-
                 s_juzz.setSelection(0)
             }
-
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
-
         })
 
         s_juzz.setSelection(0, true)
@@ -103,7 +110,6 @@ class QuranFragment : BaseFragment(R.layout.fragment_quran), SwipeRefreshLayout.
     }
 
     private fun setVisibility(status: EnumStatus){
-
         when(status){
             EnumStatus.SUCCESS -> {
                 tv_loading_all_surah.text = getString(R.string.loading)
@@ -121,7 +127,6 @@ class QuranFragment : BaseFragment(R.layout.fragment_quran), SwipeRefreshLayout.
                 sl_quran.isRefreshing = false
             }
         }
-
     }
 
     private fun createAllSurahDatas(datas: MutableList<Data>) {
@@ -138,7 +143,7 @@ class QuranFragment : BaseFragment(R.layout.fragment_quran), SwipeRefreshLayout.
         } as MutableList<Data>
     }
 
-    private fun createJuzzSpinner(){
+    private fun initJuzzSpinner(){
         val arrJuzz = mutableListOf<String>()
         arrJuzz.add("All Juzz")
         for (i in 1..30){
@@ -148,7 +153,6 @@ class QuranFragment : BaseFragment(R.layout.fragment_quran), SwipeRefreshLayout.
         s_juzz.adapter = ArrayAdapter(requireContext(), R.layout.spinner_item, arrJuzz)
         s_juzz.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
             override fun onNothingSelected(parent: AdapterView<*>?) {}
-
             override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
                 juzzSurahFilter(s_juzz.selectedItem.toString())
             }
@@ -156,8 +160,15 @@ class QuranFragment : BaseFragment(R.layout.fragment_quran), SwipeRefreshLayout.
     }
 
     private fun initRvAllSurah() {
-        allSurahAdapter = AllSurahAdapter(requireContext())
-
+        allSurahAdapter = AllSurahAdapter { number, englishName, englishNameTranslation ->
+            val intent = Intent(requireContext(), ReadSurahActivity::class.java)
+            intent.apply {
+                putExtra(ReadSurahActivity.SURAH_ID, number)
+                putExtra(ReadSurahActivity.SURAH_NAME, englishName)
+                putExtra(ReadSurahActivity.SURAH_TRANSLATION, englishNameTranslation)
+            }
+            requireContext().startActivities(arrayOf(intent))
+        }
         rv_quran_surah.apply {
             adapter = allSurahAdapter
             layoutManager = LinearLayoutManager(this@QuranFragment.context)
@@ -165,8 +176,15 @@ class QuranFragment : BaseFragment(R.layout.fragment_quran), SwipeRefreshLayout.
     }
 
     private fun initRvStaredSurah() {
-        staredSurahAdapter = StaredSurahAdapter(requireContext())
-
+        staredSurahAdapter = StaredSurahAdapter{ surahID, surahName, surahTranslation ->
+            val i = Intent(requireContext(), ReadSurahActivity::class.java)
+            i.apply {
+                this.putExtra(ReadSurahActivity.SURAH_ID, surahID)
+                this.putExtra(ReadSurahActivity.SURAH_NAME, surahName)
+                this.putExtra(ReadSurahActivity.SURAH_TRANSLATION, surahTranslation)
+            }
+            requireContext().startActivities(arrayOf(i))
+        }
         rv_stared_ayah.apply {
             adapter = staredSurahAdapter
             layoutManager = LinearLayoutManager(this@QuranFragment.context, LinearLayoutManager.HORIZONTAL, false)

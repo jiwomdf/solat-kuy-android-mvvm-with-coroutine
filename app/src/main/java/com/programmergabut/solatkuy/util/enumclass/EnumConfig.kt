@@ -35,5 +35,8 @@ class EnumConfig {
 
         /* Dua after adhan*/
         const val DUA_AFTER_ADHAN_STR = "Tap to see the dua after adhan \uD83D\uDE4F"
+
+        const val LAST_READ_SURAH = "lastReadSurah"
+        const val LAST_READ_AYAH = "lastReadAyah"
     }
 }

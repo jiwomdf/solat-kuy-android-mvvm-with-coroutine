@@ -1,22 +1,23 @@
 package com.programmergabut.solatkuy.ui.activityreadsurah
 
-import android.content.Context
+import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
-import android.widget.Toast
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.programmergabut.solatkuy.R
-import com.programmergabut.solatkuy.data.local.localentity.MsFavAyah
 import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonAr.Ayah
-import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.layout_read_surah.view.*
 
-class ReadSurahAdapter(private val viewModel: ReadSurahViewModel,
-                       private val surahId: String, private val surahName: String,
-                       private val context: Context) : RecyclerView.Adapter<ReadSurahAdapter.ReadSurahViewHolder>() {
+class ReadSurahAdapter(
+    val onClick: (Ayah, View) -> Unit,
+    val isFav: Drawable,
+    val isNotFav: Drawable,
+    val accentColor: Int,
+    val whiteColor: Int
+) : RecyclerView.Adapter<ReadSurahAdapter.ReadSurahViewHolder>() {
 
     private val diffCallback = object: DiffUtil.ItemCallback<Ayah>(){
         override fun areItemsTheSame(oldItem: Ayah, newItem: Ayah) = oldItem == newItem
@@ -39,7 +40,6 @@ class ReadSurahAdapter(private val viewModel: ReadSurahViewModel,
 
     override fun onBindViewHolder(holder: ReadSurahViewHolder, position: Int) = holder.bind(listAyah[position])
 
-
     inner class ReadSurahViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
         fun bind(data: Ayah){
             itemView.tv_listFav_ar.text = data.text
@@ -47,31 +47,27 @@ class ReadSurahAdapter(private val viewModel: ReadSurahViewModel,
             itemView.tv_listFav_num.text = data.numberInSurah.toString()
 
             if(data.isFav)
-                itemView.iv_listFav_fav.setImageDrawable(context.getDrawable(R.drawable.ic_favorite_red_24))
+                itemView.iv_listFav_fav.setImageDrawable(isFav)
             else
-                itemView.iv_listFav_fav.setImageDrawable(context.getDrawable(R.drawable.ic_favorite_24))
+                itemView.iv_listFav_fav.setImageDrawable(isNotFav)
+
+            if(data.isLastRead){
+                itemView.cl_readSurah.setBackgroundColor(accentColor)
+                /* itemView.tv_listFav_ar.setTextColor(whiteColor)
+                itemView.tv_listFav_en.setTextColor(whiteColor)
+                itemView.tv_listFav_num.setTextColor(whiteColor) */
+            }
+            else{
+                itemView.cl_readSurah.setBackgroundColor(whiteColor)
+            }
 
             itemView.iv_listFav_fav.setOnClickListener {
-
-                val msFavAyah = MsFavAyah(surahId.toInt(), data.numberInSurah, surahName, data.text, data.textEn!!)
-
-                if(itemView.iv_listFav_fav.drawable.constantState == context.getDrawable(R.drawable.ic_favorite_red_24)?.constantState){
-                    Toasty.info(context, "Unsaving the ayah", Toast.LENGTH_SHORT).show()
-
-                    viewModel.deleteFavAyah(msFavAyah)
-                    itemView.iv_listFav_fav.setImageDrawable(context.getDrawable(R.drawable.ic_favorite_24))
-                }
-                else{
-                    Toasty.info(context, "Saving the ayah", Toast.LENGTH_SHORT).show()
-
-                    viewModel.insertFavAyah(msFavAyah)
-                    itemView.iv_listFav_fav.setImageDrawable(context.getDrawable(R.drawable.ic_favorite_red_24))
-                }
-
-                viewModel.fetchReadSurahAr(surahId.toInt())
+                onClick(data, itemView)
             }
         }
     }
+
+
 
 
 }

@@ -22,5 +22,6 @@ data class Ayah(
     val text: String,
 
     var textEn: String?,
-    var isFav: Boolean
+    var isFav: Boolean,
+    var isLastRead: Boolean
 )

@@ -55,7 +55,10 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
     override fun setListener() {}
     override fun onDestroy() {
         super.onDestroy()
-        sharedPref.edit().clear().apply()
+        sharedPref.edit().apply {
+            putBoolean("isHasNotOpenAnimation", false)
+            apply()
+        }
     }
     override fun setObserver() {
         observeDb()
@@ -104,7 +107,6 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
 
         try{
             bottom_navigation.setupWithNavController(navHostFragment.findNavController())
-
             navHostFragment.findNavController()
                 .addOnDestinationChangedListener { _, destination, _ ->
                     when(destination.id){
@@ -113,6 +115,10 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
                         else -> bottom_navigation.visibility = View.GONE
                     }
                 }
+            bottom_navigation.setOnNavigationItemReselectedListener {
+                /* NO-OP */
+            }
+
         }
         catch (ex: Exception){
             print(ex.message)

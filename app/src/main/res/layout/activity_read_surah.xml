@@ -62,8 +62,6 @@
             app:layout_constraintHorizontal_bias="0.0"
             app:layout_constraintTop_toTopOf="@+id/lottieAnimationView" />
 
-
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 

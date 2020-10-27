@@ -14,11 +14,12 @@ import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonAr.Aya
 import com.programmergabut.solatkuy.ui.activityreadsurah.ReadSurahActivity
 import kotlinx.android.synthetic.main.layout_stared_surah.view.*
 
-class StaredSurahAdapter(private val c: Context) : RecyclerView.Adapter<StaredSurahAdapter.StaredSurahViewHolder>() {
+class StaredSurahAdapter(
+    private val onClick: (surahID: String, surahName: String, surahTranslation: String ) -> Unit
+) : RecyclerView.Adapter<StaredSurahAdapter.StaredSurahViewHolder>() {
 
     private val diffCallback = object: DiffUtil.ItemCallback<MsFavSurah>(){
         override fun areItemsTheSame(oldItem: MsFavSurah, newItem: MsFavSurah) = oldItem == newItem
-
         override fun areContentsTheSame(oldItem: MsFavSurah, newItem: MsFavSurah) = oldItem == newItem
     }
 
@@ -38,20 +39,14 @@ class StaredSurahAdapter(private val c: Context) : RecyclerView.Adapter<StaredSu
     override fun onBindViewHolder(holder: StaredSurahViewHolder, position: Int) = holder.bind(listData[position])
 
     inner class StaredSurahViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
-
         fun bind(data: MsFavSurah){
-
             itemView.tv_stared_ayah.text = data.surahName
             itemView.cv_stared_ayah.setOnClickListener {
-
-                val i = Intent(c, ReadSurahActivity::class.java)
-                i.apply {
-                    this.putExtra(ReadSurahActivity.surahID, data.surahID.toString())
-                    this.putExtra(ReadSurahActivity.surahName, data.surahName)
-                    this.putExtra(ReadSurahActivity.surahTranslation, data.surahTranslation)
-                }
-
-                c.startActivities(arrayOf(i))
+                onClick(
+                    data.surahID.toString(),
+                    data.surahName!!,
+                    data.surahTranslation!!
+                )
             }
         }
     }

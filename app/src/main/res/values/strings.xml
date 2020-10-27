@@ -1,4 +1,6 @@
 <resources>
+    <item name="item_click_support" type="id" />
+
     <string name="app_name">Solat Kuy</string>
     <string name="loading">Loading..</string>
     <string name="fajr">Fajr</string>
