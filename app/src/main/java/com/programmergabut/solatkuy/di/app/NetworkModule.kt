@@ -10,8 +10,10 @@ import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
 import dagger.hilt.android.components.ApplicationComponent
+import okhttp3.OkHttpClient
 import retrofit2.Retrofit
 import retrofit2.converter.gson.GsonConverterFactory
+import java.util.concurrent.TimeUnit
 import javax.inject.Singleton
 
 @Module
@@ -41,23 +43,34 @@ object NetworkModule {
         return GsonConverterFactory.create(gson)
     }
 
+    @Provides
+    @Singleton
+    fun provideOkHttpClient(): OkHttpClient = OkHttpClient.Builder()
+        .readTimeout(15, TimeUnit.SECONDS)
+        .connectTimeout(15, TimeUnit.SECONDS)
+        .build()
+
     @AladhanApi
     @Provides
     @Singleton
-    fun provideRetrofitAladhan(@AladhanEndPoint BASE_URL: String, gsonConverterFactory: GsonConverterFactory): Retrofit {
+    fun provideRetrofitAladhan(@AladhanEndPoint BASE_URL: String, gsonConverterFactory: GsonConverterFactory,
+                               okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(gsonConverterFactory)
+            .client(okHttpClient)
             .build()
     }
 
     @QuranApi
     @Provides
     @Singleton
-    fun provideRetrofitQuranApi(@QuranApiEndPoint BASE_URL: String, gsonConverterFactory: GsonConverterFactory): Retrofit {
+    fun provideRetrofitQuranApi(@QuranApiEndPoint BASE_URL: String, gsonConverterFactory: GsonConverterFactory,
+                                okHttpClient: OkHttpClient): Retrofit {
         return Retrofit.Builder()
             .baseUrl(BASE_URL)
             .addConverterFactory(gsonConverterFactory)
+            .client(okHttpClient)
             .build()
     }
 

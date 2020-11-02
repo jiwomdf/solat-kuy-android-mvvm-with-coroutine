@@ -29,7 +29,7 @@ class FragmentInfo : BaseFragment(R.layout.fragment_info), SwipeRefreshLayout.On
     private lateinit var duaCollectionAdapter: DuaCollectionAdapter
     private var mMsApi1: MsApi1? = null
 
-    override fun setIntentExtra() {}
+    override fun setIntentExtra() {/*NO-OP*/}
     override fun setFirstView() {
         initRvDuaCollection()
     }
@@ -52,7 +52,6 @@ class FragmentInfo : BaseFragment(R.layout.fragment_info), SwipeRefreshLayout.On
         }
     }
 
-
     /* Subscribe live data */
     private fun observeDB() {
         fragmentInfoViewModel.msApi1.observe(viewLifecycleOwner, { retval ->
@@ -67,7 +66,7 @@ class FragmentInfo : BaseFragment(R.layout.fragment_info), SwipeRefreshLayout.On
                     tv_city.text = city ?: EnumConfig.CITY_NOT_FOUND_STR
                     fetchPrayerApi(retval.data)
                 }
-                else -> {}
+                else -> {/*NO-OP*/}
             }
         })
     }
@@ -119,6 +118,7 @@ class FragmentInfo : BaseFragment(R.layout.fragment_info), SwipeRefreshLayout.On
                     setState(it.status)
                 }
                 EnumStatus.ERROR ->{
+                    showBottomSheet(description = getString(R.string.fetch_failed), isCancelable = true, isFinish = false)
                     setState(it.status)
                 }
             }

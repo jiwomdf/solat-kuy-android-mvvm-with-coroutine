@@ -75,4 +75,7 @@
     <string name="are_you_sure_want_to_delete_this_ayah">Are you sure want to unfavorite this ayah?</string>
     <string name="api_alquran_cloud">https://api.alquran.cloud</string>
     <string name="solat_kuy">Solat Kuy</string>
+    <string name="text_error_title">Error Occurred</string>
+    <string name="text_error_dsc">Sorry.. there is some error</string>
+    <string name="oke">Oke</string>
 </resources>

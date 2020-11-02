@@ -50,6 +50,8 @@
             android:id="@+id/btn_byLatitudeLongitude"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
+            android:layout_marginTop="@dimen/small_margin"
+            android:background="@drawable/button_background_primary"
             android:text="@string/by_latitude_amp_longitude"
             android:textSize="@dimen/small_text_size" />
 
@@ -57,6 +59,10 @@
             android:id="@+id/btn_byGps"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            android:layout_marginTop="@dimen/small_margin"
+            app:backgroundTint="@color/colorPrimaryLight"
+            android:background="@drawable/button_background_secondary"
+            android:textColor="@color/colorPrimary"
             android:text="@string/by_gps"
             android:textSize="@dimen/small_text_size" />
 

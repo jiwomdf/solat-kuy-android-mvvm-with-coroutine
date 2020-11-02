@@ -50,9 +50,9 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
     private val viewModel: MainActivityViewModel by viewModels()
     private val ALL_PERMISSIONS = 101
 
-    override fun setIntentExtra() {}
-    override fun setFirstView() {}
-    override fun setListener() {}
+    override fun setIntentExtra() {/*NO-OP*/}
+    override fun setFirstView() {/*NO-OP*/}
+    override fun setListener() {/*NO-OP*/}
     override fun onDestroy() {
         super.onDestroy()
         sharedPref.edit().apply {

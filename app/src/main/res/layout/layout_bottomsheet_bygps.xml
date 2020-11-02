@@ -84,6 +84,7 @@
         android:id="@+id/btn_proceedByGps"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
+        android:background="@drawable/button_background_primary"
         android:layout_marginTop="16dp"
         android:layout_marginBottom="16dp"
         android:text="@string/proceeded"

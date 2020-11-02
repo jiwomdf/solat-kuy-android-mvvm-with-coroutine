@@ -215,7 +215,6 @@ class PrayerBroadcastReceiver: BroadcastReceiver() {
 
     private fun intentToDuaAfterAdhanGenerator(context: Context): Intent {
         val i = Intent(context, DuaActivity::class.java)
-
         val duaAfterAdhan = DuaGenerator.getListDua().find { x -> x.id == 1}
 
         i.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK

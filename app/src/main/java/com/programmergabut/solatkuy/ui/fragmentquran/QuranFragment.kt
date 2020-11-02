@@ -1,6 +1,7 @@
 package com.programmergabut.solatkuy.ui.fragmentquran
 
 import android.content.Intent
+import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
@@ -32,7 +33,7 @@ class QuranFragment : BaseFragment(R.layout.fragment_quran), SwipeRefreshLayout.
     private lateinit var staredSurahAdapter: StaredSurahAdapter
     private var allSurahDatas: MutableList<Data>? = null
 
-    override fun setIntentExtra() {}
+    override fun setIntentExtra() {/*NO-OP*/}
     override fun setFirstView() {
         initRvAllSurah()
         initRvStaredSurah()
@@ -46,27 +47,26 @@ class QuranFragment : BaseFragment(R.layout.fragment_quran), SwipeRefreshLayout.
         sl_quran.setOnRefreshListener(this)
 
         cv_fav_ayah.setOnClickListener {
-            val i = Intent(context, FavAyahActivity::class.java)
-            context?.startActivities(arrayOf(i))
+            gotoIntent(FavAyahActivity::class.java)
         }
 
         cv_last_read_ayah.setOnClickListener {
             val surahID = sharedPref.getInt(LAST_READ_SURAH, -1)
             val selSurah = allSurahDatas?.find { x -> x.number == surahID }
-            val intent = Intent(requireContext(), ReadSurahActivity::class.java)
-            intent.apply {
-                putExtra(ReadSurahActivity.SURAH_ID, selSurah?.number.toString())
-                putExtra(ReadSurahActivity.SURAH_NAME, selSurah?.englishName)
-                putExtra(ReadSurahActivity.SURAH_TRANSLATION, selSurah?.englishNameTranslation)
-                putExtra(ReadSurahActivity.IS_AUTO_SCROLL, true)
+
+            val bundle = Bundle()
+            bundle.apply {
+                putString(ReadSurahActivity.SURAH_ID, selSurah?.number.toString())
+                putString(ReadSurahActivity.SURAH_NAME, selSurah?.englishName)
+                putString(ReadSurahActivity.SURAH_TRANSLATION, selSurah?.englishNameTranslation)
+                putBoolean(ReadSurahActivity.IS_AUTO_SCROLL, true)
             }
-            requireContext().startActivities(arrayOf(intent))
+            gotoIntent(ReadSurahActivity::class.java, bundle)
         }
     }
 
     private fun initSearchSurah() {
         et_search.addTextChangedListener(object: TextWatcher{
-
             override fun afterTextChanged(s: Editable?) {
                 val newData = allSurahDatas!!.filter { x -> x.englishNameLC!!.contains(s.toString()) }
                 allSurahAdapter.listData = newData
@@ -102,7 +102,11 @@ class QuranFragment : BaseFragment(R.layout.fragment_quran), SwipeRefreshLayout.
                     staredSurahAdapter.listData = it.data!!
                     staredSurahAdapter.notifyDataSetChanged()
                 }
-                else -> {}
+                EnumStatus.ERROR -> {
+                    showBottomSheet(isCancelable = true, isFinish = true)
+                    return@observe
+                }
+                else -> {/*NO-OP*/}
             }
         })
 
@@ -122,6 +126,7 @@ class QuranFragment : BaseFragment(R.layout.fragment_quran), SwipeRefreshLayout.
                 tv_loading_all_surah.visibility = View.VISIBLE
             }
             EnumStatus.ERROR -> {
+                showBottomSheet(description = getString(R.string.fetch_failed), isCancelable = true, isFinish = false)
                 tv_loading_all_surah.text = getString(R.string.fetch_failed)
                 rv_quran_surah.visibility = View.INVISIBLE
                 sl_quran.isRefreshing = false
@@ -161,13 +166,13 @@ class QuranFragment : BaseFragment(R.layout.fragment_quran), SwipeRefreshLayout.
 
     private fun initRvAllSurah() {
         allSurahAdapter = AllSurahAdapter { number, englishName, englishNameTranslation ->
-            val intent = Intent(requireContext(), ReadSurahActivity::class.java)
-            intent.apply {
-                putExtra(ReadSurahActivity.SURAH_ID, number)
-                putExtra(ReadSurahActivity.SURAH_NAME, englishName)
-                putExtra(ReadSurahActivity.SURAH_TRANSLATION, englishNameTranslation)
+            val bundle = Bundle()
+            bundle.apply {
+                putString(ReadSurahActivity.SURAH_ID, number)
+                putString(ReadSurahActivity.SURAH_NAME, englishName)
+                putString(ReadSurahActivity.SURAH_TRANSLATION, englishNameTranslation)
             }
-            requireContext().startActivities(arrayOf(intent))
+            gotoIntent(ReadSurahActivity::class.java, bundle)
         }
         rv_quran_surah.apply {
             adapter = allSurahAdapter
@@ -177,13 +182,13 @@ class QuranFragment : BaseFragment(R.layout.fragment_quran), SwipeRefreshLayout.
 
     private fun initRvStaredSurah() {
         staredSurahAdapter = StaredSurahAdapter{ surahID, surahName, surahTranslation ->
-            val i = Intent(requireContext(), ReadSurahActivity::class.java)
-            i.apply {
-                this.putExtra(ReadSurahActivity.SURAH_ID, surahID)
-                this.putExtra(ReadSurahActivity.SURAH_NAME, surahName)
-                this.putExtra(ReadSurahActivity.SURAH_TRANSLATION, surahTranslation)
+            val bundle = Bundle()
+            bundle.apply {
+                putString(ReadSurahActivity.SURAH_ID, surahID)
+                putString(ReadSurahActivity.SURAH_NAME, surahName)
+                putString(ReadSurahActivity.SURAH_TRANSLATION, surahTranslation)
             }
-            requireContext().startActivities(arrayOf(i))
+            gotoIntent(ReadSurahActivity::class.java, bundle)
         }
         rv_stared_ayah.apply {
             adapter = staredSurahAdapter
@@ -194,7 +199,6 @@ class QuranFragment : BaseFragment(R.layout.fragment_quran), SwipeRefreshLayout.
     private fun juzzSurahFilter(juzz: String){
 
         var datas = emptyList<Data>()
-
         if(juzz == "All Juzz")
             datas = allSurahDatas ?: emptyList()
         else{

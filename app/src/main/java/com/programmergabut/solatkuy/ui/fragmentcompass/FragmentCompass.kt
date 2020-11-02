@@ -7,8 +7,6 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
-import android.os.Bundle
-import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.RotateAnimation
@@ -54,22 +52,18 @@ class FragmentCompass : BaseFragment(R.layout.fragment_compass), SensorEventList
         mSensorManager.unregisterListener(this)
     }
 
-    override fun setIntentExtra() {}
-
+    override fun setIntentExtra() {/*NO-OP*/}
     override fun setFirstView() {
         mSensorManager = activity?.getSystemService(SENSOR_SERVICE) as SensorManager
         openLottieAnimation()
     }
-
     override fun setObserver() {
         subscribeObserversDB()
         subscribeObserversAPI()
     }
-
     override fun setListener() {
         sl_compass.setOnRefreshListener(this)
     }
-
 
     private fun openLottieAnimation() {
         val isHasNotOpenAnimation = sharedPref.getBoolean("isHasNotOpenAnimation", true)
@@ -85,11 +79,8 @@ class FragmentCompass : BaseFragment(R.layout.fragment_compass), SensorEventList
     }
 
     /* Subscribe live data */
-    @SuppressLint("SetTextI18n")
     private fun subscribeObserversAPI() {
-
         fragmentCompassViewModel.compass.observe(viewLifecycleOwner, Observer { retVal ->
-
             when(retVal.status){
                 EnumStatus.SUCCESS -> {
                     retVal.data?.data.let {
@@ -103,9 +94,7 @@ class FragmentCompass : BaseFragment(R.layout.fragment_compass), SensorEventList
                 }
                 EnumStatus.ERROR -> tv_qibla_dir.text = getString(R.string.fetch_failed)
             }
-
         })
-
     }
 
     private fun subscribeObserversDB() {
@@ -143,9 +132,9 @@ class FragmentCompass : BaseFragment(R.layout.fragment_compass), SensorEventList
 
             val R = FloatArray(9)
             val I = FloatArray(9)
-            val success = SensorManager.getRotationMatrix(R, I, mGravity, mGeomagnetic)
+            val isSuccess = SensorManager.getRotationMatrix(R, I, mGravity, mGeomagnetic)
 
-            if(success){
+            if(isSuccess){
                 val orientation = FloatArray(3)
                 SensorManager.getOrientation(R, orientation)
                 azimuth = Math.toDegrees(orientation[0].toDouble()).toFloat()
@@ -167,7 +156,7 @@ class FragmentCompass : BaseFragment(R.layout.fragment_compass), SensorEventList
 
     }
 
-    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {}
+    override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {/*NO-OP*/}
 
     override fun onRefresh() {
         fragmentCompassViewModel.fetchCompassApi(mMsApi1)

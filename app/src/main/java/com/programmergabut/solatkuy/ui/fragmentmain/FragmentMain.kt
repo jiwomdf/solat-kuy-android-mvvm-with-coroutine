@@ -72,17 +72,14 @@ class FragmentMain : BaseFragment(R.layout.fragment_main), SwipeRefreshLayout.On
         tv_quran_ayah_quote_click?.visibility = View.VISIBLE
     }
 
-    override fun setIntentExtra() {}
-
+    override fun setIntentExtra() {/*NO-OP*/}
     override fun setFirstView() {
         openPopupQuote()
     }
-
     override fun setObserver() {
         subscribeObserversDB()
         subscribeObserversAPI()
     }
-
     override fun setListener() {
         sl_main.setOnRefreshListener(this)
         tvQuranQuoteClick()

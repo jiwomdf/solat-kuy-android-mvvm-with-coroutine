@@ -81,6 +81,10 @@ class ReadSurahActivity : BaseActivity(R.layout.activity_read_surah) {
                     setVisibility(it.status)
                     lottieAnimationView.cancelAnimation()
                     tv_readQuran_loading.text = getString(R.string.fetch_failed)
+                    showBottomSheet("Error Occurred",
+                        isCancelable = true,
+                        isFinish = true
+                    )
                 }
             }
         })
@@ -89,6 +93,14 @@ class ReadSurahActivity : BaseActivity(R.layout.activity_read_surah) {
 
             val lastSurah = sharedPref.getInt(LAST_READ_SURAH, -1)
             val lastAyah = sharedPref.getInt(LAST_READ_AYAH, -1)
+
+            if(lastSurah == -1 || lastAyah == -1){
+                showBottomSheet("Error Occurred", "Surah and ayah not found",
+                    isCancelable = true,
+                    isFinish = true
+                )
+                return@observe
+            }
 
             when (local.status) {
                 EnumStatus.SUCCESS -> {
@@ -108,17 +120,18 @@ class ReadSurahActivity : BaseActivity(R.layout.activity_read_surah) {
                             return@out
                         }
                     }
-                    readSurahAdapter.listAyah = data?.ayahs!!
-                    readSurahAdapter.notifyDataSetChanged()
 
+                    readSurahAdapter.apply {
+                        listAyah = data?.ayahs!!
+                        notifyDataSetChanged()
+                    }
                     if(mIsAutoScroll){
                         val lastReadAyah = sharedPref.getInt(LAST_READ_AYAH, 0)
                         (rv_read_surah.layoutManager as LinearLayoutManager)
                             .scrollToPositionWithOffset(lastReadAyah - 1, 0)
                     }
                 }
-                else -> {
-                }
+                else -> {/*NO-OP*/}
             }
         })
 
@@ -158,8 +171,7 @@ class ReadSurahActivity : BaseActivity(R.layout.activity_read_surah) {
                         menu?.findItem(R.id.i_star_surah)?.icon =
                             ContextCompat.getDrawable(this, R.drawable.ic_star_yellow_24)
                 }
-                else -> {
-                }
+                else -> {/*NO-OP*/}
             }
         })
 
@@ -174,7 +186,9 @@ class ReadSurahActivity : BaseActivity(R.layout.activity_read_surah) {
                 true
             }
             R.id.i_star_surah -> {
-                if (mMenu?.findItem(R.id.i_star_surah)?.icon?.constantState == this.getDrawable(R.drawable.ic_star_24)?.constantState)
+                if (mMenu?.findItem(R.id.i_star_surah)?.icon?.constantState
+                    == ContextCompat.getDrawable(this, R.drawable.ic_star_24)?.constantState)
+
                     viewModel.insertFavSurah(
                         MsFavSurah(
                             mSelSurahId.toInt(),
@@ -207,19 +221,19 @@ class ReadSurahActivity : BaseActivity(R.layout.activity_read_surah) {
                     data.text,
                     data.textEn!!
                 )
-                if (itemView.iv_listFav_fav.drawable.constantState == this.getDrawable(R.drawable.ic_favorite_red_24)?.constantState) {
+                if (itemView.iv_listFav_fav.drawable.constantState == ContextCompat.getDrawable(this, R.drawable.ic_favorite_red_24)?.constantState) {
                     Toasty.info(this, "Unsaving the ayah", Toast.LENGTH_SHORT).show()
                     viewModel.deleteFavAyah(msFavAyah)
-                    itemView.iv_listFav_fav.setImageDrawable(this.getDrawable(R.drawable.ic_favorite_24))
+                    itemView.iv_listFav_fav.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_favorite_24))
                 } else {
                     Toasty.info(this, "Saving the ayah", Toast.LENGTH_SHORT).show()
                     viewModel.insertFavAyah(msFavAyah)
-                    itemView.iv_listFav_fav.setImageDrawable(this.getDrawable(R.drawable.ic_favorite_red_24))
+                    itemView.iv_listFav_fav.setImageDrawable(ContextCompat.getDrawable(this, R.drawable.ic_favorite_red_24))
                 }
                 viewModel.fetchReadSurahAr(mSelSurahId.toInt())
             },
-            this.getDrawable(R.drawable.ic_favorite_red_24)!!,
-            this.getDrawable(R.drawable.ic_favorite_24)!!,
+            ContextCompat.getDrawable(this, R.drawable.ic_favorite_red_24)!!,
+            ContextCompat.getDrawable(this, R.drawable.ic_favorite_24)!!,
             ContextCompat.getColor(this, R.color.colorAccent),
             ContextCompat.getColor(this, R.color.colorWhite)
         )
