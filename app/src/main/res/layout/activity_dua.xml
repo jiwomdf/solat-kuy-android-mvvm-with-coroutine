@@ -16,7 +16,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_margin="@dimen/medium_margin"
-            android:textColor="@color/colorBlack"
+            android:textColor="@color/purple_200"
             android:textStyle="bold"
             android:textSize="@dimen/large2_text_size"
             android:gravity="center"
@@ -26,7 +26,7 @@
             android:id="@+id/tv_prayer_ar"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/colorBlack"
+            android:textColor="@color/white"
             android:textSize="@dimen/large2_text_size"
             tools:text="اَللهُمَّ رَبَّ هذِهِ الدَّعْوَةِ التَّآمَّةِ، وَالصَّلاَةِ الْقَآئِمَةِ، آتِ مُحَمَّدَانِ الْوَسِيْلَةَ وَالْفَضِيْلَةَ وَالشَّرَفَ وَالدَّرَجَةَ الْعَالِيَةَ الرَّفِيْعَةَ وَابْعَثْهُ مَقَامًامَحْمُوْدَانِ الَّذِىْ وَعَدْتَهُ اِنَّكَ لاَتُخْلِفُ الْمِيْعَادَ يَآاَرْحَمَ الرَّحِمِيْن"
             android:layout_margin="@dimen/medium_margin"/>
@@ -35,7 +35,7 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/medium_margin"
-            android:textColor="@color/colorBlack"
+            android:textColor="@color/purple_200"
             android:textStyle="bold"
             android:textSize="@dimen/medium_text_size"
             android:text="@string/latin"/>
@@ -54,7 +54,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/medium_margin"
             android:layout_marginTop="@dimen/medium_margin"
-            android:textColor="@color/colorBlack"
+            android:textColor="@color/purple_200"
             android:textStyle="bold"
             android:textSize="@dimen/medium_text_size"
             android:text="@string/english"/>
@@ -73,7 +73,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/medium_margin"
             android:layout_marginTop="@dimen/medium_margin"
-            android:textColor="@color/colorBlack"
+            android:textColor="@color/purple_200"
             android:textStyle="bold"
             android:textSize="@dimen/medium_text_size"
             android:text="@string/indonesia"/>
@@ -93,7 +93,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="@dimen/medium_margin"
             android:layout_marginTop="@dimen/medium_margin"
-            android:textColor="@color/colorBlack"
+            android:textColor="@color/purple_200"
             android:textStyle="bold"
             android:textSize="@dimen/medium_text_size"
             android:text="@string/reference"/>
@@ -102,7 +102,7 @@
             android:id="@+id/tv_prayer_ref"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:textColor="@color/colorAccent"
+            android:textColor="@color/teal_200"
             android:layout_marginBottom="@dimen/medium_margin"
             android:textSize="@dimen/medium_text_size"
             android:layout_marginStart="@dimen/medium_margin"

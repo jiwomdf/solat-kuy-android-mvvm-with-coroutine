@@ -12,6 +12,7 @@ import androidx.navigation.findNavController
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.data.local.SolatKuyRoom
+import com.programmergabut.solatkuy.util.enumclass.EnumConfig
 import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.layout_error_bottomsheet.*
 import javax.inject.Inject
@@ -26,12 +27,10 @@ abstract class BaseFragment(fragmentLayout: Int) : Fragment(fragmentLayout) {
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        setIntentExtra()
         setFirstView()
         setObserver()
         setListener()
     }
-    abstract fun setIntentExtra()
     abstract fun setFirstView()
     abstract fun setObserver()
     abstract fun setListener()
@@ -67,4 +66,20 @@ abstract class BaseFragment(fragmentLayout: Int) : Fragment(fragmentLayout) {
         }
     }
 
+    protected fun getDatabase() = db
+
+    protected fun getLastReadSurah(): Int {
+        return sharedPref.getInt(EnumConfig.LAST_READ_SURAH, -1)
+    }
+
+    protected fun getIsNotHasOpenAnimation(): Boolean {
+        return sharedPref.getBoolean("isHasNotOpenAnimation", true)
+    }
+
+    protected fun setIsNotHasOpenAnimation(value: Boolean){
+        sharedPref.edit()?.apply{
+            putBoolean("isHasNotOpenAnimation", value)
+            apply()
+        }
+    }
 }

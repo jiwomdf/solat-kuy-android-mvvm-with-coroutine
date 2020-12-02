@@ -4,6 +4,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/dark_200"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -14,7 +15,6 @@
         android:layout_marginStart="@dimen/medium_margin"
         android:layout_marginEnd="@dimen/medium_margin"
         android:layout_marginTop="@dimen/medium_margin"
-        android:textColor="@color/colorBlack"
         android:fontFamily="@font/poppins_regular"
         tools:text="بوَرَأَيْتَ النَّاسَ يَدْخُلُونَ فِي دِينِ اللَّهِ أَفْوَاجًا"
         android:textSize="@dimen/large2_text_size"
@@ -53,7 +53,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/medium_margin"
-        android:textColor="@color/colorBlack"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -66,7 +65,6 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/colorLightGrey"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

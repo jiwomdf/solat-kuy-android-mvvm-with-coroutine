@@ -3,6 +3,7 @@ package com.programmergabut.solatkuy.ui.activityprayer
 import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_dua.*
+import java.lang.Exception
 
 class DuaActivity : BaseActivity(R.layout.activity_dua) {
 
@@ -15,17 +16,18 @@ class DuaActivity : BaseActivity(R.layout.activity_dua) {
         const val duaRef = "duaRef"
     }
 
-    override fun setIntentExtra() {}
-    override fun setObserver() {}
-    override fun setListener() {}
-
     override fun setFirstView() {
-        tv_prayer_title.text = intent.getStringExtra(duaTitle)!!
-        tv_prayer_ar.text = intent.getStringExtra(duaAr)!!
-        tv_prayer_lt.text = intent.getStringExtra(duaLt)!!
-        tv_prayer_en.text = intent.getStringExtra(duaEn)!!
-        tv_prayer_in.text = intent.getStringExtra(duaIn)!!
-        tv_prayer_ref.text = intent.getStringExtra(duaRef)!!
+        try {
+            tv_prayer_title.text = intent.getStringExtra(duaTitle)!!
+            tv_prayer_ar.text = intent.getStringExtra(duaAr)!!
+            tv_prayer_lt.text = intent.getStringExtra(duaLt)!!
+            tv_prayer_en.text = intent.getStringExtra(duaEn)!!
+            tv_prayer_in.text = intent.getStringExtra(duaIn)!!
+            tv_prayer_ref.text = intent.getStringExtra(duaRef)!!
+        }
+        catch (ex: Exception){
+            showBottomSheet(isCancelable = false, isFinish = true)
+        }
     }
 
 

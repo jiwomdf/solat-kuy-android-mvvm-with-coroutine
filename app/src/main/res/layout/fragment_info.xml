@@ -7,7 +7,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/colorDarkWhite"
     tools:context=".ui.fragmentinfo.FragmentInfo">
 
     <ScrollView
@@ -27,14 +26,13 @@
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:background="@color/colorPrimary"
+                    android:background="@color/dark_700"
                     android:orientation="vertical">
 
                     <TextView
                         android:id="@+id/tv_imsak_info_title"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/colorWhite"
                         android:textStyle="bold"
                         android:layout_marginStart="@dimen/medium_margin"
                         android:layout_marginTop="@dimen/medium_margin"
@@ -47,7 +45,6 @@
                         android:id="@+id/tv_imsak_date"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/colorWhite"
                         android:layout_marginStart="@dimen/medium_margin"
                         android:layout_marginTop="@dimen/small_margin"
                         android:layout_marginBottom="@dimen/small_margin"
@@ -59,7 +56,6 @@
                         android:id="@+id/tv_city"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/colorWhite"
                         tools:text="Surakarta"
                         android:layout_marginStart="@dimen/medium_margin"
                         android:layout_marginTop="@dimen/small_margin"
@@ -73,7 +69,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
                         android:layout_marginEnd="@dimen/medium_margin"
-                        android:textColor="@color/colorWhite"
                         android:textSize="@dimen/large2_text_size"
                         app:layout_constraintBottom_toBottomOf="parent"
                         app:layout_constraintEnd_toEndOf="parent"
@@ -93,10 +88,9 @@
                 <androidx.constraintlayout.widget.ConstraintLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:background="@color/dark_700"
                     android:paddingTop="@dimen/small_margin"
                     android:orientation="vertical">
-
-
 
                     <LinearLayout
                         android:id="@+id/ll_title_date_info"
@@ -113,7 +107,6 @@
                             android:layout_marginStart="@dimen/medium_margin"
                             android:text="@string/gregorian_to_hijri"
                             android:textSize="@dimen/large_text_size"
-                            android:textColor="@color/colorBlack"
                             android:textStyle="bold"/>
                     </LinearLayout>
 
@@ -169,7 +162,6 @@
                                 android:layout_height="match_parent"
                                 android:layout_margin="@dimen/smaller_margin"
                                 android:text="@string/loading"
-                                android:textColor="@color/colorBlack"
                                 tools:text="01-03-2020" />
 
                             <TextView
@@ -178,7 +170,6 @@
                                 android:layout_height="match_parent"
                                 android:layout_margin="@dimen/smaller_margin"
                                 android:text="@string/loading"
-                                android:textColor="@color/colorBlack"
                                 tools:text="06-07-1441" />
                         </TableRow>
 
@@ -198,7 +189,6 @@
                                 android:layout_height="match_parent"
                                 android:layout_margin="@dimen/smaller_margin"
                                 android:text="@string/loading"
-                                android:textColor="@color/colorBlack"
                                 tools:text="March" />
 
                             <TextView
@@ -207,7 +197,6 @@
                                 android:layout_height="match_parent"
                                 android:layout_margin="@dimen/smaller_margin"
                                 android:text="@string/loading"
-                                android:textColor="@color/colorBlack"
                                 tools:text="Rajab / رَجَب" />
                         </TableRow>
 
@@ -228,7 +217,6 @@
                                 android:layout_height="match_parent"
                                 android:layout_margin="@dimen/smaller_margin"
                                 android:text="@string/loading"
-                                android:textColor="@color/colorBlack"
                                 tools:text="Sunday" />
 
                             <TextView
@@ -237,7 +225,6 @@
                                 android:layout_height="match_parent"
                                 android:layout_margin="@dimen/smaller_margin"
                                 android:text="@string/loading"
-                                android:textColor="@color/colorBlack"
                                 tools:text="Al Ahad / الاحد" />
                         </TableRow>
                     </TableLayout>
@@ -265,7 +252,7 @@
 <!--                        android:id="@+id/tv_ah_loading"-->
 <!--                        android:layout_width="match_parent"-->
 <!--                        android:layout_height="wrap_content"-->
-<!--                        android:textColor="@color/colorBlack"-->
+<!--                       -->
 <!--                        android:textSize="@dimen/large_text_size"-->
 <!--                        android:gravity="center"-->
 <!--                        android:layout_marginTop="@dimen/medium_margin"-->
@@ -291,6 +278,7 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
+                    android:background="@color/dark_700"
                     android:orientation="vertical">
 
                     <LinearLayout
@@ -304,7 +292,6 @@
                             android:layout_width="match_parent"
                             android:layout_height="wrap_content"
                             android:textSize="@dimen/large_text_size"
-                            android:textColor="@color/colorBlack"
                             android:textStyle="bold"/>
                     </LinearLayout>
 

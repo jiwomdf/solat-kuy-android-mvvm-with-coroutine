@@ -6,24 +6,21 @@ import androidx.lifecycle.Observer
 import com.nhaarman.mockitokotlin2.mock
 import com.programmergabut.solatkuy.CoroutinesTestRule
 import com.programmergabut.solatkuy.DummyArgument
-import com.programmergabut.solatkuy.data.Repository
+import com.programmergabut.solatkuy.data.PrayerRepository
 import com.programmergabut.solatkuy.data.local.localentity.NotifiedPrayer
 import com.programmergabut.solatkuy.ui.fragmentmain.FragmentMainViewModel
 import com.programmergabut.solatkuy.util.Resource
 import com.programmergabut.solatkuy.DummyRetValue
-import com.programmergabut.solatkuy.data.local.localentity.MsFavSurah
 import com.programmergabut.solatkuy.data.local.localentity.MsSetting
 import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonEn.ReadSurahEnResponse
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
-import org.junit.Assert
 import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
-import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.verify
 import org.mockito.junit.MockitoJUnitRunner
@@ -41,7 +38,7 @@ class FragmentMainViewModelTest {
     val coroutinesTestRule: CoroutinesTestRule = CoroutinesTestRule()
 
     @Mock
-    private lateinit var repository: Repository
+    private lateinit var prayerRepository: PrayerRepository
 
     private val msApi1 = DummyArgument.msApi1
     private val surahID = DummyArgument.surahID
@@ -50,10 +47,10 @@ class FragmentMainViewModelTest {
 
     @Before
     fun before(){
-        viewModel = FragmentMainViewModel(repository)
+        viewModel = FragmentMainViewModel(prayerRepository)
 
-        verify(repository).getMsApi1()
-        verify(repository).getListFavAyah()
+        verify(prayerRepository).getMsApi1()
+        verify(prayerRepository).getListFavAyah()
     }
 
     @Test
@@ -61,14 +58,14 @@ class FragmentMainViewModelTest {
         //given
         val observer = mock<Observer<Resource<List<NotifiedPrayer>>>>()
         val dummyNotifiedPrayer = Resource.success(DummyRetValue.getNotifiedPrayer())
-        `when`(repository.syncNotifiedPrayer(msApi1)).thenReturn(dummyNotifiedPrayer.data)
+        `when`(prayerRepository.syncNotifiedPrayer(msApi1)).thenReturn(dummyNotifiedPrayer.data)
 
         //when
         viewModel.syncNotifiedPrayer(msApi1)
         val result = viewModel.notifiedPrayer.value
 
         //--return value
-        verify(repository).syncNotifiedPrayer(msApi1)
+        verify(prayerRepository).syncNotifiedPrayer(msApi1)
         assertEquals(dummyNotifiedPrayer, result)
 
         //--observer
@@ -81,14 +78,14 @@ class FragmentMainViewModelTest {
         //given
         val observer = mock<Observer<Resource<ReadSurahEnResponse>>>()
         val dummyQuranSurah = Resource.success(DummyRetValue.surahEnID_1())
-        `when`(repository.fetchReadSurahEn(surahID)).thenReturn(dummyQuranSurah.data)
+        `when`(prayerRepository.fetchReadSurahEn(surahID)).thenReturn(dummyQuranSurah.data)
 
         //when
         viewModel.fetchReadSurahEn(surahID)
         val result = viewModel.readSurahEn.value
 
         //--return value
-        verify(repository).fetchReadSurahEn(surahID)
+        verify(prayerRepository).fetchReadSurahEn(surahID)
         assertEquals(dummyQuranSurah, result)
 
         //--observer
@@ -105,7 +102,7 @@ class FragmentMainViewModelTest {
         dummyLiveData.value = Resource.success(DummyRetValue.getMsSetting())
 
         //scenario
-        `when`(repository.getMsSetting()).thenReturn(dummyLiveData)
+        `when`(prayerRepository.getMsSetting()).thenReturn(dummyLiveData)
 
         //start observer
         viewModel.msSetting.observeForever(observer)
@@ -115,7 +112,7 @@ class FragmentMainViewModelTest {
         val result = viewModel.msSetting.value
 
         //--verify
-        verify(repository).getMsSetting()
+        verify(prayerRepository).getMsSetting()
         assertEquals(dummyLiveData.value, result)
         verify(observer).onChanged(dummyLiveData.value)
 
@@ -127,20 +124,20 @@ class FragmentMainViewModelTest {
     @Test
     fun updateMsApi1() = coroutinesTestRule.testDispatcher.runBlockingTest {
         viewModel.updateMsApi1(msApi1)
-        com.nhaarman.mockitokotlin2.verify(repository).updateMsApi1(msApi1)
+        com.nhaarman.mockitokotlin2.verify(prayerRepository).updateMsApi1(msApi1)
     }
 
     @Test
     fun updatePrayerIsNotified() = coroutinesTestRule.testDispatcher.runBlockingTest {
 
         viewModel.updatePrayerIsNotified(mapPrayer.keys.elementAt(0), true)
-        com.nhaarman.mockitokotlin2.verify(repository).updatePrayerIsNotified(mapPrayer.keys.elementAt(0), true)
+        com.nhaarman.mockitokotlin2.verify(prayerRepository).updatePrayerIsNotified(mapPrayer.keys.elementAt(0), true)
     }
 
     @Test
     fun updateIsUsingDBQuotes() = coroutinesTestRule.testDispatcher.runBlockingTest {
         viewModel.updateIsUsingDBQuotes(true)
-        com.nhaarman.mockitokotlin2.verify(repository).updateIsUsingDBQuotes(true)
+        com.nhaarman.mockitokotlin2.verify(prayerRepository).updateIsUsingDBQuotes(true)
     }
 
 }

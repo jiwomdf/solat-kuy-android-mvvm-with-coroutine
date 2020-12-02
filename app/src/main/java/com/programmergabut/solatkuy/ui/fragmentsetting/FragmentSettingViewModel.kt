@@ -1,26 +1,24 @@
 package com.programmergabut.solatkuy.ui.fragmentsetting
 
-import android.widget.Toast
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.programmergabut.solatkuy.data.Repository
+import com.programmergabut.solatkuy.data.PrayerRepository
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
-import es.dmoral.toasty.Toasty
 import kotlinx.coroutines.launch
 
 /*
  * Created by Katili Jiwo Adi Wiyono on 25/03/20.
  */
 
-class FragmentSettingViewModel @ViewModelInject constructor(val repository: Repository): ViewModel() {
+class FragmentSettingViewModel @ViewModelInject constructor(val prayerRepository: PrayerRepository): ViewModel() {
 
     companion object {
         const val SUCCESS_CHANGE_COORDINATE = "Success change the coordinate"
     }
 
-    val msApi1 = repository.getMsApi1()
+    val msApi1 = prayerRepository.getMsApi1()
 
     var errMessage = MutableLiveData<String>()
 
@@ -44,7 +42,7 @@ class FragmentSettingViewModel @ViewModelInject constructor(val repository: Repo
             return@launch
         }
 
-        repository.updateMsApi1(msApi1)
+        prayerRepository.updateMsApi1(msApi1)
         errMessage.postValue(SUCCESS_CHANGE_COORDINATE)
     }
 

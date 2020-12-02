@@ -38,7 +38,7 @@ class NotificationHelper(c: Context): ContextWrapper(c) {
             channel1.enableLights(true)
             channel1.vibrationPattern = longArrayOf(0)
             channel1.enableVibration(true)
-            channel1.lightColor = R.color.colorPrimary
+            channel1.lightColor = R.color.dark_500
             channel1.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
 
             getManager()?.createNotificationChannel(channel1)
@@ -101,7 +101,7 @@ class NotificationHelper(c: Context): ContextWrapper(c) {
                 .setContentTitle(pName)
                 .setContentText(message)
                 .setSubText(EnumConfig.DUA_AFTER_ADHAN_STR)
-                .setColor(getColor(R.color.colorPrimary))
+                .setColor(getColor(R.color.dark_500))
                 .setStyle(NotificationCompat.BigTextStyle().bigText(message))
                 .setAutoCancel(true)
                 //.addAction(R.mipmap.ic_launcher, "remind me 10 more minute", actionIntent)

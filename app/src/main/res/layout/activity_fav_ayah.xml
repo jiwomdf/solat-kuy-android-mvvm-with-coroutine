@@ -15,7 +15,7 @@
             android:id="@+id/tb_favAyah"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/colorWhite"
+            android:background="@color/dark_500"
             app:titleTextAppearance="@style/ActionBar.nameText"
             app:layout_scrollFlags="scroll|enterAlways" />
 

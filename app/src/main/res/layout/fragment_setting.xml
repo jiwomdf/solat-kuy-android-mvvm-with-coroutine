@@ -5,7 +5,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/colorDarkWhite"
     tools:context=".ui.fragmentsetting.FragmentSetting">
 
     <LinearLayout
@@ -16,6 +15,7 @@
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:cardBackgroundColor="@color/dark_700"
             app:cardCornerRadius="@dimen/medium_margin"
             android:layout_margin="@dimen/small_margin">
 
@@ -35,7 +35,6 @@
                     android:id="@+id/tv_cur_loc"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/colorBlack"
                     android:textStyle="bold"
                     android:layout_marginBottom="@dimen/small_margin"
                     android:text="@string/current_location"
@@ -57,7 +56,6 @@
                     android:id="@+id/tv_view_latitude"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/colorBlack"
                     android:layout_marginTop="16dp"
                     android:layout_marginStart="@dimen/large_margin"
                     android:gravity="start"
@@ -78,7 +76,6 @@
                     android:id="@+id/tv_view_longitude"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/colorBlack"
                     android:layout_marginTop="8dp"
                     android:layout_marginStart="@dimen/large_margin"
                     android:gravity="start"
@@ -100,7 +97,6 @@
                     android:id="@+id/tv_view_city"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/colorBlack"
                     android:layout_marginTop="8dp"
                     android:layout_marginStart="@dimen/large_margin"
                     android:gravity="start"
@@ -116,6 +112,7 @@
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:cardBackgroundColor="@color/dark_700"
             app:cardCornerRadius="@dimen/medium_margin"
             android:layout_margin="@dimen/small_margin">
 
@@ -141,7 +138,6 @@
                     android:id="@+id/tv_changeLocation"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/colorBlack"
                     android:textStyle="bold"
                     android:layout_marginStart="@dimen/small_margin"
                     android:text="@string/changelocation"
@@ -165,7 +161,6 @@
                         android:layout_width="wrap_content"
                         android:layout_height="match_parent"
                         android:layout_marginTop="@dimen/small_margin"
-                        android:background="@drawable/button_background_primary"
                         android:text="@string/by_latitude_amp_longitude"
                         android:textSize="@dimen/small_text_size" />
 
@@ -173,10 +168,7 @@
                         android:id="@+id/btn_byGps"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textColor="@color/colorPrimary"
-                        app:backgroundTint="@color/colorPrimaryLight"
-                        android:backgroundTint="@color/colorPrimaryLight"
-                        android:background="@drawable/button_background_secondary"                        android:layout_marginTop="@dimen/small_margin"
+                        android:layout_marginTop="@dimen/small_margin"
                         android:text="@string/by_gps"
                         android:textSize="@dimen/small_text_size" />
 
@@ -190,6 +182,7 @@
         <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
+            app:cardBackgroundColor="@color/dark_700"
             app:cardCornerRadius="@dimen/medium_margin"
             android:layout_margin="@dimen/small_margin">
 
@@ -214,7 +207,6 @@
                     android:id="@+id/tv_authorCredit"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textColor="@color/colorBlack"
                     android:textStyle="bold"
                     android:layout_marginStart="8dp"
                     android:text="@string/author_credit"
@@ -223,13 +215,11 @@
                     app:layout_constraintTop_toTopOf="parent" />
 
                 <Button
-                    style="@style/Widget.AppCompat.Button.Borderless.Colored"
                     android:id="@+id/btn_seeAuthor"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:layout_marginTop="16dp"
-                    android:textColor="@color/colorPrimary"
                     android:text="@string/see_author_and_credit"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tv_authorCredit" />

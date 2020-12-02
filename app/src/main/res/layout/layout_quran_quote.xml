@@ -4,12 +4,12 @@
     android:layout_height="wrap_content"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     app:cardCornerRadius="@dimen/medium_margin"
-    app:cardBackgroundColor="@color/colorPrimary"
     xmlns:tools="http://schemas.android.com/tools">
 
     <LinearLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        android:background="@color/dark_700"
         android:orientation="vertical">
 
         <TextView
@@ -21,7 +21,6 @@
             android:layout_marginEnd="@dimen/medium_margin"
             android:layout_marginBottom="@dimen/large_margin"
             android:layout_gravity="center"
-            android:textColor="@color/colorWhite"
             tools:text="Extol thy Sustainer's limitless glory, and praise Him, and seek His forgiveness" />
 
         <TextView
@@ -32,7 +31,6 @@
             android:layout_marginTop="@dimen/medium_margin"
             android:layout_marginEnd="@dimen/medium_margin"
             android:layout_marginBottom="@dimen/small_margin"
-            android:textColor="@color/colorWhite"
             tools:text="Extol thy Sustainer's limitless glory, and praise Him, and seek His forgiveness: for, behold, He is ever an acceptor of repentance. - QS An-nasr ayat 3" />
 
         <ImageView

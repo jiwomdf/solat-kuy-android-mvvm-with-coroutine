@@ -1,5 +1,5 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.motion.widget.MotionLayout
+<androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
     xmlns:app="http://schemas.android.com/apk/res-auto"
@@ -12,13 +12,13 @@
         android:id="@+id/include"
         layout="@layout/layout_widget"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
+        android:layout_height="150dp"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent"
         app:layout_constraintBottom_toTopOf="@+id/sv_main"/>
 
-    <ScrollView
+    <LinearLayout
         android:id="@+id/sv_main"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
@@ -54,8 +54,8 @@
                 tools:ignore="UselessLeaf" />
 
         </LinearLayout>
-    </ScrollView>
+    </LinearLayout>
 
-</androidx.constraintlayout.motion.widget.MotionLayout>
+</androidx.constraintlayout.widget.ConstraintLayout>
 
 

@@ -29,7 +29,6 @@ class FragmentInfo : BaseFragment(R.layout.fragment_info), SwipeRefreshLayout.On
     private lateinit var duaCollectionAdapter: DuaCollectionAdapter
     private var mMsApi1: MsApi1? = null
 
-    override fun setIntentExtra() {/*NO-OP*/}
     override fun setFirstView() {
         initRvDuaCollection()
     }
@@ -58,14 +57,15 @@ class FragmentInfo : BaseFragment(R.layout.fragment_info), SwipeRefreshLayout.On
             when(retval.status){
                 EnumStatus.SUCCESS -> {
                     if(retval.data == null)
-                        throw Exception("retval.data == null")
+                        showBottomSheet(isCancelable = false, isFinish = true)
 
-                    mMsApi1 = retval.data
+                    mMsApi1 = retval.data!!
                     val city = LocationHelper.getCity(requireContext(), retval.data.latitude.toDouble(), retval.data.longitude.toDouble())
 
                     tv_city.text = city ?: EnumConfig.CITY_NOT_FOUND_STR
                     fetchPrayerApi(retval.data)
                 }
+                EnumStatus.ERROR -> showBottomSheet(isCancelable = false, isFinish = true)
                 else -> {/*NO-OP*/}
             }
         })
@@ -182,7 +182,7 @@ class FragmentInfo : BaseFragment(R.layout.fragment_info), SwipeRefreshLayout.On
 
     override fun onRefresh() {
         if(mMsApi1 == null)
-            throw Exception("null mMsApi1")
+            showBottomSheet(isCancelable = false, isFinish = true)
 
         fetchPrayerApi(mMsApi1!!)
         sl_info.isRefreshing = false

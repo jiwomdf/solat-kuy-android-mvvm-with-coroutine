@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/dark_200"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:orientation="vertical">
 
@@ -9,7 +10,6 @@
         android:id="@+id/tv_dialog_fragmentCompass_note"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/colorBlack"
         android:gravity="center"
         android:layout_marginTop="@dimen/small_margin"
         android:text="@string/please_do_this_move_before_using_the_compass_to_calibrate_the_compass"
@@ -28,14 +28,12 @@
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_dialog_fragmentCompass_note"
         app:lottie_autoPlay="true"
-        app:lottie_colorFilter="@color/colorPrimary"
         app:lottie_fileName="2754-move-phone-around-for-ar-app.json"
         app:lottie_loop="true" />
 
     <Button
         android:id="@+id/btn_hideAnimation"
         android:layout_width="wrap_content"
-        android:background="@drawable/button_background_primary"
         android:layout_height="55dp"
         android:layout_marginBottom="@dimen/small_margin"
         android:text="@string/hide"

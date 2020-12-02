@@ -1,15 +1,12 @@
 package com.programmergabut.solatkuy.ui.fragmentcompass.viewmodel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.verify
 import com.programmergabut.solatkuy.CoroutinesTestRule
 import com.programmergabut.solatkuy.DummyRetValue
-import com.programmergabut.solatkuy.data.Repository
+import com.programmergabut.solatkuy.data.PrayerRepository
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
-import com.programmergabut.solatkuy.data.local.localentity.MsFavSurah
 import com.programmergabut.solatkuy.data.remote.remoteentity.compassJson.CompassResponse
 import com.programmergabut.solatkuy.ui.fragmentcompass.FragmentCompassViewModel
 import com.programmergabut.solatkuy.util.Resource
@@ -38,15 +35,15 @@ class FragmentCompassViewModelTest {
     val coroutinesTestRule: CoroutinesTestRule = CoroutinesTestRule()
 
     @Mock
-    private lateinit var repository: Repository
+    private lateinit var prayerRepository: PrayerRepository
 
     private val msApi1 = MsApi1(0, "", "", "","","")
 
     @Before
     fun before(){
-        viewModel = FragmentCompassViewModel(repository)
+        viewModel = FragmentCompassViewModel(prayerRepository)
 
-        Mockito.verify(repository).getMsApi1()
+        Mockito.verify(prayerRepository).getMsApi1()
     }
 
     @Test
@@ -55,14 +52,14 @@ class FragmentCompassViewModelTest {
         //given
         val observer = mock<Observer<Resource<CompassResponse>>>()
         val dummyCompass = Resource.success(DummyRetValue.fetchCompassApi())
-        `when`(repository.fetchCompass(msApi1)).thenReturn(dummyCompass.data)
+        `when`(prayerRepository.fetchCompass(msApi1)).thenReturn(dummyCompass.data)
 
         //when
         viewModel.fetchCompassApi(msApi1)
         val result = viewModel.compass.value
 
         //--return value
-        Mockito.verify(repository).fetchCompass(msApi1)
+        Mockito.verify(prayerRepository).fetchCompass(msApi1)
         Assert.assertEquals(dummyCompass, result)
 
         //--observer

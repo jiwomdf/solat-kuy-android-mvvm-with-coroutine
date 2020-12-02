@@ -33,7 +33,6 @@ class QuranFragment : BaseFragment(R.layout.fragment_quran), SwipeRefreshLayout.
     private lateinit var staredSurahAdapter: StaredSurahAdapter
     private var allSurahDatas: MutableList<Data>? = null
 
-    override fun setIntentExtra() {/*NO-OP*/}
     override fun setFirstView() {
         initRvAllSurah()
         initRvStaredSurah()
@@ -51,7 +50,7 @@ class QuranFragment : BaseFragment(R.layout.fragment_quran), SwipeRefreshLayout.
         }
 
         cv_last_read_ayah.setOnClickListener {
-            val surahID = sharedPref.getInt(LAST_READ_SURAH, -1)
+            val surahID = getLastReadSurah()
             val selSurah = allSurahDatas?.find { x -> x.number == surahID }
 
             val bundle = Bundle()

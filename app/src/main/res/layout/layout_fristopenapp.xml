@@ -4,6 +4,7 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
+    android:background="@color/dark_200"
     android:paddingTop="@dimen/medium_margin"
     android:paddingLeft="@dimen/larger_margin"
     android:paddingRight="@dimen/larger_margin"
@@ -51,7 +52,6 @@
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
             android:layout_marginTop="@dimen/small_margin"
-            android:background="@drawable/button_background_primary"
             android:text="@string/by_latitude_amp_longitude"
             android:textSize="@dimen/small_text_size" />
 
@@ -60,9 +60,6 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_marginTop="@dimen/small_margin"
-            app:backgroundTint="@color/colorPrimaryLight"
-            android:background="@drawable/button_background_secondary"
-            android:textColor="@color/colorPrimary"
             android:text="@string/by_gps"
             android:textSize="@dimen/small_text_size" />
 

@@ -9,7 +9,6 @@ import android.widget.Toast
 import androidx.activity.viewModels
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
-import androidx.recyclerview.widget.ItemTouchHelper.LEFT
 import androidx.recyclerview.widget.ItemTouchHelper.RIGHT
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -46,31 +45,36 @@ class ReadSurahActivity : BaseActivity(R.layout.activity_read_surah) {
     private var mIsAutoScroll: Boolean = false
     private var mMenu: Menu? = null
 
-    override fun setListener() {}
     override fun setIntentExtra() {
-        mSelSurahId = intent.getStringExtra(SURAH_ID) ?: throw Exception("getExtras surahID")
-        mSelSurahName = intent.getStringExtra(SURAH_NAME) ?: throw Exception("getExtras surahName")
-        mSelSurahTranslation = intent.getStringExtra(SURAH_TRANSLATION) ?: throw Exception("getExtras surahTranslation")
-        mIsAutoScroll = intent.getBooleanExtra(IS_AUTO_SCROLL, false)
+        try{
+            mSelSurahId = intent.getStringExtra(SURAH_ID) ?: throw Exception("getExtras surahID")
+            mSelSurahName = intent.getStringExtra(SURAH_NAME) ?: throw Exception("getExtras surahName")
+            mSelSurahTranslation = intent.getStringExtra(SURAH_TRANSLATION) ?: throw Exception("getExtras surahTranslation")
+            mIsAutoScroll = intent.getBooleanExtra(IS_AUTO_SCROLL, false)
+        }
+        catch (ex: Exception){
+            showBottomSheet(resources.getString(R.string.text_error_title), "", isCancelable = false, isFinish = true)
+        }
     }
     override fun setFirstView() {
+        cc_readQuran_loading.visibility = View.VISIBLE
         setSupportActionBar(tb_readSurah)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         initRVReadSurah()
     }
     override fun setObserver() {
+        super.setObserver()
         var data: Data? = null
 
         viewModel.selectedSurahAr.observe(this, {
             when (it.status) {
                 EnumStatus.SUCCESS -> {
                     if (it.data == null)
-                        throw Exception(Thread.currentThread().stackTrace[1].methodName)
-                    data = it.data.data
+                        showBottomSheet(isCancelable = false, isFinish = true)
+
+                    data = it.data?.data!!
                     setVisibility(it.status)
-                    tb_readSurah.title = data!!.englishName
-                    tb_readSurah.subtitle =
-                        data!!.revelationType + " - " + data!!.numberOfAyahs + " Ayahs"
+                    setToolBarText(it.data.data)
                     viewModel.getListFavAyahBySurahID(mSelSurahId.toInt())
                 }
                 EnumStatus.LOADING -> {
@@ -81,18 +85,15 @@ class ReadSurahActivity : BaseActivity(R.layout.activity_read_surah) {
                     setVisibility(it.status)
                     lottieAnimationView.cancelAnimation()
                     tv_readQuran_loading.text = getString(R.string.fetch_failed)
-                    showBottomSheet("Error Occurred",
-                        isCancelable = true,
-                        isFinish = true
-                    )
+                    showBottomSheet(isCancelable = false, isFinish = true)
                 }
             }
         })
 
         viewModel.msFavAyahBySurahID.observe(this, { local ->
 
-            val lastSurah = sharedPref.getInt(LAST_READ_SURAH, -1)
-            val lastAyah = sharedPref.getInt(LAST_READ_AYAH, -1)
+            val lastSurah = getLastReadSurah()
+            val lastAyah = getLastReadAyah()
 
             if(lastSurah == -1 || lastAyah == -1){
                 showBottomSheet("Error Occurred", "Surah and ayah not found",
@@ -126,16 +127,24 @@ class ReadSurahActivity : BaseActivity(R.layout.activity_read_surah) {
                         notifyDataSetChanged()
                     }
                     if(mIsAutoScroll){
-                        val lastReadAyah = sharedPref.getInt(LAST_READ_AYAH, 0)
+                        val lastReadAyah = getLastReadAyah()
                         (rv_read_surah.layoutManager as LinearLayoutManager)
                             .scrollToPositionWithOffset(lastReadAyah - 1, 0)
                     }
+                }
+                EnumStatus.ERROR -> {
+                    showBottomSheet(isCancelable = false, isFinish = true)
                 }
                 else -> {/*NO-OP*/}
             }
         })
 
         viewModel.fetchReadSurahAr(mSelSurahId.toInt())
+    }
+
+    private fun setToolBarText(data: Data) {
+        tb_readSurah.title = data.englishName
+        tb_readSurah.subtitle = data.revelationType + " - " + data.numberOfAyahs + " Ayahs"
     }
 
     private fun setVisibility(status: EnumStatus){
@@ -169,8 +178,9 @@ class ReadSurahActivity : BaseActivity(R.layout.activity_read_surah) {
                             ContextCompat.getDrawable(this, R.drawable.ic_star_24)
                     else
                         menu?.findItem(R.id.i_star_surah)?.icon =
-                            ContextCompat.getDrawable(this, R.drawable.ic_star_yellow_24)
+                            ContextCompat.getDrawable(this, R.drawable.ic_star_purple_24)
                 }
+                EnumStatus.ERROR -> showBottomSheet(isCancelable = false, isFinish = true)
                 else -> {/*NO-OP*/}
             }
         })
@@ -179,8 +189,8 @@ class ReadSurahActivity : BaseActivity(R.layout.activity_read_surah) {
         return super.onCreateOptionsMenu(menu)
     }
 
-    override fun onOptionsItemSelected(item: MenuItem?): Boolean {
-        return when (item?.itemId) {
+    override fun onOptionsItemSelected(item: MenuItem): Boolean {
+        return when (item.itemId) {
             android.R.id.home -> {
                 finish()
                 true
@@ -207,7 +217,7 @@ class ReadSurahActivity : BaseActivity(R.layout.activity_read_surah) {
 
                 true
             }
-            else -> super.onOptionsItemSelected(item!!)
+            else -> super.onOptionsItemSelected(item)
         }
     }
 
@@ -234,8 +244,8 @@ class ReadSurahActivity : BaseActivity(R.layout.activity_read_surah) {
             },
             ContextCompat.getDrawable(this, R.drawable.ic_favorite_red_24)!!,
             ContextCompat.getDrawable(this, R.drawable.ic_favorite_24)!!,
-            ContextCompat.getColor(this, R.color.colorAccent),
-            ContextCompat.getColor(this, R.color.colorWhite)
+            ContextCompat.getColor(this, R.color.purple_700),
+            ContextCompat.getColor(this, R.color.dark_200)
         )
 
         rv_read_surah.apply {
@@ -256,7 +266,7 @@ class ReadSurahActivity : BaseActivity(R.layout.activity_read_surah) {
     }
 
     private val itemTouchCallback = object : ItemTouchHelper.SimpleCallback(
-        0, LEFT or RIGHT
+        0, RIGHT
     ) {
         override fun onMove(
             recyclerView: RecyclerView,
@@ -293,7 +303,7 @@ class ReadSurahActivity : BaseActivity(R.layout.activity_read_surah) {
             val background =  ColorDrawable(
                 ContextCompat.getColor(
                     this@ReadSurahActivity,
-                    R.color.colorAccent
+                    R.color.dark_200
                 )
             )
             background.setBounds(
@@ -312,11 +322,7 @@ class ReadSurahActivity : BaseActivity(R.layout.activity_read_surah) {
     }
 
     private fun insertLastReadSharedPref(numberInSurah: Int) {
-        sharedPref.edit()?.apply{
-            putInt(LAST_READ_SURAH, mSelSurahId.toInt())
-            putInt(LAST_READ_AYAH, numberInSurah)
-            apply()
-        }
+        insertLastReadSharedPref(mSelSurahId.toInt(), numberInSurah)
     }
 
 }

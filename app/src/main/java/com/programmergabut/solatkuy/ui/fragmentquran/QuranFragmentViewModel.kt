@@ -5,14 +5,15 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.programmergabut.solatkuy.data.Repository
+import com.programmergabut.solatkuy.data.PrayerRepository
+import com.programmergabut.solatkuy.data.QuranRepository
 import com.programmergabut.solatkuy.data.remote.remoteentity.quranallsurahJson.AllSurahResponse
 import com.programmergabut.solatkuy.util.EspressoIdlingResource
 import com.programmergabut.solatkuy.util.Resource
 import kotlinx.coroutines.launch
 import java.lang.Exception
 
-class QuranFragmentViewModel @ViewModelInject constructor(val repository: Repository): ViewModel() {
+class QuranFragmentViewModel @ViewModelInject constructor(val quranRepository: QuranRepository): ViewModel() {
 
 
     private var _allSurah = MutableLiveData<Resource<AllSurahResponse>>()
@@ -25,7 +26,7 @@ class QuranFragmentViewModel @ViewModelInject constructor(val repository: Reposi
 
             EspressoIdlingResource.increment()
             try{
-                repository.fetchAllSurah().let {
+                quranRepository.fetchAllSurah().let {
                     _allSurah.postValue(Resource.success(it))
                     EspressoIdlingResource.decrement()
                 }
@@ -38,6 +39,6 @@ class QuranFragmentViewModel @ViewModelInject constructor(val repository: Reposi
         }
     }
 
-    val staredSurah = repository.getListFavSurah()
+    val staredSurah = quranRepository.getListFavSurah()
 
 }

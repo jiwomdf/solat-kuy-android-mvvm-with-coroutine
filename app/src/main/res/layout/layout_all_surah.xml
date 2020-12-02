@@ -6,6 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:layout_marginBottom="@dimen/medium_margin"
+    android:background="@color/dark_700"
     xmlns:tools="http://schemas.android.com/tools"
     android:orientation="vertical">
 
@@ -15,7 +16,6 @@
         android:layout_height="wrap_content"
         android:textSize="@dimen/medium_text_size"
         android:textStyle="bold"
-        android:textColor="@color/colorBlack"
         android:layout_marginStart="@dimen/medium_margin"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -29,7 +29,6 @@
         android:textSize="@dimen/medium_text_size"
         android:layout_marginStart="@dimen/larger_margin"
         android:textStyle="bold"
-        android:textColor="@color/colorBlack"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toEndOf="@+id/tv_allsurah_no"
         app:layout_constraintTop_toTopOf="parent"
@@ -52,7 +51,6 @@
         android:textSize="@dimen/large_text_size"
         android:layout_marginEnd="@dimen/medium_margin"
         android:textStyle="bold"
-        android:textColor="@color/colorBlack"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintTop_toTopOf="parent"
@@ -61,7 +59,7 @@
     <View
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/colorLightGrey"
+        android:background="@color/dark_200"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />

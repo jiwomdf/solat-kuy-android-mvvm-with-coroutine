@@ -3,6 +3,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:padding="@dimen/small_margin"
+    android:background="@color/dark_200"
     android:orientation="vertical">
 
     <ImageView
@@ -17,7 +18,6 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/small_margin"
-        android:textColor="@color/colorBlack"
         android:textStyle="bold"
         android:gravity="center"
         android:text="@string/select_the_quotes_from"
@@ -29,11 +29,13 @@
         android:layout_height="wrap_content">
         <RadioButton
             android:id="@+id/rb_fromApi"
+            android:textColor="@color/white"
             android:text="@string/from_api"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />
         <RadioButton
             android:id="@+id/rb_fromFavQuote"
+            android:textColor="@color/white"
             android:text="@string/from_fav_quote"
             android:layout_width="match_parent"
             android:layout_height="wrap_content" />

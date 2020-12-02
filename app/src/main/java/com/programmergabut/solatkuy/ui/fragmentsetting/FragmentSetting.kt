@@ -47,7 +47,6 @@ class FragmentSetting : BaseFragment(R.layout.fragment_setting) {
     private lateinit var mFusedLocationClient: FusedLocationProviderClient
     private val ALL_PERMISSIONS = 101
 
-    override fun setIntentExtra() {/*NO-OP*/}
     override fun setFirstView() {
         dialog = BottomSheetDialog(requireContext())
     }

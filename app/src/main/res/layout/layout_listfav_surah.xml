@@ -3,6 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:background="@color/dark_200"
     android:layout_margin="@dimen/medium_margin"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
@@ -11,7 +12,6 @@
         android:id="@+id/tv_listFav_ar"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:textColor="@color/colorBlack"
         tools:text="بوَرَأَيْتَ النَّاسَ يَدْخُلُونَ فِي دِينِ اللَّهِ أَفْوَاجًا"
         android:layout_marginTop="@dimen/small_margin"
         android:textSize="@dimen/large2_text_size"
@@ -49,7 +49,6 @@
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/medium_margin"
         android:textSize="@dimen/small_text_size"
-        android:textColor="@color/colorBlack"
         android:textStyle="bold"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
@@ -62,7 +61,6 @@
         android:id="@+id/view"
         android:layout_width="match_parent"
         android:layout_height="1dp"
-        android:background="@color/colorLightGrey"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent" />

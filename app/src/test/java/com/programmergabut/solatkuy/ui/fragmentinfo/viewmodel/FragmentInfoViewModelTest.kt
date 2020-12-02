@@ -3,12 +3,10 @@ package com.programmergabut.solatkuy.ui.fragmentinfo.viewmodel
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.verify
 import com.programmergabut.solatkuy.CoroutinesTestRule
 import com.programmergabut.solatkuy.DummyArgument
 import com.programmergabut.solatkuy.DummyRetValue
-import com.programmergabut.solatkuy.data.Repository
-import com.programmergabut.solatkuy.data.local.localentity.MsApi1
+import com.programmergabut.solatkuy.data.PrayerRepository
 import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.PrayerResponse
 import com.programmergabut.solatkuy.ui.fragmentinfo.FragmentInfoViewModel
 import com.programmergabut.solatkuy.util.Resource
@@ -38,15 +36,15 @@ class FragmentInfoViewModelTest {
     val coroutinesTestRule: CoroutinesTestRule = CoroutinesTestRule()
 
     @Mock
-    private lateinit var repository: Repository
+    private lateinit var prayerRepository: PrayerRepository
 
     private val msApi1 = DummyArgument.msApi1
 
     @Before
     fun before(){
-        viewModel = FragmentInfoViewModel(repository)
+        viewModel = FragmentInfoViewModel(prayerRepository)
 
-        Mockito.verify(repository).getMsApi1()
+        Mockito.verify(prayerRepository).getMsApi1()
     }
 
     @Test
@@ -55,14 +53,14 @@ class FragmentInfoViewModelTest {
         //given
         val observer = mock<Observer<Resource<PrayerResponse>>>()
         val dummyPrayerApi = Resource.success(DummyRetValue.fetchPrayerApi())
-        `when`(repository.fetchPrayerApi(msApi1)).thenReturn(dummyPrayerApi.data)
+        `when`(prayerRepository.fetchPrayerApi(msApi1)).thenReturn(dummyPrayerApi.data)
 
         //when
         viewModel.fetchPrayerApi(msApi1)
         val result = viewModel.prayer.value
 
         //--return value
-        Mockito.verify(repository).fetchPrayerApi(msApi1)
+        Mockito.verify(prayerRepository).fetchPrayerApi(msApi1)
         Assert.assertEquals(dummyPrayerApi, result)
 
         //--observer

@@ -50,15 +50,9 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
     private val viewModel: MainActivityViewModel by viewModels()
     private val ALL_PERMISSIONS = 101
 
-    override fun setIntentExtra() {/*NO-OP*/}
-    override fun setFirstView() {/*NO-OP*/}
-    override fun setListener() {/*NO-OP*/}
     override fun onDestroy() {
         super.onDestroy()
-        sharedPref.edit().apply {
-            putBoolean("isHasNotOpenAnimation", false)
-            apply()
-        }
+        setIsNotHasOpenAnimation(false)
     }
     override fun setObserver() {
         observeDb()
@@ -75,7 +69,7 @@ class MainActivity : BaseActivity(R.layout.activity_main) {
                         else
                             initDialog()
                     else
-                        SolatKuyRoom.populateDatabase(db)
+                        SolatKuyRoom.populateDatabase(getDatabase())
                 }
                 else -> {}
             }

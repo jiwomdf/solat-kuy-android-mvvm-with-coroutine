@@ -5,16 +5,16 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.programmergabut.solatkuy.data.Repository
+import com.programmergabut.solatkuy.data.PrayerRepository
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
 import com.programmergabut.solatkuy.data.remote.remoteentity.compassJson.CompassResponse
 import com.programmergabut.solatkuy.util.Resource
 import kotlinx.coroutines.launch
 import java.lang.Exception
 
-class FragmentCompassViewModel @ViewModelInject constructor(val repository: Repository): ViewModel() {
+class FragmentCompassViewModel @ViewModelInject constructor(val prayerRepository: PrayerRepository): ViewModel() {
 
-    val msApi1 = repository.getMsApi1()
+    val msApi1 = prayerRepository.getMsApi1()
 
     private var _compass = MutableLiveData<Resource<CompassResponse>>()
     val compass: LiveData<Resource<CompassResponse>>
@@ -25,7 +25,7 @@ class FragmentCompassViewModel @ViewModelInject constructor(val repository: Repo
         viewModelScope.launch {
             _compass.postValue(Resource.loading(null))
             try {
-                repository.fetchCompass(msApi1).let {
+                prayerRepository.fetchCompass(msApi1).let {
                     _compass.postValue(Resource.success(it))
                 }
             }

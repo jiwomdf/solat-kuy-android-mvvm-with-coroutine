@@ -2,6 +2,7 @@
 <androidx.constraintlayout.widget.ConstraintLayout
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:background="@color/dark_200"
     android:layout_width="match_parent"
     android:layout_height="wrap_content">
 
@@ -13,7 +14,6 @@
         android:layout_marginTop="16dp"
         android:text="@string/by_latitude_amp_longitude"
         android:textSize="@dimen/medium_text_size"
-        android:textColor="@color/colorBlack"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -24,7 +24,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        app:boxBackgroundColor="@color/colorDarkWhite"
+        app:boxBackgroundColor="@color/white"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/tv_llDialog_title">
 
@@ -45,7 +45,7 @@
         android:layout_height="wrap_content"
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
-        app:boxBackgroundColor="@color/colorDarkWhite"
+        app:boxBackgroundColor="@color/white"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/et_llDialog_latitude_layout">
@@ -64,7 +64,7 @@
         android:id="@+id/btn_proceedByLL"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:background="@drawable/button_background_primary"
+        android:backgroundTint="@color/purple_700"
         app:layout_constraintHorizontal_bias="1.0"
         android:layout_marginEnd="@dimen/medium_margin"
         android:layout_marginBottom="@dimen/medium_margin"

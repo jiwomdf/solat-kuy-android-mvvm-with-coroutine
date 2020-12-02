@@ -52,7 +52,6 @@ class FragmentCompass : BaseFragment(R.layout.fragment_compass), SensorEventList
         mSensorManager.unregisterListener(this)
     }
 
-    override fun setIntentExtra() {/*NO-OP*/}
     override fun setFirstView() {
         mSensorManager = activity?.getSystemService(SENSOR_SERVICE) as SensorManager
         openLottieAnimation()
@@ -66,16 +65,13 @@ class FragmentCompass : BaseFragment(R.layout.fragment_compass), SensorEventList
     }
 
     private fun openLottieAnimation() {
-        val isHasNotOpenAnimation = sharedPref.getBoolean("isHasNotOpenAnimation", true)
+        val isHasNotOpenAnimation = getIsNotHasOpenAnimation()
         if(isHasNotOpenAnimation)
             createLottieAnimation()
     }
 
     private fun saveSharedPreferences() {
-        sharedPref.edit()?.apply{
-            putBoolean("isHasNotOpenAnimation", false)
-            apply()
-        }
+
     }
 
     /* Subscribe live data */

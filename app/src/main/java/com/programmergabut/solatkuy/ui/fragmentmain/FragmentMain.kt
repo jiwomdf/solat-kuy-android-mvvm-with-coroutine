@@ -72,7 +72,6 @@ class FragmentMain : BaseFragment(R.layout.fragment_main), SwipeRefreshLayout.On
         tv_quran_ayah_quote_click?.visibility = View.VISIBLE
     }
 
-    override fun setIntentExtra() {/*NO-OP*/}
     override fun setFirstView() {
         openPopupQuote()
     }
@@ -81,22 +80,20 @@ class FragmentMain : BaseFragment(R.layout.fragment_main), SwipeRefreshLayout.On
         subscribeObserversAPI()
     }
     override fun setListener() {
-        sl_main.setOnRefreshListener(this)
+        //sl_main.setOnRefreshListener(this)
         tvQuranQuoteClick()
         cbClickListener()
     }
 
-    /* Subscribe live data */
     private fun subscribeObserversAPI() {
-
         viewModel.notifiedPrayer.observe(viewLifecycleOwner, { retVal ->
             when(retVal.status){
                 EnumStatus.SUCCESS -> {
 
                     if(retVal.data == null)
-                        throw Exception("notifiedPrayer return null")
+                        showBottomSheet(isCancelable = false, isFinish = true)
 
-                    bindCheckBox(retVal.data)
+                    bindCheckBox(retVal.data!!)
                     updateAlarmManager(retVal.data)
 
                     val data = createWidgetData(retVal.data)
@@ -106,7 +103,7 @@ class FragmentMain : BaseFragment(R.layout.fragment_main), SwipeRefreshLayout.On
                     Toasty.info(requireContext(), "Syncing data..", Toast.LENGTH_SHORT).show()
                     bindPrayerText(null)
                 }
-                EnumStatus.ERROR -> Toasty.error(requireContext(), "Please reopen the app").show()
+                EnumStatus.ERROR -> showBottomSheet(isCancelable = false, isFinish = true)
             }
         })
 
@@ -127,6 +124,9 @@ class FragmentMain : BaseFragment(R.layout.fragment_main), SwipeRefreshLayout.On
                     updateMonthAndYearMsApi1(it.data)
                     fetchPrayerApi(it.data)
                 }
+                EnumStatus.ERROR -> {
+                    showBottomSheet(isCancelable = false, isFinish = true)
+                }
                 else -> {}
             }
         })
@@ -140,6 +140,9 @@ class FragmentMain : BaseFragment(R.layout.fragment_main), SwipeRefreshLayout.On
                         subscribeReadSurahEn()
                     else
                         subscribeFavAyah()
+                }
+                EnumStatus.ERROR -> {
+                    showBottomSheet(isCancelable = false, isFinish = true)
                 }
                 else -> {}
             }
@@ -517,7 +520,7 @@ class FragmentMain : BaseFragment(R.layout.fragment_main), SwipeRefreshLayout.On
 
     override fun onRefresh() {
         viewModel.getMsSetting(0)
-        sl_main.isRefreshing = false
+        //sl_main.isRefreshing = false
     }
 
     private fun openPopupQuote(){

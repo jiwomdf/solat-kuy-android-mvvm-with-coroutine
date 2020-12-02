@@ -5,7 +5,7 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.programmergabut.solatkuy.data.Repository
+import com.programmergabut.solatkuy.data.PrayerRepository
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
 import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.PrayerResponse
 import com.programmergabut.solatkuy.util.EspressoIdlingResource
@@ -17,9 +17,9 @@ import java.lang.Exception
  * Created by Katili Jiwo Adi Wiyono on 25/04/20.
  */
 
-class FragmentInfoViewModel @ViewModelInject constructor(val repository: Repository): ViewModel() {
+class FragmentInfoViewModel @ViewModelInject constructor(val prayerRepository: PrayerRepository): ViewModel() {
 
-    val msApi1 = repository.getMsApi1()
+    val msApi1 = prayerRepository.getMsApi1()
 
     private var _prayer = MutableLiveData<Resource<PrayerResponse>>()
     val prayer: LiveData<Resource<PrayerResponse>>
@@ -32,7 +32,7 @@ class FragmentInfoViewModel @ViewModelInject constructor(val repository: Reposit
             _prayer.postValue(Resource.loading(null))
 
             try{
-                repository.fetchPrayerApi(msApi1).let {
+                prayerRepository.fetchPrayerApi(msApi1).let {
                     _prayer.postValue(Resource.success(it))
 
                     EspressoIdlingResource.decrement()

@@ -3,17 +3,13 @@ package com.programmergabut.solatkuy.ui.fragmentquran
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import com.nhaarman.mockitokotlin2.mock
-import com.nhaarman.mockitokotlin2.verify
 import com.programmergabut.solatkuy.CoroutinesTestRule
 import com.programmergabut.solatkuy.DummyRetValue
-import com.programmergabut.solatkuy.data.Repository
+import com.programmergabut.solatkuy.data.PrayerRepository
 import com.programmergabut.solatkuy.data.remote.remoteentity.quranallsurahJson.AllSurahResponse
-import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonAr.ReadSurahArResponse
-import com.programmergabut.solatkuy.ui.fragmentsetting.FragmentSettingViewModel
 import com.programmergabut.solatkuy.util.Resource
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
-import org.junit.Assert
 import org.junit.Before
 import org.junit.Test
 
@@ -37,13 +33,13 @@ class QuranFragmentViewModelTest {
     val coroutinesTestRule: CoroutinesTestRule = CoroutinesTestRule()
 
     @Mock
-    private lateinit var repository: Repository
+    private lateinit var prayerRepository: PrayerRepository
 
     @Before
     fun setUp(){
-        viewModel = QuranFragmentViewModel(repository)
+        viewModel = QuranFragmentViewModel(prayerRepository)
 
-        Mockito.verify(repository).getListFavSurah()
+        Mockito.verify(prayerRepository).getListFavSurah()
     }
 
 
@@ -55,7 +51,7 @@ class QuranFragmentViewModelTest {
         val dummySelectedSurahAr = Resource.success(DummyRetValue.fetchAllSurah())
 
         //scenario
-        Mockito.`when`(repository.fetchAllSurah()).thenReturn(dummySelectedSurahAr.data)
+        Mockito.`when`(prayerRepository.fetchAllSurah()).thenReturn(dummySelectedSurahAr.data)
 
         //start observer
         viewModel.allSurah.observeForever(observer)
@@ -65,7 +61,7 @@ class QuranFragmentViewModelTest {
         val result = viewModel.allSurah.value
 
         //--verify
-        Mockito.verify(repository).fetchAllSurah()
+        Mockito.verify(prayerRepository).fetchAllSurah()
         assertEquals(dummySelectedSurahAr, result)
         Mockito.verify(observer).onChanged(dummySelectedSurahAr)
 

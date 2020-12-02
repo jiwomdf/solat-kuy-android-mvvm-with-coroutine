@@ -13,7 +13,6 @@
         android:layout_height="wrap_content"
         android:layout_gravity="center"
         android:layout_marginTop="@dimen/small_margin"
-        android:textColor="@color/colorBlack"
         android:textSize="@dimen/large_text_size"
         tools:text="الْوَالِي" />
 
@@ -25,7 +24,6 @@
         android:textStyle="bold"
         android:layout_marginTop="@dimen/small_margin"
         android:layout_marginBottom="@dimen/small_margin"
-        android:textColor="@color/colorBlack"
         android:textSize="@dimen/small_text_size"
         tools:text="Al Waali" />
 
@@ -36,7 +34,6 @@
         android:layout_gravity="center"
         android:textStyle="bold"
         android:layout_marginBottom="@dimen/small_margin"
-        android:textColor="@color/colorBlack"
         android:textSize="@dimen/small_text_size"
         tools:text="1" />
 

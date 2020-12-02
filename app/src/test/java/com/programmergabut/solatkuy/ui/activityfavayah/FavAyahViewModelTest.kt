@@ -4,7 +4,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.nhaarman.mockitokotlin2.verify
 import com.programmergabut.solatkuy.CoroutinesTestRule
 import com.programmergabut.solatkuy.DummyArgument
-import com.programmergabut.solatkuy.data.Repository
+import com.programmergabut.solatkuy.data.PrayerRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before
@@ -29,23 +29,23 @@ class FavAyahViewModelTest {
     val coroutinesTestRule: CoroutinesTestRule = CoroutinesTestRule()
 
     @Mock
-    private lateinit var repository: Repository
+    private lateinit var prayerRepository: PrayerRepository
 
     private val msFavAyah = DummyArgument.msFavAyah
 
     @Before
     fun setUp() {
-        viewModel = FavAyahViewModel(repository)
+        viewModel = FavAyahViewModel(prayerRepository)
     }
 
     @Test
     fun getFavAyah() = coroutinesTestRule.testDispatcher.runBlockingTest {
-        Mockito.verify(repository).getListFavAyah()
+        Mockito.verify(prayerRepository).getListFavAyah()
     }
 
     @Test
     fun deleteFavAyah() = coroutinesTestRule.testDispatcher.runBlockingTest{
         viewModel.deleteFavAyah(msFavAyah)
-        verify(repository).deleteFavAyah(msFavAyah)
+        verify(prayerRepository).deleteFavAyah(msFavAyah)
     }
 }

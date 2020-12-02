@@ -4,8 +4,8 @@
     tools:keep="@animator/bottom_navigation_colors">
     <item
         android:state_checked="true"
-        android:color="@color/colorPrimary" />
+        android:color="@color/dark_500" />
     <item
         android:state_checked="false"
-        android:color="@color/colorDarkGrey" />
+        android:color="@color/dark_700" />
 </selector>

@@ -6,7 +6,6 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:orientation="vertical"
-    android:background="@color/colorDarkWhite"
     tools:context=".ui.fragmentquran.QuranFragment">
 
     <EditText
@@ -16,6 +15,8 @@
         android:layout_margin="@dimen/small_margin"
         android:textStyle="bold"
         android:drawableEnd="@drawable/ic_search_24"
+        android:theme="@style/ThemeEditTextLight"
+        android:textColor="@color/white"
         android:hint="@string/search_surah_name"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -41,7 +42,7 @@
             android:layout_marginTop="@dimen/small_margin"
             android:layout_marginEnd="@dimen/small_margin"
             android:layout_toStartOf="@+id/cv_fav_ayah"
-            app:cardBackgroundColor="@color/colorAccent"
+            app:cardBackgroundColor="@color/purple_700"
             app:cardCornerRadius="@dimen/medium_margin">
 
             <androidx.appcompat.widget.AppCompatImageView
@@ -61,7 +62,7 @@
             android:layout_marginEnd="@dimen/medium_margin"
             android:layout_alignParentEnd="true"
             android:layout_alignParentTop="true"
-            app:cardBackgroundColor="@color/colorRed"
+            app:cardBackgroundColor="@color/purple_700"
             app:cardCornerRadius="@dimen/medium_margin">
 
             <androidx.appcompat.widget.AppCompatImageView
@@ -90,6 +91,7 @@
     <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="match_parent"
+        app:cardBackgroundColor="@color/dark_700"
         android:layout_margin="@dimen/small_margin"
         app:cardCornerRadius="@dimen/medium_margin">
 

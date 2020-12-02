@@ -16,8 +16,6 @@ class FavAyahActivity : BaseActivity(R.layout.activity_fav_ayah) {
     private lateinit var favAyahAdapter: FavAyahAdapter
     private val favAyahViewModel: FavAyahViewModel by viewModels()
 
-    override fun setIntentExtra() {}
-    override fun setListener() {}
     override fun setFirstView() {
         tb_favAyah.title = "Ayahs you've been liked"
         initRVFavAyah()
@@ -25,13 +23,12 @@ class FavAyahActivity : BaseActivity(R.layout.activity_fav_ayah) {
 
     override fun setObserver() {
         favAyahViewModel.favAyah.observe(this, {
-
             when(it.status){
                 EnumStatus.SUCCESS -> {
                     if(it.data == null)
-                        throw Exception("favAyahViewModel.favAyah")
+                        showBottomSheet(isCancelable = false, isFinish = true)
 
-                    if(it.data.isEmpty())
+                    if(it.data?.isEmpty()!!)
                         tv_fav_ayah_empty.visibility = View.VISIBLE
                     else{
                         favAyahAdapter.listAyah = it.data
@@ -40,9 +37,10 @@ class FavAyahActivity : BaseActivity(R.layout.activity_fav_ayah) {
                     }
                 }
                 EnumStatus.LOADING -> {}
-                EnumStatus.ERROR -> {}
+                EnumStatus.ERROR -> {
+                    showBottomSheet(isCancelable = false, isFinish = true)
+                }
             }
-
         })
     }
 

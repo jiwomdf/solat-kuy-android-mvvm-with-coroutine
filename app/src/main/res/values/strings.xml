@@ -76,6 +76,6 @@
     <string name="api_alquran_cloud">https://api.alquran.cloud</string>
     <string name="solat_kuy">Solat Kuy</string>
     <string name="text_error_title">Error Occurred</string>
-    <string name="text_error_dsc">Sorry.. there is some error</string>
+    <string name="text_error_dsc">Sorry.. there is some error, please try again</string>
     <string name="oke">Oke</string>
 </resources>

@@ -1,9 +1,10 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content">
+    android:layout_height="wrap_content"
+    android:background="@color/grey"
+    xmlns:tools="http://schemas.android.com/tools">
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="match_parent"
@@ -13,8 +14,9 @@
             android:id="@+id/iv_prayer_widget"
             android:layout_width="match_parent"
             android:layout_height="250dp"
-            android:background="@color/colorDarkGrey"
+            android:background="@color/grey"
             android:contentDescription="@string/widgetwallpaper"
+            tools:srcCompat="@drawable/img_dhuhr"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
@@ -27,7 +29,7 @@
             android:layout_marginTop="@dimen/small_margin"
             android:layout_marginEnd="@dimen/small_margin"
             android:text="@string/loading"
-            android:textColor="@color/colorWhite"
+            android:textColor="@color/white"
             android:textSize="@dimen/small_text_size"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -38,7 +40,7 @@
             android:layout_height="wrap_content"
             android:layout_marginEnd="@dimen/small_margin"
             android:text="@string/loading"
-            android:textColor="@color/colorWhite"
+            android:textColor="@color/white"
             android:textSize="@dimen/small_text_size"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintTop_toBottomOf="@+id/tv_view_latitude" />
@@ -50,7 +52,7 @@
             android:layout_marginTop="@dimen/small_margin"
             android:layout_marginStart="@dimen/small_margin"
             android:text="@string/loading"
-            android:textColor="@color/colorWhite"
+            android:textColor="@color/white"
             android:textSize="@dimen/small_text_size"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />
@@ -62,7 +64,7 @@
             android:layout_height="wrap_content"
             android:layout_marginStart="10dp"
             android:text="@string/loading"
-            android:textColor="@color/colorWhite"
+            android:textColor="@color/white"
             android:textStyle="bold"
             android:textSize="@dimen/large_text_size"
             app:layout_constraintBottom_toTopOf="@id/tv_widget_prayer_countdown"
@@ -74,7 +76,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_margin="10dp"
-            android:textColor="@color/colorWhite"
+            android:textColor="@color/white"
             android:text="@string/loading"
             android:textSize="@dimen/medium_text_size"
             app:layout_constraintBottom_toBottomOf="parent"
