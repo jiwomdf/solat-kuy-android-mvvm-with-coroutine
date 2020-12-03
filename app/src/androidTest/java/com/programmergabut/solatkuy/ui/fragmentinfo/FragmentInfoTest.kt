@@ -16,6 +16,8 @@ import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.SmallTest
 import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.ui.DummyRetval
+import com.programmergabut.solatkuy.ui.fragmentcompass.FragmentCompass
+import com.programmergabut.solatkuy.ui.launchFragmentInHiltContainer
 import com.programmergabut.solatkuy.ui.main.MainActivity
 import com.programmergabut.solatkuy.util.EspressoIdlingResource
 import dagger.hilt.android.testing.HiltAndroidRule

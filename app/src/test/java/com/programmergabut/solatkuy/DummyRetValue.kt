@@ -95,7 +95,8 @@ object DummyRetValue {
     fun surahArID_1(): ReadSurahArResponse{
         val listAyah = mutableListOf<com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonAr.Ayah>()
         listAyah.add(com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonAr.Ayah(
-            0,0,0,0,0,0,0,"test","test",false))
+            0,0,0,0,0,0,0,"test","test",false, isLastRead = false
+        ))
         return ReadSurahArResponse(0,
             com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonAr.Data(listAyah,
                 com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonAr.Edition(

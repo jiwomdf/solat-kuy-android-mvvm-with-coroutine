@@ -26,9 +26,9 @@ import java.util.*
  */
 
 @AndroidEntryPoint
-class QuranFragment : BaseFragment(R.layout.fragment_quran), SwipeRefreshLayout.OnRefreshListener {
+class QuranFragment : BaseFragment<QuranFragmentViewModel>(R.layout.fragment_quran, QuranFragmentViewModel::class.java),
+    SwipeRefreshLayout.OnRefreshListener {
 
-    private val fragmentQuranFragmentViewModel: QuranFragmentViewModel by viewModels()
     private lateinit var allSurahAdapter: AllSurahAdapter
     private lateinit var staredSurahAdapter: StaredSurahAdapter
     private var allSurahDatas: MutableList<Data>? = null
@@ -80,7 +80,7 @@ class QuranFragment : BaseFragment(R.layout.fragment_quran), SwipeRefreshLayout.
     }
 
     private fun observeApi(){
-        fragmentQuranFragmentViewModel.allSurah.observe(viewLifecycleOwner, {
+        viewModel.allSurah.observe(viewLifecycleOwner, {
             when(it.status){
                 EnumStatus.SUCCESS -> {
                     val datas = it.data?.data!! as MutableList<Data>
@@ -95,7 +95,7 @@ class QuranFragment : BaseFragment(R.layout.fragment_quran), SwipeRefreshLayout.
             }
         })
 
-        fragmentQuranFragmentViewModel.staredSurah.observe(viewLifecycleOwner, {
+        viewModel.staredSurah.observe(viewLifecycleOwner, {
             when(it.status){
                 EnumStatus.SUCCESS -> {
                     staredSurahAdapter.listData = it.data!!
@@ -109,7 +109,7 @@ class QuranFragment : BaseFragment(R.layout.fragment_quran), SwipeRefreshLayout.
             }
         })
 
-        fragmentQuranFragmentViewModel.fetchAllSurah()
+        viewModel.fetchAllSurah()
     }
 
     private fun setVisibility(status: EnumStatus){
@@ -246,7 +246,7 @@ class QuranFragment : BaseFragment(R.layout.fragment_quran), SwipeRefreshLayout.
     }
 
     override fun onRefresh() {
-        fragmentQuranFragmentViewModel.fetchAllSurah()
+        viewModel.fetchAllSurah()
         s_juzz.setSelection(0)
     }
 

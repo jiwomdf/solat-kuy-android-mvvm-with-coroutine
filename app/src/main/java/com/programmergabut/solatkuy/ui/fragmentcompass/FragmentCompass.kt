@@ -1,6 +1,5 @@
 package com.programmergabut.solatkuy.ui.fragmentcompass
 
-import android.annotation.SuppressLint
 import android.app.Dialog
 import android.content.Context.SENSOR_SERVICE
 import android.hardware.Sensor
@@ -26,11 +25,10 @@ import kotlinx.android.synthetic.main.layout_phone_tilt.*
  */
 
 @AndroidEntryPoint
-class FragmentCompass : BaseFragment(R.layout.fragment_compass), SensorEventListener, SwipeRefreshLayout.OnRefreshListener {
+class FragmentCompass : BaseFragment<FragmentCompassViewModel>(R.layout.fragment_compass, FragmentCompassViewModel::class.java),
+    SensorEventListener, SwipeRefreshLayout.OnRefreshListener {
 
-    private val fragmentCompassViewModel: FragmentCompassViewModel by viewModels()
     private lateinit var mMsApi1: MsApi1
-
     private var mGravity = FloatArray(3)
     private var mGeomagnetic = FloatArray(3)
     private var azimuth = 0f
@@ -76,7 +74,7 @@ class FragmentCompass : BaseFragment(R.layout.fragment_compass), SensorEventList
 
     /* Subscribe live data */
     private fun subscribeObserversAPI() {
-        fragmentCompassViewModel.compass.observe(viewLifecycleOwner, Observer { retVal ->
+        viewModel.compass.observe(viewLifecycleOwner, { retVal ->
             when(retVal.status){
                 EnumStatus.SUCCESS -> {
                     retVal.data?.data.let {
@@ -94,14 +92,14 @@ class FragmentCompass : BaseFragment(R.layout.fragment_compass), SensorEventList
     }
 
     private fun subscribeObserversDB() {
-        fragmentCompassViewModel.msApi1.observe(viewLifecycleOwner, Observer {
+        viewModel.msApi1.observe(viewLifecycleOwner, {
             when(it.status){
                 EnumStatus.SUCCESS -> {
                     if(it.data == null)
                         throw Exception("MsApi1 for Compass Null")
 
                     mMsApi1 = it.data
-                    fragmentCompassViewModel.fetchCompassApi(it.data)
+                    viewModel.fetchCompassApi(it.data)
                 }
                 EnumStatus.LOADING -> {}
                 EnumStatus.ERROR -> {}
@@ -155,7 +153,7 @@ class FragmentCompass : BaseFragment(R.layout.fragment_compass), SensorEventList
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {/*NO-OP*/}
 
     override fun onRefresh() {
-        fragmentCompassViewModel.fetchCompassApi(mMsApi1)
+        viewModel.fetchCompassApi(mMsApi1)
         sl_compass.isRefreshing = false
     }
 

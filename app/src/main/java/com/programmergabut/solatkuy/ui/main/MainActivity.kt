@@ -43,11 +43,10 @@ import org.joda.time.LocalDate
  * Created by Katili Jiwo Adi Wiyono on 25/03/20.
  */
 @AndroidEntryPoint
-class MainActivity : BaseActivity(R.layout.activity_main) {
+class MainActivity : BaseActivity<MainActivityViewModel>(R.layout.activity_main, MainActivityViewModel::class.java) {
 
     private lateinit var mSubDialogView: View
     private lateinit var mSubDialog: Dialog
-    private val viewModel: MainActivityViewModel by viewModels()
     private val ALL_PERMISSIONS = 101
 
     override fun onDestroy() {

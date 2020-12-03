@@ -23,9 +23,9 @@ import java.util.*
  */
 
 @AndroidEntryPoint
-class FragmentInfo : BaseFragment(R.layout.fragment_info), SwipeRefreshLayout.OnRefreshListener {
+class FragmentInfo : BaseFragment<FragmentInfoViewModel>(R.layout.fragment_info, FragmentInfoViewModel::class.java),
+    SwipeRefreshLayout.OnRefreshListener {
 
-    private val fragmentInfoViewModel: FragmentInfoViewModel by viewModels()
     private lateinit var duaCollectionAdapter: DuaCollectionAdapter
     private var mMsApi1: MsApi1? = null
 
@@ -53,7 +53,7 @@ class FragmentInfo : BaseFragment(R.layout.fragment_info), SwipeRefreshLayout.On
 
     /* Subscribe live data */
     private fun observeDB() {
-        fragmentInfoViewModel.msApi1.observe(viewLifecycleOwner, { retval ->
+        viewModel.msApi1.observe(viewLifecycleOwner, { retval ->
             when(retval.status){
                 EnumStatus.SUCCESS -> {
                     if(retval.data == null)
@@ -73,7 +73,7 @@ class FragmentInfo : BaseFragment(R.layout.fragment_info), SwipeRefreshLayout.On
 
     private fun observeAPI(){
 
-        /* fragmentInfoViewModel.asmaAlHusnaApi.observe(this, Observer {
+        /* viewModel.asmaAlHusnaApi.observe(this, Observer {
             when(it.Status) {
                 EnumStatus.SUCCESS -> {
                     tv_ah_loading.visibility = View.GONE
@@ -93,7 +93,7 @@ class FragmentInfo : BaseFragment(R.layout.fragment_info), SwipeRefreshLayout.On
             }
         }) */
 
-        fragmentInfoViewModel.prayer.observe(viewLifecycleOwner, {
+        viewModel.prayer.observe(viewLifecycleOwner, {
 
             when(it.status){
                 EnumStatus.SUCCESS -> {
@@ -173,11 +173,11 @@ class FragmentInfo : BaseFragment(R.layout.fragment_info), SwipeRefreshLayout.On
 
     /* Fetch API Data */
     /* private fun fetchAsmaAlHusnaApi(mMsApi1: MsApi1) {
-        fragmentInfoViewModel.fetchAsmaAlHusna(mMsApi1)
+        viewModel.fetchAsmaAlHusna(mMsApi1)
     }*/
 
     private fun fetchPrayerApi(mMsApi1: MsApi1) {
-        fragmentInfoViewModel.fetchPrayerApi(mMsApi1)
+        viewModel.fetchPrayerApi(mMsApi1)
     }
 
     override fun onRefresh() {

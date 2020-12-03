@@ -5,7 +5,7 @@ import androidx.lifecycle.Observer
 import com.nhaarman.mockitokotlin2.mock
 import com.programmergabut.solatkuy.CoroutinesTestRule
 import com.programmergabut.solatkuy.DummyRetValue
-import com.programmergabut.solatkuy.data.PrayerRepository
+import com.programmergabut.solatkuy.data.QuranRepository
 import com.programmergabut.solatkuy.data.remote.remoteentity.quranallsurahJson.AllSurahResponse
 import com.programmergabut.solatkuy.util.Resource
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -18,6 +18,8 @@ import org.junit.Rule
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito
+import org.mockito.Mockito.`when`
+import org.mockito.Mockito.verify
 import org.mockito.junit.MockitoJUnitRunner
 
 @ExperimentalCoroutinesApi
@@ -33,13 +35,13 @@ class QuranFragmentViewModelTest {
     val coroutinesTestRule: CoroutinesTestRule = CoroutinesTestRule()
 
     @Mock
-    private lateinit var prayerRepository: PrayerRepository
+    private lateinit var quranRepository: QuranRepository
 
     @Before
     fun setUp(){
-        viewModel = QuranFragmentViewModel(prayerRepository)
+        viewModel = QuranFragmentViewModel(quranRepository)
 
-        Mockito.verify(prayerRepository).getListFavSurah()
+        verify(quranRepository).getListFavSurah()
     }
 
 
@@ -51,7 +53,7 @@ class QuranFragmentViewModelTest {
         val dummySelectedSurahAr = Resource.success(DummyRetValue.fetchAllSurah())
 
         //scenario
-        Mockito.`when`(prayerRepository.fetchAllSurah()).thenReturn(dummySelectedSurahAr.data)
+        `when`(quranRepository.fetchAllSurah()).thenReturn(dummySelectedSurahAr.data)
 
         //start observer
         viewModel.allSurah.observeForever(observer)
@@ -61,9 +63,9 @@ class QuranFragmentViewModelTest {
         val result = viewModel.allSurah.value
 
         //--verify
-        Mockito.verify(prayerRepository).fetchAllSurah()
+        verify(quranRepository).fetchAllSurah()
         assertEquals(dummySelectedSurahAr, result)
-        Mockito.verify(observer).onChanged(dummySelectedSurahAr)
+        verify(observer).onChanged(dummySelectedSurahAr)
 
         //end observer
         viewModel.allSurah.removeObserver(observer)

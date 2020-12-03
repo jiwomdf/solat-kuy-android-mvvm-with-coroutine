@@ -39,13 +39,12 @@ import org.joda.time.LocalDate
  */
 
 @AndroidEntryPoint
-class FragmentSetting : BaseFragment(R.layout.fragment_setting) {
+class FragmentSetting : BaseFragment<FragmentSettingViewModel>(R.layout.fragment_setting, FragmentSettingViewModel::class.java) {
 
     private lateinit var dialog: BottomSheetDialog
-    lateinit var dialogView: View
-    private val viewModel: FragmentSettingViewModel by viewModels()
     private lateinit var mFusedLocationClient: FusedLocationProviderClient
     private val ALL_PERMISSIONS = 101
+    lateinit var dialogView: View
 
     override fun setFirstView() {
         dialog = BottomSheetDialog(requireContext())

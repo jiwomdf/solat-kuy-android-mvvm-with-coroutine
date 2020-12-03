@@ -11,18 +11,16 @@ import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_fav_ayah.*
 
 @AndroidEntryPoint
-class FavAyahActivity : BaseActivity(R.layout.activity_fav_ayah) {
+class FavAyahActivity : BaseActivity<FavAyahViewModel>(R.layout.activity_fav_ayah, FavAyahViewModel::class.java) {
 
     private lateinit var favAyahAdapter: FavAyahAdapter
-    private val favAyahViewModel: FavAyahViewModel by viewModels()
-
     override fun setFirstView() {
         tb_favAyah.title = "Ayahs you've been liked"
         initRVFavAyah()
     }
 
     override fun setObserver() {
-        favAyahViewModel.favAyah.observe(this, {
+        viewModel.favAyah.observe(this, {
             when(it.status){
                 EnumStatus.SUCCESS -> {
                     if(it.data == null)
@@ -45,7 +43,7 @@ class FavAyahActivity : BaseActivity(R.layout.activity_fav_ayah) {
     }
 
     private fun initRVFavAyah() {
-        favAyahAdapter = FavAyahAdapter(this, favAyahViewModel)
+        favAyahAdapter = FavAyahAdapter(this, viewModel)
 
         rv_fav_ayah.apply {
             adapter = favAyahAdapter

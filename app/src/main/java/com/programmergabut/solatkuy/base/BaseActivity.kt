@@ -8,6 +8,8 @@ import android.view.MotionEvent
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.data.local.SolatKuyRoom
@@ -15,17 +17,22 @@ import com.programmergabut.solatkuy.util.enumclass.EnumConfig
 import kotlinx.android.synthetic.main.layout_error_bottomsheet.*
 import javax.inject.Inject
 
-abstract class BaseActivity(
-    private val contentView: Int
-): AppCompatActivity() {
+abstract class BaseActivity<VM: ViewModel>(private val contentView: Int, private val viewModelClass: Class<VM>?): AppCompatActivity() {
 
     @Inject
     lateinit var db : SolatKuyRoom
     @Inject
     lateinit var sharedPref: SharedPreferences
 
+    protected lateinit var viewModel: VM
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
+
+        viewModelClass?.let {
+            viewModel = ViewModelProvider(this).get(viewModelClass)
+        }
+
 
         setContentView(contentView)
         setIntentExtra()

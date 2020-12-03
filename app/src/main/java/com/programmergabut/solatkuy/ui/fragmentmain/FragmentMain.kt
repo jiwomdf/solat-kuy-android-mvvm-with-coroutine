@@ -47,9 +47,8 @@ import kotlin.math.abs
  */
 
 @AndroidEntryPoint
-class FragmentMain : BaseFragment(R.layout.fragment_main), SwipeRefreshLayout.OnRefreshListener  {
+class FragmentMain : BaseFragment<FragmentMainViewModel>(R.layout.fragment_main, FragmentMainViewModel::class.java), SwipeRefreshLayout.OnRefreshListener  {
 
-    private val viewModel: FragmentMainViewModel by viewModels()
     private var isTimerHasBinded = false
     private var coroutineTimerJob: Job? = null
     private var dialogView: View? = null
@@ -80,7 +79,7 @@ class FragmentMain : BaseFragment(R.layout.fragment_main), SwipeRefreshLayout.On
         subscribeObserversAPI()
     }
     override fun setListener() {
-        //sl_main.setOnRefreshListener(this)
+        sl_main.setOnRefreshListener(this)
         tvQuranQuoteClick()
         cbClickListener()
     }
@@ -100,7 +99,7 @@ class FragmentMain : BaseFragment(R.layout.fragment_main), SwipeRefreshLayout.On
                     bindWidget(data)
                 }
                 EnumStatus.LOADING -> {
-                    Toasty.info(requireContext(), "Syncing data..", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), "Syncing data..", Toast.LENGTH_SHORT).show()
                     bindPrayerText(null)
                 }
                 EnumStatus.ERROR -> showBottomSheet(isCancelable = false, isFinish = true)
@@ -134,6 +133,10 @@ class FragmentMain : BaseFragment(R.layout.fragment_main), SwipeRefreshLayout.On
         viewModel.msSetting.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             when(it.status){
                 EnumStatus.SUCCESS -> {
+
+                    if(sl_main.isRefreshing)
+                        sl_main.isRefreshing = false
+
                     if(it.data == null) return@Observer
 
                     if(!it.data.isUsingDBQuotes)
@@ -442,7 +445,6 @@ class FragmentMain : BaseFragment(R.layout.fragment_main), SwipeRefreshLayout.On
         var tempHour = abs(hour)
         var tempMinute = abs(minute)
         var tempSecond = abs(second)
-
         var isMinuteZero = false
 
         while(true){
@@ -461,34 +463,33 @@ class FragmentMain : BaseFragment(R.layout.fragment_main), SwipeRefreshLayout.On
 
             if(tempSecond == 0){
                 tempSecond = 60
-
                 if(tempMinute != 0)
                     tempMinute -= 1
-
                 if(tempMinute == 0)
                     isMinuteZero = true
             }
 
             if(tempMinute == 0){
-
                 if(!isMinuteZero)
                     tempMinute = 59
-
                 if(tempHour != 0)
                     tempHour -= 1
             }
 
             /* fetching Prayer API */
             if(tempHour == 0 && tempMinute == 0 && tempSecond == 1){
-
                 withContext(Dispatchers.Main){
                     tempMsApi1?.let { fetchPrayerApi(it) }
                 }
             }
 
             withContext(Dispatchers.Main){
-                if(tv_widget_prayer_countdown != null)
-                    tv_widget_prayer_countdown.text = "$tempHour : $tempMinute : $tempSecond remaining"
+                if(tv_widget_prayer_countdown != null){
+                    val strHour = if(tempHour <= 9) "0$tempHour" else tempHour
+                    val strMinute = if(tempMinute <= 9) "0$tempMinute" else tempMinute
+                    val strSecond = if(tempSecond <= 9) "0$tempSecond" else tempSecond
+                    tv_widget_prayer_countdown.text = "$strHour : $strMinute : $strSecond remaining"
+                }
                 else
                     return@withContext
             }
@@ -520,7 +521,6 @@ class FragmentMain : BaseFragment(R.layout.fragment_main), SwipeRefreshLayout.On
 
     override fun onRefresh() {
         viewModel.getMsSetting(0)
-        //sl_main.isRefreshing = false
     }
 
     private fun openPopupQuote(){

@@ -11,6 +11,7 @@ import com.programmergabut.solatkuy.data.local.localentity.NotifiedPrayer
 import com.programmergabut.solatkuy.ui.fragmentmain.FragmentMainViewModel
 import com.programmergabut.solatkuy.util.Resource
 import com.programmergabut.solatkuy.DummyRetValue
+import com.programmergabut.solatkuy.data.QuranRepository
 import com.programmergabut.solatkuy.data.local.localentity.MsSetting
 import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonEn.ReadSurahEnResponse
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -40,6 +41,10 @@ class FragmentMainViewModelTest {
     @Mock
     private lateinit var prayerRepository: PrayerRepository
 
+    @Mock
+    private lateinit var quranRepository: QuranRepository
+
+
     private val msApi1 = DummyArgument.msApi1
     private val surahID = DummyArgument.surahID
     private val mapPrayer = DummyArgument.getMapPrayer()
@@ -47,10 +52,10 @@ class FragmentMainViewModelTest {
 
     @Before
     fun before(){
-        viewModel = FragmentMainViewModel(prayerRepository)
+        viewModel = FragmentMainViewModel(prayerRepository, quranRepository)
 
         verify(prayerRepository).getMsApi1()
-        verify(prayerRepository).getListFavAyah()
+        verify(quranRepository).getListFavAyah()
     }
 
     @Test
@@ -78,14 +83,14 @@ class FragmentMainViewModelTest {
         //given
         val observer = mock<Observer<Resource<ReadSurahEnResponse>>>()
         val dummyQuranSurah = Resource.success(DummyRetValue.surahEnID_1())
-        `when`(prayerRepository.fetchReadSurahEn(surahID)).thenReturn(dummyQuranSurah.data)
+        `when`(quranRepository.fetchReadSurahEn(surahID)).thenReturn(dummyQuranSurah.data)
 
         //when
         viewModel.fetchReadSurahEn(surahID)
         val result = viewModel.readSurahEn.value
 
         //--return value
-        verify(prayerRepository).fetchReadSurahEn(surahID)
+        verify(quranRepository).fetchReadSurahEn(surahID)
         assertEquals(dummyQuranSurah, result)
 
         //--observer

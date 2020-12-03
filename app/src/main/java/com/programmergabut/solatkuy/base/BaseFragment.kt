@@ -1,39 +1,53 @@
 package com.programmergabut.solatkuy.base
 
-import android.app.Dialog
 import android.content.Intent
 import android.content.SharedPreferences
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
 import androidx.fragment.app.Fragment
-import androidx.navigation.Navigation
-import androidx.navigation.findNavController
+import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.data.local.SolatKuyRoom
+import com.programmergabut.solatkuy.ui.fragmentcompass.FragmentCompassViewModel
 import com.programmergabut.solatkuy.util.enumclass.EnumConfig
-import kotlinx.android.synthetic.main.activity_main.*
 import kotlinx.android.synthetic.main.layout_error_bottomsheet.*
 import javax.inject.Inject
 
-abstract class BaseFragment(fragmentLayout: Int) : Fragment(fragmentLayout) {
+abstract class BaseFragment<VM: ViewModel>(fragmentLayout: Int, private val viewModelClass: Class<VM>) : Fragment(fragmentLayout) {
 
     @Inject
     lateinit var db: SolatKuyRoom
     @Inject
     lateinit var sharedPref: SharedPreferences
 
+    protected lateinit var viewModel: VM
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        viewModel = ViewModelProvider(requireActivity()).get(viewModelClass)
+
+        setIntentExtra()
         setFirstView()
         setObserver()
         setListener()
     }
-    abstract fun setFirstView()
-    abstract fun setObserver()
-    abstract fun setListener()
+
+    protected open fun setIntentExtra(){
+
+    }
+    protected open fun setFirstView(){
+
+    }
+    protected open fun setObserver(){
+
+    }
+    protected open fun setListener(){
+
+    }
 
     protected fun <T : Any> gotoIntent(classIntent : Class<T>, bundle : Bundle? = null, isFinish : Boolean = false){
         val intent = Intent(this.activity, classIntent)

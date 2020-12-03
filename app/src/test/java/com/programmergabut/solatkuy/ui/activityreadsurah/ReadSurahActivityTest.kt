@@ -8,7 +8,7 @@ import com.nhaarman.mockitokotlin2.verify
 import com.programmergabut.solatkuy.CoroutinesTestRule
 import com.programmergabut.solatkuy.DummyArgument
 import com.programmergabut.solatkuy.DummyRetValue
-import com.programmergabut.solatkuy.data.PrayerRepository
+import com.programmergabut.solatkuy.data.QuranRepository
 import com.programmergabut.solatkuy.data.local.localentity.MsFavAyah
 import com.programmergabut.solatkuy.data.local.localentity.MsFavSurah
 import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonAr.ReadSurahArResponse
@@ -37,7 +37,7 @@ class ReadSurahActivityTest{
     val coroutinesTestRule: CoroutinesTestRule = CoroutinesTestRule()
 
     @Mock
-    private lateinit var prayerRepository: PrayerRepository
+    private lateinit var quranRepository: QuranRepository
 
     private val surahID = DummyArgument.surahID
     private val msFavAyah = DummyArgument.msFavAyah
@@ -45,7 +45,7 @@ class ReadSurahActivityTest{
 
     @Before
     fun before(){
-        viewModel = ReadSurahViewModel(prayerRepository)
+        viewModel = ReadSurahViewModel(quranRepository)
     }
 
     @Test
@@ -56,7 +56,7 @@ class ReadSurahActivityTest{
         val dummySelectedSurahAr = Resource.success(DummyRetValue.surahArID_1())
 
         //scenario
-        Mockito.`when`(prayerRepository.fetchReadSurahAr(surahID)).thenReturn(dummySelectedSurahAr.data)
+        Mockito.`when`(quranRepository.fetchReadSurahAr(surahID)).thenReturn(dummySelectedSurahAr.data)
 
         //start observer
         viewModel.selectedSurahAr.observeForever(observer)
@@ -66,7 +66,7 @@ class ReadSurahActivityTest{
         val result = viewModel.selectedSurahAr.value
 
         //--verify
-        Mockito.verify(prayerRepository).fetchReadSurahAr(surahID)
+        Mockito.verify(quranRepository).fetchReadSurahAr(surahID)
         Assert.assertEquals(dummySelectedSurahAr, result)
         Mockito.verify(observer).onChanged(dummySelectedSurahAr)
 
@@ -83,7 +83,7 @@ class ReadSurahActivityTest{
         dummyLiveData.value = Resource.success(DummyRetValue.getFavSurahBySurahID(surahID)[0])
 
         //scenario
-        Mockito.`when`(prayerRepository.getFavSurahBySurahID(surahID)).thenReturn(dummyLiveData)
+        Mockito.`when`(quranRepository.getFavSurahBySurahID(surahID)).thenReturn(dummyLiveData)
 
         //start observer
         viewModel.msFavSurah.observeForever(observer)
@@ -93,7 +93,7 @@ class ReadSurahActivityTest{
         val result = viewModel.msFavSurah.value
 
         //--verify
-        Mockito.verify(prayerRepository).getFavSurahBySurahID(surahID)
+        Mockito.verify(quranRepository).getFavSurahBySurahID(surahID)
         Assert.assertEquals(dummyLiveData.value, result)
         Mockito.verify(observer).onChanged(dummyLiveData.value)
 
@@ -110,7 +110,7 @@ class ReadSurahActivityTest{
         dummyLiveData.value = Resource.success(DummyRetValue.getListMsFavAyah())
 
         //scenario
-        Mockito.`when`(prayerRepository.getListFavAyahBySurahID(surahID)).thenReturn(dummyLiveData)
+        Mockito.`when`(quranRepository.getListFavAyahBySurahID(surahID)).thenReturn(dummyLiveData)
 
         //start observer
         viewModel.msFavAyahBySurahID.observeForever(observer)
@@ -120,7 +120,7 @@ class ReadSurahActivityTest{
         val result = viewModel.msFavAyahBySurahID.value
 
         //--verify
-        Mockito.verify(prayerRepository).getListFavAyahBySurahID(surahID)
+        Mockito.verify(quranRepository).getListFavAyahBySurahID(surahID)
         Assert.assertEquals(dummyLiveData.value, result)
         Mockito.verify(observer).onChanged(dummyLiveData.value)
 
@@ -131,22 +131,22 @@ class ReadSurahActivityTest{
     @Test
     fun insertFavAyah() = coroutinesTestRule.testDispatcher.runBlockingTest {
         viewModel.insertFavAyah(msFavAyah)
-        verify(prayerRepository).insertFavAyah(msFavAyah)
+        verify(quranRepository).insertFavAyah(msFavAyah)
     }
     @Test
     fun deleteFavAyah() = coroutinesTestRule.testDispatcher.runBlockingTest {
         viewModel.deleteFavAyah(msFavAyah)
-        verify(prayerRepository).deleteFavAyah(msFavAyah)
+        verify(quranRepository).deleteFavAyah(msFavAyah)
     }
     @Test
     fun insertFavSurah() = coroutinesTestRule.testDispatcher.runBlockingTest {
         viewModel.insertFavSurah(msFavSurah)
-        verify(prayerRepository).insertFavSurah(msFavSurah)
+        verify(quranRepository).insertFavSurah(msFavSurah)
     }
     @Test
     fun deleteFavSurah() = coroutinesTestRule.testDispatcher.runBlockingTest {
         viewModel.deleteFavSurah(msFavSurah)
-        verify(prayerRepository).deleteFavSurah(msFavSurah)
+        verify(quranRepository).deleteFavSurah(msFavSurah)
     }
 
 }

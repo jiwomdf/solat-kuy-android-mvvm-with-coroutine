@@ -1,14 +1,15 @@
 package com.programmergabut.solatkuy.ui.main.view
 
+import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.swipeDown
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.MediumTest
-import androidx.test.rule.ActivityTestRule
 import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.ui.main.MainActivity
 import com.programmergabut.solatkuy.util.EspressoIdlingResource
@@ -26,7 +27,7 @@ import org.junit.runner.RunWith
 class MainFragmentTest{
 
     @get:Rule
-    var activityRule = ActivityTestRule(MainActivity::class.java)
+    var activityRule = ActivityScenarioRule(MainActivity::class.java)
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)

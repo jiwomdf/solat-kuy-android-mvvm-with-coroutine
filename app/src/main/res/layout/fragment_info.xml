@@ -299,6 +299,7 @@
                         android:id="@+id/rvDuaCollection"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
+                        android:layout_marginBottom="@dimen/small_margin"
                         tools:listitem="@layout/layout_dua_button"/>
 
                 </LinearLayout>

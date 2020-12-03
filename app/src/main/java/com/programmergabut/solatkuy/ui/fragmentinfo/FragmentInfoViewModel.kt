@@ -8,8 +8,9 @@ import androidx.lifecycle.viewModelScope
 import com.programmergabut.solatkuy.data.PrayerRepository
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
 import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.PrayerResponse
-import com.programmergabut.solatkuy.util.EspressoIdlingResource
 import com.programmergabut.solatkuy.util.Resource
+import com.programmergabut.solatkuy.util.helper.RunIdlingResourceHelper.Companion.runIdlingResourceDecrement
+import com.programmergabut.solatkuy.util.helper.RunIdlingResourceHelper.Companion.runIdlingResourceIncrement
 import kotlinx.coroutines.launch
 import java.lang.Exception
 
@@ -28,17 +29,17 @@ class FragmentInfoViewModel @ViewModelInject constructor(val prayerRepository: P
     fun fetchPrayerApi(msApi1: MsApi1){
         viewModelScope.launch {
 
-            EspressoIdlingResource.increment()
             _prayer.postValue(Resource.loading(null))
 
             try{
+                runIdlingResourceIncrement()
                 prayerRepository.fetchPrayerApi(msApi1).let {
                     _prayer.postValue(Resource.success(it))
-
-                    EspressoIdlingResource.decrement()
+                    runIdlingResourceDecrement()
                 }
             }
             catch (ex: Exception){
+                runIdlingResourceDecrement()
                 _prayer.postValue(Resource.error(ex.message.toString(), null))
             }
 

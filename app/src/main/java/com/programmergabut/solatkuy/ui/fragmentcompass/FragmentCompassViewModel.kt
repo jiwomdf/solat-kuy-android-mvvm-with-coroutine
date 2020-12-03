@@ -9,6 +9,8 @@ import com.programmergabut.solatkuy.data.PrayerRepository
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
 import com.programmergabut.solatkuy.data.remote.remoteentity.compassJson.CompassResponse
 import com.programmergabut.solatkuy.util.Resource
+import com.programmergabut.solatkuy.util.helper.RunIdlingResourceHelper.Companion.runIdlingResourceDecrement
+import com.programmergabut.solatkuy.util.helper.RunIdlingResourceHelper.Companion.runIdlingResourceIncrement
 import kotlinx.coroutines.launch
 import java.lang.Exception
 
@@ -25,11 +27,14 @@ class FragmentCompassViewModel @ViewModelInject constructor(val prayerRepository
         viewModelScope.launch {
             _compass.postValue(Resource.loading(null))
             try {
+                runIdlingResourceIncrement()
                 prayerRepository.fetchCompass(msApi1).let {
                     _compass.postValue(Resource.success(it))
                 }
+                runIdlingResourceDecrement()
             }
             catch (ex: Exception){
+                runIdlingResourceDecrement()
                 _compass.postValue(Resource.error(ex.message.toString(), null))
             }
         }

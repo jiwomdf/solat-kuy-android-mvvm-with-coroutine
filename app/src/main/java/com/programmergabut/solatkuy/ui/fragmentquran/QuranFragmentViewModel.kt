@@ -5,11 +5,11 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
-import com.programmergabut.solatkuy.data.PrayerRepository
 import com.programmergabut.solatkuy.data.QuranRepository
 import com.programmergabut.solatkuy.data.remote.remoteentity.quranallsurahJson.AllSurahResponse
-import com.programmergabut.solatkuy.util.EspressoIdlingResource
 import com.programmergabut.solatkuy.util.Resource
+import com.programmergabut.solatkuy.util.helper.RunIdlingResourceHelper.Companion.runIdlingResourceDecrement
+import com.programmergabut.solatkuy.util.helper.RunIdlingResourceHelper.Companion.runIdlingResourceIncrement
 import kotlinx.coroutines.launch
 import java.lang.Exception
 
@@ -24,16 +24,16 @@ class QuranFragmentViewModel @ViewModelInject constructor(val quranRepository: Q
         viewModelScope.launch {
             _allSurah.postValue(Resource.loading(null))
 
-            EspressoIdlingResource.increment()
             try{
+                runIdlingResourceIncrement()
                 quranRepository.fetchAllSurah().let {
                     _allSurah.postValue(Resource.success(it))
-                    EspressoIdlingResource.decrement()
+                    runIdlingResourceDecrement()
                 }
             }
             catch (ex: Exception){
                 _allSurah.postValue(Resource.error("No internet connection", null))
-                EspressoIdlingResource.decrement()
+                runIdlingResourceDecrement()
             }
 
         }

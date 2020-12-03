@@ -1,5 +1,6 @@
 package com.programmergabut.solatkuy.ui.fragmentcompass
 
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.navigation.findNavController
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso
@@ -12,8 +13,9 @@ import androidx.test.espresso.matcher.RootMatchers.isDialog
 import androidx.test.espresso.matcher.ViewMatchers
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import androidx.test.rule.ActivityTestRule
 import com.programmergabut.solatkuy.R
+import com.programmergabut.solatkuy.data.local.SolatKuyRoom
+import com.programmergabut.solatkuy.ui.launchFragmentInHiltContainer
 import com.programmergabut.solatkuy.ui.main.MainActivity
 import com.programmergabut.solatkuy.util.EspressoIdlingResource
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -24,13 +26,18 @@ import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import javax.inject.Inject
+import javax.inject.Named
 
 @RunWith(AndroidJUnit4::class)
 @HiltAndroidTest
 class FragmentCompassTest {
 
+    /* @get:Rule
+    var activityRule = ActivityTestRule(MainActivity::class.java) */
+
     @get:Rule
-    var activityRule = ActivityTestRule(MainActivity::class.java)
+    var instantTaskExecutorRule = InstantTaskExecutorRule()
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
@@ -38,6 +45,7 @@ class FragmentCompassTest {
     @Before
     fun setUp() {
         IdlingRegistry.getInstance().register(EspressoIdlingResource.espressoTestIdlingResource)
+        hiltRule.inject()
     }
 
     @After
@@ -48,10 +56,10 @@ class FragmentCompassTest {
     @Test
     fun test_visibility_fragmentCompass(){
 
-        val activityScenario = ActivityScenario.launch(MainActivity::class.java)
-        activityScenario.onActivity {
-            it.findNavController(R.id.navHostFragment).navigate(R.id.fragmentCompass)
-        }
+        launchFragmentInHiltContainer<FragmentCompass>() {
+
+        } // it can be done because the HiltExt.kt file
+
 
         /* onView(withId(R.id.btn_hideAnimation))
             .inRoot(isDialog()) // <---

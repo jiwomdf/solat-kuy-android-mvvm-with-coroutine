@@ -9,6 +9,8 @@ import com.programmergabut.solatkuy.data.local.localentity.MsSetting
 import com.programmergabut.solatkuy.data.local.localentity.NotifiedPrayer
 import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonEn.ReadSurahEnResponse
 import com.programmergabut.solatkuy.util.Resource
+import com.programmergabut.solatkuy.util.helper.RunIdlingResourceHelper.Companion.runIdlingResourceDecrement
+import com.programmergabut.solatkuy.util.helper.RunIdlingResourceHelper.Companion.runIdlingResourceIncrement
 import kotlinx.coroutines.launch
 import java.lang.Exception
 
@@ -26,17 +28,18 @@ class FragmentMainViewModel @ViewModelInject constructor(val prayerRepository: P
         get() = _notifiedPrayer
 
     fun syncNotifiedPrayer(msApi1: MsApi1) = viewModelScope.launch {
-        //EspressoIdlingResource.increment()
+
         _notifiedPrayer.postValue(Resource.loading(null))
         try {
+            runIdlingResourceIncrement()
             prayerRepository.syncNotifiedPrayer(msApi1).let {
                 _notifiedPrayer.postValue(Resource.success(it))
-                //EspressoIdlingResource.decrement()
+                runIdlingResourceDecrement()
             }
         }
         catch (e: Exception){
             _notifiedPrayer.postValue(Resource.error(e.message.toString(), null))
-            //EspressoIdlingResource.decrement()
+            runIdlingResourceDecrement()
         }
     }
 
@@ -46,18 +49,18 @@ class FragmentMainViewModel @ViewModelInject constructor(val prayerRepository: P
 
     fun fetchReadSurahEn(nInSurah: Int) = viewModelScope.launch{
 
-        //EspressoIdlingResource.increment()
         _readSurahEn.postValue(Resource.loading(null))
 
         try {
+            runIdlingResourceIncrement()
             quranRepository.fetchReadSurahEn(nInSurah).let {
                 _readSurahEn.postValue(Resource.success(it))
-                //EspressoIdlingResource.decrement()
+                runIdlingResourceDecrement()
             }
         }
         catch (e: Exception){
             _readSurahEn.postValue(Resource.error(e.message.toString(), null))
-            //EspressoIdlingResource.decrement()
+            runIdlingResourceDecrement()
         }
     }
 

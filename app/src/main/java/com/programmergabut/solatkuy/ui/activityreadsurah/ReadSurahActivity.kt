@@ -28,7 +28,7 @@ import kotlinx.android.synthetic.main.layout_read_surah.view.*
 
 
 @AndroidEntryPoint
-class ReadSurahActivity : BaseActivity(R.layout.activity_read_surah) {
+class ReadSurahActivity : BaseActivity<ReadSurahViewModel>(R.layout.activity_read_surah, ReadSurahViewModel::class.java) {
 
     companion object{
         const val SURAH_ID = "SURAH_ID"
@@ -37,7 +37,6 @@ class ReadSurahActivity : BaseActivity(R.layout.activity_read_surah) {
         const val IS_AUTO_SCROLL = "IS_AUTO_SCROLL"
     }
 
-    private val viewModel: ReadSurahViewModel by viewModels()
     private lateinit var readSurahAdapter: ReadSurahAdapter
     private lateinit var mSelSurahId: String
     private lateinit var mSelSurahName: String

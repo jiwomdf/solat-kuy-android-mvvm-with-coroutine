@@ -1,11 +1,12 @@
 package com.programmergabut.solatkuy.ui.activityprayer
 
+import androidx.lifecycle.ViewModel
 import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.base.BaseActivity
 import kotlinx.android.synthetic.main.activity_dua.*
 import java.lang.Exception
 
-class DuaActivity : BaseActivity(R.layout.activity_dua) {
+class DuaActivity : BaseActivity<ViewModel>(R.layout.activity_dua, null) {
 
     companion object{
         const val duaTitle = "duaTitle"
