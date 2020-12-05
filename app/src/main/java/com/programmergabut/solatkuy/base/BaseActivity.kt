@@ -120,4 +120,15 @@ abstract class BaseActivity<VM: ViewModel>(private val contentView: Int, private
         }
     }
 
+    protected fun getIsBrightnessActive(): Boolean {
+        return sharedPref.getBoolean("isBrightnessActive", false)
+    }
+
+    protected fun setIsBrightnessActive(value: Boolean){
+        sharedPref.edit()?.apply{
+            putBoolean("isBrightnessActive", value)
+            apply()
+        }
+    }
+
 }

@@ -6,7 +6,7 @@ import androidx.lifecycle.Observer
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.base.BaseActivity
-import com.programmergabut.solatkuy.util.enumclass.EnumStatus
+import com.programmergabut.solatkuy.util.EnumStatus
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.activity_fav_ayah.*
 

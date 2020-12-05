@@ -49,26 +49,27 @@ class QuranFragmentViewModelTest {
     fun fetchAllSurah() = coroutinesTestRule.testDispatcher.runBlockingTest{
 
         //given
-        val observer = mock<Observer<Resource<AllSurahResponse>>>()
+        //val observerStatus = mock<Observer<Resource<Unit>>>()
+        //val observer = mock<Observer<Resource<AllSurahResponse>>>()
         val dummySelectedSurahAr = Resource.success(DummyRetValue.fetchAllSurah())
 
         //scenario
         `when`(quranRepository.fetchAllSurah()).thenReturn(dummySelectedSurahAr.data)
 
         //start observer
-        viewModel.allSurah.observeForever(observer)
+        //viewModel.allSurahStatus.observeForever(observerStatus)
 
         //when
         viewModel.fetchAllSurah()
-        val result = viewModel.allSurah.value
+        val result = viewModel.allSurah
 
         //--verify
         verify(quranRepository).fetchAllSurah()
-        assertEquals(dummySelectedSurahAr, result)
-        verify(observer).onChanged(dummySelectedSurahAr)
+        assertEquals(dummySelectedSurahAr.data, result)
+        //verify(observer).onChanged(dummySelectedSurahAr)
 
         //end observer
-        viewModel.allSurah.removeObserver(observer)
+        //viewModel.allSurahStatus.removeObserver(observerStatus)
     }
 
 }

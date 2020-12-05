@@ -1,7 +1,6 @@
 package com.programmergabut.solatkuy.ui.activityfavayah
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import com.nhaarman.mockitokotlin2.verify
 import com.programmergabut.solatkuy.CoroutinesTestRule
 import com.programmergabut.solatkuy.DummyArgument
 import com.programmergabut.solatkuy.data.QuranRepository
@@ -13,7 +12,7 @@ import org.junit.Test
 import org.junit.Rule
 import org.junit.runner.RunWith
 import org.mockito.Mock
-import org.mockito.Mockito
+import org.mockito.Mockito.verify
 import org.mockito.junit.MockitoJUnitRunner
 
 @ExperimentalCoroutinesApi
@@ -40,7 +39,7 @@ class FavAyahViewModelTest {
 
     @Test
     fun getFavAyah() = coroutinesTestRule.testDispatcher.runBlockingTest {
-        Mockito.verify(quranRepository).getListFavAyah()
+        verify(quranRepository).getListFavAyah()
     }
 
     @Test

@@ -21,9 +21,9 @@ import com.programmergabut.solatkuy.data.local.localentity.MsFavAyah
 import com.programmergabut.solatkuy.data.local.localentity.MsTimings
 import com.programmergabut.solatkuy.data.local.localentity.NotifiedPrayer
 import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonEn.ReadSurahEnResponse
+import com.programmergabut.solatkuy.util.EnumStatus
 import com.programmergabut.solatkuy.util.Resource
 import com.programmergabut.solatkuy.util.enumclass.EnumConfig
-import com.programmergabut.solatkuy.util.enumclass.EnumStatus
 import com.programmergabut.solatkuy.util.helper.LocationHelper
 import com.programmergabut.solatkuy.util.helper.PushNotificationHelper
 import com.programmergabut.solatkuy.util.helper.SelectPrayerHelper
@@ -33,7 +33,6 @@ import kotlinx.android.synthetic.main.fragment_main.*
 import kotlinx.android.synthetic.main.layout_popup_choose_quote_setting.view.*
 import kotlinx.android.synthetic.main.layout_prayer_time.*
 import kotlinx.android.synthetic.main.layout_quran_quote.*
-import kotlinx.android.synthetic.main.layout_widget.*
 import kotlinx.coroutines.*
 import org.joda.time.DateTime
 import org.joda.time.LocalDate
@@ -47,7 +46,7 @@ import kotlin.math.abs
  */
 
 @AndroidEntryPoint
-class FragmentMain : BaseFragment<FragmentMainViewModel>(R.layout.fragment_main, FragmentMainViewModel::class.java), SwipeRefreshLayout.OnRefreshListener  {
+class FragmentMain : BaseFragment<FragmentMainViewModel>(R.layout.fragment_main, FragmentMainViewModel::class.java){
 
     private var isTimerHasBinded = false
     private var coroutineTimerJob: Job? = null
@@ -79,9 +78,11 @@ class FragmentMain : BaseFragment<FragmentMainViewModel>(R.layout.fragment_main,
         subscribeObserversAPI()
     }
     override fun setListener() {
-        sl_main.setOnRefreshListener(this)
         tvQuranQuoteClick()
         cbClickListener()
+        iv_refresh.setOnClickListener {
+            viewModel.getMsSetting(0)
+        }
     }
 
     private fun subscribeObserversAPI() {
@@ -102,7 +103,9 @@ class FragmentMain : BaseFragment<FragmentMainViewModel>(R.layout.fragment_main,
                     Toast.makeText(requireContext(), "Syncing data..", Toast.LENGTH_SHORT).show()
                     bindPrayerText(null)
                 }
-                EnumStatus.ERROR -> showBottomSheet(isCancelable = false, isFinish = true)
+                EnumStatus.ERROR ->{
+                    showBottomSheet(isCancelable = false, isFinish = true)
+                }
             }
         })
 
@@ -133,9 +136,6 @@ class FragmentMain : BaseFragment<FragmentMainViewModel>(R.layout.fragment_main,
         viewModel.msSetting.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
             when(it.status){
                 EnumStatus.SUCCESS -> {
-
-                    if(sl_main.isRefreshing)
-                        sl_main.isRefreshing = false
 
                     if(it.data == null) return@Observer
 
@@ -498,7 +498,6 @@ class FragmentMain : BaseFragment<FragmentMainViewModel>(R.layout.fragment_main,
     }
 
     private fun updateAlarmManager(listNotifiedPrayer: List<NotifiedPrayer>){
-
         if(mCityName == null)
             mCityName = "-"
 
@@ -517,10 +516,6 @@ class FragmentMain : BaseFragment<FragmentMainViewModel>(R.layout.fragment_main,
             tv_quran_ayah_quote_click.visibility = View.VISIBLE
             it.visibility = View.GONE
         }
-    }
-
-    override fun onRefresh() {
-        viewModel.getMsSetting(0)
     }
 
     private fun openPopupQuote(){

@@ -13,10 +13,10 @@ import kotlinx.android.synthetic.main.layout_read_surah.view.*
 
 class ReadSurahAdapter(
     val onClick: (Ayah, View) -> Unit,
+    val setTheme: (View) -> Unit,
     val isFav: Drawable,
     val isNotFav: Drawable,
-    val accentColor: Int,
-    val whiteColor: Int
+    val accentColor: Int
 ) : RecyclerView.Adapter<ReadSurahAdapter.ReadSurahViewHolder>() {
 
     private val diffCallback = object: DiffUtil.ItemCallback<Ayah>(){
@@ -33,6 +33,7 @@ class ReadSurahAdapter(
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReadSurahViewHolder {
         val view = LayoutInflater.from(parent.context).inflate(R.layout.layout_read_surah, parent, false)
+
         return ReadSurahViewHolder(view)
     }
 
@@ -46,24 +47,24 @@ class ReadSurahAdapter(
             itemView.tv_listFav_en.text = data.textEn
             itemView.tv_listFav_num.text = data.numberInSurah.toString()
 
+            setTheme(itemView)
+
             if(data.isFav)
                 itemView.iv_listFav_fav.setImageDrawable(isFav)
             else
                 itemView.iv_listFav_fav.setImageDrawable(isNotFav)
 
             if(data.isLastRead){
-                itemView.cl_readSurah.setBackgroundColor(accentColor)
+                itemView.cl_vh_readSurah.setBackgroundColor(accentColor)
                 /* itemView.tv_listFav_ar.setTextColor(whiteColor)
                 itemView.tv_listFav_en.setTextColor(whiteColor)
                 itemView.tv_listFav_num.setTextColor(whiteColor) */
-            }
-            else{
-                itemView.cl_readSurah.setBackgroundColor(whiteColor)
             }
 
             itemView.iv_listFav_fav.setOnClickListener {
                 onClick(data, itemView)
             }
+
         }
     }
 

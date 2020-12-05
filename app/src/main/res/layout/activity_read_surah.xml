@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    android:background="@color/dark_200"
+    android:id="@+id/cl_surah"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     tools:context=".ui.activityreadsurah.ReadSurahActivity">
@@ -29,7 +29,6 @@
         android:layout_height="match_parent"
         tools:listitem="@layout/layout_read_surah"
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"/>
-
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:id="@+id/cc_readQuran_loading"
@@ -59,7 +58,7 @@
             android:text="@string/please_wait_for_a_while"
             android:textStyle="bold"
             android:textSize="@dimen/large_text_size"
-            android:textColor="@color/white"
+            android:textColor="@color/dark_200"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintBottom_toBottomOf="parent"
@@ -69,5 +68,13 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
+    <com.google.android.material.floatingactionbutton.FloatingActionButton
+        android:id="@+id/fab_brightness"
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/medium_margin"
+        android:src="@drawable/ic_baseline_brightness_4_24"
+        app:layout_anchor="@+id/cc_readQuran_loading"
+        app:layout_anchorGravity="end|bottom" />
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

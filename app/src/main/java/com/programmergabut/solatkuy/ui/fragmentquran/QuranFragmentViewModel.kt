@@ -1,7 +1,6 @@
 package com.programmergabut.solatkuy.ui.fragmentquran
 
 import androidx.hilt.lifecycle.ViewModelInject
-import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
@@ -15,27 +14,26 @@ import java.lang.Exception
 
 class QuranFragmentViewModel @ViewModelInject constructor(val quranRepository: QuranRepository): ViewModel() {
 
-
-    private var _allSurah = MutableLiveData<Resource<AllSurahResponse>>()
-    val allSurah: LiveData<Resource<AllSurahResponse>>
+    var allSurahStatus = MutableLiveData<Resource<Unit>>()
+    private var _allSurah = AllSurahResponse(0, listOf(), "")
+    val allSurah: AllSurahResponse
         get() = _allSurah
 
     fun fetchAllSurah(){
         viewModelScope.launch {
-            _allSurah.postValue(Resource.loading(null))
-
+            allSurahStatus.postValue(Resource.loading(null))
             try{
                 runIdlingResourceIncrement()
                 quranRepository.fetchAllSurah().let {
-                    _allSurah.postValue(Resource.success(it))
+                    _allSurah = it
+                    allSurahStatus.postValue(Resource.success(null))
                     runIdlingResourceDecrement()
                 }
             }
             catch (ex: Exception){
-                _allSurah.postValue(Resource.error("No internet connection", null))
                 runIdlingResourceDecrement()
+                allSurahStatus.postValue(Resource.error(ex.message.toString(), null))
             }
-
         }
     }
 

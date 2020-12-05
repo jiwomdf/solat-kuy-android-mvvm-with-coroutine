@@ -25,6 +25,7 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.testing.FragmentScenario.EmptyFragmentActivity
 import androidx.test.core.app.ActivityScenario
 import androidx.test.core.app.ApplicationProvider
+import com.programmergabut.solatkuy.HiltTestActivity
 import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.ui.main.MainActivity
 
@@ -34,10 +35,10 @@ inline fun <reified T : Fragment> launchFragmentInHiltContainer(
     crossinline action: Fragment.() -> Unit = {}
 ) {
     val startActivityIntent = Intent.makeMainActivity(
-        ComponentName(ApplicationProvider.getApplicationContext(), MainActivity::class.java)
+        ComponentName(ApplicationProvider.getApplicationContext(), HiltTestActivity::class.java)
     ).putExtra(EmptyFragmentActivity.THEME_EXTRAS_BUNDLE_KEY, themeResId)
 
-    ActivityScenario.launch<MainActivity>(startActivityIntent).onActivity { activity ->
+    ActivityScenario.launch<HiltTestActivity>(startActivityIntent).onActivity { activity ->
         val fragment: Fragment = activity.supportFragmentManager.fragmentFactory.instantiate(
             Preconditions.checkNotNull(T::class.java.classLoader),
             T::class.java.name

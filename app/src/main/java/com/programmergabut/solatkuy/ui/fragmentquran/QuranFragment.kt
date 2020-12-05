@@ -1,13 +1,11 @@
 package com.programmergabut.solatkuy.ui.fragmentquran
 
-import android.content.Intent
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
-import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.programmergabut.solatkuy.R
@@ -15,8 +13,8 @@ import com.programmergabut.solatkuy.base.BaseFragment
 import com.programmergabut.solatkuy.data.remote.remoteentity.quranallsurahJson.Data
 import com.programmergabut.solatkuy.ui.activityfavayah.FavAyahActivity
 import com.programmergabut.solatkuy.ui.activityreadsurah.ReadSurahActivity
-import com.programmergabut.solatkuy.util.enumclass.EnumConfig.Companion.LAST_READ_SURAH
-import com.programmergabut.solatkuy.util.enumclass.EnumStatus
+import com.programmergabut.solatkuy.util.EnumStatus
+import com.programmergabut.solatkuy.util.Resource
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_quran.*
 import java.util.*
@@ -80,10 +78,10 @@ class QuranFragment : BaseFragment<QuranFragmentViewModel>(R.layout.fragment_qur
     }
 
     private fun observeApi(){
-        viewModel.allSurah.observe(viewLifecycleOwner, {
+        viewModel.allSurahStatus.observe(viewLifecycleOwner, {
             when(it.status){
                 EnumStatus.SUCCESS -> {
-                    val datas = it.data?.data!! as MutableList<Data>
+                    val datas = viewModel.allSurah.data as MutableList<Data>
                     allSurahAdapter.listData = datas
                     allSurahAdapter.notifyDataSetChanged()
 
@@ -91,7 +89,12 @@ class QuranFragment : BaseFragment<QuranFragmentViewModel>(R.layout.fragment_qur
                     setVisibility(it.status)
                 }
                 EnumStatus.LOADING -> setVisibility(it.status)
-                EnumStatus.ERROR -> setVisibility(it.status)
+                EnumStatus.ERROR -> {
+                    setVisibility(it.status)
+                }
+                else -> {/*NO-OP*/}
+            }.also {
+                viewModel.allSurahStatus.postValue(Resource.neutral())
             }
         })
 
@@ -130,6 +133,7 @@ class QuranFragment : BaseFragment<QuranFragmentViewModel>(R.layout.fragment_qur
                 rv_quran_surah.visibility = View.INVISIBLE
                 sl_quran.isRefreshing = false
             }
+            else -> {/*NO-OP*/}
         }
     }
 

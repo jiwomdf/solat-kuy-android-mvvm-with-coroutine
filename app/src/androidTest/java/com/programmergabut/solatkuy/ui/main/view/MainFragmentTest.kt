@@ -82,10 +82,10 @@ class MainFragmentTest{
         onView(withId(R.id.cb_isha)).perform(click())
     }
 
-    @Test
+    /* @Test
     fun test_refreshLayout(){
-        onView(withId(R.id.sl_main)).perform(swipeDown())
-    }
+        onView(withId(R.id.sl_main)).perform(click())
+    } */
 
 }
 

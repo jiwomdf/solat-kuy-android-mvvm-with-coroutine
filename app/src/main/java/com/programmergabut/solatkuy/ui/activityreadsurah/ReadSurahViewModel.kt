@@ -32,9 +32,10 @@ class ReadSurahViewModel @ViewModelInject constructor(val quranRepository: Quran
             }
             catch (ex: Exception){
                 runIdlingResourceDecrement()
-                _selectedSurahAr.postValue(Resource.error(ex.message.toString(), null))
-            }
 
+                val err = Resource.error(ex.message.toString(), null)
+                _selectedSurahAr.postValue(err)
+            }
         }
     }
 

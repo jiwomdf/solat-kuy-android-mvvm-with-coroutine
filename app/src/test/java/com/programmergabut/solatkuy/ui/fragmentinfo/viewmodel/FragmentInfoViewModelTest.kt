@@ -2,7 +2,6 @@ package com.programmergabut.solatkuy.ui.fragmentinfo.viewmodel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
-import com.nhaarman.mockitokotlin2.mock
 import com.programmergabut.solatkuy.CoroutinesTestRule
 import com.programmergabut.solatkuy.DummyArgument
 import com.programmergabut.solatkuy.DummyRetValue
@@ -51,21 +50,20 @@ class FragmentInfoViewModelTest {
     fun fetchPrayerApi() = coroutinesTestRule.testDispatcher.runBlockingTest{
 
         //given
-        val observer = mock<Observer<Resource<PrayerResponse>>>()
         val dummyPrayerApi = Resource.success(DummyRetValue.fetchPrayerApi())
         `when`(prayerRepository.fetchPrayerApi(msApi1)).thenReturn(dummyPrayerApi.data)
 
         //when
         viewModel.fetchPrayerApi(msApi1)
-        val result = viewModel.prayer.value
+        val result = viewModel.prayer
 
         //--return value
         Mockito.verify(prayerRepository).fetchPrayerApi(msApi1)
-        Assert.assertEquals(dummyPrayerApi, result)
+        Assert.assertEquals(dummyPrayerApi.data, result)
 
         //--observer
-        viewModel.prayer.observeForever(observer)
-        Mockito.verify(observer).onChanged(dummyPrayerApi)
+        /* viewModel.prayerStatus.observeForever(observerStatus)
+        Mockito.verify(observer).onChanged(dummyPrayerApi) */
     }
 
    /* @Test

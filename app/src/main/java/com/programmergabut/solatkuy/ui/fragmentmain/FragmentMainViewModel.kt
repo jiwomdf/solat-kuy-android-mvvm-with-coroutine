@@ -62,6 +62,7 @@ class FragmentMainViewModel @ViewModelInject constructor(val prayerRepository: P
             _readSurahEn.postValue(Resource.error(e.message.toString(), null))
             runIdlingResourceDecrement()
         }
+
     }
 
     private var _setting = MutableLiveData<Int>()

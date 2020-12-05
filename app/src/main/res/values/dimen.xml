@@ -18,6 +18,7 @@
     <dimen name="avatar_size">30sp</dimen>
     <dimen name="avatar_size_small">30sp</dimen>
     <dimen name="list_width_size">40dp</dimen>
+    <dimen name="widget_size">250dp</dimen>
 
     <dimen name="editText_size">200dp</dimen>
 

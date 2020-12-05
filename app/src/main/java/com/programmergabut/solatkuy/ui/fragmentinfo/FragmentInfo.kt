@@ -9,8 +9,9 @@ import com.programmergabut.solatkuy.data.local.localentity.MsApi1
 import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.Data
 import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.PrayerResponse
 import com.programmergabut.solatkuy.ui.fragmentinfo.adapter.DuaCollectionAdapter
+import com.programmergabut.solatkuy.util.EnumStatus
+import com.programmergabut.solatkuy.util.Resource
 import com.programmergabut.solatkuy.util.enumclass.EnumConfig
-import com.programmergabut.solatkuy.util.enumclass.EnumStatus
 import com.programmergabut.solatkuy.util.generator.DuaGenerator
 import com.programmergabut.solatkuy.util.helper.LocationHelper
 import dagger.hilt.android.AndroidEntryPoint
@@ -93,13 +94,13 @@ class FragmentInfo : BaseFragment<FragmentInfoViewModel>(R.layout.fragment_info,
             }
         }) */
 
-        viewModel.prayer.observe(viewLifecycleOwner, {
+        viewModel.prayerStatus.observe(viewLifecycleOwner, {
 
             when(it.status){
                 EnumStatus.SUCCESS -> {
                     val sdf = SimpleDateFormat("dd", Locale.getDefault())
                     val currentDate = sdf.format(Date())
-                    val data = createTodayData(it.data!!, currentDate)
+                    val data = createTodayData(viewModel.prayer, currentDate)
                     val date = data?.date
                     val hijriDate = date?.hijri
                     val gregorianDate = date?.gregorian
@@ -121,6 +122,9 @@ class FragmentInfo : BaseFragment<FragmentInfoViewModel>(R.layout.fragment_info,
                     showBottomSheet(description = getString(R.string.fetch_failed), isCancelable = true, isFinish = false)
                     setState(it.status)
                 }
+                else -> {/* NO-OP */}
+            }.also {
+                viewModel.prayerStatus.postValue(Resource.neutral())
             }
         })
 
@@ -149,6 +153,7 @@ class FragmentInfo : BaseFragment<FragmentInfoViewModel>(R.layout.fragment_info,
                 tv_gregorian_day.text = getString(R.string.fetch_failed_sort)
                 tv_hijri_day.text = getString(R.string.fetch_failed_sort)
             }
+            else -> {/*NO-OP*/}
         }
     }
 

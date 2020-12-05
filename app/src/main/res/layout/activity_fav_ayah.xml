@@ -16,6 +16,8 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/dark_500"
+            app:subtitleTextColor="@color/white"
+            app:titleTextColor="@color/white"
             app:titleTextAppearance="@style/ActionBar.nameText"
             app:layout_scrollFlags="scroll|enterAlways" />
 
