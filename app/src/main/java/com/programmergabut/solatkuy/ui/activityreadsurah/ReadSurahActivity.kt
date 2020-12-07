@@ -1,13 +1,16 @@
 package com.programmergabut.solatkuy.ui.activityreadsurah
 
-import android.graphics.Canvas
+import android.graphics.*
 import android.graphics.drawable.ColorDrawable
+import android.os.Handler
+import android.os.Looper
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
 import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
+import androidx.recyclerview.widget.ItemTouchHelper.LEFT
 import androidx.recyclerview.widget.ItemTouchHelper.RIGHT
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
@@ -22,6 +25,8 @@ import dagger.hilt.android.AndroidEntryPoint
 import es.dmoral.toasty.Toasty
 import kotlinx.android.synthetic.main.activity_read_surah.*
 import kotlinx.android.synthetic.main.layout_read_surah.view.*
+
+
 
 
 @AndroidEntryPoint
@@ -43,7 +48,8 @@ class ReadSurahActivity : BaseActivity<ReadSurahViewModel>(
     private lateinit var mSelSurahTranslation: String
     private var mIsAutoScroll: Boolean = false
     private var mMenu: Menu? = null
-
+    private var isFirstLoad = true
+    
     override fun setIntentExtra() {
         try{
             mSelSurahId = intent.getStringExtra(SURAH_ID) ?: throw Exception("getExtras surahID")
@@ -97,6 +103,11 @@ class ReadSurahActivity : BaseActivity<ReadSurahViewModel>(
                     setVisibility(it.status)
                     setToolBarText(it.data.data)
                     viewModel.getListFavAyahBySurahID(mSelSurahId.toInt())
+
+                    if(isFirstLoad){
+                        Toast.makeText(this, "Swipe to save last read", Toast.LENGTH_SHORT).show()
+                        isFirstLoad = false
+                    }
                 }
                 EnumStatus.LOADING -> {
                     setVisibility(it.status)
@@ -108,7 +119,8 @@ class ReadSurahActivity : BaseActivity<ReadSurahViewModel>(
                     tv_readQuran_loading.text = getString(R.string.fetch_failed)
                     showBottomSheet(isCancelable = false, isFinish = true)
                 }
-                else -> {/* NO-OP*/}
+                else -> {/* NO-OP*/
+                }
             }
         })
 
@@ -158,7 +170,8 @@ class ReadSurahActivity : BaseActivity<ReadSurahViewModel>(
                 EnumStatus.ERROR -> {
                     showBottomSheet(isCancelable = false, isFinish = true)
                 }
-                else -> {/*NO-OP*/}
+                else -> {/*NO-OP*/
+                }
             }
         })
 
@@ -221,7 +234,8 @@ class ReadSurahActivity : BaseActivity<ReadSurahViewModel>(
                             ContextCompat.getDrawable(this, R.drawable.ic_star_purple_24)
                 }
                 EnumStatus.ERROR -> showBottomSheet(isCancelable = false, isFinish = true)
-                else -> {/*NO-OP*/ }
+                else -> {/*NO-OP*/
+                }
             }
         })
 
@@ -276,19 +290,17 @@ class ReadSurahActivity : BaseActivity<ReadSurahViewModel>(
             ItemTouchHelper(itemTouchCallback).attachToRecyclerView(this)
         }
 
-        /* ItemClickSupport.addTo(rv_read_surah).setOnItemClickListener(object : ItemClickSupport.OnItemClickListener {
-            override fun onItemClicked(recyclerView: RecyclerView?, position: Int, v: View?) {
-                val test = ""
-            }
 
-            override fun onItemDoubleClicked(recyclerView: RecyclerView?, position: Int, v: View?) {
-                val test = ""
-            }
-        }) */
     }
 
     private val adapterOnClick = fun(data: Ayah, itemView: View){
-        val msFavAyah = MsFavAyah(mSelSurahId.toInt(), data.numberInSurah, SURAH_NAME, data.text, data.textEn!!)
+        val msFavAyah = MsFavAyah(
+            mSelSurahId.toInt(),
+            data.numberInSurah,
+            SURAH_NAME,
+            data.text,
+            data.textEn!!
+        )
 
         if (itemView.iv_listFav_fav.drawable.constantState == ContextCompat.getDrawable(
                 this,
@@ -327,12 +339,17 @@ class ReadSurahActivity : BaseActivity<ReadSurahViewModel>(
             itemView.tv_listFav_ar.setTextColor(ContextCompat.getColor(this, R.color.white))
             itemView.tv_listFav_en.setTextColor(ContextCompat.getColor(this, R.color.white))
             itemView.tv_listFav_num.setTextColor(ContextCompat.getColor(this, R.color.white))
-            itemView.cl_vh_readSurah.setBackgroundColor(ContextCompat.getColor(this, R.color.dark_500))
+            itemView.cl_vh_readSurah.setBackgroundColor(
+                ContextCompat.getColor(
+                    this,
+                    R.color.dark_500
+                )
+            )
         }
     }
 
     private val itemTouchCallback = object : ItemTouchHelper.SimpleCallback(
-        0, RIGHT
+        0, LEFT
     ) {
         override fun onMove(
             recyclerView: RecyclerView,
@@ -377,7 +394,7 @@ class ReadSurahActivity : BaseActivity<ReadSurahViewModel>(
             val background =  ColorDrawable(
                 ContextCompat.getColor(
                     this@ReadSurahActivity,
-                    R.color.dark_200
+                    R.color.purple_500
                 )
             )
             background.setBounds(
@@ -386,12 +403,29 @@ class ReadSurahActivity : BaseActivity<ReadSurahViewModel>(
             )
             background.draw(canvas)
 
-            /* val icon = ContextCompat.getDrawable(this@ReadSurahActivity, R.drawable.ic_check_white_24dp)
-            icon?.setBounds(
-                viewHolder.itemView.right, viewHolder.itemView.top,
-                viewHolder.itemView.left, viewHolder.itemView.bottom
-            )
-            icon?.draw(canvas) */
+            val icon = ContextCompat.getDrawable(
+                this@ReadSurahActivity,
+                R.drawable.ic_baseline_check_24
+            ) ?: return
+
+            val iconMargin = 50
+            val iconTop = viewHolder.itemView.top + (viewHolder.itemView.height - icon.intrinsicHeight) / 2
+            val iconBottom: Int = iconTop + icon.intrinsicHeight
+
+            when {
+                dX > 0 -> { // Swiping to the right
+                    val iconLeft: Int = viewHolder.itemView.left + iconMargin + icon.intrinsicWidth
+                    val iconRight: Int = viewHolder.itemView.left + iconMargin
+                    icon.setBounds(iconLeft, iconTop, iconRight, iconBottom)
+                }
+                dX < 0 -> { // Swiping to the left
+                    val iconLeft: Int = viewHolder.itemView.right - iconMargin - icon.intrinsicWidth
+                    val iconRight: Int = viewHolder.itemView.right - iconMargin
+                    icon.setBounds(iconLeft, iconTop, iconRight, iconBottom)
+                }
+            }
+
+            icon.draw(canvas)
         }
     }
 

@@ -24,7 +24,7 @@ import kotlinx.coroutines.launch
  * Created by Katili Jiwo Adi Wiyono on 27/03/20.
  */
 
-class NotificationHelper(c: Context): ContextWrapper(c) {
+class NotificationHelper(context: Context): ContextWrapper(context) {
 
     private val channel1ID: String = "c_1"
     private val channel1Name: String = "channel1"
@@ -85,13 +85,18 @@ class NotificationHelper(c: Context): ContextWrapper(c) {
 
         val bitmap = BitmapFactory.decodeResource(resources, lIcon)
 
+        val v = this.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-            val v = this.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-            CoroutineScope(Dispatchers.IO).launch{
+            CoroutineScope(Dispatchers.Default).launch{
                 for(i in 1 .. 4){
                     v.vibrate(VibrationEffect.createOneShot(800, VibrationEffect.DEFAULT_AMPLITUDE))
                     delay(1200)
                 }
+            }
+        }
+        else{
+            for(i in 1 .. 4){
+                v.vibrate(200)
             }
         }
 

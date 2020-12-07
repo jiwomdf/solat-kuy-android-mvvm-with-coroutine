@@ -69,7 +69,7 @@ class FragmentCompass : BaseFragment<FragmentCompassViewModel>(R.layout.fragment
     }
 
     private fun saveSharedPreferences() {
-
+        setIsNotHasOpenAnimation(true)
     }
 
     /* Subscribe live data */
