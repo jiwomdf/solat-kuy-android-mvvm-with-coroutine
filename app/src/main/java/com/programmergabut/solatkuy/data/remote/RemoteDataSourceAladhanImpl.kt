@@ -19,14 +19,11 @@ class RemoteDataSourceAladhanImpl @Inject constructor(
 
     //Coroutine
     override suspend fun fetchCompassApi(msApi1: MsApi1): CompassResponse {
-
         return qiblaApiService.fetchQibla(msApi1.latitude, msApi1.longitude)
     }
 
     override suspend fun fetchPrayerApi(msApi1: MsApi1): PrayerResponse {
-
         return calendarApiService.fetchPrayer(msApi1.latitude, msApi1.longitude, msApi1.method, msApi1.month, msApi1.year)
-
     }
 
 }

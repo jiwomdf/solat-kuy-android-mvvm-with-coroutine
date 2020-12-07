@@ -1,20 +1,18 @@
 package com.programmergabut.solatkuy.util.helper
 
 import com.programmergabut.solatkuy.util.EspressoIdlingResource
+import com.programmergabut.solatkuy.util.EnumConfig.Companion.IS_TESTING
 
 class RunIdlingResourceHelper {
 
     companion object {
-
-        private const val isTesting = true
-
         fun runIdlingResourceIncrement(){
-            if(!isTesting) return
+            if(!IS_TESTING) return
             EspressoIdlingResource.increment()
         }
 
         fun runIdlingResourceDecrement(){
-            if(!isTesting) return
+            if(!IS_TESTING) return
             EspressoIdlingResource.decrement()
         }
     }

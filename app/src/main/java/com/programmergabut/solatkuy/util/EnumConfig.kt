@@ -1,4 +1,4 @@
-package com.programmergabut.solatkuy.util.enumclass
+package com.programmergabut.solatkuy.util
 
 /*
  * Created by Katili Jiwo Adi Wiyono on 12/04/20.
@@ -7,6 +7,8 @@ package com.programmergabut.solatkuy.util.enumclass
 
 class EnumConfig {
     companion object{
+
+        const val IS_TESTING = false
 
         const val DATABASE_NAME = "solatkuydb"
 
@@ -17,6 +19,15 @@ class EnumConfig {
         const val ISHA = "Isha"
         const val SUNRISE = "Sunrise"
         const val IMSAK = "Imsak"
+
+        /* Testing Purpose */
+        const val FAJR_TIME = "04:00"
+        const val DHUHR_TIME = "12:46"
+        const val ASR_TIME = "15:00"
+        const val MAGHRIB_TIME = "16:45"
+        const val ISHA_TIME = "17:00"
+        const val SUNRISE_TIME = "06:00"
+
 
         /* Notification */
         const val ID_DUA = 500 //main notification

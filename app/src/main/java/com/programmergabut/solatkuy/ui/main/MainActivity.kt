@@ -47,6 +47,7 @@ class MainActivity : BaseActivity<MainActivityViewModel>(R.layout.activity_main,
 
     private lateinit var mSubDialogView: View
     private lateinit var mSubDialog: Dialog
+    private lateinit var dialog: Dialog
     private val ALL_PERMISSIONS = 101
 
     override fun onDestroy() {
@@ -70,27 +71,38 @@ class MainActivity : BaseActivity<MainActivityViewModel>(R.layout.activity_main,
                     else
                         SolatKuyRoom.populateDatabase(getDatabase())
                 }
-                else -> {}
+                else -> {/*NO-OP*/}
             }
         })
     }
 
     private fun observeErrorMsg() {
-        viewModel.errMessage.observe(this, {
-            if(it == FragmentSettingViewModel.SUCCESS_CHANGE_COORDINATE)
-                Toasty.success(this, it, Toasty.LENGTH_SHORT).show()
-            else
-                Toasty.error(this, it, Toasty.LENGTH_SHORT).show()
+        viewModel.errStatus.observe(this, {
+            val errMsg = viewModel.getErrMsg()
+            if(errMsg.isEmpty())
+                return@observe
+
+            when(it){
+                EnumStatus.SUCCESS -> {
+                    Toasty.success(this, errMsg , Toasty.LENGTH_SHORT).show()
+                    updateIsHasOpenApp()
+                }
+                EnumStatus.ERROR -> {
+                    Toasty.error(this, errMsg, Toasty.LENGTH_SHORT).show()
+                }
+                else -> {/*NO-OP*/}
+            }.also {
+                viewModel.errStatus.postValue(EnumStatus.NEUTRAL)
+            }
         })
     }
 
     /* DIALOG */
     private fun initDialog() {
-        val dialogView = layoutInflater.inflate(R.layout.layout_fristopenapp,null)
-        val dialog =  Dialog(this@MainActivity)
+        dialog =  Dialog(this@MainActivity)
         dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
         dialog.setCancelable(false)
-        dialog.setContentView(dialogView)
+        dialog.setContentView(layoutInflater.inflate(R.layout.layout_fristopenapp,null))
         dialog.show()
 
         btnSetLatitudeLongitude(dialog)
@@ -139,7 +151,6 @@ class MainActivity : BaseActivity<MainActivityViewModel>(R.layout.activity_main,
                 val longitude = mSubDialogView.et_llDialog_longitude.text.toString().trim()
 
                 insertLocationSettingToDb(latitude, longitude)
-                updateIsHasOpenApp(dialog)
             }
         }
 
@@ -156,13 +167,12 @@ class MainActivity : BaseActivity<MainActivityViewModel>(R.layout.activity_main,
                 val longitude = mSubDialogView.tv_gpsDialog_longitude.text.toString().trim()
 
                 insertLocationSettingToDb(latitude, longitude)
-                updateIsHasOpenApp(dialog)
             }
         }
 
     }
 
-    private fun updateIsHasOpenApp(dialog: Dialog) {
+    private fun updateIsHasOpenApp() {
         mSubDialog.dismiss()
         dialog.dismiss()
 

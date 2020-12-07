@@ -6,9 +6,9 @@ import androidx.lifecycle.MediatorLiveData
 import com.programmergabut.solatkuy.data.local.dao.*
 import com.programmergabut.solatkuy.data.local.localentity.*
 import com.programmergabut.solatkuy.data.remote.RemoteDataSourceAladhanImpl
-import com.programmergabut.solatkuy.data.remote.RemoteDataSourceApiAlquranImpl
+import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.Timings
 import com.programmergabut.solatkuy.util.Resource
-import com.programmergabut.solatkuy.util.enumclass.EnumConfig
+import com.programmergabut.solatkuy.util.EnumConfig
 import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
@@ -71,32 +71,30 @@ class PrayerRepository @Inject constructor(
 
         try {
             val data = remoteDataSourceAladhanImpl.fetchPrayerApi(msApi1)
-            Log.d("syncNotifiedPrayer", "fetch")
 
-            data.let {
-                val sdf = SimpleDateFormat("dd", Locale.getDefault())
-                val currentDate = sdf.format(Date())
+            val sdf = SimpleDateFormat("dd", Locale.getDefault())
+            val currentDate = sdf.format(Date())
 
-                val timings =
-                    it.data.find { obj -> obj.date.gregorian?.day == currentDate.toString() }?.timings
+            val timings = data.data.find { obj ->
+                obj.date.gregorian?.day == currentDate.toString()
+            }?.timings
 
-                val map = mutableMapOf<String, String>()
+            val map: MutableMap<String, String>
+            if(timings != null){
+                map = createPrayerTime(timings)
+            }
+            else{
+                Log.d("<Error>","PrayerRepository, timings is null")
+                return emptyList()
+            }
 
-                map[EnumConfig.FAJR] = timings?.fajr.toString()
-                map[EnumConfig.DHUHR] = timings?.dhuhr.toString()
-                map[EnumConfig.ASR] = timings?.asr.toString()
-                map[EnumConfig.MAGHRIB] = timings?.maghrib.toString()
-                map[EnumConfig.ISHA] = timings?.isha.toString()
-                map[EnumConfig.SUNRISE] = timings?.sunrise.toString()
-
-                map.forEach { p ->
-                    notifiedPrayerDao.updatePrayerTime(p.key, p.value)
-                    Log.d("syncNotifiedPrayer", "updated")
-                }
+            map.forEach { prayer ->
+                notifiedPrayerDao.updatePrayerTime(prayer.key, prayer.value)
             }
         }
         catch (ex :Exception){
-            print("not connected to internet and using the offline data")
+            Log.d("<Error>","PrayerRepository, not connected to internet and using the offline data")
+            return emptyList()
         }
 
         return notifiedPrayerDao.getListNotifiedPrayerSync()
@@ -130,6 +128,43 @@ class PrayerRepository @Inject constructor(
                 }
             }
         }.asLiveData() */
+    }
+
+    suspend fun syncNotifiedPrayerTesting(): List<NotifiedPrayer> {
+
+        val listData = mutableListOf<NotifiedPrayer>()
+
+        try {
+            val map = mutableMapOf<String, String>()
+            map[EnumConfig.FAJR] = EnumConfig.FAJR_TIME
+            map[EnumConfig.DHUHR] = EnumConfig.DHUHR_TIME
+            map[EnumConfig.ASR] = EnumConfig.ASR_TIME
+            map[EnumConfig.MAGHRIB] = EnumConfig.MAGHRIB_TIME
+            map[EnumConfig.ISHA] = EnumConfig.ISHA_TIME
+            map[EnumConfig.SUNRISE] = EnumConfig.SUNRISE_TIME
+
+            map.forEach { p ->
+                listData.add(NotifiedPrayer(p.key, true, p.value))
+            }
+
+        }
+        catch (ex :Exception){
+            Log.d("<Error>","PrayerRepository, not connected to internet and using the offline data")
+            return emptyList()
+        }
+
+        return listData
+    }
+
+    private fun createPrayerTime(timings: Timings): MutableMap<String, String> {
+        val map = mutableMapOf<String, String>()
+        map[EnumConfig.FAJR] = timings.fajr
+        map[EnumConfig.DHUHR] = timings.dhuhr
+        map[EnumConfig.ASR] = timings.asr
+        map[EnumConfig.MAGHRIB] = timings.maghrib
+        map[EnumConfig.ISHA] = timings.isha
+        map[EnumConfig.SUNRISE] = timings.sunrise
+        return map
     }
 }
 

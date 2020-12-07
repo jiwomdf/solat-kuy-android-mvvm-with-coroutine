@@ -4,6 +4,7 @@ import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
 import android.os.Build
+import android.util.Log
 import com.programmergabut.solatkuy.service.ServiceBootComplete
 
 /*
@@ -34,8 +35,10 @@ class BootCompleteReceiver: BroadcastReceiver() {
                     )
                 }*/
             }
-            else
+            else{
+                Log.d("<Error>","BootCompleteReceiver, context == null")
                 throw Exception("Context Null")
+            }
 
         }
 

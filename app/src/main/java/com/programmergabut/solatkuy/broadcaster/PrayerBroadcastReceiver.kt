@@ -7,9 +7,10 @@ import android.content.Context
 import android.content.Intent
 import android.os.Build
 import android.os.Bundle
+import android.util.Log
 import com.programmergabut.solatkuy.data.local.localentity.NotifiedPrayer
 import com.programmergabut.solatkuy.ui.activityprayer.DuaActivity
-import com.programmergabut.solatkuy.util.enumclass.EnumConfig
+import com.programmergabut.solatkuy.util.EnumConfig
 import com.programmergabut.solatkuy.util.helper.NotificationHelper
 import com.programmergabut.solatkuy.util.generator.DuaGenerator
 import java.util.*
@@ -44,12 +45,15 @@ class PrayerBroadcastReceiver: BroadcastReceiver() {
 
         val listData = bundleDeserializer(listPrayerBundle)
 
-        if(pID == -1 || pName.isNullOrEmpty() || pTime.isNullOrEmpty() || listPrayerBundle == null)
+        if(pID == -1 || pName.isNullOrEmpty() || pTime.isNullOrEmpty() || listPrayerBundle == null){
+            Log.d("<Error>","PrayerBroadcastReceiver, pID == -1 || pName.isNullOrEmpty() || pTime.isNullOrEmpty() || listPrayerBundle == null")
             throw Exception("PrayerBroadcastReceiver")
+        }
 
         removeAllNotification(context, listData)
 
-        if(pCity == null) pCity = "-"
+        if(pCity == null)
+            pCity = "-"
 
         val duaIntent = intentToDuaAfterAdhanGenerator(context)
 

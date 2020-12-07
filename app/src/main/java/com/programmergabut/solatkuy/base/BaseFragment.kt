@@ -11,8 +11,7 @@ import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.data.local.SolatKuyRoom
-import com.programmergabut.solatkuy.ui.fragmentcompass.FragmentCompassViewModel
-import com.programmergabut.solatkuy.util.enumclass.EnumConfig
+import com.programmergabut.solatkuy.util.EnumConfig
 import kotlinx.android.synthetic.main.layout_error_bottomsheet.*
 import javax.inject.Inject
 

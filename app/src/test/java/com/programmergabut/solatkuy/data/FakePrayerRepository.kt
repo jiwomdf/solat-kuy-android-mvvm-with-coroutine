@@ -6,13 +6,11 @@ import androidx.lifecycle.MediatorLiveData
 import com.programmergabut.solatkuy.data.local.dao.*
 import com.programmergabut.solatkuy.data.local.localentity.*
 import com.programmergabut.solatkuy.data.remote.RemoteDataSourceAladhanImpl
-import com.programmergabut.solatkuy.data.remote.RemoteDataSourceApiAlquranImpl
 import com.programmergabut.solatkuy.util.Resource
-import com.programmergabut.solatkuy.util.enumclass.EnumConfig
+import com.programmergabut.solatkuy.util.EnumConfig
 import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
-import javax.inject.Inject
 
 /*
  * Created by Katili Jiwo Adi Wiyono on 26/03/20.

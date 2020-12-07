@@ -1,6 +1,5 @@
 package com.programmergabut.solatkuy.ui.fragmentinfo
 
-import androidx.fragment.app.viewModels
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.programmergabut.solatkuy.R
@@ -11,7 +10,7 @@ import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.PrayerRe
 import com.programmergabut.solatkuy.ui.fragmentinfo.adapter.DuaCollectionAdapter
 import com.programmergabut.solatkuy.util.EnumStatus
 import com.programmergabut.solatkuy.util.Resource
-import com.programmergabut.solatkuy.util.enumclass.EnumConfig
+import com.programmergabut.solatkuy.util.EnumConfig
 import com.programmergabut.solatkuy.util.generator.DuaGenerator
 import com.programmergabut.solatkuy.util.helper.LocationHelper
 import dagger.hilt.android.AndroidEntryPoint

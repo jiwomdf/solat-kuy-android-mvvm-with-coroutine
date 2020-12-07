@@ -3,8 +3,7 @@ package com.programmergabut.solatkuy.di.app
 import android.content.Context
 import androidx.room.Room
 import com.programmergabut.solatkuy.data.local.SolatKuyRoom
-import com.programmergabut.solatkuy.util.enumclass.EnumConfig
-import com.programmergabut.solatkuy.util.enumclass.EnumConfig.Companion.DATABASE_NAME
+import com.programmergabut.solatkuy.util.EnumConfig.Companion.DATABASE_NAME
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn

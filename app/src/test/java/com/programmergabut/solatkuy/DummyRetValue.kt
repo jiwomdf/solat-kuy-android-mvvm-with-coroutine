@@ -15,7 +15,7 @@ import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonEn.Aya
 import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonEn.Edition
 import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonEn.ReadSurahEnResponse
 import com.programmergabut.solatkuy.util.Resource
-import com.programmergabut.solatkuy.util.enumclass.EnumConfig
+import com.programmergabut.solatkuy.util.EnumConfig
 
 object DummyRetValue {
 

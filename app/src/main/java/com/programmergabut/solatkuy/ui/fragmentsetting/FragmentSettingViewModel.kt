@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.programmergabut.solatkuy.data.PrayerRepository
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
+import com.programmergabut.solatkuy.util.EnumStatus
 import kotlinx.coroutines.launch
 
 /*
@@ -14,18 +15,17 @@ import kotlinx.coroutines.launch
 
 class FragmentSettingViewModel @ViewModelInject constructor(val prayerRepository: PrayerRepository): ViewModel() {
 
-    companion object {
-        const val SUCCESS_CHANGE_COORDINATE = "Success change the coordinate"
-    }
-
     val msApi1 = prayerRepository.getMsApi1()
 
-    var errMessage = MutableLiveData<String>()
+    var errStatus = MutableLiveData<EnumStatus>()
+    private var errMessage = ""
+    fun getErrMsg() = errMessage
 
     fun updateMsApi1(msApi1: MsApi1) = viewModelScope.launch {
 
         if(msApi1.latitude.isEmpty() || msApi1.longitude.isEmpty() || msApi1.latitude == "." || msApi1.longitude == "."){
-            errMessage.postValue("latitude and longitude cannot be empty")
+            errMessage = "latitude and longitude cannot be empty"
+            errStatus.postValue(EnumStatus.ERROR)
             return@launch
         }
 
@@ -33,17 +33,20 @@ class FragmentSettingViewModel @ViewModelInject constructor(val prayerRepository
         val arrLongitude = msApi1.longitude.toCharArray()
 
         if(arrLatitude[arrLatitude.size - 1] == '.' || arrLongitude[arrLongitude.size - 1] == '.'){
-            errMessage.postValue("latitude and longitude cannot be ended by .")
+            errMessage = "latitude and longitude cannot be ended with ."
+            errStatus.postValue(EnumStatus.ERROR)
             return@launch
         }
 
         if(arrLatitude[0] == '.' || arrLongitude[0] == '.'){
-            errMessage.postValue("latitude and longitude cannot be started by .")
+            errMessage = "latitude and longitude cannot be started with ."
+            errStatus.postValue(EnumStatus.ERROR)
             return@launch
         }
 
         prayerRepository.updateMsApi1(msApi1)
-        errMessage.postValue(SUCCESS_CHANGE_COORDINATE)
+        errMessage = "Success change the coordinate"
+        errStatus.postValue(EnumStatus.SUCCESS)
     }
 
 }

@@ -9,6 +9,7 @@ import com.programmergabut.solatkuy.data.local.localentity.MsSetting
 import com.programmergabut.solatkuy.data.local.localentity.NotifiedPrayer
 import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonEn.ReadSurahEnResponse
 import com.programmergabut.solatkuy.util.Resource
+import com.programmergabut.solatkuy.util.EnumConfig.Companion.IS_TESTING
 import com.programmergabut.solatkuy.util.helper.RunIdlingResourceHelper.Companion.runIdlingResourceDecrement
 import com.programmergabut.solatkuy.util.helper.RunIdlingResourceHelper.Companion.runIdlingResourceIncrement
 import kotlinx.coroutines.launch
@@ -28,13 +29,20 @@ class FragmentMainViewModel @ViewModelInject constructor(val prayerRepository: P
         get() = _notifiedPrayer
 
     fun syncNotifiedPrayer(msApi1: MsApi1) = viewModelScope.launch {
-
         _notifiedPrayer.postValue(Resource.loading(null))
         try {
             runIdlingResourceIncrement()
-            prayerRepository.syncNotifiedPrayer(msApi1).let {
-                _notifiedPrayer.postValue(Resource.success(it))
-                runIdlingResourceDecrement()
+            if(IS_TESTING){
+                prayerRepository.syncNotifiedPrayerTesting().let {
+                    _notifiedPrayer.postValue(Resource.success(it))
+                    runIdlingResourceDecrement()
+                }
+            }
+            else {
+                prayerRepository.syncNotifiedPrayer(msApi1).let {
+                    _notifiedPrayer.postValue(Resource.success(it))
+                    runIdlingResourceDecrement()
+                }
             }
         }
         catch (e: Exception){

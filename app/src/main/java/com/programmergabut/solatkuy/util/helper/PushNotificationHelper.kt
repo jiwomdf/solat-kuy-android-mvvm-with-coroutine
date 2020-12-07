@@ -9,7 +9,7 @@ import android.os.Build
 import android.os.Bundle
 import com.programmergabut.solatkuy.broadcaster.PrayerBroadcastReceiver
 import com.programmergabut.solatkuy.data.local.localentity.NotifiedPrayer
-import com.programmergabut.solatkuy.util.enumclass.EnumConfig
+import com.programmergabut.solatkuy.util.EnumConfig
 import java.util.*
 
 /*
@@ -33,21 +33,13 @@ class PushNotificationHelper(context: Context, selList: MutableList<NotifiedPray
         newList.sortBy { x -> x.prayerID }
         newList.forEachIndexed { _, it ->
 
-            /* #TESTING PURPOSE
-             if(it.prayerID != 1)
-                return@forEachIndexed*/
-
             val arrPrayer = it.prayerTime.split(":")
-
             val hour = arrPrayer[0].trim()
             val minute = arrPrayer[1].split(" ")[0].trim()
 
             val c = Calendar.getInstance()
             c.set(Calendar.HOUR_OF_DAY, hour.toInt())
             c.set(Calendar.MINUTE, minute.toInt())
-            /* #TESTING PURPOSE
-            c.set(Calendar.HOUR_OF_DAY, 21)
-            c.set(Calendar.MINUTE, 10)*/
             c.set(Calendar.SECOND, 0)
 
             intent.putExtra(PrayerBroadcastReceiver.prayer_id, it.prayerID)
@@ -60,14 +52,6 @@ class PushNotificationHelper(context: Context, selList: MutableList<NotifiedPray
 
             if(c.before(Calendar.getInstance()))
                 c.add(Calendar.DATE, 1)
-
-            /* if(it.isNotified){
-                val pushNotificationWork: WorkRequest = OneTimeWorkRequestBuilder<PushNotificationWorker>().build()
-
-                WorkManager
-                    .getInstance(context)
-                    .enqueue(pushNotificationWork)
-            } */
 
             if(it.isNotified){
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)

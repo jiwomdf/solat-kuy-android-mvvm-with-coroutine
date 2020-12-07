@@ -9,6 +9,7 @@ import com.programmergabut.solatkuy.util.helper.PushNotificationHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
+import java.lang.Exception
 import javax.inject.Inject
 
 /*
@@ -17,25 +18,24 @@ import javax.inject.Inject
 
 class ServiceBootComplete: Service() {
 
-    @Inject lateinit var db: SolatKuyRoom
+    lateinit var db: SolatKuyRoom
 
-    override fun onBind(intent: Intent?): IBinder? {
-        return null
-    }
+    override fun onBind(intent: Intent?): IBinder? = null
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
-
         super.onStartCommand(intent, flags, startId)
 
+        db = SolatKuyRoom.getDataBase(this)
+
         CoroutineScope(Dispatchers.IO).launch {
+            try{
+                val data = db.notifiedPrayerDao().getListNotifiedPrayerSync() as MutableList
 
-            val data = db.notifiedPrayerDao().getListNotifiedPrayerSync() as MutableList
-
-            PushNotificationHelper(
-                this@ServiceBootComplete,
-                data,
-                "-"
-            )
+                PushNotificationHelper(this@ServiceBootComplete, data, "-")
+            }
+            catch(ex: Exception){
+                Log.d("<Error>","ServiceBootComplete, onStartCommand")
+            }
         }
 
         return START_REDELIVER_INTENT

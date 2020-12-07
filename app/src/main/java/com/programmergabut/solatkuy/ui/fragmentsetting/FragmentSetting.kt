@@ -13,7 +13,6 @@ import android.view.View
 import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
-import androidx.fragment.app.viewModels
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
@@ -23,9 +22,8 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.base.BaseFragment
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
-import com.programmergabut.solatkuy.ui.main.MainActivityViewModel
 import com.programmergabut.solatkuy.util.EnumStatus
-import com.programmergabut.solatkuy.util.enumclass.EnumConfig
+import com.programmergabut.solatkuy.util.EnumConfig
 import com.programmergabut.solatkuy.util.helper.LocationHelper
 import dagger.hilt.android.AndroidEntryPoint
 import es.dmoral.toasty.Toasty
@@ -57,7 +55,6 @@ class FragmentSetting : BaseFragment<FragmentSettingViewModel>(R.layout.fragment
         btnSetLatitudeLongitude()
     }
 
-
     private fun subscribeObserversDB() {
         viewModel.msApi1.observe(viewLifecycleOwner, {
             when(it.status){
@@ -70,17 +67,30 @@ class FragmentSetting : BaseFragment<FragmentSettingViewModel>(R.layout.fragment
                         tv_view_city.text = city ?: EnumConfig.CITY_NOT_FOUND_STR
                     }
                 }
-                else -> {}
+                else -> {/*NO-OP*/}
             }
         })
     }
 
     private fun observeErrorMsg() {
-        viewModel.errMessage.observe(viewLifecycleOwner, {
-            if(it == MainActivityViewModel.SUCCESS_CHANGE_COORDINATE)
-                Toasty.success(requireContext(), it, Toasty.LENGTH_SHORT).show()
-            else
-                Toasty.error(requireContext(), it, Toasty.LENGTH_SHORT).show()
+        viewModel.errStatus.observe(viewLifecycleOwner, {
+            val errMsg = viewModel.getErrMsg()
+
+            if(errMsg.isEmpty())
+                return@observe
+
+            when(it){
+                EnumStatus.SUCCESS -> {
+                    Toasty.success(requireContext(),errMsg , Toasty.LENGTH_SHORT).show()
+                    dialog.dismiss()
+                }
+                EnumStatus.ERROR -> {
+                    Toasty.error(requireContext(), errMsg, Toasty.LENGTH_SHORT).show()
+                }
+                else -> {/*NO-OP*/}
+            }.also {
+                viewModel.errStatus.postValue(EnumStatus.NEUTRAL)
+            }
         })
     }
 
@@ -96,7 +106,6 @@ class FragmentSetting : BaseFragment<FragmentSettingViewModel>(R.layout.fragment
                 val longitude = dialogView.et_llDialog_longitude.text.toString().trim()
 
                 insertLocationSettingToDb(latitude, longitude)
-                dialog.dismiss()
             }
         }
 
@@ -112,7 +121,6 @@ class FragmentSetting : BaseFragment<FragmentSettingViewModel>(R.layout.fragment
                 val longitude = dialogView.tv_gpsDialog_longitude.text.toString().trim()
 
                 insertLocationSettingToDb(latitude, longitude)
-                dialog.dismiss()
             }
         }
 
@@ -263,8 +271,7 @@ class FragmentSetting : BaseFragment<FragmentSettingViewModel>(R.layout.fragment
 
             private fun onLocationChanged(it: Location?) {
 
-                if(it == null)
-                    return
+                if(it == null) return
 
                 dialogView.iv_warning.visibility = View.GONE
                 dialogView.tv_warning.visibility = View.GONE
