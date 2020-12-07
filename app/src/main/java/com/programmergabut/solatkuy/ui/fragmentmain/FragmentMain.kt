@@ -88,10 +88,10 @@ class FragmentMain : BaseFragment<FragmentMainViewModel>(R.layout.fragment_main,
             when(retVal.status){
                 EnumStatus.SUCCESS -> {
 
-                    if(retVal.data == null)
-                        showBottomSheet(isCancelable = false, isFinish = true)
+                    if(retVal.data == null) showBottomSheet(isCancelable = false, isFinish = true)
+                    if(retVal.data?.isEmpty()!!) return@observe
 
-                    bindCheckBox(retVal.data!!)
+                    bindCheckBox(retVal.data)
                     updateAlarmManager(retVal.data)
 
                     val data = createWidgetData(retVal.data)

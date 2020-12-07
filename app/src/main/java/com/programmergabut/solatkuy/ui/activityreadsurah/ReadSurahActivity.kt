@@ -126,12 +126,16 @@ class ReadSurahActivity : BaseActivity<ReadSurahViewModel>(
 
         viewModel.msFavAyahBySurahID.observe(this, { local ->
 
-            val lastSurah = getLastReadSurah()
-            val lastAyah = getLastReadAyah()
+            var lastSurah = getLastReadSurah()
+            var lastAyah = getLastReadAyah()
 
-            if (lastSurah == -1 || lastAyah == -1) {
+            if (lastSurah == -1 && lastAyah == -1) {
+                lastSurah = 0
+                lastAyah = 0
+            }
+            else if(lastSurah == -1 || lastAyah == -1){
                 showBottomSheet(
-                    "Error Occurred", "Surah and ayah not found",
+                    "Error Occurred", "Last surah and ayah not found",
                     isCancelable = true,
                     isFinish = true
                 )
