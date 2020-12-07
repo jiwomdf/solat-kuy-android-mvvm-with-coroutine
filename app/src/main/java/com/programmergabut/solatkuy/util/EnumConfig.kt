@@ -8,7 +8,7 @@ package com.programmergabut.solatkuy.util
 class EnumConfig {
     companion object{
 
-        const val IS_TESTING = false
+        const val IS_TESTING = true
 
         const val DATABASE_NAME = "solatkuydb"
 

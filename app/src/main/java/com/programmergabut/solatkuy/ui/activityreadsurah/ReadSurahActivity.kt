@@ -49,7 +49,7 @@ class ReadSurahActivity : BaseActivity<ReadSurahViewModel>(
     private var mIsAutoScroll: Boolean = false
     private var mMenu: Menu? = null
     private var isFirstLoad = true
-    
+
     override fun setIntentExtra() {
         try{
             mSelSurahId = intent.getStringExtra(SURAH_ID) ?: throw Exception("getExtras surahID")
