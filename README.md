@@ -11,6 +11,7 @@ created with:
 - Retrofit 
 - Dagger Hilt
 - Navigation Component
+- Motion Layout
 - Material Design 
 - Testing with Mockito, espresso, & Junit4
 
