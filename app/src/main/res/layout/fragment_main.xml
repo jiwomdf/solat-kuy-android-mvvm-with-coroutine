@@ -6,7 +6,7 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     app:layoutDescription="@xml/fragment_main_scene"
-    tools:context=".ui.fragmentmain.FragmentMain">
+    tools:context=".ui.fragmentmain.MainFragment">
 
     <ImageView
         android:id="@+id/iv_prayer_widget"

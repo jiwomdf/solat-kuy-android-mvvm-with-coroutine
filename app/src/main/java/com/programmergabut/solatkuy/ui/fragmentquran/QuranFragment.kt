@@ -24,8 +24,9 @@ import java.util.*
  */
 
 @AndroidEntryPoint
-class QuranFragment : BaseFragment<QuranFragmentViewModel>(R.layout.fragment_quran, QuranFragmentViewModel::class.java),
-    SwipeRefreshLayout.OnRefreshListener {
+class QuranFragment(viewModelTest: QuranFragmentViewModel? = null) : BaseFragment<QuranFragmentViewModel>(
+    R.layout.fragment_quran, QuranFragmentViewModel::class.java, viewModelTest
+), SwipeRefreshLayout.OnRefreshListener {
 
     private lateinit var allSurahAdapter: AllSurahAdapter
     private lateinit var staredSurahAdapter: StaredSurahAdapter

@@ -7,10 +7,12 @@ import com.programmergabut.solatkuy.base.BaseFragment
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
 import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.Data
 import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.PrayerResponse
+import com.programmergabut.solatkuy.ui.fragmentcompass.FragmentCompassViewModel
 import com.programmergabut.solatkuy.ui.fragmentinfo.adapter.DuaCollectionAdapter
 import com.programmergabut.solatkuy.util.EnumStatus
 import com.programmergabut.solatkuy.util.Resource
 import com.programmergabut.solatkuy.util.EnumConfig
+import com.programmergabut.solatkuy.util.EnumConfig.Companion.IS_TESTING
 import com.programmergabut.solatkuy.util.generator.DuaGenerator
 import com.programmergabut.solatkuy.util.helper.LocationHelper
 import dagger.hilt.android.AndroidEntryPoint
@@ -23,8 +25,9 @@ import java.util.*
  */
 
 @AndroidEntryPoint
-class FragmentInfo : BaseFragment<FragmentInfoViewModel>(R.layout.fragment_info, FragmentInfoViewModel::class.java),
-    SwipeRefreshLayout.OnRefreshListener {
+class InfoFragment(viewModelTest: FragmentInfoViewModel? = null) : BaseFragment<FragmentInfoViewModel>(
+    R.layout.fragment_info, FragmentInfoViewModel::class.java, viewModelTest
+), SwipeRefreshLayout.OnRefreshListener {
 
     private lateinit var duaCollectionAdapter: DuaCollectionAdapter
     private var mMsApi1: MsApi1? = null
@@ -46,7 +49,7 @@ class FragmentInfo : BaseFragment<FragmentInfoViewModel>(R.layout.fragment_info,
 
         rvDuaCollection.apply {
             adapter = duaCollectionAdapter
-            layoutManager = LinearLayoutManager(this@FragmentInfo.context)
+            layoutManager = LinearLayoutManager(this@InfoFragment.context)
             setHasFixedSize(true)
         }
     }

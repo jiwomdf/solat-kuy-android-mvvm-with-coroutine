@@ -2,7 +2,7 @@ package com.programmergabut.solatkuy.ui.main
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.programmergabut.solatkuy.CoroutinesTestRule
-import com.programmergabut.solatkuy.data.PrayerRepository
+import com.programmergabut.solatkuy.data.PrayerRepositoryImpl
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.Before
 
@@ -26,16 +26,16 @@ class MainActivityViewModelTest {
     val coroutinesTestRule: CoroutinesTestRule = CoroutinesTestRule()
 
     @Mock
-    private lateinit var prayerRepository: PrayerRepository
+    private lateinit var prayerRepositoryImpl: PrayerRepositoryImpl
 
 
     @Before
     fun setUp() {
-        viewModel = MainActivityViewModel(prayerRepository)
+        viewModel = MainActivityViewModel(prayerRepositoryImpl)
     }
 
     @Test
     fun getMsSetting(){
-        Mockito.verify(prayerRepository).getMsSetting()
+        Mockito.verify(prayerRepositoryImpl).getMsSetting()
     }
 }

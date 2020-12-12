@@ -44,7 +44,9 @@ import kotlin.math.abs
  */
 
 @AndroidEntryPoint
-class FragmentMain : BaseFragment<FragmentMainViewModel>(R.layout.fragment_main, FragmentMainViewModel::class.java){
+class MainFragment(viewModelTest: FragmentMainViewModel? = null) : BaseFragment<FragmentMainViewModel>(
+    R.layout.fragment_main, FragmentMainViewModel::class.java, viewModelTest
+){
 
     private var isTimerHasBinded = false
     private var coroutineTimerJob: Job? = null

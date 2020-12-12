@@ -37,10 +37,10 @@ class PushNotificationHelper(context: Context, selList: MutableList<NotifiedPray
             val hour = arrPrayer[0].trim()
             val minute = arrPrayer[1].split(" ")[0].trim()
 
-            val c = Calendar.getInstance()
-            c.set(Calendar.HOUR_OF_DAY, hour.toInt())
-            c.set(Calendar.MINUTE, minute.toInt())
-            c.set(Calendar.SECOND, 0)
+            val calendar = Calendar.getInstance()
+            calendar.set(Calendar.HOUR_OF_DAY, hour.toInt())
+            calendar.set(Calendar.MINUTE, minute.toInt())
+            calendar.set(Calendar.SECOND, 0)
 
             intent.putExtra(PrayerBroadcastReceiver.prayer_id, it.prayerID)
             intent.putExtra(PrayerBroadcastReceiver.prayer_name, it.prayerName)
@@ -50,14 +50,14 @@ class PushNotificationHelper(context: Context, selList: MutableList<NotifiedPray
 
             val pendingIntent = PendingIntent.getBroadcast(context, it.prayerID, intent, 0)
 
-            if(c.before(Calendar.getInstance()))
-                c.add(Calendar.DATE, 1)
+            if(calendar.before(Calendar.getInstance()))
+                calendar.add(Calendar.DATE, 1)
 
             if(it.isNotified){
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-                    alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, c.timeInMillis, pendingIntent)
+                    alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
                 else
-                    alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.timeInMillis, pendingIntent)
+                    alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
             }
             else
                 alarmManager.cancel(pendingIntent)

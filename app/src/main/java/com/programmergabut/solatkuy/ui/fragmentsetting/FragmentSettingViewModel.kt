@@ -5,6 +5,7 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.programmergabut.solatkuy.data.PrayerRepository
+import com.programmergabut.solatkuy.data.PrayerRepositoryImpl
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
 import com.programmergabut.solatkuy.util.EnumStatus
 import kotlinx.coroutines.launch
@@ -13,9 +14,9 @@ import kotlinx.coroutines.launch
  * Created by Katili Jiwo Adi Wiyono on 25/03/20.
  */
 
-class FragmentSettingViewModel @ViewModelInject constructor(val prayerRepository: PrayerRepository): ViewModel() {
+class FragmentSettingViewModel @ViewModelInject constructor(val prayerRepositoryImpl: PrayerRepository): ViewModel() {
 
-    val msApi1 = prayerRepository.getMsApi1()
+    val msApi1 = prayerRepositoryImpl.getMsApi1()
 
     var errStatus = MutableLiveData<EnumStatus>()
     private var errMessage = ""
@@ -44,7 +45,7 @@ class FragmentSettingViewModel @ViewModelInject constructor(val prayerRepository
             return@launch
         }
 
-        prayerRepository.updateMsApi1(msApi1)
+        prayerRepositoryImpl.updateMsApi1(msApi1)
         errMessage = "Success change the coordinate"
         errStatus.postValue(EnumStatus.SUCCESS)
     }

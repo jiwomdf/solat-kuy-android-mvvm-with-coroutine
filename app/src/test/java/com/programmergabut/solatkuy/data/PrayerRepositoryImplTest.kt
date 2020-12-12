@@ -20,7 +20,7 @@ import org.mockito.Mockito
 import org.mockito.Mockito.mock
 
 @ExperimentalCoroutinesApi
-class PrayerRepositoryTest{
+class PrayerRepositoryImplTest{
     @get:Rule
     var instantTaskExecutorRule = InstantTaskExecutorRule()
 

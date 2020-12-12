@@ -37,7 +37,9 @@ import org.joda.time.LocalDate
  */
 
 @AndroidEntryPoint
-class FragmentSetting : BaseFragment<FragmentSettingViewModel>(R.layout.fragment_setting, FragmentSettingViewModel::class.java) {
+class SettingFragment(viewModelTest: FragmentSettingViewModel? = null) : BaseFragment<FragmentSettingViewModel>(
+    R.layout.fragment_setting, FragmentSettingViewModel::class.java, viewModelTest
+) {
 
     private lateinit var dialog: BottomSheetDialog
     private lateinit var mFusedLocationClient: FusedLocationProviderClient
