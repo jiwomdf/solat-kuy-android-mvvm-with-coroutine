@@ -28,6 +28,7 @@ import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.base.BaseActivity
 import com.programmergabut.solatkuy.data.local.SolatKuyRoom
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
+import com.programmergabut.solatkuy.ui.SolatKuyFragmentFactory
 import com.programmergabut.solatkuy.ui.fragmentsetting.FragmentSettingViewModel
 import com.programmergabut.solatkuy.util.EnumStatus
 import dagger.hilt.android.AndroidEntryPoint
@@ -38,6 +39,7 @@ import kotlinx.android.synthetic.main.layout_bottomsheet_bylatitudelongitude.vie
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import org.joda.time.LocalDate
+import javax.inject.Inject
 
 /*
  * Created by Katili Jiwo Adi Wiyono on 25/03/20.
@@ -49,6 +51,13 @@ class MainActivity : BaseActivity<MainActivityViewModel>(R.layout.activity_main,
     private lateinit var mSubDialog: Dialog
     private lateinit var dialog: Dialog
     private val ALL_PERMISSIONS = 101
+
+    @Inject
+    lateinit var fragmentFactory: SolatKuyFragmentFactory
+
+    override fun setFirstView() {
+        supportFragmentManager.fragmentFactory = fragmentFactory
+    }
 
     override fun onDestroy() {
         super.onDestroy()

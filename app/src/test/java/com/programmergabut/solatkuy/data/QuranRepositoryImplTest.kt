@@ -18,7 +18,7 @@ import org.mockito.Mockito
 import org.mockito.Mockito.mock
 
 @ExperimentalCoroutinesApi
-class QuranRepositoryTest {
+class QuranRepositoryImplTest {
 
     @get:Rule
     var instantTaskExecutorRule = InstantTaskExecutorRule()

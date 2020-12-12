@@ -3,7 +3,9 @@ package com.programmergabut.solatkuy.ui.fragmentmain
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import com.programmergabut.solatkuy.data.PrayerRepository
+import com.programmergabut.solatkuy.data.PrayerRepositoryImpl
 import com.programmergabut.solatkuy.data.QuranRepository
+import com.programmergabut.solatkuy.data.QuranRepositoryImpl
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
 import com.programmergabut.solatkuy.data.local.localentity.MsSetting
 import com.programmergabut.solatkuy.data.local.localentity.NotifiedPrayer
@@ -19,10 +21,12 @@ import java.lang.Exception
  * Created by Katili Jiwo Adi Wiyono on 25/03/20.
  */
 
-class FragmentMainViewModel @ViewModelInject constructor(val prayerRepository: PrayerRepository, val quranRepository: QuranRepository): ViewModel() {
+class FragmentMainViewModel @ViewModelInject constructor(
+    val prayerRepositoryImpl: PrayerRepository, val quranRepositoryImpl: QuranRepository
+): ViewModel() {
 
-    val msApi1 = prayerRepository.getMsApi1()
-    val favAyah = quranRepository.getListFavAyah()
+    val msApi1 = prayerRepositoryImpl.getMsApi1()
+    val favAyah = quranRepositoryImpl.getListFavAyah()
 
     private var _notifiedPrayer = MutableLiveData<Resource<List<NotifiedPrayer>>>()
     val notifiedPrayer: LiveData<Resource<List<NotifiedPrayer>>>
@@ -33,13 +37,13 @@ class FragmentMainViewModel @ViewModelInject constructor(val prayerRepository: P
         try {
             runIdlingResourceIncrement()
             if(IS_TESTING){
-                prayerRepository.syncNotifiedPrayerTesting().let {
+                prayerRepositoryImpl.syncNotifiedPrayerTesting().let {
                     _notifiedPrayer.postValue(Resource.success(it))
                     runIdlingResourceDecrement()
                 }
             }
             else {
-                prayerRepository.syncNotifiedPrayer(msApi1).let {
+                prayerRepositoryImpl.syncNotifiedPrayer(msApi1).let {
                     _notifiedPrayer.postValue(Resource.success(it))
                     runIdlingResourceDecrement()
                 }
@@ -61,7 +65,7 @@ class FragmentMainViewModel @ViewModelInject constructor(val prayerRepository: P
 
         try {
             runIdlingResourceIncrement()
-            quranRepository.fetchReadSurahEn(nInSurah).let {
+            quranRepositoryImpl.fetchReadSurahEn(nInSurah).let {
                 _readSurahEn.postValue(Resource.success(it))
                 runIdlingResourceDecrement()
             }
@@ -75,7 +79,7 @@ class FragmentMainViewModel @ViewModelInject constructor(val prayerRepository: P
 
     private var _setting = MutableLiveData<Int>()
     var msSetting: LiveData<Resource<MsSetting>> = Transformations.switchMap(_setting){
-        prayerRepository.getMsSetting()
+        prayerRepositoryImpl.getMsSetting()
     }
     fun getMsSetting(ayahID: Int){
         this._setting.value = ayahID
@@ -86,19 +90,19 @@ class FragmentMainViewModel @ViewModelInject constructor(val prayerRepository: P
     }*/
 
     fun updateMsApi1(msApi1: MsApi1) = viewModelScope.launch {
-        prayerRepository.updateMsApi1(msApi1)
+        prayerRepositoryImpl.updateMsApi1(msApi1)
     }
 
     fun updatePrayerIsNotified(prayerName: String, isNotified: Boolean) = viewModelScope.launch {
-        prayerRepository.updatePrayerIsNotified(prayerName, isNotified)
+        prayerRepositoryImpl.updatePrayerIsNotified(prayerName, isNotified)
     }
 
     fun updateIsUsingDBQuotes(isUsingDBQuotes: Boolean) = viewModelScope.launch {
-        prayerRepository.updateIsUsingDBQuotes(isUsingDBQuotes)
+        prayerRepositoryImpl.updateIsUsingDBQuotes(isUsingDBQuotes)
     }
 
     fun updateMsApi1MonthAndYear(api1ID: Int, month: String, year:String) = viewModelScope.launch{
-        prayerRepository.updateMsApi1MonthAndYear(api1ID, month, year)
+        prayerRepositoryImpl.updateMsApi1MonthAndYear(api1ID, month, year)
     }
 
 }

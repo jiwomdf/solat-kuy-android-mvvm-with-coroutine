@@ -9,31 +9,34 @@ import android.hardware.SensorManager
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.RotateAnimation
-import androidx.fragment.app.viewModels
-import androidx.lifecycle.Observer
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.base.BaseFragment
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
+import com.programmergabut.solatkuy.util.EnumConfig.Companion.IS_TESTING
 import com.programmergabut.solatkuy.util.EnumStatus
 import dagger.hilt.android.AndroidEntryPoint
 import kotlinx.android.synthetic.main.fragment_compass.*
 import kotlinx.android.synthetic.main.layout_phone_tilt.*
+import javax.inject.Inject
 
 /*
  * Created by Katili Jiwo Adi Wiyono on 31/03/20.
  */
 
 @AndroidEntryPoint
-class FragmentCompass : BaseFragment<FragmentCompassViewModel>(R.layout.fragment_compass, FragmentCompassViewModel::class.java),
-    SensorEventListener, SwipeRefreshLayout.OnRefreshListener {
+class CompassFragment constructor(viewModelTest: FragmentCompassViewModel? = null) : BaseFragment<FragmentCompassViewModel>(
+    R.layout.fragment_compass,
+    FragmentCompassViewModel::class.java,
+    viewModelTest
+), SensorEventListener, SwipeRefreshLayout.OnRefreshListener {
 
-    private lateinit var mMsApi1: MsApi1
-    private var mGravity = FloatArray(3)
-    private var mGeomagnetic = FloatArray(3)
     private var azimuth = 0f
     private var currentAzimuth = 0f
+    private var mGravity = FloatArray(3)
+    private var mGeomagnetic = FloatArray(3)
     private lateinit var mSensorManager: SensorManager
+    private lateinit var mMsApi1: MsApi1
 
     /* Compass */
     override fun onResume() {

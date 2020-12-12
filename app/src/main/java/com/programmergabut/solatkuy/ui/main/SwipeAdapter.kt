@@ -1,15 +1,5 @@
 package com.programmergabut.solatkuy.ui.main
 
-import androidx.fragment.app.Fragment
-import androidx.fragment.app.FragmentManager
-import androidx.lifecycle.Lifecycle
-import androidx.viewpager2.adapter.FragmentStateAdapter
-import com.programmergabut.solatkuy.ui.fragmentcompass.FragmentCompass
-import com.programmergabut.solatkuy.ui.fragmentinfo.FragmentInfo
-import com.programmergabut.solatkuy.ui.fragmentmain.FragmentMain
-import com.programmergabut.solatkuy.ui.fragmentquran.QuranFragment
-import com.programmergabut.solatkuy.ui.fragmentsetting.FragmentSetting
-
 /*
  * Created by Katili Jiwo Adi Wiyono on 31/03/20.
  */

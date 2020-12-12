@@ -12,22 +12,27 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.data.local.SolatKuyRoom
 import com.programmergabut.solatkuy.util.EnumConfig
+import com.programmergabut.solatkuy.util.EnumConfig.Companion.IS_TESTING
 import kotlinx.android.synthetic.main.layout_error_bottomsheet.*
 import javax.inject.Inject
 
-abstract class BaseFragment<VM: ViewModel>(fragmentLayout: Int, private val viewModelClass: Class<VM>) : Fragment(fragmentLayout) {
+abstract class BaseFragment<VM: ViewModel>(
+    fragmentLayout: Int,
+    private val viewModelClass: Class<VM>,
+    private val viewModelTest: VM?
+) : Fragment(fragmentLayout) {
 
     @Inject
     lateinit var db: SolatKuyRoom
     @Inject
     lateinit var sharedPref: SharedPreferences
 
-    protected lateinit var viewModel: VM
+    lateinit var viewModel: VM
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        viewModel = ViewModelProvider(requireActivity()).get(viewModelClass)
+        viewModel = viewModelTest ?: ViewModelProvider(requireActivity()).get(viewModelClass)
 
         setIntentExtra()
         setFirstView()

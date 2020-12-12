@@ -1,5 +1,6 @@
 package com.programmergabut.solatkuy.ui.fragmentquran
 
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.core.app.ActivityScenario
@@ -13,33 +14,51 @@ import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.MediumTest
 import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.ui.MyViewAction
+import com.programmergabut.solatkuy.launchFragmentInHiltContainer
+import com.programmergabut.solatkuy.ui.TestSolatKuyFragmentFactory
+import com.programmergabut.solatkuy.ui.fragmentinfo.FragmentInfoViewModel
 import com.programmergabut.solatkuy.ui.main.MainActivity
 import com.programmergabut.solatkuy.util.EspressoIdlingResource
+import com.programmergabut.solatkuy.viewmodel.FakePrayerRepositoryAndroidTest
+import com.programmergabut.solatkuy.viewmodel.FakeQuranRepositoryAndroidTest
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.hamcrest.CoreMatchers.anything
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
+import javax.inject.Inject
 
 
 @RunWith(AndroidJUnit4::class)
 @HiltAndroidTest
 @MediumTest
+@ExperimentalCoroutinesApi
 class QuranFragmentTest{
+
+    @get:Rule
+    var activityRule = ActivityScenarioRule(MainActivity::class.java)
+
+    @get:Rule
+    var instantTaskExecutorRule = InstantTaskExecutorRule()
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
 
+//    @Inject
+//    lateinit var testSolatKuyFragmentFactory: TestSolatKuyFragmentFactory
+
     @Before
     fun setUp() {
-        hiltRule.inject()
+        //hiltRule.inject()
         IdlingRegistry.getInstance().register(EspressoIdlingResource.espressoTestIdlingResource)
     }
 
@@ -50,9 +69,9 @@ class QuranFragmentTest{
 
     @Test
     fun test_visibility(){
-        val activityScenario = ActivityScenario.launch(MainActivity::class.java)
-        activityScenario.onActivity {
-            it.findNavController(R.id.navHostFragment).navigate(R.id.quranFragment)
+
+        //val testViewModel = QuranFragmentViewModel(FakeQuranRepositoryAndroidTest())
+        launchFragmentInHiltContainer<QuranFragment> {
         }
 
         onView(withId(R.id.et_search)).check(matches(isDisplayed()))

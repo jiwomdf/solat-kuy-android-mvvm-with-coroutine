@@ -1,12 +1,10 @@
 package com.programmergabut.solatkuy.ui.fragmentinfo.viewmodel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.Observer
 import com.programmergabut.solatkuy.CoroutinesTestRule
 import com.programmergabut.solatkuy.DummyArgument
 import com.programmergabut.solatkuy.DummyRetValue
-import com.programmergabut.solatkuy.data.PrayerRepository
-import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.PrayerResponse
+import com.programmergabut.solatkuy.data.PrayerRepositoryImpl
 import com.programmergabut.solatkuy.ui.fragmentinfo.FragmentInfoViewModel
 import com.programmergabut.solatkuy.util.Resource
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -24,7 +22,7 @@ import org.mockito.junit.MockitoJUnitRunner
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
-class FragmentInfoViewModelTest {
+class InfoFragmentViewModelTest {
 
     private lateinit var viewModel: FragmentInfoViewModel
 
@@ -35,15 +33,15 @@ class FragmentInfoViewModelTest {
     val coroutinesTestRule: CoroutinesTestRule = CoroutinesTestRule()
 
     @Mock
-    private lateinit var prayerRepository: PrayerRepository
+    private lateinit var prayerRepositoryImpl: PrayerRepositoryImpl
 
     private val msApi1 = DummyArgument.msApi1
 
     @Before
     fun before(){
-        viewModel = FragmentInfoViewModel(prayerRepository)
+        viewModel = FragmentInfoViewModel(prayerRepositoryImpl)
 
-        Mockito.verify(prayerRepository).getMsApi1()
+        Mockito.verify(prayerRepositoryImpl).getMsApi1()
     }
 
     @Test
@@ -51,14 +49,14 @@ class FragmentInfoViewModelTest {
 
         //given
         val dummyPrayerApi = Resource.success(DummyRetValue.fetchPrayerApi())
-        `when`(prayerRepository.fetchPrayerApi(msApi1)).thenReturn(dummyPrayerApi.data)
+        `when`(prayerRepositoryImpl.fetchPrayerApi(msApi1)).thenReturn(dummyPrayerApi.data)
 
         //when
         viewModel.fetchPrayerApi(msApi1)
         val result = viewModel.prayer
 
         //--return value
-        Mockito.verify(prayerRepository).fetchPrayerApi(msApi1)
+        Mockito.verify(prayerRepositoryImpl).fetchPrayerApi(msApi1)
         Assert.assertEquals(dummyPrayerApi.data, result)
 
         //--observer

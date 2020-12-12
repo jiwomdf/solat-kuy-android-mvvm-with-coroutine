@@ -7,22 +7,22 @@
 
     <fragment
         android:id="@+id/fragmentCompass"
-        android:name="com.programmergabut.solatkuy.ui.fragmentcompass.FragmentCompass"
+        android:name="com.programmergabut.solatkuy.ui.fragmentcompass.CompassFragment"
         android:label="fragment_compass"
         tools:layout="@layout/fragment_compass" />
     <fragment
         android:id="@+id/fragmentInfo"
-        android:name="com.programmergabut.solatkuy.ui.fragmentinfo.FragmentInfo"
+        android:name="com.programmergabut.solatkuy.ui.fragmentinfo.InfoFragment"
         android:label="fragment_info"
         tools:layout="@layout/fragment_info" />
     <fragment
         android:id="@+id/fragmentMain"
-        android:name="com.programmergabut.solatkuy.ui.fragmentmain.FragmentMain"
+        android:name="com.programmergabut.solatkuy.ui.fragmentmain.MainFragment"
         android:label="fragment_main"
         tools:layout="@layout/fragment_main" />
     <fragment
         android:id="@+id/fragmentSetting"
-        android:name="com.programmergabut.solatkuy.ui.fragmentsetting.FragmentSetting"
+        android:name="com.programmergabut.solatkuy.ui.fragmentsetting.SettingFragment"
         android:label="fragment_setting"
         tools:layout="@layout/fragment_setting" />
     <fragment

@@ -25,7 +25,8 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 @HiltAndroidTest
-class FragmentSettingTest{
+class SettingFragmentTest{
+
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
 
