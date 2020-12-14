@@ -30,6 +30,7 @@ import com.programmergabut.solatkuy.data.local.SolatKuyRoom
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
 import com.programmergabut.solatkuy.ui.SolatKuyFragmentFactory
 import com.programmergabut.solatkuy.ui.fragmentsetting.FragmentSettingViewModel
+import com.programmergabut.solatkuy.util.EnumConfig.Companion.IS_TESTING
 import com.programmergabut.solatkuy.util.EnumStatus
 import dagger.hilt.android.AndroidEntryPoint
 import es.dmoral.toasty.Toasty
@@ -57,6 +58,9 @@ class MainActivity : BaseActivity<MainActivityViewModel>(R.layout.activity_main,
 
     override fun setFirstView() {
         supportFragmentManager.fragmentFactory = fragmentFactory
+
+        if(IS_TESTING)
+            Toasty.warning(this, "Is Testing", Toast.LENGTH_SHORT).show()
     }
 
     override fun onDestroy() {

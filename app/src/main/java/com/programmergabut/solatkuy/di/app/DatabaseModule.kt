@@ -19,7 +19,9 @@ object DatabaseModule {
     @Provides
     fun provideSolatKuyDatabase(
         @ApplicationContext context: Context
-    ) = Room.databaseBuilder(context, SolatKuyRoom::class.java, DATABASE_NAME).build()
+    ) = Room.databaseBuilder(context, SolatKuyRoom::class.java, DATABASE_NAME)
+        .allowMainThreadQueries()
+        .build()
 
     /* DAO */
     @Singleton

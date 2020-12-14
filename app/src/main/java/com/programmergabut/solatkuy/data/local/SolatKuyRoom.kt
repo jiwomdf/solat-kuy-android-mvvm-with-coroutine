@@ -38,6 +38,7 @@ abstract class SolatKuyRoom: RoomDatabase() {
 
             synchronized(this) {
                 val instance = Room.databaseBuilder(context.applicationContext, SolatKuyRoom::class.java, dbName)
+                    .allowMainThreadQueries()
                     .build()
 
                 INSTANCE = instance

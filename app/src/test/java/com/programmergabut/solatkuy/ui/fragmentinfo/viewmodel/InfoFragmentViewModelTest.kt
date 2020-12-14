@@ -1,10 +1,13 @@
 package com.programmergabut.solatkuy.ui.fragmentinfo.viewmodel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.lifecycle.Observer
+import com.nhaarman.mockitokotlin2.mock
 import com.programmergabut.solatkuy.CoroutinesTestRule
 import com.programmergabut.solatkuy.DummyArgument
 import com.programmergabut.solatkuy.DummyRetValue
 import com.programmergabut.solatkuy.data.PrayerRepositoryImpl
+import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.PrayerResponse
 import com.programmergabut.solatkuy.ui.fragmentinfo.FragmentInfoViewModel
 import com.programmergabut.solatkuy.util.Resource
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -18,6 +21,7 @@ import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito
 import org.mockito.Mockito.`when`
+import org.mockito.Mockito.mock
 import org.mockito.junit.MockitoJUnitRunner
 
 @ExperimentalCoroutinesApi
@@ -48,20 +52,22 @@ class InfoFragmentViewModelTest {
     fun fetchPrayerApi() = coroutinesTestRule.testDispatcher.runBlockingTest{
 
         //given
+        val observer = mock<Observer<Resource<PrayerResponse>>>()
         val dummyPrayerApi = Resource.success(DummyRetValue.fetchPrayerApi())
         `when`(prayerRepositoryImpl.fetchPrayerApi(msApi1)).thenReturn(dummyPrayerApi.data)
 
         //when
         viewModel.fetchPrayerApi(msApi1)
-        val result = viewModel.prayer
+        val result = viewModel.prayer.value
 
         //--return value
         Mockito.verify(prayerRepositoryImpl).fetchPrayerApi(msApi1)
-        Assert.assertEquals(dummyPrayerApi.data, result)
+        Assert.assertEquals(dummyPrayerApi, result)
 
         //--observer
-        /* viewModel.prayerStatus.observeForever(observerStatus)
-        Mockito.verify(observer).onChanged(dummyPrayerApi) */
+        viewModel.prayer.observeForever(observer)
+        Mockito.verify(observer).onChanged(dummyPrayerApi)
+
     }
 
    /* @Test

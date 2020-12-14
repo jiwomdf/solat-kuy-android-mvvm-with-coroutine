@@ -6,9 +6,7 @@ import com.programmergabut.solatkuy.data.remote.remoteentity.asmaalhusnaJson.Asm
 import com.programmergabut.solatkuy.data.remote.remoteentity.asmaalhusnaJson.Data
 import com.programmergabut.solatkuy.data.remote.remoteentity.asmaalhusnaJson.En
 import com.programmergabut.solatkuy.data.remote.remoteentity.compassJson.CompassResponse
-import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.Date
-import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.PrayerResponse
-import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.Timings
+import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.*
 import com.programmergabut.solatkuy.data.remote.remoteentity.quranallsurahJson.AllSurahResponse
 import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonAr.ReadSurahArResponse
 import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonEn.Ayah
@@ -108,10 +106,14 @@ object DummyRetValue {
 
     fun fetchPrayerApi(): PrayerResponse{
         val listData = mutableListOf<com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.Data>()
-        listData.add(com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.Data(
-            Date(null, null, null, null),null,
+        listData.add(
+            Data(
+            Date(Gregorian("","", Designation("", ""),"", Month("", 1), Weekday(""),""),
+                Hijri("","", DesignationX("",""),"", listOf(), MonthX("","",1), WeekdayX("",""),""),
+                "", ""),null,
             Timings("15:00", "12:00", "04:00", "05:00",
-                "20:00", "18:00", "00:00", "06:00", "17:00")))
+                "20:00", "18:00", "00:00", "06:00", "17:00"))
+        )
 
         return PrayerResponse(0, listData,"testing")
     }

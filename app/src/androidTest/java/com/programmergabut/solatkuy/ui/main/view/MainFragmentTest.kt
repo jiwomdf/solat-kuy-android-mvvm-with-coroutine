@@ -1,5 +1,6 @@
 package com.programmergabut.solatkuy.ui.main.view
 
+import androidx.navigation.findNavController
 import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingRegistry
@@ -7,9 +8,8 @@ import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.action.ViewActions.swipeDown
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
-import androidx.test.ext.junit.rules.ActivityScenarioRule
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import androidx.test.filters.MediumTest
+import androidx.test.rule.ActivityTestRule
 import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.ui.main.MainActivity
 import com.programmergabut.solatkuy.util.EspressoIdlingResource
@@ -23,11 +23,7 @@ import org.junit.runner.RunWith
 
 @RunWith(AndroidJUnit4::class)
 @HiltAndroidTest
-@MediumTest
 class MainFragmentTest{
-
-    @get:Rule
-    var activityRule = ActivityScenarioRule(MainActivity::class.java)
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
@@ -43,7 +39,12 @@ class MainFragmentTest{
     }
 
     @Test
-    fun test_visibility_FragmentMain(){
+    fun firstOpenFragmentMain(){
+
+        val activityScenario = ActivityScenario.launch(MainActivity::class.java)
+        activityScenario.onActivity {
+            it.findNavController(R.id.navHostFragment).navigate(R.id.fragmentMain)
+        }
 
         onView(withId(R.id.tv_view_city)).check(matches(isDisplayed()))
         onView(withId(R.id.tv_view_latitude)).check(matches(isDisplayed()))
@@ -59,16 +60,30 @@ class MainFragmentTest{
     }
 
     @Test
-    fun test_clickQuranQuote() {
+    fun clickQuranQuote() {
+
+        val activityScenario = ActivityScenario.launch(MainActivity::class.java)
+        activityScenario.onActivity {
+            it.findNavController(R.id.navHostFragment).navigate(R.id.fragmentMain)
+        }
+
         onView(withId(R.id.tv_quran_ayah_quote_click)).check(matches(isDisplayed()))
         onView(withId(R.id.tv_quran_ayah_quote_click)).perform(click())
+        Thread.sleep(2000)
 
         onView(withId(R.id.tv_quran_ayah_quote)).check(matches(isDisplayed()))
         onView(withId(R.id.tv_quran_ayah_quote)).perform(click())
+        Thread.sleep(2000)
     }
 
     @Test
-    fun test_clickCbPrayer(){
+    fun clickCbPrayer(){
+
+        val activityScenario = ActivityScenario.launch(MainActivity::class.java)
+        activityScenario.onActivity {
+            it.findNavController(R.id.navHostFragment).navigate(R.id.fragmentMain)
+        }
+
         onView(withId(R.id.cb_fajr)).check(matches(isCompletelyDisplayed()))
         onView(withId(R.id.cb_dhuhr)).check(matches(isCompletelyDisplayed()))
         onView(withId(R.id.cb_asr)).check(matches(isCompletelyDisplayed()))
@@ -82,10 +97,14 @@ class MainFragmentTest{
         onView(withId(R.id.cb_isha)).perform(click())
     }
 
-    /* @Test
-    fun test_refreshLayout(){
-        onView(withId(R.id.sl_main)).perform(click())
-    } */
+    @Test
+    fun refreshQuote(){
+        val activityScenario = ActivityScenario.launch(MainActivity::class.java)
+        activityScenario.onActivity {
+            it.findNavController(R.id.navHostFragment).navigate(R.id.fragmentMain)
+        }
+
+        onView(withId(R.id.iv_refresh)).perform(click())
+    }
 
 }
-

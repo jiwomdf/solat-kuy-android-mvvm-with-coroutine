@@ -85,11 +85,13 @@ class CompassFragment constructor(viewModelTest: FragmentCompassViewModel? = nul
                             it?.direction.toString().substring(0,6).trim() + "°"
                         else
                             it?.direction.toString()
-                    }}
+                    }
+                }
                 EnumStatus.LOADING -> {
                     tv_qibla_dir.text = getString(R.string.loading)
                 }
                 EnumStatus.ERROR -> tv_qibla_dir.text = getString(R.string.fetch_failed)
+                else -> {/* NO-OP*/}
             }
         })
     }
@@ -106,6 +108,7 @@ class CompassFragment constructor(viewModelTest: FragmentCompassViewModel? = nul
                 }
                 EnumStatus.LOADING -> {}
                 EnumStatus.ERROR -> {}
+                else -> {/* NO-OP*/}
             }
         })
     }

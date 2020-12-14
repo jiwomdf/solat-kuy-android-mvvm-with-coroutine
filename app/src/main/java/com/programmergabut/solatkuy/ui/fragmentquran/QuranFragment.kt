@@ -79,10 +79,10 @@ class QuranFragment(viewModelTest: QuranFragmentViewModel? = null) : BaseFragmen
     }
 
     private fun observeApi(){
-        viewModel.allSurahStatus.observe(viewLifecycleOwner, {
+        viewModel.allSurah.observe(viewLifecycleOwner, {
             when(it.status){
                 EnumStatus.SUCCESS -> {
-                    val datas = viewModel.allSurah.data as MutableList<Data>
+                    val datas = it?.data?.data as MutableList<Data>
                     allSurahAdapter.listData = datas
                     allSurahAdapter.notifyDataSetChanged()
 
@@ -94,8 +94,6 @@ class QuranFragment(viewModelTest: QuranFragmentViewModel? = null) : BaseFragmen
                     setVisibility(it.status)
                 }
                 else -> {/*NO-OP*/}
-            }.also {
-                viewModel.allSurahStatus.postValue(Resource.neutral())
             }
         })
 

@@ -96,13 +96,13 @@ class InfoFragment(viewModelTest: FragmentInfoViewModel? = null) : BaseFragment<
             }
         }) */
 
-        viewModel.prayerStatus.observe(viewLifecycleOwner, {
+        viewModel.prayer.observe(viewLifecycleOwner, {
 
             when(it.status){
                 EnumStatus.SUCCESS -> {
                     val sdf = SimpleDateFormat("dd", Locale.getDefault())
                     val currentDate = sdf.format(Date())
-                    val data = createTodayData(viewModel.prayer, currentDate)
+                    val data = createTodayData(it.data, currentDate)
                     val date = data?.date
                     val hijriDate = date?.hijri
                     val gregorianDate = date?.gregorian
@@ -126,7 +126,7 @@ class InfoFragment(viewModelTest: FragmentInfoViewModel? = null) : BaseFragment<
                 }
                 else -> {/* NO-OP */}
             }.also {
-                viewModel.prayerStatus.postValue(Resource.neutral())
+                //viewModel.prayer.postValue(Resource.neutral())
             }
         })
 

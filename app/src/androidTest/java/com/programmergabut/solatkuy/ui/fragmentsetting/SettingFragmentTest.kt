@@ -26,13 +26,11 @@ import org.junit.runner.RunWith
 @RunWith(AndroidJUnit4::class)
 @HiltAndroidTest
 class SettingFragmentTest{
-
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
 
     @Before
     fun setUp() {
-        hiltRule.inject()
         IdlingRegistry.getInstance().register(EspressoIdlingResource.espressoTestIdlingResource)
     }
 

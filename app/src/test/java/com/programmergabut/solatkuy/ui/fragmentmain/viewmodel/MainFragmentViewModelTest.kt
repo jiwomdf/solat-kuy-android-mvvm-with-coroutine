@@ -1,6 +1,7 @@
 package com.programmergabut.solatkuy.ui.fragmentmain.viewmodel
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.Observer
 import com.nhaarman.mockitokotlin2.mock
@@ -12,7 +13,10 @@ import com.programmergabut.solatkuy.ui.fragmentmain.FragmentMainViewModel
 import com.programmergabut.solatkuy.util.Resource
 import com.programmergabut.solatkuy.DummyRetValue
 import com.programmergabut.solatkuy.data.QuranRepositoryImpl
+import com.programmergabut.solatkuy.data.local.dao.NotifiedPrayerDao
+import com.programmergabut.solatkuy.data.local.localentity.MsApi1
 import com.programmergabut.solatkuy.data.local.localentity.MsSetting
+import com.programmergabut.solatkuy.data.remote.RemoteDataSourceAladhan
 import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonEn.ReadSurahEnResponse
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
@@ -25,6 +29,7 @@ import org.mockito.Mock
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.verify
 import org.mockito.junit.MockitoJUnitRunner
+
 
 @ExperimentalCoroutinesApi
 @RunWith(MockitoJUnitRunner::class)
@@ -44,7 +49,6 @@ class MainFragmentViewModelTest {
     @Mock
     private lateinit var quranRepositoryImpl: QuranRepositoryImpl
 
-
     private val msApi1 = DummyArgument.msApi1
     private val surahID = DummyArgument.surahID
     private val mapPrayer = DummyArgument.getMapPrayer()
@@ -63,6 +67,7 @@ class MainFragmentViewModelTest {
         //given
         val observer = mock<Observer<Resource<List<NotifiedPrayer>>>>()
         val dummyNotifiedPrayer = Resource.success(DummyRetValue.getNotifiedPrayer())
+
         `when`(prayerRepositoryImpl.syncNotifiedPrayer(msApi1)).thenReturn(dummyNotifiedPrayer.data)
 
         //when
