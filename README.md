@@ -14,6 +14,7 @@ created with:
 - Motion Layout
 - Material Design 
 - Testing with Mockito, espresso, & Junit4
+- minifyEnabled
 
 Feel free to see and contribute
 
