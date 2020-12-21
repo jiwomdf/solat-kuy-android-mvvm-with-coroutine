@@ -1,39 +1,40 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.cardview.widget.CardView
-    android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    app:cardCornerRadius="@dimen/medium_margin"
+<layout
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools">
 
-
-    <LinearLayout
+    <androidx.cardview.widget.CardView
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/dark_700"
-        android:orientation="vertical">
+        app:cardCornerRadius="@dimen/medium_margin">
 
-        <TextView
-            android:id="@+id/tv_quran_ayah_quote_click"
+        <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/medium_margin"
-            android:layout_marginTop="@dimen/medium_margin"
-            android:layout_marginEnd="@dimen/medium_margin"
-            android:layout_marginBottom="@dimen/large_margin"
-            android:layout_gravity="center"
-            tools:text="Extol thy Sustainer's limitless glory, and praise Him, and seek His forgiveness" />
+            android:background="@color/dark_700"
+            android:orientation="vertical">
 
-        <TextView
-            android:id="@+id/tv_quran_ayah_quote"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/medium_margin"
-            android:layout_marginTop="@dimen/medium_margin"
-            android:layout_marginEnd="@dimen/medium_margin"
-            android:layout_marginBottom="@dimen/small_margin"
-            tools:text="Extol thy Sustainer's limitless glory, and praise Him, and seek His forgiveness: for, behold, He is ever an acceptor of repentance. - QS An-nasr ayat 3" />
+            <TextView
+                android:id="@+id/tv_quran_ayah_quote_click"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/medium_margin"
+                android:layout_marginTop="@dimen/medium_margin"
+                android:layout_marginEnd="@dimen/medium_margin"
+                android:layout_marginBottom="@dimen/large_margin"
+                android:layout_gravity="center"
+                tools:text="Extol thy Sustainer's limitless glory, and praise Him, and seek His forgiveness" />
+
+            <TextView
+                android:id="@+id/tv_quran_ayah_quote"
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginStart="@dimen/medium_margin"
+                android:layout_marginTop="@dimen/medium_margin"
+                android:layout_marginEnd="@dimen/medium_margin"
+                android:layout_marginBottom="@dimen/small_margin"
+                tools:text="Extol thy Sustainer's limitless glory, and praise Him, and seek His forgiveness: for, behold, He is ever an acceptor of repentance. - QS An-nasr ayat 3" />
 
             <LinearLayout
                 android:layout_width="wrap_content"
@@ -56,7 +57,7 @@
                     android:src="@drawable/ic_baseline_refresh_24"/>
 
             </LinearLayout>
-
         </LinearLayout>
+    </androidx.cardview.widget.CardView>
 
-</androidx.cardview.widget.CardView>
+</layout>

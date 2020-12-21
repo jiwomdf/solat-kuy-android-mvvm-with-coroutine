@@ -4,7 +4,9 @@ import com.google.gson.Gson
 import com.google.gson.GsonBuilder
 import com.programmergabut.solatkuy.BuildConfig
 import com.programmergabut.solatkuy.data.remote.RemoteDataSourceAladhan
+import com.programmergabut.solatkuy.data.remote.RemoteDataSourceAladhanImpl
 import com.programmergabut.solatkuy.data.remote.RemoteDataSourceApiAlquran
+import com.programmergabut.solatkuy.data.remote.RemoteDataSourceApiAlquranImpl
 import com.programmergabut.solatkuy.data.remote.api.*
 import dagger.Module
 import dagger.Provides
@@ -106,12 +108,19 @@ object NetworkModule {
 
     @Provides
     @Singleton
-    fun provideRemoteDataSourceAladhan(remoteDataSourceAladhan: RemoteDataSourceAladhan): RemoteDataSourceAladhan =
-        remoteDataSourceAladhan
+    fun provideRemoteDataSourceAladhan(
+        qiblaApiService: QiblaApiService, calendarApiService: CalendarApiService
+    ) = RemoteDataSourceAladhanImpl(qiblaApiService, calendarApiService) as RemoteDataSourceAladhan
 
     @Provides
     @Singleton
-    fun provideRemoteDataSourceApiAlquran(remoteDataSourceApiAlquran: RemoteDataSourceApiAlquran): RemoteDataSourceApiAlquran =
-        remoteDataSourceApiAlquran
+    fun provideRemoteDataSourceApiAlquran(
+        readSurahEnService: ReadSurahEnService,
+        allSurahService: AllSurahService,
+        readSurahArService: ReadSurahArService
+    ) = RemoteDataSourceApiAlquranImpl(
+        readSurahEnService,
+        allSurahService,
+        readSurahArService) as RemoteDataSourceApiAlquran
 
 }

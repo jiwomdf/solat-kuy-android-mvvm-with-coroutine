@@ -11,28 +11,7 @@ import kotlinx.coroutines.launch
 
 class MainActivityViewModel @ViewModelInject constructor(val prayerRepositoryImpl: PrayerRepositoryImpl) : ViewModel(){
 
-
-    /* private var _msSetting = MutableLiveData<Resource<MsSetting>>()
-    val msSetting: LiveData<Resource<MsSetting>>
-        get() = _msSetting */
-
     val msSetting = prayerRepositoryImpl.getMsSetting()
-    /* viewModelScope.launch {
-
-        _msSetting.postValue(Resource.loading(null))
-
-        repository.getMsSetting().let {
-            _msSetting.postValue(Resource.success(it.value))
-        }
-    } */
-
-    /* fun updateMsApi1(msApi1: MsApi1) = viewModelScope.launch {
-        repository?.updateMsApi1(msApi1, this)
-    } */
-
-    /* fun updateSetting(msSetting: MsSetting) = viewModelScope.launch {
-        repository?.updateMsSetting(msSetting.isHasOpenApp, this)
-    } */
 
     var errStatus = MutableLiveData<EnumStatus>()
     private var errMessage = ""

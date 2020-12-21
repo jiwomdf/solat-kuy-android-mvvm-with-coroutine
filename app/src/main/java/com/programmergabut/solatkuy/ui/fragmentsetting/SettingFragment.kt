@@ -8,11 +8,13 @@ import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationManager
+import android.os.Bundle
 import android.os.Looper
+import android.view.LayoutInflater
 import android.view.View
-import android.widget.TextView
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
+import androidx.databinding.DataBindingUtil
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
@@ -22,14 +24,15 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.base.BaseFragment
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
-import com.programmergabut.solatkuy.util.EnumStatus
+import com.programmergabut.solatkuy.databinding.FragmentSettingBinding
+import com.programmergabut.solatkuy.databinding.LayoutAboutAuthorBinding
+import com.programmergabut.solatkuy.databinding.LayoutBottomsheetBygpsBinding
+import com.programmergabut.solatkuy.databinding.LayoutBottomsheetBylatitudelongitudeBinding
 import com.programmergabut.solatkuy.util.EnumConfig
+import com.programmergabut.solatkuy.util.EnumStatus
 import com.programmergabut.solatkuy.util.helper.LocationHelper
 import dagger.hilt.android.AndroidEntryPoint
 import es.dmoral.toasty.Toasty
-import kotlinx.android.synthetic.main.fragment_setting.*
-import kotlinx.android.synthetic.main.layout_bottomsheet_bygps.view.*
-import kotlinx.android.synthetic.main.layout_bottomsheet_bylatitudelongitude.view.*
 import org.joda.time.LocalDate
 
 /*
@@ -37,24 +40,35 @@ import org.joda.time.LocalDate
  */
 
 @AndroidEntryPoint
-class SettingFragment(viewModelTest: FragmentSettingViewModel? = null) : BaseFragment<FragmentSettingViewModel>(
+class SettingFragment(viewModelTest: FragmentSettingViewModel? = null) : BaseFragment<FragmentSettingBinding, FragmentSettingViewModel>(
     R.layout.fragment_setting, FragmentSettingViewModel::class.java, viewModelTest
 ) {
 
     private lateinit var dialog: BottomSheetDialog
     private lateinit var mFusedLocationClient: FusedLocationProviderClient
     private val ALL_PERMISSIONS = 101
-    lateinit var dialogView: View
 
-    override fun setFirstView() {
+    private lateinit var dialogGpsBinding: LayoutBottomsheetBygpsBinding
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         dialog = BottomSheetDialog(requireContext())
-    }
-    override fun setObserver() {
+        inflateBinding()
         subscribeObserversDB()
         observeErrorMsg()
     }
+
     override fun setListener() {
+        super.setListener()
         btnSetLatitudeLongitude()
+    }
+
+    private fun inflateBinding() {
+        dialogGpsBinding = DataBindingUtil.inflate(
+            LayoutInflater.from(requireContext()),
+            R.layout.layout_bottomsheet_bygps, null, true
+        )
     }
 
     private fun subscribeObserversDB() {
@@ -64,9 +78,9 @@ class SettingFragment(viewModelTest: FragmentSettingViewModel? = null) : BaseFra
                     val retVal = it.data
                     if(retVal != null){
                         val city = LocationHelper.getCity(requireContext(), retVal.latitude.toDouble(), retVal.longitude.toDouble())
-                        tv_view_latitude.text = retVal.latitude + " °S"
-                        tv_view_longitude.text = retVal.longitude + " °E"
-                        tv_view_city.text = city ?: EnumConfig.CITY_NOT_FOUND_STR
+                        binding.tvViewLatitude.text = retVal.latitude + " °S"
+                        binding.tvViewLongitude.text = retVal.longitude + " °E"
+                        binding.tvViewCity.text = city ?: EnumConfig.CITY_NOT_FOUND_STR
                     }
                 }
                 else -> {/*NO-OP*/}
@@ -90,46 +104,50 @@ class SettingFragment(viewModelTest: FragmentSettingViewModel? = null) : BaseFra
                     Toasty.error(requireContext(), errMsg, Toasty.LENGTH_SHORT).show()
                 }
                 else -> {/*NO-OP*/}
-            }.also {
-                viewModel.errStatus.postValue(EnumStatus.NEUTRAL)
             }
         })
     }
 
     /* init first load data */
     private fun btnSetLatitudeLongitude(){
-        btn_byLatitudeLongitude.setOnClickListener {
-            dialogView = layoutInflater.inflate(R.layout.layout_bottomsheet_bylatitudelongitude,null)
-            dialog.setContentView(dialogView)
+
+        binding.btnByLatitudeLongitude.setOnClickListener {
+            val dialogLatLngBinding = DataBindingUtil.inflate<LayoutBottomsheetBylatitudelongitudeBinding>(
+                LayoutInflater.from(requireContext()),
+                R.layout.layout_bottomsheet_bylatitudelongitude, null, true
+            )
+            dialog.setContentView(dialogLatLngBinding.root)
             dialog.show()
 
-            dialogView.btn_proceedByLL.setOnClickListener{
-                val latitude = dialogView.et_llDialog_latitude.text.toString().trim()
-                val longitude = dialogView.et_llDialog_longitude.text.toString().trim()
+            dialogLatLngBinding.btnProceedByLL.setOnClickListener{
+                val latitude = dialogLatLngBinding.etLlDialogLatitude.text.toString().trim()
+                val longitude = dialogLatLngBinding.etLlDialogLongitude.text.toString().trim()
 
                 insertLocationSettingToDb(latitude, longitude)
             }
         }
 
-        btn_byGps.setOnClickListener{
-            dialogView = layoutInflater.inflate(R.layout.layout_bottomsheet_bygps,null)
-            dialog.setContentView(dialogView)
+        binding.btnByGps.setOnClickListener{
+            dialog.setContentView(dialogGpsBinding.root)
             dialog.show()
 
-            getGPSLocation(dialogView)
+            getGPSLocation(dialogGpsBinding)
 
-            dialogView.btn_proceedByGps.setOnClickListener{
-                val latitude = dialogView.tv_gpsDialog_latitude.text.toString().trim()
-                val longitude = dialogView.tv_gpsDialog_longitude.text.toString().trim()
+            dialogGpsBinding.btnProceedByGps.setOnClickListener{
+                val latitude = dialogGpsBinding.tvGpsDialogLatitude.text.toString().trim()
+                val longitude = dialogGpsBinding.tvGpsDialogLongitude.text.toString().trim()
 
                 insertLocationSettingToDb(latitude, longitude)
             }
         }
 
-        btn_seeAuthor.setOnClickListener{
+        binding.btnSeeAuthor.setOnClickListener{
             val dialog = Dialog(requireContext())
-            dialogView = layoutInflater.inflate(R.layout.layout_about_author,null)
-            dialog.setContentView(dialogView)
+            val dialogAuthorBinding = DataBindingUtil.inflate<LayoutAboutAuthorBinding>(
+                LayoutInflater.from(requireContext()),
+                R.layout.layout_about_author, null, true
+            )
+            dialog.setContentView(dialogAuthorBinding.root)
             dialog.show()
         }
     }
@@ -157,7 +175,7 @@ class SettingFragment(viewModelTest: FragmentSettingViewModel? = null) : BaseFra
 
         if(requestCode == ALL_PERMISSIONS){
             if(grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)
-                onUpdateLocationListener()
+                onUpdateLocationListener(dialogGpsBinding)
             else
                 Toasty.error(requireContext(), "All Permission Denied", Toast.LENGTH_SHORT).show()
         }
@@ -184,10 +202,10 @@ class SettingFragment(viewModelTest: FragmentSettingViewModel? = null) : BaseFra
 
 
     /* supporting function */
-    private fun getGPSLocation(dialogView: View){
+    private fun getGPSLocation(dialogGpsBinding: LayoutBottomsheetBygpsBinding){
 
-        dialogView.findViewById<TextView>(R.id.tv_view_latitude).visibility = View.GONE
-        dialogView.findViewById<TextView>(R.id.tv_view_longitude).visibility = View.GONE
+        dialogGpsBinding.tvViewLatitude.visibility = View.GONE
+        dialogGpsBinding.tvViewLongitude.visibility = View.GONE
 
         if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
             || ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
@@ -195,8 +213,8 @@ class SettingFragment(viewModelTest: FragmentSettingViewModel? = null) : BaseFra
             mFusedLocationClient = getFusedLocationProviderClient(requireContext())
 
             //onSuccessListener()
-            onFailedListener()
-            onUpdateLocationListener()
+            onFailedListener(dialogGpsBinding)
+            onUpdateLocationListener(dialogGpsBinding)
         }
         else {
             // TODO: Consider calling
@@ -211,7 +229,7 @@ class SettingFragment(viewModelTest: FragmentSettingViewModel? = null) : BaseFra
         }
     }
 
-    private fun onFailedListener() {
+    private fun onFailedListener(dialogGpsBinding: LayoutBottomsheetBygpsBinding) {
         val lm: LocationManager = requireContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
         var gpsEnabled = false
         var networkEnabled = false
@@ -225,9 +243,9 @@ class SettingFragment(viewModelTest: FragmentSettingViewModel? = null) : BaseFra
         } catch (ex: java.lang.Exception) { }
 
         if (!gpsEnabled && !networkEnabled)
-            dialogView.tv_warning.text = getString(R.string.please_enable_your_location)
+            dialogGpsBinding.tvWarning.text = getString(R.string.please_enable_your_location)
         else
-            dialogView.tv_warning.text = getString(R.string.loading)
+            dialogGpsBinding.tvWarning.text = getString(R.string.loading)
     }
 
     /* private fun onSuccessListener(){
@@ -245,7 +263,7 @@ class SettingFragment(viewModelTest: FragmentSettingViewModel? = null) : BaseFra
         }
     }*/
 
-    private fun onUpdateLocationListener(){
+    private fun onUpdateLocationListener(dialogGpsBinding: LayoutBottomsheetBygpsBinding) {
         val mLocationRequest: LocationRequest?
         mLocationRequest = LocationRequest()
         mLocationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
@@ -267,7 +285,6 @@ class SettingFragment(viewModelTest: FragmentSettingViewModel? = null) : BaseFra
         getFusedLocationProviderClient(requireContext()).requestLocationUpdates(mLocationRequest, object : LocationCallback() {
 
             override fun onLocationResult(locationResult: LocationResult) {
-                // do work here
                 onLocationChanged(locationResult.lastLocation)
             }
 
@@ -275,13 +292,13 @@ class SettingFragment(viewModelTest: FragmentSettingViewModel? = null) : BaseFra
 
                 if(it == null) return
 
-                dialogView.iv_warning.visibility = View.GONE
-                dialogView.tv_warning.visibility = View.GONE
-                dialogView.findViewById<TextView>(R.id.tv_view_latitude).visibility = View.VISIBLE
-                dialogView.findViewById<TextView>(R.id.tv_view_longitude).visibility = View.VISIBLE
+                dialogGpsBinding.ivWarning.visibility = View.GONE
+                dialogGpsBinding.tvWarning.visibility = View.GONE
+                dialogGpsBinding.tvViewLatitude.visibility = View.VISIBLE
+                dialogGpsBinding.tvViewLongitude.visibility = View.VISIBLE
 
-                dialogView.tv_gpsDialog_latitude.text = it.latitude.toString()
-                dialogView.tv_gpsDialog_longitude.text= it.longitude.toString()
+                dialogGpsBinding.tvGpsDialogLatitude.text = it.latitude.toString()
+                dialogGpsBinding.tvGpsDialogLongitude.text= it.longitude.toString()
 
             }
         }, Looper.myLooper())

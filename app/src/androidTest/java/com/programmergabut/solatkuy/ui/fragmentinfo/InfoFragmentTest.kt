@@ -10,7 +10,7 @@ import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.programmergabut.solatkuy.R
-import com.programmergabut.solatkuy.ui.DummyRetval
+import com.programmergabut.solatkuy.ui.DummyFragmentInfoRetval
 import com.programmergabut.solatkuy.ui.main.MainActivity
 import com.programmergabut.solatkuy.util.EspressoIdlingResource
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -65,13 +65,13 @@ class InfoFragmentTest{
             it.findNavController(R.id.navHostFragment).navigate(R.id.fragmentInfo)
         }
 
-        val topCard = DummyRetval.fragmentInfoTopCard()
+        val topCard = DummyFragmentInfoRetval.fragmentInfoTopCard()
         onView(ViewMatchers.withId(R.id.tv_imsak_info_title)).check(matches(withText(topCard["tv_imsak_info_title"])))
         onView(ViewMatchers.withId(R.id.tv_imsak_date)).check(matches(withText(topCard["tv_imsak_date"])))
         onView(ViewMatchers.withId(R.id.tv_city)).check(matches(withText(topCard["tv_city"])))
         onView(ViewMatchers.withId(R.id.tv_imsak_time)).check(matches(withText(topCard["tv_imsak_time"])))
 
-        val dateCard = DummyRetval.fragmentInfoGregorianHijriCard()
+        val dateCard = DummyFragmentInfoRetval.fragmentInfoGregorianHijriCard()
         onView(ViewMatchers.withId(R.id.tv_gregorian_date)).check(matches(withText(dateCard["tv_gregorian_date"])))
         onView(ViewMatchers.withId(R.id.tv_hijri_date)).check(matches(withText(dateCard["tv_hijri_date"])))
         onView(ViewMatchers.withId(R.id.tv_gregorian_month)).check(matches(withText(dateCard["tv_gregorian_month"])))

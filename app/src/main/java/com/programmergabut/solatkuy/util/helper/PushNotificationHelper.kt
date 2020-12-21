@@ -16,7 +16,7 @@ import java.util.*
  * Created by Katili Jiwo Adi Wiyono on 02/04/20.
  */
 
-class PushNotificationHelper(context: Context, selList: MutableList<NotifiedPrayer>, mCityName: String): ContextWrapper(context) {
+class PushNotificationHelper(context: Context, selectedList: MutableList<NotifiedPrayer>, mCityName: String): ContextWrapper(context) {
 
     private var mCityName: String? = null
 
@@ -26,9 +26,9 @@ class PushNotificationHelper(context: Context, selList: MutableList<NotifiedPray
         val intent = Intent(context, PrayerBroadcastReceiver::class.java)
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
-        val listPrayerBundle = bundleCreator(selList)
+        val listPrayerBundle = bundleCreator(selectedList)
 
-        val newList = selList.filter { x -> x.prayerName !=  EnumConfig.SUNRISE} as MutableList<NotifiedPrayer>
+        val newList = selectedList.filter { x -> x.prayerName !=  EnumConfig.SUNRISE} as MutableList<NotifiedPrayer>
 
         newList.sortBy { x -> x.prayerID }
         newList.forEachIndexed { _, it ->
@@ -106,7 +106,7 @@ class PushNotificationHelper(context: Context, selList: MutableList<NotifiedPray
         } */
     }
 
-   private fun bundleCreator(selList: MutableList<NotifiedPrayer>): Bundle {
+   private fun bundleCreator(selectedList: MutableList<NotifiedPrayer>): Bundle {
 
         val listPID = arrayListOf<Int>()
         val listPName = arrayListOf<String>()
@@ -114,7 +114,7 @@ class PushNotificationHelper(context: Context, selList: MutableList<NotifiedPray
         val listPIsNotified = arrayListOf<Int>()
         val listPCity = arrayListOf<String>()
 
-        selList.forEach {
+        selectedList.forEach {
             listPID.add(it.prayerID)
             listPName.add(it.prayerName)
             listPTime.add(it.prayerTime)

@@ -72,11 +72,11 @@ abstract class SolatKuyRoom: RoomDatabase() {
             msApi1Dao.insertMsApi1(
                 MsApi1(
                     1,
-                    "0",
-                    "0",
-                    "3",
-                    "3",
-                    "2020"
+                    EnumConfig.START_LAT,
+                    EnumConfig.START_LNG,
+                    EnumConfig.START_METHOD,
+                    EnumConfig.START_MONTH,
+                    EnumConfig.START_YEAR
                 )
             )
         }
@@ -88,42 +88,42 @@ abstract class SolatKuyRoom: RoomDatabase() {
                 NotifiedPrayer(
                     EnumConfig.FAJR,
                     true,
-                    "00:00"
+                    EnumConfig.FAJR_TIME
                 )
             )
             notifiedPrayerDao.insertNotifiedPrayer(
                 NotifiedPrayer(
                     EnumConfig.DHUHR,
                     true,
-                    "00:00"
+                    EnumConfig.DHUHR_TIME
                 )
             )
             notifiedPrayerDao.insertNotifiedPrayer(
                 NotifiedPrayer(
                     EnumConfig.ASR,
                     true,
-                    "00:00"
+                    EnumConfig.ASR_TIME
                 )
             )
             notifiedPrayerDao.insertNotifiedPrayer(
                 NotifiedPrayer(
                     EnumConfig.MAGHRIB,
                     true,
-                    "00:00"
+                    EnumConfig.MAGHRIB_TIME
                 )
             )
             notifiedPrayerDao.insertNotifiedPrayer(
                 NotifiedPrayer(
                     EnumConfig.ISHA,
                     true,
-                    "00:00"
+                    EnumConfig.ISHA_TIME
                 )
             )
             notifiedPrayerDao.insertNotifiedPrayer(
                 NotifiedPrayer(
                     EnumConfig.SUNRISE,
                     true,
-                    "00:00"
+                    EnumConfig.SUNRISE_TIME
                 )
             )
         }

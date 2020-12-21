@@ -8,10 +8,6 @@ data class Resource<out T>(val status: EnumStatus, val data: T?, val message:Str
 
     companion object{
 
-        fun<T> neutral(): Resource<T>{
-            return Resource(EnumStatus.NEUTRAL, null, null)
-        }
-
         fun<T> success(data:T?): Resource<T>{
             return Resource(EnumStatus.SUCCESS,data, null)
         }
@@ -29,7 +25,6 @@ data class Resource<out T>(val status: EnumStatus, val data: T?, val message:Str
 }
 
 enum class EnumStatus {
-    NEUTRAL,
     SUCCESS,
     ERROR,
     LOADING

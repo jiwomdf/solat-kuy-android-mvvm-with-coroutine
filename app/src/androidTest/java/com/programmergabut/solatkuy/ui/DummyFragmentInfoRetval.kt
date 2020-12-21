@@ -2,7 +2,7 @@ package com.programmergabut.solatkuy.ui
 
 import com.programmergabut.solatkuy.R
 
-object DummyRetval {
+object DummyFragmentInfoRetval {
 
     /* Fragment Info
     * Last update 08 July 2020

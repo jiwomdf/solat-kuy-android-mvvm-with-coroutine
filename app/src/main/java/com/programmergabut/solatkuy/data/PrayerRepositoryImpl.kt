@@ -20,7 +20,7 @@ import javax.inject.Inject
  */
 
 class PrayerRepositoryImpl @Inject constructor(
-    private val remoteDataSourceAladhan: RemoteDataSourceAladhanImpl,
+    private val remoteDataSourceAladhan: RemoteDataSourceAladhan,
     private val notifiedPrayerDao: NotifiedPrayerDao,
     private val msApi1Dao: MsApi1Dao,
     private val msSettingDao: MsSettingDao,
@@ -95,7 +95,7 @@ class PrayerRepositoryImpl @Inject constructor(
         }
         catch (ex :Exception){
             Log.d("<Error>","PrayerRepository, not connected to internet and using the offline data")
-            return emptyList()
+            return notifiedPrayerDao.getListNotifiedPrayerSync()
         }
 
         return notifiedPrayerDao.getListNotifiedPrayerSync()

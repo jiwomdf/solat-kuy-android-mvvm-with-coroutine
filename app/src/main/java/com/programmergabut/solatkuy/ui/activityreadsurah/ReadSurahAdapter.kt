@@ -4,16 +4,17 @@ import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonAr.Ayah
-import kotlinx.android.synthetic.main.layout_read_surah.view.*
+import com.programmergabut.solatkuy.databinding.ListReadSurahBinding
 
 class ReadSurahAdapter(
-    val onClick: (Ayah, View) -> Unit,
-    val setTheme: (View) -> Unit,
+    val onClickFavAyah: (Ayah, ListReadSurahBinding) -> Unit,
+    val setTheme: (ListReadSurahBinding) -> Unit,
     val isFav: Drawable,
     val isNotFav: Drawable,
     val accentColor: Int
@@ -32,37 +33,42 @@ class ReadSurahAdapter(
         set(value) = differ.submitList(value)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReadSurahViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.layout_read_surah, parent, false)
+        val binding = DataBindingUtil.inflate<ListReadSurahBinding>(
+            LayoutInflater.from(parent.context),
+            R.layout.list_read_surah, parent, false
+        )
 
-        return ReadSurahViewHolder(view)
+        return ReadSurahViewHolder(binding)
     }
 
     override fun getItemCount(): Int = listAyah.size
 
     override fun onBindViewHolder(holder: ReadSurahViewHolder, position: Int) = holder.bind(listAyah[position])
 
-    inner class ReadSurahViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
-        fun bind(data: Ayah){
-            itemView.tv_listFav_ar.text = data.text
-            itemView.tv_listFav_en.text = data.textEn
-            itemView.tv_listFav_num.text = data.numberInSurah.toString()
+    inner class ReadSurahViewHolder(private val binding: ListReadSurahBinding): RecyclerView.ViewHolder(binding.root) {
 
-            setTheme(itemView)
+        fun bind(data: Ayah){
+
+            binding.tvListFavAr.text = data.text
+            binding.tvListFavEn.text = data.textEn
+            binding.tvListFavNum.text = data.numberInSurah.toString()
+
+            setTheme(binding)
 
             if(data.isFav)
-                itemView.iv_listFav_fav.setImageDrawable(isFav)
+                binding.ivListFavFav.setImageDrawable(isFav)
             else
-                itemView.iv_listFav_fav.setImageDrawable(isNotFav)
+                binding.ivListFavFav.setImageDrawable(isNotFav)
 
             if(data.isLastRead){
-                itemView.cl_vh_readSurah.setBackgroundColor(accentColor)
-                /* itemView.tv_listFav_ar.setTextColor(whiteColor)
-                itemView.tv_listFav_en.setTextColor(whiteColor)
-                itemView.tv_listFav_num.setTextColor(whiteColor) */
+                binding.clVhReadSurah.setBackgroundColor(accentColor)
+                /* binding.tv_listFav_ar.setTextColor(whiteColor)
+                binding.tv_listFav_en.setTextColor(whiteColor)
+                binding.tv_listFav_num.setTextColor(whiteColor) */
             }
 
-            itemView.iv_listFav_fav.setOnClickListener {
-                onClick(data, itemView)
+            binding.ivListFavFav.setOnClickListener {
+                onClickFavAyah(data, binding)
             }
 
         }

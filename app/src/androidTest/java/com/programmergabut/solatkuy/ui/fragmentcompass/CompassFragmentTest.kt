@@ -1,17 +1,7 @@
 package com.programmergabut.solatkuy.ui.fragmentcompass
 
-import androidx.navigation.findNavController
-import androidx.test.core.app.ActivityScenario
-import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingRegistry
-import androidx.test.espresso.assertion.ViewAssertions.matches
-import androidx.test.espresso.matcher.ViewMatchers
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
-import androidx.test.espresso.matcher.ViewMatchers.withText
 import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.programmergabut.solatkuy.R
-import com.programmergabut.solatkuy.ui.DummyRetval
-import com.programmergabut.solatkuy.ui.main.MainActivity
 import com.programmergabut.solatkuy.util.EspressoIdlingResource
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest

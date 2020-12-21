@@ -1,0 +1,44 @@
+<?xml version="1.0" encoding="utf-8"?>
+<layout
+    xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:tools="http://schemas.android.com/tools">
+
+    <LinearLayout
+        android:layout_width="wrap_content"
+        android:layout_height="wrap_content"
+        android:layout_margin="@dimen/small_margin"
+        android:orientation="vertical">
+
+        <TextView
+            android:id="@+id/tv_ah_ar"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:layout_marginTop="@dimen/small_margin"
+            android:textSize="@dimen/large_text_size"
+            tools:text="الْوَالِي" />
+
+        <TextView
+            android:id="@+id/tv_ah_en"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textStyle="bold"
+            android:layout_marginTop="@dimen/small_margin"
+            android:layout_marginBottom="@dimen/small_margin"
+            android:textSize="@dimen/small_text_size"
+            tools:text="Al Waali" />
+
+        <TextView
+            android:id="@+id/tv_ah_num"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_gravity="center"
+            android:textStyle="bold"
+            android:layout_marginBottom="@dimen/small_margin"
+            android:textSize="@dimen/small_text_size"
+            tools:text="1" />
+
+    </LinearLayout>
+
+</layout>

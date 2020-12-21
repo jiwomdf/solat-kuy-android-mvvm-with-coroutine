@@ -22,13 +22,10 @@ class RemoteDataSourceApiAlquranImpl @Inject constructor(
     }
 
     override suspend fun fetchAllSurah(): AllSurahResponse {
-
         return allSurahService.fetchAllSurah()
     }
 
     override suspend fun fetchReadSurahAr(surahID: Int): ReadSurahArResponse {
-        //EspressoIdlingResource.increment()
-
         val listAyah: MutableList<Ayah>
 
         val retValAr = readSurahArService.fetchReadSurahAr(surahID)
@@ -60,8 +57,6 @@ class RemoteDataSourceApiAlquranImpl @Inject constructor(
         Log.d("fetchReadSurahAr", "listAyah")
 
         return retValAr
-
-        //EspressoIdlingResource.decrement()
     }
 
 }

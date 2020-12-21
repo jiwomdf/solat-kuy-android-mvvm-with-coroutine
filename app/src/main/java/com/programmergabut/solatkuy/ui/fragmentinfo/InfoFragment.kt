@@ -1,5 +1,7 @@
 package com.programmergabut.solatkuy.ui.fragmentinfo
 
+import android.os.Bundle
+import android.view.View
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.programmergabut.solatkuy.R
@@ -7,16 +9,13 @@ import com.programmergabut.solatkuy.base.BaseFragment
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
 import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.Data
 import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.PrayerResponse
-import com.programmergabut.solatkuy.ui.fragmentcompass.FragmentCompassViewModel
+import com.programmergabut.solatkuy.databinding.FragmentInfoBinding
 import com.programmergabut.solatkuy.ui.fragmentinfo.adapter.DuaCollectionAdapter
-import com.programmergabut.solatkuy.util.EnumStatus
-import com.programmergabut.solatkuy.util.Resource
 import com.programmergabut.solatkuy.util.EnumConfig
-import com.programmergabut.solatkuy.util.EnumConfig.Companion.IS_TESTING
+import com.programmergabut.solatkuy.util.EnumStatus
 import com.programmergabut.solatkuy.util.generator.DuaGenerator
 import com.programmergabut.solatkuy.util.helper.LocationHelper
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_info.*
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -25,29 +24,31 @@ import java.util.*
  */
 
 @AndroidEntryPoint
-class InfoFragment(viewModelTest: FragmentInfoViewModel? = null) : BaseFragment<FragmentInfoViewModel>(
+class InfoFragment(viewModelTest: FragmentInfoViewModel? = null) : BaseFragment<FragmentInfoBinding, FragmentInfoViewModel>(
     R.layout.fragment_info, FragmentInfoViewModel::class.java, viewModelTest
 ), SwipeRefreshLayout.OnRefreshListener {
 
     private lateinit var duaCollectionAdapter: DuaCollectionAdapter
     private var mMsApi1: MsApi1? = null
 
-    override fun setFirstView() {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         initRvDuaCollection()
-    }
-    override fun setObserver() {
         observeDB()
         observeAPI()
     }
+
     override fun setListener() {
-        sl_info.setOnRefreshListener(this)
+        super.setListener()
+        binding.slInfo.setOnRefreshListener(this)
     }
 
     private fun initRvDuaCollection() {
         duaCollectionAdapter = DuaCollectionAdapter(requireContext())
         duaCollectionAdapter.setData(DuaGenerator.getListDua())
 
-        rvDuaCollection.apply {
+        binding.rvDuaCollection.apply {
             adapter = duaCollectionAdapter
             layoutManager = LinearLayoutManager(this@InfoFragment.context)
             setHasFixedSize(true)
@@ -65,7 +66,7 @@ class InfoFragment(viewModelTest: FragmentInfoViewModel? = null) : BaseFragment<
                     mMsApi1 = retval.data!!
                     val city = LocationHelper.getCity(requireContext(), retval.data.latitude.toDouble(), retval.data.longitude.toDouble())
 
-                    tv_city.text = city ?: EnumConfig.CITY_NOT_FOUND_STR
+                    binding.tvCity.text = city ?: EnumConfig.CITY_NOT_FOUND_STR
                     fetchPrayerApi(retval.data)
                 }
                 EnumStatus.ERROR -> showBottomSheet(isCancelable = false, isFinish = true)
@@ -107,15 +108,14 @@ class InfoFragment(viewModelTest: FragmentInfoViewModel? = null) : BaseFragment<
                     val hijriDate = date?.hijri
                     val gregorianDate = date?.gregorian
 
-                    tv_imsak_date.text = date?.readable
-                    tv_imsak_time.text = data?.timings?.imsak
-
-                    tv_gregorian_date.text = gregorianDate?.date
-                    tv_hijri_date.text = hijriDate?.date
-                    tv_gregorian_month.text = gregorianDate?.month?.en
-                    tv_hijri_month.text = hijriDate?.month?.en + " / " + hijriDate?.month?.ar
-                    tv_gregorian_day.text = gregorianDate?.weekday?.en
-                    tv_hijri_day.text = hijriDate?.weekday?.en + " / " + hijriDate?.weekday?.ar
+                    binding.tvImsakDate.text = date?.readable
+                    binding.tvImsakTime.text = data?.timings?.imsak
+                    binding.tvGregorianDate.text = gregorianDate?.date
+                    binding.tvHijriDate.text = hijriDate?.date
+                    binding.tvGregorianMonth.text = gregorianDate?.month?.en
+                    binding.tvHijriMonth.text = hijriDate?.month?.en + " / " + hijriDate?.month?.ar
+                    binding.tvGregorianDay.text = gregorianDate?.weekday?.en
+                    binding.tvHijriDay.text = hijriDate?.weekday?.en + " / " + hijriDate?.weekday?.ar
                 }
                 EnumStatus.LOADING -> {
                     setState(it.status)
@@ -124,9 +124,6 @@ class InfoFragment(viewModelTest: FragmentInfoViewModel? = null) : BaseFragment<
                     showBottomSheet(description = getString(R.string.fetch_failed), isCancelable = true, isFinish = false)
                     setState(it.status)
                 }
-                else -> {/* NO-OP */}
-            }.also {
-                //viewModel.prayer.postValue(Resource.neutral())
             }
         })
 
@@ -136,24 +133,24 @@ class InfoFragment(viewModelTest: FragmentInfoViewModel? = null) : BaseFragment<
         when(status){
             EnumStatus.SUCCESS -> { }
             EnumStatus.LOADING -> {
-                tv_imsak_date.text = getString(R.string.loading)
-                tv_imsak_time.text = getString(R.string.loading)
-                tv_gregorian_date.text = getString(R.string.loading)
-                tv_hijri_date.text = getString(R.string.loading)
-                tv_gregorian_month.text = getString(R.string.loading)
-                tv_hijri_month.text = getString(R.string.loading)
-                tv_gregorian_day.text = getString(R.string.loading)
-                tv_hijri_day.text = getString(R.string.loading)
+                binding.tvImsakDate.text = getString(R.string.loading)
+                binding.tvImsakTime.text = getString(R.string.loading)
+                binding.tvGregorianDate.text = getString(R.string.loading)
+                binding.tvHijriDate.text = getString(R.string.loading)
+                binding.tvGregorianMonth.text = getString(R.string.loading)
+                binding.tvHijriMonth.text = getString(R.string.loading)
+                binding.tvGregorianDay.text = getString(R.string.loading)
+                binding.tvHijriDay.text = getString(R.string.loading)
             }
             EnumStatus.ERROR ->{
-                tv_imsak_date.text = getString(R.string.fetch_failed)
-                tv_imsak_time.text = getString(R.string.fetch_failed_sort)
-                tv_gregorian_date.text = getString(R.string.fetch_failed_sort)
-                tv_hijri_date.text = getString(R.string.fetch_failed_sort)
-                tv_gregorian_month.text = getString(R.string.fetch_failed_sort)
-                tv_hijri_month.text = getString(R.string.fetch_failed_sort)
-                tv_gregorian_day.text = getString(R.string.fetch_failed_sort)
-                tv_hijri_day.text = getString(R.string.fetch_failed_sort)
+                binding.tvImsakDate.text = getString(R.string.fetch_failed)
+                binding.tvImsakTime.text = getString(R.string.fetch_failed_sort)
+                binding.tvGregorianDate.text = getString(R.string.fetch_failed_sort)
+                binding.tvHijriDate.text = getString(R.string.fetch_failed_sort)
+                binding.tvGregorianMonth.text = getString(R.string.fetch_failed_sort)
+                binding.tvHijriMonth.text = getString(R.string.fetch_failed_sort)
+                binding.tvGregorianDay.text = getString(R.string.fetch_failed_sort)
+                binding.tvHijriDay.text = getString(R.string.fetch_failed_sort)
             }
             else -> {/*NO-OP*/}
         }
@@ -192,7 +189,7 @@ class InfoFragment(viewModelTest: FragmentInfoViewModel? = null) : BaseFragment<
             showBottomSheet(isCancelable = false, isFinish = true)
 
         fetchPrayerApi(mMsApi1!!)
-        sl_info.isRefreshing = false
+        binding.slInfo.isRefreshing = false
     }
 
 }

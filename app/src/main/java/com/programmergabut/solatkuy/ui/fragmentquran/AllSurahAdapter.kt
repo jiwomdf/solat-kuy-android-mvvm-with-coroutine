@@ -1,14 +1,14 @@
 package com.programmergabut.solatkuy.ui.fragmentquran
 
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.data.remote.remoteentity.quranallsurahJson.Data
-import kotlinx.android.synthetic.main.layout_all_surah.view.*
+import com.programmergabut.solatkuy.databinding.ListAllSurahBinding
 
 class AllSurahAdapter(
     private val onClick: (String, String, String) -> Unit
@@ -26,24 +26,25 @@ class AllSurahAdapter(
         set(value) = differ.submitList(value)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): AllSurahViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.layout_all_surah, parent, false)
-        return AllSurahViewHolder(view)
+        val binding = DataBindingUtil.inflate<ListAllSurahBinding>(
+            LayoutInflater.from(parent.context), R.layout.list_all_surah, parent, false
+        )
+        return AllSurahViewHolder(binding)
     }
 
     override fun getItemCount(): Int = differ.currentList.size
 
     override fun onBindViewHolder(holder: AllSurahViewHolder, position: Int) = holder.bind(listData[position])
 
-    inner class AllSurahViewHolder(itemView: View): RecyclerView.ViewHolder(itemView) {
+    inner class AllSurahViewHolder(private val binding: ListAllSurahBinding): RecyclerView.ViewHolder(binding.root) {
         fun bind(data: Data){
 
-            itemView.apply {
-                tv_allsurah_no.text = data.number.toString()
-                tv_allsurah_en.text = data.englishName
-                tv_allsurah_en_meaning.text = data.englishNameTranslation
-                tv_allsurah_ar.text = data.name
-            }
-            itemView.cc_allsurah.setOnClickListener {
+            binding.tvAllsurahNo.text = data.number.toString()
+            binding.tvAllsurahEn.text = data.englishName
+            binding.tvAllsurahEnMeaning.text = data.englishNameTranslation
+            binding.tvAllsurahAr.text = data.name
+
+            binding.ccAllsurah.setOnClickListener {
                 onClick(
                     data.number.toString(),
                     data.englishName,

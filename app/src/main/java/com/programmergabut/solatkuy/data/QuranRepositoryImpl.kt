@@ -6,12 +6,13 @@ import com.programmergabut.solatkuy.data.local.dao.MsFavAyahDao
 import com.programmergabut.solatkuy.data.local.dao.MsFavSurahDao
 import com.programmergabut.solatkuy.data.local.localentity.MsFavAyah
 import com.programmergabut.solatkuy.data.local.localentity.MsFavSurah
+import com.programmergabut.solatkuy.data.remote.RemoteDataSourceApiAlquran
 import com.programmergabut.solatkuy.data.remote.RemoteDataSourceApiAlquranImpl
 import com.programmergabut.solatkuy.util.Resource
 import javax.inject.Inject
 
 class QuranRepositoryImpl @Inject constructor(
-    private val remoteDataSourceApiAlquranImpl: RemoteDataSourceApiAlquranImpl,
+    private val remoteDataSourceApiAlquranImpl: RemoteDataSourceApiAlquran,
     private val msFavAyahDao: MsFavAyahDao,
     private val msFavSurahDao: MsFavSurahDao
 ): QuranRepository {

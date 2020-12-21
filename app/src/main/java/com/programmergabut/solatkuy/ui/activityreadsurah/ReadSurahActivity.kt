@@ -2,8 +2,8 @@ package com.programmergabut.solatkuy.ui.activityreadsurah
 
 import android.graphics.*
 import android.graphics.drawable.ColorDrawable
-import android.os.Handler
-import android.os.Looper
+import android.os.Bundle
+import android.util.Log
 import android.view.Menu
 import android.view.MenuItem
 import android.view.View
@@ -11,7 +11,6 @@ import android.widget.Toast
 import androidx.core.content.ContextCompat
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ItemTouchHelper.LEFT
-import androidx.recyclerview.widget.ItemTouchHelper.RIGHT
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.programmergabut.solatkuy.R
@@ -20,17 +19,15 @@ import com.programmergabut.solatkuy.data.local.localentity.MsFavAyah
 import com.programmergabut.solatkuy.data.local.localentity.MsFavSurah
 import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonAr.Ayah
 import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonAr.Data
+import com.programmergabut.solatkuy.databinding.ActivityReadSurahBinding
+import com.programmergabut.solatkuy.databinding.ListReadSurahBinding
 import com.programmergabut.solatkuy.util.EnumStatus
 import dagger.hilt.android.AndroidEntryPoint
 import es.dmoral.toasty.Toasty
-import kotlinx.android.synthetic.main.activity_read_surah.*
-import kotlinx.android.synthetic.main.layout_read_surah.view.*
-
-
 
 
 @AndroidEntryPoint
-class ReadSurahActivity : BaseActivity<ReadSurahViewModel>(
+class ReadSurahActivity : BaseActivity<ActivityReadSurahBinding, ReadSurahViewModel>(
     R.layout.activity_read_surah,
     ReadSurahViewModel::class.java
 ) {
@@ -43,21 +40,30 @@ class ReadSurahActivity : BaseActivity<ReadSurahViewModel>(
     }
 
     private lateinit var readSurahAdapter: ReadSurahAdapter
-    private lateinit var mSelSurahId: String
-    private lateinit var mSelSurahName: String
-    private lateinit var mSelSurahTranslation: String
-    private var mIsAutoScroll: Boolean = false
-    private var mMenu: Menu? = null
+    private lateinit var selectedSurahId: String
+    private lateinit var selectedSurahName: String
+    private lateinit var selectedTranslation: String
+    private var isAutoScroll: Boolean = false
+    private var menu: Menu? = null
     private var isFirstLoad = true
 
-    override fun setIntentExtra() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        setIntentExtra()
+        setFirstView()
+        setListener()
+    }
+
+    private fun setIntentExtra() {
         try{
-            mSelSurahId = intent.getStringExtra(SURAH_ID) ?: throw Exception("getExtras surahID")
-            mSelSurahName = intent.getStringExtra(SURAH_NAME) ?: throw Exception("getExtras surahName")
-            mSelSurahTranslation = intent.getStringExtra(SURAH_TRANSLATION) ?: throw Exception("getExtras surahTranslation")
-            mIsAutoScroll = intent.getBooleanExtra(IS_AUTO_SCROLL, false)
+            selectedSurahId = intent.getStringExtra(SURAH_ID) ?: throw Exception("ReadSurahActivity getExtras surahID")
+            selectedSurahName = intent.getStringExtra(SURAH_NAME) ?: throw Exception("ReadSurahActivity getExtras surahName")
+            selectedTranslation = intent.getStringExtra(SURAH_TRANSLATION) ?: throw Exception("ReadSurahActivity getExtras surahTranslation")
+            isAutoScroll = intent.getBooleanExtra(IS_AUTO_SCROLL, false)
         }
         catch (ex: Exception){
+            Log.d("<Error>", ex.message.toString())
             showBottomSheet(
                 resources.getString(R.string.text_error_title),
                 "",
@@ -66,16 +72,17 @@ class ReadSurahActivity : BaseActivity<ReadSurahViewModel>(
             )
         }
     }
-    override fun setFirstView() {
-        cc_readQuran_loading.visibility = View.VISIBLE
-        setSupportActionBar(tb_readSurah)
+
+    private fun setFirstView() {
+        binding.ccReadQuranLoading.visibility = View.VISIBLE
+        setSupportActionBar(binding.tbReadSurah)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         initRVReadSurah()
         setTheme(getIsBrightnessActive())
     }
 
-    override fun setListener() {
-        fab_brightness.setOnClickListener {
+    private fun setListener() {
+        binding.fabBrightness.setOnClickListener {
             if(!getIsBrightnessActive()){
                 setIsBrightnessActive(true)
                 setTheme(true)
@@ -87,22 +94,19 @@ class ReadSurahActivity : BaseActivity<ReadSurahViewModel>(
 
             readSurahAdapter.notifyDataSetChanged()
         }
-    }
 
-    override fun setObserver() {
-        super.setObserver()
         var data: Data? = null
 
         viewModel.selectedSurahAr.observe(this, {
             when (it.status) {
                 EnumStatus.SUCCESS -> {
-                    if (it.data == null)
+                    if (it.data?.data == null)
                         showBottomSheet(isCancelable = false, isFinish = true)
 
                     data = it.data?.data!!
                     setVisibility(it.status)
-                    setToolBarText(it.data.data)
-                    viewModel.getListFavAyahBySurahID(mSelSurahId.toInt())
+                    setToolBarText(data!!)
+                    viewModel.getListFavAyahBySurahID(selectedSurahId.toInt())
 
                     if(isFirstLoad){
                         Toast.makeText(this, "Swipe to save last read", Toast.LENGTH_SHORT).show()
@@ -111,15 +115,13 @@ class ReadSurahActivity : BaseActivity<ReadSurahViewModel>(
                 }
                 EnumStatus.LOADING -> {
                     setVisibility(it.status)
-                    tb_readSurah.title = ""
+                    binding.tbReadSurah.title = ""
                 }
                 EnumStatus.ERROR -> {
                     setVisibility(it.status)
-                    lottieAnimationView.cancelAnimation()
-                    tv_readQuran_loading.text = getString(R.string.fetch_failed)
+                    binding.lottieAnimationView.cancelAnimation()
+                    binding.tvReadQuranLoading.text = getString(R.string.fetch_failed)
                     showBottomSheet(isCancelable = false, isFinish = true)
-                }
-                else -> {/* NO-OP*/
                 }
             }
         })
@@ -147,7 +149,7 @@ class ReadSurahActivity : BaseActivity<ReadSurahViewModel>(
                     /* set the favorite ayah */
                     local.data?.forEach { ayah ->
                         data?.ayahs?.forEach out@{ remoteAyah ->
-                            if (remoteAyah.numberInSurah == ayah.ayahID && mSelSurahId.toInt() == ayah.surahID) {
+                            if (remoteAyah.numberInSurah == ayah.ayahID && selectedSurahId.toInt() == ayah.surahID) {
                                 remoteAyah.isFav = true
                                 return@out
                             }
@@ -155,7 +157,7 @@ class ReadSurahActivity : BaseActivity<ReadSurahViewModel>(
                     }
                     /* set the last read ayah */
                     data?.ayahs?.forEach out@{
-                        if (lastSurah == mSelSurahId.toInt() && lastAyah == it.numberInSurah) {
+                        if (lastSurah == selectedSurahId.toInt() && lastAyah == it.numberInSurah) {
                             it.isLastRead = true
                             return@out
                         }
@@ -165,9 +167,9 @@ class ReadSurahActivity : BaseActivity<ReadSurahViewModel>(
                         listAyah = data?.ayahs!!
                         notifyDataSetChanged()
                     }
-                    if (mIsAutoScroll) {
+                    if (isAutoScroll) {
                         val lastReadAyah = getLastReadAyah()
-                        (rv_read_surah.layoutManager as LinearLayoutManager)
+                        (binding.rvReadSurah.layoutManager as LinearLayoutManager)
                             .scrollToPositionWithOffset(lastReadAyah - 1, 0)
                     }
                 }
@@ -179,52 +181,51 @@ class ReadSurahActivity : BaseActivity<ReadSurahViewModel>(
             }
         })
 
-        viewModel.fetchReadSurahAr(mSelSurahId.toInt())
+        viewModel.fetchReadSurahAr(selectedSurahId.toInt())
     }
 
     private fun setTheme(isBrightnessActive: Boolean){
         if(isBrightnessActive){
-            tb_readSurah.setTitleTextColor(ContextCompat.getColor(this, R.color.black))
-            tb_readSurah.setSubtitleTextColor(ContextCompat.getColor(this, R.color.black))
-            tb_readSurah.setBackgroundColor(ContextCompat.getColor(this, R.color.white))
+            binding.tbReadSurah.setTitleTextColor(ContextCompat.getColor(this, R.color.black))
+            binding.tbReadSurah.setSubtitleTextColor(ContextCompat.getColor(this, R.color.black))
+            binding.tbReadSurah.setBackgroundColor(ContextCompat.getColor(this, R.color.white))
         }
         else{
-            tb_readSurah.setTitleTextColor(ContextCompat.getColor(this, R.color.white))
-            tb_readSurah.setSubtitleTextColor(ContextCompat.getColor(this, R.color.white))
-            tb_readSurah.setBackgroundColor(ContextCompat.getColor(this, R.color.dark_700))
+            binding.tbReadSurah.setTitleTextColor(ContextCompat.getColor(this, R.color.white))
+            binding.tbReadSurah.setSubtitleTextColor(ContextCompat.getColor(this, R.color.white))
+            binding.tbReadSurah.setBackgroundColor(ContextCompat.getColor(this, R.color.dark_700))
         }
     }
 
     private fun setToolBarText(data: Data) {
-        tb_readSurah.title = data.englishName
-        tb_readSurah.subtitle = data.revelationType + " - " + data.numberOfAyahs + " Ayahs"
+        binding.tbReadSurah.title = data.englishName
+        binding.tbReadSurah.subtitle = data.revelationType + " - " + data.numberOfAyahs + " Ayahs"
     }
 
     private fun setVisibility(status: EnumStatus){
         when(status){
             EnumStatus.SUCCESS -> {
-                rv_read_surah.visibility = View.VISIBLE
-                ab_readQuran.visibility = View.VISIBLE
-                cc_readQuran_loading.visibility = View.GONE
-                fab_brightness.visibility = View.VISIBLE
+                binding.rvReadSurah.visibility = View.VISIBLE
+                binding.abReadQuran.visibility = View.VISIBLE
+                binding.ccReadQuranLoading.visibility = View.GONE
+                binding.fabBrightness.visibility = View.VISIBLE
             }
             EnumStatus.LOADING -> {
-                ab_readQuran.visibility = View.INVISIBLE
-                cc_readQuran_loading.visibility = View.VISIBLE
-                rv_read_surah.visibility = View.INVISIBLE
-                fab_brightness.visibility = View.GONE
+                binding.abReadQuran.visibility = View.INVISIBLE
+                binding.ccReadQuranLoading.visibility = View.VISIBLE
+                binding.rvReadSurah.visibility = View.INVISIBLE
+                binding.fabBrightness.visibility = View.GONE
             }
             EnumStatus.ERROR -> {
-                ab_readQuran.visibility = View.INVISIBLE
-                rv_read_surah.visibility = View.INVISIBLE
-                fab_brightness.visibility = View.INVISIBLE
+                binding.abReadQuran.visibility = View.INVISIBLE
+                binding.rvReadSurah.visibility = View.INVISIBLE
+                binding.fabBrightness.visibility = View.INVISIBLE
             }
-            else -> {/*NO-OP*/}
         }
     }
 
     override fun onCreateOptionsMenu(menu: Menu?): Boolean {
-        this.mMenu = menu
+        this.menu = menu
         menuInflater.inflate(R.menu.read_surah_menu, menu)
 
         viewModel.msFavSurah.observe(this, {
@@ -243,7 +244,7 @@ class ReadSurahActivity : BaseActivity<ReadSurahViewModel>(
             }
         })
 
-        viewModel.getFavSurahBySurahID(mSelSurahId.toInt())
+        viewModel.getFavSurahBySurahID(selectedSurahId.toInt())
         return super.onCreateOptionsMenu(menu)
     }
 
@@ -254,22 +255,22 @@ class ReadSurahActivity : BaseActivity<ReadSurahViewModel>(
                 true
             }
             R.id.i_star_surah -> {
-                if (mMenu?.findItem(R.id.i_star_surah)?.icon?.constantState
+                if (menu?.findItem(R.id.i_star_surah)?.icon?.constantState
                     == ContextCompat.getDrawable(this, R.drawable.ic_star_24)?.constantState
                 )
                     viewModel.insertFavSurah(
                         MsFavSurah(
-                            mSelSurahId.toInt(),
-                            mSelSurahName,
-                            mSelSurahTranslation
+                            selectedSurahId.toInt(),
+                            selectedSurahName,
+                            selectedTranslation
                         )
                     )
                 else
                     viewModel.deleteFavSurah(
                         MsFavSurah(
-                            mSelSurahId.toInt(),
-                            mSelSurahName,
-                            mSelSurahTranslation
+                            selectedSurahId.toInt(),
+                            selectedSurahName,
+                            selectedTranslation
                         )
                     )
 
@@ -281,39 +282,38 @@ class ReadSurahActivity : BaseActivity<ReadSurahViewModel>(
 
     private fun initRVReadSurah() {
         readSurahAdapter = ReadSurahAdapter(
-            adapterOnClick,
+            onClickFavAyah,
             adapterTheme,
             ContextCompat.getDrawable(this, R.drawable.ic_favorite_red_24)!!,
             ContextCompat.getDrawable(this, R.drawable.ic_favorite_24)!!,
             ContextCompat.getColor(this, R.color.purple_500)
         )
 
-        rv_read_surah.apply {
+        binding.rvReadSurah.apply {
             adapter = readSurahAdapter
             layoutManager = LinearLayoutManager(this@ReadSurahActivity)
             ItemTouchHelper(itemTouchCallback).attachToRecyclerView(this)
         }
 
-
     }
 
-    private val adapterOnClick = fun(data: Ayah, itemView: View){
+    private val onClickFavAyah = fun(data: Ayah, binding: ListReadSurahBinding){
         val msFavAyah = MsFavAyah(
-            mSelSurahId.toInt(),
+            selectedSurahId.toInt(),
             data.numberInSurah,
-            SURAH_NAME,
+            selectedSurahName,
             data.text,
             data.textEn!!
         )
 
-        if (itemView.iv_listFav_fav.drawable.constantState == ContextCompat.getDrawable(
+        if (binding.ivListFavFav.drawable.constantState == ContextCompat.getDrawable(
                 this,
                 R.drawable.ic_favorite_red_24
             )?.constantState
         ) {
             Toasty.info(this, "Unsaving the ayah", Toast.LENGTH_SHORT).show()
             viewModel.deleteFavAyah(msFavAyah)
-            itemView.iv_listFav_fav.setImageDrawable(
+            binding.ivListFavFav.setImageDrawable(
                 ContextCompat.getDrawable(
                     this,
                     R.drawable.ic_favorite_24
@@ -322,28 +322,28 @@ class ReadSurahActivity : BaseActivity<ReadSurahViewModel>(
         } else {
             Toasty.info(this, "Saving the ayah", Toast.LENGTH_SHORT).show()
             viewModel.insertFavAyah(msFavAyah)
-            itemView.iv_listFav_fav.setImageDrawable(
+            binding.ivListFavFav.setImageDrawable(
                 ContextCompat.getDrawable(
                     this,
                     R.drawable.ic_favorite_red_24
                 )
             )
         }
-        viewModel.fetchReadSurahAr(mSelSurahId.toInt())
+        viewModel.fetchReadSurahAr(selectedSurahId.toInt())
     }
 
-    private val adapterTheme = fun(itemView: View){
+    private val adapterTheme = fun(binding: ListReadSurahBinding){
         if(getIsBrightnessActive()){
-            itemView.tv_listFav_ar.setTextColor(ContextCompat.getColor(this, R.color.black))
-            itemView.tv_listFav_en.setTextColor(ContextCompat.getColor(this, R.color.black))
-            itemView.tv_listFav_num.setTextColor(ContextCompat.getColor(this, R.color.black))
-            itemView.cl_vh_readSurah.setBackgroundColor(ContextCompat.getColor(this, R.color.white))
+            binding.tvListFavAr.setTextColor(ContextCompat.getColor(this, R.color.black))
+            binding.tvListFavEn.setTextColor(ContextCompat.getColor(this, R.color.black))
+            binding.tvListFavNum.setTextColor(ContextCompat.getColor(this, R.color.black))
+            binding.clVhReadSurah.setBackgroundColor(ContextCompat.getColor(this, R.color.white))
         }
         else {
-            itemView.tv_listFav_ar.setTextColor(ContextCompat.getColor(this, R.color.white))
-            itemView.tv_listFav_en.setTextColor(ContextCompat.getColor(this, R.color.white))
-            itemView.tv_listFav_num.setTextColor(ContextCompat.getColor(this, R.color.white))
-            itemView.cl_vh_readSurah.setBackgroundColor(
+            binding.tvListFavAr.setTextColor(ContextCompat.getColor(this, R.color.white))
+            binding.tvListFavEn.setTextColor(ContextCompat.getColor(this, R.color.white))
+            binding.tvListFavNum.setTextColor(ContextCompat.getColor(this, R.color.white))
+            binding.clVhReadSurah.setBackgroundColor(
                 ContextCompat.getColor(
                     this,
                     R.color.dark_500
@@ -368,11 +368,11 @@ class ReadSurahActivity : BaseActivity<ReadSurahViewModel>(
             insertLastReadSharedPref(item.numberInSurah)
             Toasty.success(
                 this@ReadSurahActivity,
-                "Surah $mSelSurahId ayah ${item.numberInSurah} is now your last read",
+                "Surah $selectedSurahId ayah ${item.numberInSurah} is now your last read",
                 Toasty.LENGTH_LONG
             ).show()
 
-            viewModel.fetchReadSurahAr(mSelSurahId.toInt())
+            viewModel.fetchReadSurahAr(selectedSurahId.toInt())
             readSurahAdapter.notifyDataSetChanged()
         }
 
@@ -434,7 +434,7 @@ class ReadSurahActivity : BaseActivity<ReadSurahViewModel>(
     }
 
     private fun insertLastReadSharedPref(numberInSurah: Int) {
-        insertLastReadSharedPref(mSelSurahId.toInt(), numberInSurah)
+        insertLastReadSharedPref(selectedSurahId.toInt(), numberInSurah)
     }
 
 }

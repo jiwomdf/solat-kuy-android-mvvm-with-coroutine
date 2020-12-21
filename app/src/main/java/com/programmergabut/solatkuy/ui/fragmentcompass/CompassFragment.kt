@@ -6,26 +6,28 @@ import android.hardware.Sensor
 import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
+import android.os.Bundle
+import android.view.LayoutInflater
+import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.RotateAnimation
+import androidx.databinding.DataBindingUtil
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.base.BaseFragment
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
-import com.programmergabut.solatkuy.util.EnumConfig.Companion.IS_TESTING
+import com.programmergabut.solatkuy.databinding.FragmentCompassBinding
+import com.programmergabut.solatkuy.databinding.LayoutPhoneTiltBinding
 import com.programmergabut.solatkuy.util.EnumStatus
 import dagger.hilt.android.AndroidEntryPoint
-import kotlinx.android.synthetic.main.fragment_compass.*
-import kotlinx.android.synthetic.main.layout_phone_tilt.*
-import javax.inject.Inject
 
 /*
  * Created by Katili Jiwo Adi Wiyono on 31/03/20.
  */
 
 @AndroidEntryPoint
-class CompassFragment constructor(viewModelTest: FragmentCompassViewModel? = null) : BaseFragment<FragmentCompassViewModel>(
+class CompassFragment constructor(viewModelTest: FragmentCompassViewModel? = null) : BaseFragment<FragmentCompassBinding, FragmentCompassViewModel>(
     R.layout.fragment_compass,
     FragmentCompassViewModel::class.java,
     viewModelTest
@@ -53,16 +55,18 @@ class CompassFragment constructor(viewModelTest: FragmentCompassViewModel? = nul
         mSensorManager.unregisterListener(this)
     }
 
-    override fun setFirstView() {
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+
         mSensorManager = activity?.getSystemService(SENSOR_SERVICE) as SensorManager
         openLottieAnimation()
-    }
-    override fun setObserver() {
         subscribeObserversDB()
         subscribeObserversAPI()
     }
+
     override fun setListener() {
-        sl_compass.setOnRefreshListener(this)
+        super.setListener()
+        binding.slCompass.setOnRefreshListener(this)
     }
 
     private fun openLottieAnimation() {
@@ -81,16 +85,18 @@ class CompassFragment constructor(viewModelTest: FragmentCompassViewModel? = nul
             when(retVal.status){
                 EnumStatus.SUCCESS -> {
                     retVal.data?.data.let {
-                        tv_qibla_dir.text = if(it?.direction.toString().length > 6)
+                        binding.tvQiblaDir.text = if(it?.direction.toString().length > 6)
                             it?.direction.toString().substring(0,6).trim() + "°"
                         else
                             it?.direction.toString()
                     }
                 }
                 EnumStatus.LOADING -> {
-                    tv_qibla_dir.text = getString(R.string.loading)
+                    binding.tvQiblaDir.text = getString(R.string.loading)
                 }
-                EnumStatus.ERROR -> tv_qibla_dir.text = getString(R.string.fetch_failed)
+                EnumStatus.ERROR -> {
+                    binding.tvQiblaDir.text = getString(R.string.fetch_failed)
+                }
                 else -> {/* NO-OP*/}
             }
         })
@@ -108,7 +114,6 @@ class CompassFragment constructor(viewModelTest: FragmentCompassViewModel? = nul
                 }
                 EnumStatus.LOADING -> {}
                 EnumStatus.ERROR -> {}
-                else -> {/* NO-OP*/}
             }
         })
     }
@@ -149,7 +154,7 @@ class CompassFragment constructor(viewModelTest: FragmentCompassViewModel? = nul
                 anim.repeatCount = 0
                 anim.fillAfter = true
 
-                iv_compass.startAnimation(anim)
+                binding.ivCompass.startAnimation(anim)
             }
 
         }
@@ -160,19 +165,22 @@ class CompassFragment constructor(viewModelTest: FragmentCompassViewModel? = nul
 
     override fun onRefresh() {
         viewModel.fetchCompassApi(mMsApi1)
-        sl_compass.isRefreshing = false
+        binding.slCompass.isRefreshing = false
     }
 
     /* Lottie Animation */
     private fun createLottieAnimation() {
-        val dialogView = layoutInflater.inflate(R.layout.layout_phone_tilt, null)
+        val dialogBinding: LayoutPhoneTiltBinding = DataBindingUtil.inflate(
+            LayoutInflater.from(requireContext()),
+            R.layout.layout_fristopenapp, null, true
+        )
         val dialog =  Dialog(requireContext())
         dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
         dialog.setCancelable(false)
-        dialog.setContentView(dialogView)
+        dialog.setContentView(dialogBinding.root)
         dialog.show()
 
-        dialog.btn_hideAnimation.setOnClickListener {
+        dialogBinding.btnHideAnimation.setOnClickListener {
             saveSharedPreferences()
             dialog.hide()
         }

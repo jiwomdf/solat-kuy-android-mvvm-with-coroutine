@@ -1,32 +1,41 @@
 package com.programmergabut.solatkuy.ui.activityprayer
 
+import android.os.Bundle
+import android.util.Log
 import androidx.lifecycle.ViewModel
 import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.base.BaseActivity
-import kotlinx.android.synthetic.main.activity_dua.*
+import com.programmergabut.solatkuy.databinding.ActivityDuaBinding
 import java.lang.Exception
 
-class DuaActivity : BaseActivity<ViewModel>(R.layout.activity_dua, null) {
+class DuaActivity : BaseActivity<ActivityDuaBinding, ViewModel>(R.layout.activity_dua, null) {
 
     companion object{
-        const val duaTitle = "duaTitle"
-        const val duaAr = "duaAr"
-        const val duaLt = "duaLt"
-        const val duaEn = "duaEn"
-        const val duaIn = "duaIn"
-        const val duaRef = "duaRef"
+        const val DUA_TITLE = "duaTitle"
+        const val DUA_AR = "duaAr"
+        const val DUA_LT = "duaLt"
+        const val DUA_EN = "duaEn"
+        const val DUA_IN = "duaIn"
+        const val DUA_REF = "duaRef"
     }
 
-    override fun setFirstView() {
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+
+        setListener()
+    }
+
+    private fun setListener(){
         try {
-            tv_prayer_title.text = intent.getStringExtra(duaTitle)!!
-            tv_prayer_ar.text = intent.getStringExtra(duaAr)!!
-            tv_prayer_lt.text = intent.getStringExtra(duaLt)!!
-            tv_prayer_en.text = intent.getStringExtra(duaEn)!!
-            tv_prayer_in.text = intent.getStringExtra(duaIn)!!
-            tv_prayer_ref.text = intent.getStringExtra(duaRef)!!
+            binding.tvPrayerTitle.text = intent.getStringExtra(DUA_TITLE) ?: throw Exception("DuaActivity getExtras $DUA_TITLE")
+            binding.tvPrayerAr.text = intent.getStringExtra(DUA_AR) ?: throw Exception("DuaActivity getExtras $DUA_AR")
+            binding.tvPrayerLt.text = intent.getStringExtra(DUA_LT) ?: throw Exception("DuaActivity getExtras $DUA_LT")
+            binding.tvPrayerEn.text = intent.getStringExtra(DUA_EN) ?: throw Exception("DuaActivity getExtras $DUA_EN")
+            binding.tvPrayerIn.text = intent.getStringExtra(DUA_IN) ?: throw Exception("DuaActivity getExtras $DUA_IN")
+            binding.tvPrayerRef.text = intent.getStringExtra(DUA_REF) ?: throw Exception("DuaActivity getExtras $DUA_REF")
         }
         catch (ex: Exception){
+            Log.d("<Error>", ex.message.toString())
             showBottomSheet(isCancelable = false, isFinish = true)
         }
     }

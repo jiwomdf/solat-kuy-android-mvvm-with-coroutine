@@ -8,15 +8,15 @@ import android.content.DialogInterface
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationManager
+import android.os.Bundle
 import android.os.Looper
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.widget.Button
 import android.widget.TextView
-import android.widget.Toast
-import androidx.activity.viewModels
 import androidx.core.app.ActivityCompat
-import androidx.lifecycle.lifecycleScope
+import androidx.databinding.DataBindingUtil
 import androidx.navigation.findNavController
 import androidx.navigation.ui.setupWithNavController
 import com.google.android.gms.location.LocationCallback
@@ -28,17 +28,13 @@ import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.base.BaseActivity
 import com.programmergabut.solatkuy.data.local.SolatKuyRoom
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
+import com.programmergabut.solatkuy.databinding.ActivityMainBinding
+import com.programmergabut.solatkuy.databinding.LayoutBottomsheetBygpsBinding
+import com.programmergabut.solatkuy.databinding.LayoutBottomsheetBylatitudelongitudeBinding
 import com.programmergabut.solatkuy.ui.SolatKuyFragmentFactory
-import com.programmergabut.solatkuy.ui.fragmentsetting.FragmentSettingViewModel
-import com.programmergabut.solatkuy.util.EnumConfig.Companion.IS_TESTING
 import com.programmergabut.solatkuy.util.EnumStatus
 import dagger.hilt.android.AndroidEntryPoint
 import es.dmoral.toasty.Toasty
-import kotlinx.android.synthetic.main.activity_main.*
-import kotlinx.android.synthetic.main.layout_bottomsheet_bygps.view.*
-import kotlinx.android.synthetic.main.layout_bottomsheet_bylatitudelongitude.view.*
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.launch
 import org.joda.time.LocalDate
 import javax.inject.Inject
 
@@ -46,30 +42,30 @@ import javax.inject.Inject
  * Created by Katili Jiwo Adi Wiyono on 25/03/20.
  */
 @AndroidEntryPoint
-class MainActivity : BaseActivity<MainActivityViewModel>(R.layout.activity_main, MainActivityViewModel::class.java) {
+class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>(R.layout.activity_main, MainActivityViewModel::class.java) {
 
-    private lateinit var mSubDialogView: View
-    private lateinit var mSubDialog: Dialog
-    private lateinit var dialog: Dialog
+    private lateinit var bottomSheetDialog: Dialog
+    private lateinit var firstOpenDialog: Dialog
     private val ALL_PERMISSIONS = 101
 
     @Inject
     lateinit var fragmentFactory: SolatKuyFragmentFactory
 
-    override fun setFirstView() {
-        supportFragmentManager.fragmentFactory = fragmentFactory
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
 
-        if(IS_TESTING)
-            Toasty.warning(this, "Is Testing", Toast.LENGTH_SHORT).show()
+        supportFragmentManager.fragmentFactory = fragmentFactory
+        setListener()
+    }
+
+    private fun setListener() {
+        observeDb()
+        observeErrorMsg()
     }
 
     override fun onDestroy() {
         super.onDestroy()
         setIsNotHasOpenAnimation(false)
-    }
-    override fun setObserver() {
-        observeDb()
-        observeErrorMsg()
     }
 
     private fun observeDb(){
@@ -77,14 +73,20 @@ class MainActivity : BaseActivity<MainActivityViewModel>(R.layout.activity_main,
             when(it.status){
                 EnumStatus.SUCCESS -> {
                     if(it.data != null)
-                        if(it.data.isHasOpenApp)
+                        if(it.data.isHasOpenApp){
                             initBottomNav()
-                        else
+                        }
+                        else{
                             initDialog()
-                    else
+                        }
+                    else{
                         SolatKuyRoom.populateDatabase(getDatabase())
+                    }
                 }
-                else -> {/*NO-OP*/}
+                EnumStatus.ERROR -> {
+                    showBottomSheet(isCancelable = false, isFinish =  true)
+                }
+                else -> {/* NO-OP */}
             }
         })
     }
@@ -95,45 +97,43 @@ class MainActivity : BaseActivity<MainActivityViewModel>(R.layout.activity_main,
             if(errMsg.isEmpty())
                 return@observe
 
-            when(it){
+            when(it) {
                 EnumStatus.SUCCESS -> {
-                    Toasty.success(this, errMsg , Toasty.LENGTH_SHORT).show()
+                    Toasty.success(this, errMsg, Toasty.LENGTH_SHORT).show()
                     updateIsHasOpenApp()
                 }
                 EnumStatus.ERROR -> {
                     Toasty.error(this, errMsg, Toasty.LENGTH_SHORT).show()
                 }
-                else -> {/*NO-OP*/}
-            }.also {
-                viewModel.errStatus.postValue(EnumStatus.NEUTRAL)
+                else -> {/* NO-OP */}
             }
         })
     }
 
     /* DIALOG */
     private fun initDialog() {
-        dialog =  Dialog(this@MainActivity)
-        dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-        dialog.setCancelable(false)
-        dialog.setContentView(layoutInflater.inflate(R.layout.layout_fristopenapp,null))
-        dialog.show()
+        firstOpenDialog =  Dialog(this@MainActivity)
+        firstOpenDialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        firstOpenDialog.setCancelable(false)
+        firstOpenDialog.setContentView(layoutInflater.inflate(R.layout.layout_fristopenapp,null))
+        firstOpenDialog.show()
 
-        btnSetLatitudeLongitude(dialog)
+        btnSetLatitudeLongitude(firstOpenDialog)
     }
 
     private fun initBottomNav() {
 
         try{
-            bottom_navigation.setupWithNavController(navHostFragment.findNavController())
-            navHostFragment.findNavController()
+            binding.bottomNavigation.setupWithNavController(binding.navHostFragment.findNavController())
+            binding.navHostFragment.findNavController()
                 .addOnDestinationChangedListener { _, destination, _ ->
                     when(destination.id){
                         R.id.fragmentMain, R.id.fragmentCompass, R.id.quranFragment, R.id.fragmentInfo, R.id.fragmentSetting ->
-                            bottom_navigation.visibility = View.VISIBLE
-                        else -> bottom_navigation.visibility = View.GONE
+                            binding.bottomNavigation.visibility = View.VISIBLE
+                        else -> binding.bottomNavigation.visibility = View.GONE
                     }
                 }
-            bottom_navigation.setOnNavigationItemReselectedListener {
+            binding.bottomNavigation.setOnNavigationItemReselectedListener {
                 /* NO-OP */
             }
 
@@ -150,35 +150,38 @@ class MainActivity : BaseActivity<MainActivityViewModel>(R.layout.activity_main,
         val btnByLatitudeLongitude = dialog.findViewById<Button>(R.id.btn_byLatitudeLongitude)
         val btnByGps = dialog.findViewById<Button>(R.id.btn_byGps)
 
-        mSubDialog = BottomSheetDialog(this)
+        bottomSheetDialog = BottomSheetDialog(this)
 
         btnByLatitudeLongitude.setOnClickListener {
 
-            mSubDialogView = layoutInflater.inflate(R.layout.layout_bottomsheet_bylatitudelongitude,null)
-            mSubDialog.setContentView(mSubDialogView)
-            mSubDialog.show()
+            val binding = DataBindingUtil.inflate<LayoutBottomsheetBylatitudelongitudeBinding>(
+                LayoutInflater.from(this),
+                R.layout.layout_bottomsheet_bylatitudelongitude, null, true
+            )
+            bottomSheetDialog.setContentView(binding.root)
+            bottomSheetDialog.show()
 
-            mSubDialogView.btn_proceedByLL.setOnClickListener byLl@{
-
-                val latitude = mSubDialogView.et_llDialog_latitude.text.toString().trim()
-                val longitude = mSubDialogView.et_llDialog_longitude.text.toString().trim()
-
+            binding.btnProceedByLL.setOnClickListener byLl@{
+                val latitude = binding.etLlDialogLatitude.text.toString().trim()
+                val longitude = binding.etLlDialogLongitude.text.toString().trim()
                 insertLocationSettingToDb(latitude, longitude)
             }
         }
 
         btnByGps.setOnClickListener{
-            mSubDialogView = layoutInflater.inflate(R.layout.layout_bottomsheet_bygps,null)
-            mSubDialog.setContentView(mSubDialogView)
-            mSubDialog.show()
+            val binding = DataBindingUtil.inflate<LayoutBottomsheetBygpsBinding>(
+                LayoutInflater.from(this),
+                R.layout.layout_bottomsheet_bygps, null, true
+            )
 
-            getGPSLocation(mSubDialogView)
+            bottomSheetDialog.setContentView(binding.root)
+            bottomSheetDialog.show()
 
-            mSubDialogView.btn_proceedByGps.setOnClickListener byGps@{
+            getGPSLocation(binding.root)
 
-                val latitude = mSubDialogView.tv_gpsDialog_latitude.text.toString().trim()
-                val longitude = mSubDialogView.tv_gpsDialog_longitude.text.toString().trim()
-
+            binding.btnProceedByGps.setOnClickListener byGps@{
+                val latitude = binding.tvGpsDialogLatitude.text.toString().trim()
+                val longitude = binding.tvGpsDialogLongitude.text.toString().trim()
                 insertLocationSettingToDb(latitude, longitude)
             }
         }
@@ -186,8 +189,8 @@ class MainActivity : BaseActivity<MainActivityViewModel>(R.layout.activity_main,
     }
 
     private fun updateIsHasOpenApp() {
-        mSubDialog.dismiss()
-        dialog.dismiss()
+        bottomSheetDialog.dismiss()
+        firstOpenDialog.dismiss()
 
         viewModel.updateIsHasOpenApp(true)
     }
@@ -219,7 +222,7 @@ class MainActivity : BaseActivity<MainActivityViewModel>(R.layout.activity_main,
                 )
             }
             .setNegativeButton("cancel") { _: DialogInterface, _: Int ->
-                mSubDialog.dismiss()
+                bottomSheetDialog.dismiss()
             }
             .create()
             .show()
@@ -257,6 +260,11 @@ class MainActivity : BaseActivity<MainActivityViewModel>(R.layout.activity_main,
         var gpsEnabled = false
         var networkEnabled = false
 
+        val binding = DataBindingUtil.inflate<LayoutBottomsheetBygpsBinding>(
+            LayoutInflater.from(this),
+            R.layout.layout_bottomsheet_bygps, null, true
+        )
+
         try {
             gpsEnabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER)
         } catch (ex: java.lang.Exception) { }
@@ -266,9 +274,9 @@ class MainActivity : BaseActivity<MainActivityViewModel>(R.layout.activity_main,
         } catch (ex: java.lang.Exception) { }
 
         if (!gpsEnabled && !networkEnabled)
-            mSubDialogView.tv_warning.text = getString(R.string.please_enable_your_location)
+            binding.tvWarning.text = getString(R.string.please_enable_your_location)
         else
-            mSubDialogView.tv_warning.text = getString(R.string.loading)
+            binding.tvWarning.text = getString(R.string.loading)
     }
 
     private fun onUpdateLocationListener(){
@@ -293,6 +301,12 @@ class MainActivity : BaseActivity<MainActivityViewModel>(R.layout.activity_main,
         LocationServices.getFusedLocationProviderClient(this)
             .requestLocationUpdates(mLocationRequest, object : LocationCallback() {
 
+                val binding = DataBindingUtil.inflate<LayoutBottomsheetBygpsBinding>(
+                    LayoutInflater.from(this@MainActivity),
+                    R.layout.layout_bottomsheet_bygps, null, true
+                )
+
+
                 override fun onLocationResult(locationResult: LocationResult) {
                     // do work here
                     onLocationChanged(locationResult.lastLocation)
@@ -303,14 +317,13 @@ class MainActivity : BaseActivity<MainActivityViewModel>(R.layout.activity_main,
                     if(it == null)
                         return
 
-                    mSubDialogView.iv_warning.visibility = View.GONE
-                    mSubDialogView.tv_warning.visibility = View.GONE
-                    mSubDialogView.findViewById<TextView>(R.id.tv_view_latitude).visibility = View.VISIBLE
-                    mSubDialogView.findViewById<TextView>(R.id.tv_view_longitude).visibility = View.VISIBLE
+                    binding.tvWarning.visibility = View.GONE
+                    binding.tvWarning.visibility = View.GONE
+                    binding.tvViewLatitude.visibility = View.VISIBLE
+                    binding.tvViewLongitude.visibility = View.VISIBLE
 
-                    mSubDialogView.tv_gpsDialog_latitude.text = it.latitude.toString()
-                    mSubDialogView.tv_gpsDialog_longitude.text= it.longitude.toString()
-
+                    binding.tvGpsDialogLatitude.text = it.latitude.toString()
+                    binding.tvGpsDialogLongitude.text= it.longitude.toString()
                 }
             }, Looper.myLooper())
 

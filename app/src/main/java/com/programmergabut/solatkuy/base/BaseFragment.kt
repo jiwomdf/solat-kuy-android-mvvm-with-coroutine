@@ -1,54 +1,53 @@
 package com.programmergabut.solatkuy.base
 
 import android.content.Intent
-import android.content.SharedPreferences
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
+import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.ViewModelProvider
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.data.local.SolatKuyRoom
-import com.programmergabut.solatkuy.util.EnumConfig
-import com.programmergabut.solatkuy.util.EnumConfig.Companion.IS_TESTING
-import kotlinx.android.synthetic.main.layout_error_bottomsheet.*
+import com.programmergabut.solatkuy.databinding.LayoutErrorBottomsheetBinding
+import com.programmergabut.solatkuy.util.SharedPrefUtil
 import javax.inject.Inject
 
-abstract class BaseFragment<VM: ViewModel>(
-    fragmentLayout: Int,
-    private val viewModelClass: Class<VM>,
+abstract class BaseFragment<DB: ViewDataBinding, VM: ViewModel>(
+    private val layout: Int,
+    private val viewModelClass: Class<VM>?,
     private val viewModelTest: VM?
-) : Fragment(fragmentLayout) {
+) : Fragment() {
 
     @Inject
     lateinit var db: SolatKuyRoom
     @Inject
-    lateinit var sharedPref: SharedPreferences
-
+    lateinit var sharedPrefUtil: SharedPrefUtil
     lateinit var viewModel: VM
+    protected lateinit var binding : DB
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
+    override fun onCreateView(
+        inflater: LayoutInflater,
+        container: ViewGroup?,
+        savedInstanceState: Bundle?
+    ): View? {
 
-        viewModel = viewModelTest ?: ViewModelProvider(requireActivity()).get(viewModelClass)
+        binding = DataBindingUtil.inflate(inflater, layout, container, false)
+        binding.lifecycleOwner = this
 
-        setIntentExtra()
-        setFirstView()
-        setObserver()
+        viewModelClass?.let {
+            viewModel = viewModelTest ?: ViewModelProvider(requireActivity()).get(it)
+        }
+
         setListener()
+
+        return binding.root
     }
 
-    protected open fun setIntentExtra(){
-
-    }
-    protected open fun setFirstView(){
-
-    }
-    protected open fun setObserver(){
-
-    }
     protected open fun setListener(){
 
     }
@@ -65,16 +64,19 @@ abstract class BaseFragment<VM: ViewModel>(
     protected fun showBottomSheet(title : String = resources.getString(R.string.text_error_title), description : String = "",
                                   isCancelable : Boolean = true, isFinish : Boolean = false) {
 
-        val dialogView = layoutInflater.inflate(R.layout.layout_error_bottomsheet, null)
+        val dialogBinding = DataBindingUtil.inflate<LayoutErrorBottomsheetBinding>(
+            layoutInflater, R.layout.layout_error_bottomsheet, null, true
+        )
+
         val dialog =  BottomSheetDialog(requireContext())
         dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
         dialog.setCancelable(isCancelable)
-        dialog.setContentView(dialogView)
-        dialog.tv_title.text = title
-        dialog.tv_desc.text = description
+        dialog.setContentView(dialogBinding.root)
+        dialogBinding.tvTitle.text = title
+        dialogBinding.tvDesc.text = description
         dialog.show()
 
-        dialog.btn_ok.setOnClickListener {
+        dialogBinding.btnOk.setOnClickListener {
             dialog.hide()
 
             /* if(isFinish){
@@ -87,17 +89,14 @@ abstract class BaseFragment<VM: ViewModel>(
     protected fun getDatabase() = db
 
     protected fun getLastReadSurah(): Int {
-        return sharedPref.getInt(EnumConfig.LAST_READ_SURAH, -1)
+        return sharedPrefUtil.getLastReadSurah()
     }
 
     protected fun getIsNotHasOpenAnimation(): Boolean {
-        return sharedPref.getBoolean("isHasNotOpenAnimation", true)
+        return sharedPrefUtil.getIsNotHasOpenAnimation()
     }
 
     protected fun setIsNotHasOpenAnimation(value: Boolean){
-        sharedPref.edit()?.apply{
-            putBoolean("isHasNotOpenAnimation", value)
-            apply()
-        }
+        sharedPrefUtil.setIsNotHasOpenAnimation(value)
     }
 }

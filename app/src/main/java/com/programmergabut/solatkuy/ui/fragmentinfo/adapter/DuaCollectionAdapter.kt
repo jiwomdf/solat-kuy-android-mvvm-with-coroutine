@@ -3,13 +3,13 @@ package com.programmergabut.solatkuy.ui.fragmentinfo.adapter
 import android.content.Context
 import android.content.Intent
 import android.view.LayoutInflater
-import android.view.View
 import android.view.ViewGroup
+import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.data.local.localentity.Dua
+import com.programmergabut.solatkuy.databinding.ListDuaBinding
 import com.programmergabut.solatkuy.ui.activityprayer.DuaActivity
-import kotlinx.android.synthetic.main.layout_dua_button.view.*
 
 class DuaCollectionAdapter(private val context: Context): RecyclerView.Adapter<DuaCollectionAdapter.DuaCollectionViewHolder>() {
 
@@ -21,9 +21,10 @@ class DuaCollectionAdapter(private val context: Context): RecyclerView.Adapter<D
     }
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): DuaCollectionViewHolder {
-        val view = LayoutInflater.from(parent.context).inflate(R.layout.layout_dua_button, parent, false)
-        return DuaCollectionViewHolder(view)
-
+        val binding = DataBindingUtil.inflate<ListDuaBinding>(
+            LayoutInflater.from(parent.context), R.layout.list_dua, parent, false
+        )
+        return DuaCollectionViewHolder(binding)
     }
 
     override fun getItemCount(): Int = listData.size
@@ -32,9 +33,9 @@ class DuaCollectionAdapter(private val context: Context): RecyclerView.Adapter<D
         holder.bind(listData[position])
     }
 
-    inner class DuaCollectionViewHolder(itemView: View): RecyclerView.ViewHolder(itemView){
+    inner class DuaCollectionViewHolder(private val binding: ListDuaBinding): RecyclerView.ViewHolder(binding.root){
         fun bind(data: Dua){
-            itemView.btn_duaBtn.text = data.title
+            binding.btnDuaBtn.text = data.title
 
             openDua(data)
         }
@@ -43,14 +44,14 @@ class DuaCollectionAdapter(private val context: Context): RecyclerView.Adapter<D
         private fun openDua(data: Dua) {
             val i = Intent(context, DuaActivity::class.java)
 
-            itemView.btn_duaBtn.setOnClickListener {
+            binding.btnDuaBtn.setOnClickListener {
 
-                i.putExtra(DuaActivity.duaTitle, data.title)
-                i.putExtra(DuaActivity.duaAr, data.arab)
-                i.putExtra(DuaActivity.duaLt, data.latin)
-                i.putExtra(DuaActivity.duaEn, data.english)
-                i.putExtra(DuaActivity.duaIn, data.indonesia)
-                i.putExtra(DuaActivity.duaRef, data.reference)
+                i.putExtra(DuaActivity.DUA_TITLE, data.title)
+                i.putExtra(DuaActivity.DUA_AR, data.arab)
+                i.putExtra(DuaActivity.DUA_LT, data.latin)
+                i.putExtra(DuaActivity.DUA_EN, data.english)
+                i.putExtra(DuaActivity.DUA_IN, data.indonesia)
+                i.putExtra(DuaActivity.DUA_REF, data.reference)
 
                 context.startActivity(i)
             }
