@@ -1,4 +1,4 @@
-package com.programmergabut.solatkuy.ui.fragmentmain
+package com.programmergabut.solatkuy.ui.activitymain.fragmentmain
 
 import android.app.Dialog
 import android.graphics.drawable.Drawable
@@ -10,6 +10,7 @@ import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
@@ -20,13 +21,17 @@ import com.programmergabut.solatkuy.data.local.localentity.MsApi1
 import com.programmergabut.solatkuy.data.local.localentity.MsFavAyah
 import com.programmergabut.solatkuy.data.local.localentity.MsTimings
 import com.programmergabut.solatkuy.data.local.localentity.NotifiedPrayer
+import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.Data
+import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.PrayerResponse
 import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonEn.ReadSurahEnResponse
 import com.programmergabut.solatkuy.databinding.*
+import com.programmergabut.solatkuy.ui.activitymain.fragmentmain.adapter.DuaCollectionAdapter
 import com.programmergabut.solatkuy.util.EnumStatus
 import com.programmergabut.solatkuy.util.Resource
 import com.programmergabut.solatkuy.util.EnumConfig
 import com.programmergabut.solatkuy.util.EnumConfig.Companion.ENDED_SURAH
 import com.programmergabut.solatkuy.util.EnumConfig.Companion.STARTED_SURAH
+import com.programmergabut.solatkuy.util.generator.DuaGenerator
 import com.programmergabut.solatkuy.util.helper.LocationHelper
 import com.programmergabut.solatkuy.util.helper.PushNotificationHelper
 import com.programmergabut.solatkuy.util.helper.SelectPrayerHelper
@@ -53,6 +58,7 @@ class MainFragment(viewModelTest: FragmentMainViewModel? = null) : BaseFragment<
     private var coroutineTimerJob: Job? = null
     private var tempMsApi1: MsApi1? = null
     private var mCityName: String? = null
+    private lateinit var duaCollectionAdapter: DuaCollectionAdapter
 
     override fun onPause() {
         super.onPause()
@@ -74,6 +80,7 @@ class MainFragment(viewModelTest: FragmentMainViewModel? = null) : BaseFragment<
         super.onViewCreated(view, savedInstanceState)
 
         openPopupQuote()
+        initRvDuaCollection()
         subscribeObserversDB()
         subscribeObserversAPI()
     }
@@ -84,6 +91,17 @@ class MainFragment(viewModelTest: FragmentMainViewModel? = null) : BaseFragment<
         cbClickListener()
         binding.includeQuranQuote.ivRefresh.setOnClickListener {
             viewModel.getMsSetting(0)
+        }
+    }
+
+    private fun initRvDuaCollection() {
+        duaCollectionAdapter = DuaCollectionAdapter(requireContext())
+        duaCollectionAdapter.setData(DuaGenerator.getListDua())
+
+        binding.includeInfo.rvDuaCollection.apply {
+            adapter = duaCollectionAdapter
+            layoutManager = LinearLayoutManager(this@MainFragment.context)
+            setHasFixedSize(true)
         }
     }
 
@@ -113,6 +131,36 @@ class MainFragment(viewModelTest: FragmentMainViewModel? = null) : BaseFragment<
             }
         })
 
+        viewModel.prayer.observe(viewLifecycleOwner, {
+
+            when(it.status){
+                EnumStatus.SUCCESS -> {
+                    val sdf = SimpleDateFormat("dd", Locale.getDefault())
+                    val currentDate = sdf.format(Date())
+                    val data = createTodayData(it.data, currentDate)
+                    val date = data?.date
+                    val hijriDate = date?.hijri
+                    val gregorianDate = date?.gregorian
+
+                    binding.includeInfo.tvImsakDate.text = date?.readable
+                    binding.includeInfo.tvImsakTime.text = data?.timings?.imsak
+                    binding.includeInfo.tvGregorianDate.text = gregorianDate?.date
+                    binding.includeInfo.tvHijriDate.text = hijriDate?.date
+                    binding.includeInfo.tvGregorianMonth.text = gregorianDate?.month?.en
+                    binding.includeInfo.tvHijriMonth.text = hijriDate?.month?.en + " / " + hijriDate?.month?.ar
+                    binding.includeInfo.tvGregorianDay.text = gregorianDate?.weekday?.en
+                    binding.includeInfo.tvHijriDay.text = hijriDate?.weekday?.en + " / " + hijriDate?.weekday?.ar
+                }
+                EnumStatus.LOADING -> {
+                    setState(it.status)
+                }
+                EnumStatus.ERROR ->{
+                    showBottomSheet(description = getString(R.string.fetch_failed), isCancelable = true, isFinish = false)
+                    setState(it.status)
+                }
+            }
+        })
+
         viewModel.getMsSetting(0)
     }
 
@@ -128,7 +176,7 @@ class MainFragment(viewModelTest: FragmentMainViewModel? = null) : BaseFragment<
                     tempMsApi1 = it.data
                     bindWidgetLocation(it.data)
                     updateMonthAndYearMsApi1(it.data)
-                    fetchPrayerApi(it.data)
+                    syncNotifiedPrayer(it.data)
                 }
                 EnumStatus.ERROR -> {
                     showBottomSheet(isCancelable = false, isFinish = true)
@@ -155,6 +203,53 @@ class MainFragment(viewModelTest: FragmentMainViewModel? = null) : BaseFragment<
             }
         })
 
+        viewModel.msApi1.observe(viewLifecycleOwner, { retval ->
+            when(retval.status){
+                EnumStatus.SUCCESS -> {
+                    if(retval.data == null)
+                        showBottomSheet(isCancelable = false, isFinish = true)
+
+                    val city = LocationHelper.getCity(requireContext(), retval.data!!.latitude.toDouble(), retval.data.longitude.toDouble())
+
+                    binding.includeInfo.tvCity.text = city ?: EnumConfig.CITY_NOT_FOUND_STR
+                    fetchPrayerApi(retval.data)
+                }
+                EnumStatus.ERROR -> showBottomSheet(isCancelable = false, isFinish = true)
+                else -> {/*NO-OP*/}
+            }
+        })
+
+    }
+
+    private fun setState(status: EnumStatus){
+        when(status){
+            EnumStatus.SUCCESS -> { }
+            EnumStatus.LOADING -> {
+                binding.includeInfo.tvImsakDate.text = getString(R.string.loading)
+                binding.includeInfo.tvImsakTime.text = getString(R.string.loading)
+                binding.includeInfo.tvGregorianDate.text = getString(R.string.loading)
+                binding.includeInfo.tvHijriDate.text = getString(R.string.loading)
+                binding.includeInfo.tvGregorianMonth.text = getString(R.string.loading)
+                binding.includeInfo.tvHijriMonth.text = getString(R.string.loading)
+                binding.includeInfo.tvGregorianDay.text = getString(R.string.loading)
+                binding.includeInfo.tvHijriDay.text = getString(R.string.loading)
+            }
+            EnumStatus.ERROR ->{
+                binding.includeInfo.tvImsakDate.text = getString(R.string.fetch_failed)
+                binding.includeInfo.tvImsakTime.text = getString(R.string.fetch_failed_sort)
+                binding.includeInfo.tvGregorianDate.text = getString(R.string.fetch_failed_sort)
+                binding.includeInfo.tvHijriDate.text = getString(R.string.fetch_failed_sort)
+                binding.includeInfo.tvGregorianMonth.text = getString(R.string.fetch_failed_sort)
+                binding.includeInfo.tvHijriMonth.text = getString(R.string.fetch_failed_sort)
+                binding.includeInfo.tvGregorianDay.text = getString(R.string.fetch_failed_sort)
+                binding.includeInfo.tvHijriDay.text = getString(R.string.fetch_failed_sort)
+            }
+            else -> {/*NO-OP*/}
+        }
+    }
+
+    private fun createTodayData(it: PrayerResponse?, currentDate: String): Data? {
+        return it?.data?.find { obj -> obj.date.gregorian?.day == currentDate }
     }
 
     private fun updateMonthAndYearMsApi1(data: MsApi1) {
@@ -228,8 +323,12 @@ class MainFragment(viewModelTest: FragmentMainViewModel? = null) : BaseFragment<
 
 
     /* fetch API data */
-    private fun fetchPrayerApi(msApi1: MsApi1) {
+    private fun syncNotifiedPrayer(msApi1: MsApi1) {
         viewModel.syncNotifiedPrayer(msApi1)
+    }
+
+    private fun fetchPrayerApi(mMsApi1: MsApi1) {
+        viewModel.fetchPrayerApi(mMsApi1)
     }
 
     private fun fetchQuranSurah(){
@@ -481,8 +580,12 @@ class MainFragment(viewModelTest: FragmentMainViewModel? = null) : BaseFragment<
             /* fetching Prayer API */
             if(tempHour == 0 && tempMinute == 0 && tempSecond == 1){
                 withContext(Dispatchers.Main){
-                    tempMsApi1?.let { fetchPrayerApi(it) }
+                    tempMsApi1?.let {
+                        syncNotifiedPrayer(it)
+                        return@withContext
+                    }
                 }
+                break
             }
 
             withContext(Dispatchers.Main){

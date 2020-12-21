@@ -1,4 +1,4 @@
-package com.programmergabut.solatkuy.ui.fragmentquran
+package com.programmergabut.solatkuy.ui.activitymain.fragmentquran
 
 import android.os.Bundle
 import android.text.Editable

@@ -2,7 +2,7 @@
 <menu
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".ui.main.MainActivity">
+    tools:context=".ui.activitymain.MainActivity">
 
     <item android:id="@+id/fragmentMain"
         android:icon="@drawable/ic_prayer_time_24dp"
@@ -13,9 +13,6 @@
     <item android:id="@+id/quranFragment"
         android:icon="@drawable/ic_holy_quran_24"
         android:title="@string/holy_quran"/>
-    <item android:id="@+id/fragmentInfo"
-        android:icon="@drawable/ic_info_24dp"
-        android:title="@string/info"/>
     <item android:id="@+id/fragmentSetting"
         android:icon="@drawable/ic_settings_24dp"
         android:title="@string/setting"/>

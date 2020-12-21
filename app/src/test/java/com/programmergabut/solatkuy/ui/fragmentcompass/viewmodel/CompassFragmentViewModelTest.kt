@@ -9,7 +9,7 @@ import com.programmergabut.solatkuy.data.PrayerRepository
 import com.programmergabut.solatkuy.data.PrayerRepositoryImpl
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
 import com.programmergabut.solatkuy.data.remote.remoteentity.compassJson.CompassResponse
-import com.programmergabut.solatkuy.ui.fragmentcompass.FragmentCompassViewModel
+import com.programmergabut.solatkuy.ui.activitymain.fragmentcompass.FragmentCompassViewModel
 import com.programmergabut.solatkuy.util.Resource
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest

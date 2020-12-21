@@ -7,6 +7,7 @@ import com.programmergabut.solatkuy.CoroutinesTestRule
 import com.programmergabut.solatkuy.DummyRetValue
 import com.programmergabut.solatkuy.data.QuranRepositoryImpl
 import com.programmergabut.solatkuy.data.remote.remoteentity.quranallsurahJson.AllSurahResponse
+import com.programmergabut.solatkuy.ui.activitymain.fragmentquran.QuranFragmentViewModel
 import com.programmergabut.solatkuy.util.Resource
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest

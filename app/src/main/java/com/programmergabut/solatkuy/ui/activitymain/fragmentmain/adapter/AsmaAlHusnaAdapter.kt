@@ -1,4 +1,4 @@
-package com.programmergabut.solatkuy.ui.fragmentinfo.adapter
+package com.programmergabut.solatkuy.ui.activitymain.fragmentmain.adapter
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

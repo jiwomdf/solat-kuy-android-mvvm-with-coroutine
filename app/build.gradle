@@ -1,6 +1,5 @@
 apply plugin: 'com.android.application'
 apply plugin: 'kotlin-android'
-apply plugin: 'kotlin-android-extensions'
 apply plugin: 'kotlin-kapt'
 apply plugin: 'dagger.hilt.android.plugin'
 
@@ -31,15 +30,9 @@ android {
     }
 
     buildFeatures {
-
         dataBinding = true
-
-        // for view binding:
         // viewBinding = true
     }
-
-    dataBinding.enabled = true
-
     testOptions {
         unitTests.returnDefaultValues = true
     }
@@ -88,6 +81,7 @@ dependencies {
 
     //Lottie
     implementation 'com.airbnb.android:lottie:3.4.1'
+    implementation 'androidx.cardview:cardview:1.0.0'
 
     // Glide
     kapt 'com.github.bumptech.glide:compiler:4.11.0'

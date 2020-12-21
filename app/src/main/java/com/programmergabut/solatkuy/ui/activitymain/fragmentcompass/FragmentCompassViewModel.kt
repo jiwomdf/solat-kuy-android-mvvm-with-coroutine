@@ -1,4 +1,4 @@
-package com.programmergabut.solatkuy.ui.fragmentcompass
+package com.programmergabut.solatkuy.ui.activitymain.fragmentcompass
 
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData

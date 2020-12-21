@@ -8,6 +8,7 @@
         motion:constraintSetStart="@id/start"
         motion:duration="1000">
         <OnSwipe
+            motion:touchAnchorId="@+id/ll_container"
             motion:touchAnchorSide="bottom" />
     </Transition>
 

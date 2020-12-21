@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".ui.fragmentquran.QuranFragment">
+    tools:context=".ui.activitymain.fragmentquran.QuranFragment">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -42,7 +42,6 @@
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
                 android:layout_alignParentTop="true"
-                android:layout_marginTop="@dimen/small_margin"
                 android:layout_marginEnd="@dimen/small_margin"
                 android:layout_toStartOf="@+id/cv_fav_ayah"
                 app:cardBackgroundColor="@color/purple_700"
@@ -61,7 +60,6 @@
                 android:id="@+id/cv_fav_ayah"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/small_margin"
                 android:layout_marginEnd="@dimen/medium_margin"
                 android:layout_marginBottom="@dimen/small_margin"
                 android:layout_alignParentEnd="true"

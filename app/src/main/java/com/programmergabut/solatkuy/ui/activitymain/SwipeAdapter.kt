@@ -1,4 +1,4 @@
-package com.programmergabut.solatkuy.ui.main
+package com.programmergabut.solatkuy.ui.activitymain
 
 /*
  * Created by Katili Jiwo Adi Wiyono on 31/03/20.

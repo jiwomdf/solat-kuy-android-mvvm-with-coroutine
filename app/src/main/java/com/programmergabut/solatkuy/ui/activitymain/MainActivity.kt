@@ -1,4 +1,4 @@
-package com.programmergabut.solatkuy.ui.main
+package com.programmergabut.solatkuy.ui.activitymain
 
 import android.Manifest
 import android.app.AlertDialog

@@ -1,4 +1,4 @@
-package com.programmergabut.solatkuy.ui.fragmentcompass
+package com.programmergabut.solatkuy.ui.activitymain.fragmentcompass
 
 import android.app.Dialog
 import android.content.Context.SENSOR_SERVICE

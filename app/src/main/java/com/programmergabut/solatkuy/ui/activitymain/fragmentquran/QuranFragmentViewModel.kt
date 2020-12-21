@@ -1,4 +1,4 @@
-package com.programmergabut.solatkuy.ui.fragmentquran
+package com.programmergabut.solatkuy.ui.activitymain.fragmentquran
 
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData

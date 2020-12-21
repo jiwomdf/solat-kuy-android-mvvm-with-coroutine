@@ -1,4 +1,4 @@
-package com.programmergabut.solatkuy.ui.fragmentquran
+package com.programmergabut.solatkuy.ui.activitymain.fragmentquran
 
 import android.view.LayoutInflater
 import android.view.ViewGroup

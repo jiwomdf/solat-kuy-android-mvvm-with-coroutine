@@ -1,4 +1,4 @@
-package com.programmergabut.solatkuy.ui.fragmentsetting
+package com.programmergabut.solatkuy.ui.activitymain.fragmentsetting
 
 import android.Manifest
 import android.app.AlertDialog

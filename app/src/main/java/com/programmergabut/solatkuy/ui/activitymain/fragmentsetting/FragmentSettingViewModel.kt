@@ -1,17 +1,22 @@
-package com.programmergabut.solatkuy.ui.main
+package com.programmergabut.solatkuy.ui.activitymain.fragmentsetting
 
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
+import com.programmergabut.solatkuy.data.PrayerRepository
 import com.programmergabut.solatkuy.data.PrayerRepositoryImpl
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
 import com.programmergabut.solatkuy.util.EnumStatus
 import kotlinx.coroutines.launch
 
-class MainActivityViewModel @ViewModelInject constructor(val prayerRepositoryImpl: PrayerRepositoryImpl) : ViewModel(){
+/*
+ * Created by Katili Jiwo Adi Wiyono on 25/03/20.
+ */
 
-    val msSetting = prayerRepositoryImpl.getMsSetting()
+class FragmentSettingViewModel @ViewModelInject constructor(val prayerRepositoryImpl: PrayerRepository): ViewModel() {
+
+    val msApi1 = prayerRepositoryImpl.getMsApi1()
 
     var errStatus = MutableLiveData<EnumStatus>()
     private var errMessage = ""
@@ -43,10 +48,6 @@ class MainActivityViewModel @ViewModelInject constructor(val prayerRepositoryImp
         prayerRepositoryImpl.updateMsApi1(msApi1)
         errMessage = "Success change the coordinate"
         errStatus.postValue(EnumStatus.SUCCESS)
-    }
-
-    fun updateIsHasOpenApp(isHasOpen: Boolean) = viewModelScope.launch{
-        prayerRepositoryImpl.updateIsHasOpenApp(isHasOpen)
     }
 
 }
