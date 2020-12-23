@@ -11,6 +11,7 @@ import android.util.Log
 import com.programmergabut.solatkuy.data.local.localentity.NotifiedPrayer
 import com.programmergabut.solatkuy.ui.activityprayer.DuaActivity
 import com.programmergabut.solatkuy.util.EnumConfig
+import com.programmergabut.solatkuy.util.LogConfig.Companion.ERROR
 import com.programmergabut.solatkuy.util.helper.NotificationHelper
 import com.programmergabut.solatkuy.util.generator.DuaGenerator
 import java.util.*
@@ -21,32 +22,33 @@ import java.util.*
 
 class PrayerBroadcastReceiver: BroadcastReceiver() {
 
-    private var pID: Int? = null
-    private var pName: String? = null
-    private var pTime: String? = null
-    private var pCity: String? = null
-
     companion object{
-        const val prayer_id = "prayer_id"
-        const val prayer_name = "prayer_name"
-        const val prayer_time = "prayer_time"
-        const val prayer_city = "prayer_city"
-        const val list_prayer_bundle = "list_prayer_bundle"
+        const val PRAYER_ID = "prayer_id"
+        const val PRAYER_NAME = "prayer_name"
+        const val PRAYER_TIME = "prayer_time"
+        const val PRAYER_CITY = "prayer_city"
+        const val LIST_PRAYER_BUNDLE = "list_prayer_bundle"
+
+        const val LIST_PRAYER_ID = "list_PID"
+        const val LIST_PRAYER_NAME = "list_PName"
+        const val LIST_PRAYER_TIME = "list_PTime"
+        const val LIST_PRAYER_IS_NOTIFIED = "list_PIsNotified"
+        const val LIST_PRAYER_CITY = "listPrayerCity"
     }
 
     override fun onReceive(context: Context?, intent: Intent?) {
         val mNotificationHelper = NotificationHelper(context!!)
 
-        pID = intent?.getIntExtra(prayer_id, -1)
-        pName = intent?.getStringExtra(prayer_name)
-        pTime = intent?.getStringExtra(prayer_time)
-        pCity = intent?.getStringExtra(prayer_city)
-        val listPrayerBundle = intent?.extras?.getBundle(list_prayer_bundle)
+        val pID = intent?.getIntExtra(PRAYER_ID, -1)
+        val pName = intent?.getStringExtra(PRAYER_NAME)
+        val pTime = intent?.getStringExtra(PRAYER_TIME)
+        var pCity = intent?.getStringExtra(PRAYER_CITY)
+        val listPrayerBundle = intent?.extras?.getBundle(LIST_PRAYER_BUNDLE)
 
         val listData = bundleDeserializer(listPrayerBundle)
 
         if(pID == -1 || pName.isNullOrEmpty() || pTime.isNullOrEmpty() || listPrayerBundle == null){
-            Log.d("<Error>","PrayerBroadcastReceiver, pID == -1 || pName.isNullOrEmpty() || pTime.isNullOrEmpty() || listPrayerBundle == null")
+            Log.d(ERROR,"PrayerBroadcastReceiver, pID == -1 || pName.isNullOrEmpty() || pTime.isNullOrEmpty() || listPrayerBundle == null")
             throw Exception("PrayerBroadcastReceiver")
         }
 
@@ -59,8 +61,8 @@ class PrayerBroadcastReceiver: BroadcastReceiver() {
 
         /*
         * Deprecated, 4 June 2020
-        * because change the notification mechanism to fire all the data
-        * then cancel all alarm manager when the notification come, then fire it all again
+        * because the changes of the notification mechanism
+        * first fire all the data then cancel all alarm manager when the notification come, then fire it all again
         * also remove the more time feature
 
           when (pID!!) {
@@ -86,13 +88,12 @@ class PrayerBroadcastReceiver: BroadcastReceiver() {
             }
         } */
 
-        val pendingIntent = PendingIntent.getActivity(context, EnumConfig.ID_DUA, duaIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val pendingIntent = PendingIntent.getActivity(context, EnumConfig.ID_DUA_PENDING_INTENT, duaIntent, PendingIntent.FLAG_UPDATE_CURRENT)
 
-        val nb = mNotificationHelper.getPrayerReminderNC(/* pID!!,*/ pTime!!, pCity!!, pName!!, /* listPrayerBundle, */ pendingIntent)
-        mNotificationHelper.getManager()?.notify(EnumConfig.ID_MAIN, nb.build())
+        val nb = mNotificationHelper.getPrayerReminderNC(/* pID!!,*/ pTime, pCity, pName, /* listPrayerBundle, */ pendingIntent)
+        mNotificationHelper.getManager()?.notify(EnumConfig.ID_PRAYER_NOTIFICATION, nb.build())
 
-        executeNextNotification(listData, listPrayerBundle, context, pCity!!)
-
+        executeNextNotification(listData, listPrayerBundle, context, pCity)
     }
 
     private fun removeAllNotification(context: Context, listData: MutableList<NotifiedPrayer>){
@@ -105,51 +106,50 @@ class PrayerBroadcastReceiver: BroadcastReceiver() {
         }
     }
 
-    private fun executeNextNotification(listData: MutableList<NotifiedPrayer>, listPrayerBundle: Bundle?, context: Context, pCity: String) {
+    private fun executeNextNotification(listPrayer: MutableList<NotifiedPrayer>, listPrayerBundle: Bundle?, context: Context, pCity: String) {
 
         val intent = Intent(context, PrayerBroadcastReceiver::class.java)
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
 
         /* remove img_sunrise */
-        val newList = listData.filter { x -> x.prayerName !=  EnumConfig.SUNRISE} as MutableList<NotifiedPrayer>
+        val newPrayerList = listPrayer.filter { x -> x.prayerName !=  EnumConfig.SUNRISE} as MutableList<NotifiedPrayer>
 
-        newList.sortBy { x -> x.prayerID }
-        newList.forEachIndexed { _, it ->
+        newPrayerList.sortBy { prayer -> prayer.prayerID }
+        newPrayerList.forEach{ prayer ->
 
-            val arrPrayer = it.prayerTime.split(":")
-
+            val arrPrayer = prayer.prayerTime.split(":")
             val hour = arrPrayer[0].trim()
             val minute = arrPrayer[1].split(" ")[0].trim()
 
-            val c = Calendar.getInstance()
-            c.set(Calendar.HOUR_OF_DAY, hour.toInt())
-            c.set(Calendar.MINUTE, minute.toInt())
-            c.set(Calendar.SECOND, 0)
+            val calendar = Calendar.getInstance()
+            calendar.set(Calendar.HOUR_OF_DAY, hour.toInt())
+            calendar.set(Calendar.MINUTE, minute.toInt())
+            calendar.set(Calendar.SECOND, 0)
 
-            intent.putExtra("prayer_id", it.prayerID)
-            intent.putExtra("prayer_name", it.prayerName)
-            intent.putExtra("prayer_time", it.prayerTime)
-            intent.putExtra("prayer_city", pCity)
-            intent.putExtra("list_prayer_bundle", listPrayerBundle)
+            intent.putExtra(PRAYER_ID, prayer.prayerID)
+            intent.putExtra(PRAYER_NAME, prayer.prayerName)
+            intent.putExtra(PRAYER_TIME, prayer.prayerTime)
+            intent.putExtra(PRAYER_CITY, pCity)
+            intent.putExtra(LIST_PRAYER_BUNDLE, listPrayerBundle)
 
-            val pendingIntent = PendingIntent.getBroadcast(context, it.prayerID, intent, 0)
+            val pendingIntent = PendingIntent.getBroadcast(context, prayer.prayerID, intent, 0)
 
-            if(c.before(Calendar.getInstance()))
-                c.add(Calendar.DATE, 1)
+            if(calendar.before(Calendar.getInstance()))
+                calendar.add(Calendar.DATE, 1)
 
-            if(it.isNotified)
+            if(prayer.isNotified)
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-                    alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, c.timeInMillis, pendingIntent)
+                    alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
                 else
-                    alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.timeInMillis, pendingIntent)
+                    alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
             else
                 alarmManager.cancel(pendingIntent)
         }
 
         /*
         * Deprecated, 4 June 2020
-        * because change the notification mechanism to fire all the data
-        * then cancel all alarm manager when the notification come, then fire it all again
+        * because the changes of the notification mechanism
+        * first fire all the data then cancel all alarm manager when the notification come, then fire it all again
         * also remove the more time feature
 
         val selID = SelectPrayerHelper.selNextPrayerByLastID(newList, pID!!)
@@ -192,24 +192,24 @@ class PrayerBroadcastReceiver: BroadcastReceiver() {
 
         val listData = mutableListOf<NotifiedPrayer>()
 
-        val listPID  =  listPrayerBundle?.getIntegerArrayList("list_PID")
-        val listPName = listPrayerBundle?.getStringArrayList("list_PName")
-        val listPTime = listPrayerBundle?.getStringArrayList("list_PTime")
-        val listPIsNotified = listPrayerBundle?.getIntegerArrayList("list_PIsNotified")
-        //val listPCity = listPrayerBundle?.getStringArrayList("list_PCity")
+        val listPrayerID  =  listPrayerBundle?.getIntegerArrayList(LIST_PRAYER_ID)
+        val listPrayerName = listPrayerBundle?.getStringArrayList(LIST_PRAYER_NAME)
+        val listPrayerTime = listPrayerBundle?.getStringArrayList(LIST_PRAYER_TIME)
+        val listPrayerIsNotified = listPrayerBundle?.getIntegerArrayList(LIST_PRAYER_IS_NOTIFIED)
+        /* val listPCity = listPrayerBundle?.getStringArrayList(LIST_PRAYER_CITY) */
 
-        val listCount = listPID?.count()
+        val listCount = listPrayerID?.count()
 
         for(i in 0 until listCount!!){
 
-            val isNotified: Boolean = listPIsNotified!![i] == 1
+            val isNotified: Boolean = listPrayerIsNotified!![i] == 1
 
             listData.add(
                 NotifiedPrayer(
-                    listPID[i],
-                    listPName?.get(i)!!,
+                    listPrayerID[i],
+                    listPrayerName?.get(i)!!,
                     isNotified,
-                    listPTime?.get(i)!!
+                    listPrayerTime?.get(i)!!
                 )
             )
         }
@@ -218,18 +218,18 @@ class PrayerBroadcastReceiver: BroadcastReceiver() {
     }
 
     private fun intentToDuaAfterAdhanGenerator(context: Context): Intent {
-        val i = Intent(context, DuaActivity::class.java)
+        val intent = Intent(context, DuaActivity::class.java)
         val duaAfterAdhan = DuaGenerator.getListDua().find { x -> x.id == 1}
 
-        i.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
-        i.putExtra(DuaActivity.DUA_TITLE, duaAfterAdhan?.title)
-        i.putExtra(DuaActivity.DUA_AR, duaAfterAdhan?.arab)
-        i.putExtra(DuaActivity.DUA_LT, duaAfterAdhan?.latin)
-        i.putExtra(DuaActivity.DUA_EN, duaAfterAdhan?.english)
-        i.putExtra(DuaActivity.DUA_IN, duaAfterAdhan?.indonesia)
-        i.putExtra(DuaActivity.DUA_REF, duaAfterAdhan?.reference)
+        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
+        intent.putExtra(DuaActivity.DUA_TITLE, duaAfterAdhan?.title)
+        intent.putExtra(DuaActivity.DUA_AR, duaAfterAdhan?.arab)
+        intent.putExtra(DuaActivity.DUA_LT, duaAfterAdhan?.latin)
+        intent.putExtra(DuaActivity.DUA_EN, duaAfterAdhan?.english)
+        intent.putExtra(DuaActivity.DUA_IN, duaAfterAdhan?.indonesia)
+        intent.putExtra(DuaActivity.DUA_REF, duaAfterAdhan?.reference)
 
-        return i
+        return intent
     }
 
 }

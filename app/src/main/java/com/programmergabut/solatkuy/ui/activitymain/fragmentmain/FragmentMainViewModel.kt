@@ -5,6 +5,7 @@ import androidx.lifecycle.*
 import com.programmergabut.solatkuy.data.PrayerRepository
 import com.programmergabut.solatkuy.data.QuranRepository
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
+import com.programmergabut.solatkuy.data.local.localentity.MsFavAyah
 import com.programmergabut.solatkuy.data.local.localentity.MsSetting
 import com.programmergabut.solatkuy.data.local.localentity.NotifiedPrayer
 import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.PrayerResponse
@@ -25,12 +26,26 @@ class FragmentMainViewModel @ViewModelInject constructor(
 ): ViewModel() {
 
     val msApi1 = prayerRepository.getMsApi1()
-    val favAyah = quranRepository.getListFavAyah()
+
+    private var _favAyah = MutableLiveData<Int>()
+    val favAyah: LiveData<Resource<List<MsFavAyah>>> = Transformations.switchMap(_favAyah){ result ->
+        val data = MediatorLiveData<Resource<List<MsFavAyah>>>()
+        val local = quranRepository.getListFavAyah()
+        data.value = Resource.loading(null)
+
+        data.addSource(local){
+            data.value = Resource.success(it)
+        }
+
+        return@switchMap data
+    }
+    fun getMsFavAyah() {
+        this._favAyah.value = 0
+    }
 
     private var _notifiedPrayer = MutableLiveData<Resource<List<NotifiedPrayer>>>()
     val notifiedPrayer: LiveData<Resource<List<NotifiedPrayer>>>
         get() = _notifiedPrayer
-
     fun syncNotifiedPrayer(msApi1: MsApi1) = viewModelScope.launch {
         _notifiedPrayer.postValue(Resource.loading(null))
         try {
@@ -57,17 +72,19 @@ class FragmentMainViewModel @ViewModelInject constructor(
     private var _readSurahEn = MutableLiveData<Resource<ReadSurahEnResponse>>()
     val readSurahEn: LiveData<Resource<ReadSurahEnResponse>>
         get() = _readSurahEn
-
     fun fetchReadSurahEn(nInSurah: Int) = viewModelScope.launch{
 
         _readSurahEn.postValue(Resource.loading(null))
-
         try {
             runIdlingResourceIncrement()
-            quranRepository.fetchReadSurahEn(nInSurah).let {
-                _readSurahEn.postValue(Resource.success(it))
-                runIdlingResourceDecrement()
+            val response = quranRepository.fetchReadSurahEn(nInSurah).await()
+            if(response.statusResponse == "1"){
+                _readSurahEn.postValue(Resource.success(response))
             }
+            else{
+                _readSurahEn.postValue(Resource.error(response.messageResponse, null))
+            }
+            runIdlingResourceDecrement()
         }
         catch (e: Exception){
             _readSurahEn.postValue(Resource.error(e.message.toString(), null))
@@ -79,7 +96,6 @@ class FragmentMainViewModel @ViewModelInject constructor(
     private var _prayer = MutableLiveData<Resource<PrayerResponse>>()
     val prayer: LiveData<Resource<PrayerResponse>>
         get() = _prayer
-
     fun fetchPrayerApi(msApi1: MsApi1){
         viewModelScope.launch {
 
@@ -104,8 +120,8 @@ class FragmentMainViewModel @ViewModelInject constructor(
     var msSetting: LiveData<Resource<MsSetting>> = Transformations.switchMap(_setting){
         prayerRepository.getMsSetting()
     }
-    fun getMsSetting(ayahID: Int){
-        this._setting.value = ayahID
+    fun getMsSetting(){
+        this._setting.value = 0
     }
 
     /*fun updateNotifiedPrayer(NotifiedPrayer: NotifiedPrayer){

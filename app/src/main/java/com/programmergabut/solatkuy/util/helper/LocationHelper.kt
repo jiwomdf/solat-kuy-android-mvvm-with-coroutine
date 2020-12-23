@@ -9,10 +9,9 @@ class LocationHelper {
 
     companion object{
         fun getCity(context: Context, latitude: Double, longitude: Double): String? {
-            val geoCoder = Geocoder(context, Locale.getDefault())
-            var cityName: String?
+            val cityName: String?
             cityName = try {
-                val addresses: List<Address> = geoCoder.getFromLocation(latitude, longitude, 1)
+                val addresses: List<Address> = Geocoder(context, Locale.getDefault()).getFromLocation(latitude, longitude, 1)
                 addresses[0].subAdminArea
             } catch (ex: Exception){
                 "-"

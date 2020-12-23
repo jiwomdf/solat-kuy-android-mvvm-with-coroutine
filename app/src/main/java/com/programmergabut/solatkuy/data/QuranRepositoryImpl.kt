@@ -7,8 +7,15 @@ import com.programmergabut.solatkuy.data.local.dao.MsFavSurahDao
 import com.programmergabut.solatkuy.data.local.localentity.MsFavAyah
 import com.programmergabut.solatkuy.data.local.localentity.MsFavSurah
 import com.programmergabut.solatkuy.data.remote.RemoteDataSourceApiAlquran
-import com.programmergabut.solatkuy.data.remote.RemoteDataSourceApiAlquranImpl
+import com.programmergabut.solatkuy.data.remote.remoteentity.quranallsurahJson.AllSurahResponse
+import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonAr.ReadSurahArResponse
+import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonEn.ReadSurahEnResponse
 import com.programmergabut.solatkuy.util.Resource
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.async
+import java.lang.Exception
 import javax.inject.Inject
 
 class QuranRepositoryImpl @Inject constructor(
@@ -21,29 +28,11 @@ class QuranRepositoryImpl @Inject constructor(
      *Room
      */
     /* MsFavAyah */
-    override fun getListFavAyah(): LiveData<Resource<List<MsFavAyah>>> {
-        val data = MediatorLiveData<Resource<List<MsFavAyah>>>()
-        val listfavAyah = msFavAyahDao.getListFavAyah()
-
-        data.value = Resource.loading(null)
-
-        data.addSource(listfavAyah) {
-            data.value = Resource.success(it)
-        }
-
-        return data
+    override fun getListFavAyah(): LiveData<List<MsFavAyah>> {
+        return msFavAyahDao.getListFavAyah()
     }
-    override fun getListFavAyahBySurahID(surahID: Int): LiveData<Resource<List<MsFavAyah>>> {
-        val data = MediatorLiveData<Resource<List<MsFavAyah>>>()
-        val listfavAyah = msFavAyahDao.getListFavAyahBySurahID(surahID)
-
-        data.value = Resource.loading(null)
-
-        data.addSource(listfavAyah) {
-            data.value = Resource.success(it)
-        }
-
-        return data
+    override fun getListFavAyahBySurahID(surahID: Int): LiveData<List<MsFavAyah>> {
+        return msFavAyahDao.getListFavAyahBySurahID(surahID)
     }
     override suspend fun insertFavAyah(msFavAyah: MsFavAyah) = msFavAyahDao.insertMsAyah(msFavAyah)
     override suspend fun deleteFavAyah(msFavAyah: MsFavAyah) = msFavAyahDao.deleteMsFavAyah(msFavAyah)
@@ -79,8 +68,49 @@ class QuranRepositoryImpl @Inject constructor(
     /*
      * Retrofit
      */
-    override suspend fun fetchReadSurahEn(surahID: Int) = remoteDataSourceApiAlquranImpl.fetchReadSurahEn(surahID)
-    override suspend fun fetchAllSurah() = remoteDataSourceApiAlquranImpl.fetchAllSurah()
-    override suspend fun fetchReadSurahAr(surahID: Int) = remoteDataSourceApiAlquranImpl.fetchReadSurahAr(surahID)
+    override suspend fun fetchReadSurahEn(surahID: Int): Deferred<ReadSurahEnResponse> {
+        return CoroutineScope(IO).async {
+            lateinit var response: ReadSurahEnResponse
+            try {
+                response = remoteDataSourceApiAlquranImpl.fetchReadSurahEn(surahID)
+                response.statusResponse = "1"
+            }
+            catch (ex: Exception){
+                response.statusResponse = "-1"
+                response.messageResponse = ex.message.toString()
+            }
+            response
+        }
+    }
+
+    override suspend fun fetchAllSurah(): Deferred<AllSurahResponse> {
+        return CoroutineScope(IO).async {
+            lateinit var response: AllSurahResponse
+            try {
+                response = remoteDataSourceApiAlquranImpl.fetchAllSurah()
+                response.statusResponse = "1"
+            }
+            catch (ex: Exception){
+                response.statusResponse = "-1"
+                response.messageResponse = ex.message.toString()
+            }
+            response
+        }
+    }
+
+    override suspend fun fetchReadSurahAr(surahID: Int): Deferred<ReadSurahArResponse> {
+        return CoroutineScope(IO).async {
+            lateinit var response : ReadSurahArResponse
+            try {
+                response = remoteDataSourceApiAlquranImpl.fetchReadSurahAr(surahID)
+                response.statusResponse = "1"
+            }
+            catch (ex: Exception){
+                response.statusResponse = "-1"
+                response.messageResponse = ex.message.toString()
+            }
+            response
+        }
+    }
 
 }

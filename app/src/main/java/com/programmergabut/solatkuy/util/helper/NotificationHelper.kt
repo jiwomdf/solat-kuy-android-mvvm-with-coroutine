@@ -26,24 +26,22 @@ import kotlinx.coroutines.launch
 
 class NotificationHelper(context: Context): ContextWrapper(context) {
 
-    private val channel1ID: String = "c_1"
-    private val channel1Name: String = "channel1"
+    private val channelNotificationPrayerID: String = "channel_notification_prayer_1"
+    private val channelNotificationPrayerName: String = "channel_notification_prayer_name_1"
     private var mManager: NotificationManager? = null
 
     init {
-
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channel1 =  NotificationChannel(channel1ID, channel1Name, NotificationManager.IMPORTANCE_DEFAULT)
+            val channelNotificationPrayer =  NotificationChannel(channelNotificationPrayerID, channelNotificationPrayerName, NotificationManager.IMPORTANCE_DEFAULT)
 
-            channel1.enableLights(true)
-            channel1.vibrationPattern = longArrayOf(0)
-            channel1.enableVibration(true)
-            channel1.lightColor = R.color.dark_500
-            channel1.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
+            channelNotificationPrayer.enableLights(true)
+            channelNotificationPrayer.vibrationPattern = longArrayOf(0)
+            channelNotificationPrayer.enableVibration(true)
+            channelNotificationPrayer.lightColor = R.color.purple_500
+            channelNotificationPrayer.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
 
-            getManager()?.createNotificationChannel(channel1)
+            getManager()?.createNotificationChannel(channelNotificationPrayer)
         }
-
     }
 
     fun getManager(): NotificationManager? {
@@ -60,8 +58,8 @@ class NotificationHelper(context: Context): ContextWrapper(context) {
 
         /*
         * Deprecated, 4 June 2020
-        * because change the notification mechanism to fire all the data
-        * then cancel all alarm manager when the notification come, then fire it all again
+        * because the changes of the notification mechanism
+        * first fire all the data then cancel all alarm manager when the notification come, then fire it all again
         * also remove the more time feature
         *
         val moreTimeIntent = Intent(this, MoreTimeBroadcastReceiver::class.java)
@@ -74,39 +72,27 @@ class NotificationHelper(context: Context): ContextWrapper(context) {
         val actionIntent = PendingIntent.getBroadcast(this, 0, moreTimeIntent,
             PendingIntent.FLAG_UPDATE_CURRENT) */
 
-        val lIcon = when(pName){
+        val bitmap = BitmapFactory.decodeResource(resources, when(pName){
             getString(R.string.fajr) -> R.drawable.img_fajr
             getString(R.string.dhuhr) -> R.drawable.img_dhuhr
             getString(R.string.asr) -> R.drawable.img_asr
             getString(R.string.maghrib) -> R.drawable.img_maghrib
             getString(R.string.isha) -> R.drawable.img_isha
             else -> R.drawable.img_fajr
-        }
+        })
 
-        val bitmap = BitmapFactory.decodeResource(resources, lIcon)
-
-        val v = this.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-            CoroutineScope(Dispatchers.Default).launch{
-                for(i in 1 .. 5){
-
-                    if(i == 1)
-                        continue
-
-                    v.vibrate(VibrationEffect.createOneShot(800, VibrationEffect.DEFAULT_AMPLITUDE))
-                    delay(1200)
-                }
-            }
-        }
-        else{
-            for(i in 1 .. 4){
-                v.vibrate(200)
-            }
+        val vibrator = this.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+        if(vibrator.hasVibrator()){
+            val vibrationPattern = longArrayOf(0, 200, 120, 200, 120, 200, 120, 200)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+               vibrator.vibrate(VibrationEffect.createWaveform(vibrationPattern, VibrationEffect.DEFAULT_AMPLITUDE))
+            else
+                vibrator.vibrate(vibrationPattern, -1)
         }
 
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-            return NotificationCompat.Builder(applicationContext, channel1ID)
+            return NotificationCompat.Builder(applicationContext, channelNotificationPrayerID)
                 .setContentTitle(pName)
                 .setContentText(message)
                 .setSubText(EnumConfig.DUA_AFTER_ADHAN_STR)
@@ -115,19 +101,19 @@ class NotificationHelper(context: Context): ContextWrapper(context) {
                 .setAutoCancel(true)
                 //.addAction(R.mipmap.ic_launcher, "remind me 10 more minute", actionIntent)
                 .setLargeIcon(bitmap)
-                .setSmallIcon(R.drawable.ic_notifications_active_24dp)
+                .setSmallIcon(R.drawable.ic_launcher_foreground)
                 .setContentIntent(intent)
                 .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
                 .setOnlyAlertOnce(true)
                 .setPriority(NotificationCompat.DEFAULT_ALL)
         }
         else{
-            return NotificationCompat.Builder(this, channel1ID)
+            return NotificationCompat.Builder(this, channelNotificationPrayerID)
                 .setContentTitle(pName)
                 .setContentText(message)
                 .setSubText(EnumConfig.DUA_AFTER_ADHAN_STR)
                 .setVibrate(longArrayOf(500, 500, 500))
-                .setSmallIcon(R.drawable.ic_notifications_active_24dp)
+                .setSmallIcon(R.drawable.ic_launcher_foreground)
                 .setAutoCancel(true)
                 .setStyle(NotificationCompat.DecoratedCustomViewStyle())
         }

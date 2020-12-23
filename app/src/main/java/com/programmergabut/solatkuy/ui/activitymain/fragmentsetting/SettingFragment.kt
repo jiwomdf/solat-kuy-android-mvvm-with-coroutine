@@ -41,19 +41,21 @@ import org.joda.time.LocalDate
 
 @AndroidEntryPoint
 class SettingFragment(viewModelTest: FragmentSettingViewModel? = null) : BaseFragment<FragmentSettingBinding, FragmentSettingViewModel>(
-    R.layout.fragment_setting, FragmentSettingViewModel::class.java, viewModelTest
+    R.layout.fragment_setting,
+    FragmentSettingViewModel::class.java, viewModelTest
 ) {
 
-    private lateinit var dialog: BottomSheetDialog
+    private lateinit var bottomSheetDialog: BottomSheetDialog
     private lateinit var mFusedLocationClient: FusedLocationProviderClient
     private val ALL_PERMISSIONS = 101
 
     private lateinit var dialogGpsBinding: LayoutBottomsheetBygpsBinding
+    private lateinit var dialogLatLngBinding: LayoutBottomsheetBylatitudelongitudeBinding
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        dialog = BottomSheetDialog(requireContext())
+        bottomSheetDialog = BottomSheetDialog(requireContext())
         inflateBinding()
         subscribeObserversDB()
         observeErrorMsg()
@@ -68,6 +70,10 @@ class SettingFragment(viewModelTest: FragmentSettingViewModel? = null) : BaseFra
         dialogGpsBinding = DataBindingUtil.inflate(
             LayoutInflater.from(requireContext()),
             R.layout.layout_bottomsheet_bygps, null, true
+        )
+        dialogLatLngBinding = DataBindingUtil.inflate(
+            LayoutInflater.from(requireContext()),
+            R.layout.layout_bottomsheet_bylatitudelongitude, null, true
         )
     }
 
@@ -91,14 +97,13 @@ class SettingFragment(viewModelTest: FragmentSettingViewModel? = null) : BaseFra
     private fun observeErrorMsg() {
         viewModel.errStatus.observe(viewLifecycleOwner, {
             val errMsg = viewModel.getErrMsg()
-
             if(errMsg.isEmpty())
                 return@observe
 
             when(it){
                 EnumStatus.SUCCESS -> {
                     Toasty.success(requireContext(),errMsg , Toasty.LENGTH_SHORT).show()
-                    dialog.dismiss()
+                    bottomSheetDialog.dismiss()
                 }
                 EnumStatus.ERROR -> {
                     Toasty.error(requireContext(), errMsg, Toasty.LENGTH_SHORT).show()
@@ -107,36 +112,29 @@ class SettingFragment(viewModelTest: FragmentSettingViewModel? = null) : BaseFra
             }
         })
     }
-
-    /* init first load data */
+    
     private fun btnSetLatitudeLongitude(){
-
         binding.btnByLatitudeLongitude.setOnClickListener {
-            val dialogLatLngBinding = DataBindingUtil.inflate<LayoutBottomsheetBylatitudelongitudeBinding>(
-                LayoutInflater.from(requireContext()),
-                R.layout.layout_bottomsheet_bylatitudelongitude, null, true
-            )
-            dialog.setContentView(dialogLatLngBinding.root)
-            dialog.show()
-
+            bottomSheetDialog.apply{
+                setContentView(dialogLatLngBinding.root)
+                show()
+            }
             dialogLatLngBinding.btnProceedByLL.setOnClickListener{
                 val latitude = dialogLatLngBinding.etLlDialogLatitude.text.toString().trim()
                 val longitude = dialogLatLngBinding.etLlDialogLongitude.text.toString().trim()
-
                 insertLocationSettingToDb(latitude, longitude)
             }
         }
 
         binding.btnByGps.setOnClickListener{
-            dialog.setContentView(dialogGpsBinding.root)
-            dialog.show()
-
-            getGPSLocation(dialogGpsBinding)
-
+            bottomSheetDialog.apply{
+                setContentView(dialogGpsBinding.root)
+                show()
+                getGPSLocation(dialogGpsBinding)
+            }
             dialogGpsBinding.btnProceedByGps.setOnClickListener{
                 val latitude = dialogGpsBinding.tvGpsDialogLatitude.text.toString().trim()
                 val longitude = dialogGpsBinding.tvGpsDialogLongitude.text.toString().trim()
-
                 insertLocationSettingToDb(latitude, longitude)
             }
         }
@@ -154,9 +152,7 @@ class SettingFragment(viewModelTest: FragmentSettingViewModel? = null) : BaseFra
 
     /* Database Transaction */
     private fun insertLocationSettingToDb(latitude: String, longitude: String) {
-
         val currDate = LocalDate()
-
         val data = MsApi1(
             1,
             latitude,
@@ -175,7 +171,7 @@ class SettingFragment(viewModelTest: FragmentSettingViewModel? = null) : BaseFra
 
         if(requestCode == ALL_PERMISSIONS){
             if(grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)
-                onUpdateLocationListener(dialogGpsBinding)
+                onUpdateLocationListener()
             else
                 Toasty.error(requireContext(), "All Permission Denied", Toast.LENGTH_SHORT).show()
         }
@@ -183,7 +179,7 @@ class SettingFragment(viewModelTest: FragmentSettingViewModel? = null) : BaseFra
     }
 
     private fun showPermissionDialog(){
-        AlertDialog.Builder(context)
+        AlertDialog.Builder(requireContext())
             .setTitle("Location Needed")
             .setMessage("Permission is needed to run the Gps")
             .setPositiveButton("ok") { _: DialogInterface, _: Int ->
@@ -194,7 +190,7 @@ class SettingFragment(viewModelTest: FragmentSettingViewModel? = null) : BaseFra
                 )
             }
             .setNegativeButton("cancel") { _: DialogInterface, _: Int ->
-                dialog.dismiss()
+                bottomSheetDialog.dismiss()
             }
             .create()
             .show()
@@ -204,32 +200,19 @@ class SettingFragment(viewModelTest: FragmentSettingViewModel? = null) : BaseFra
     /* supporting function */
     private fun getGPSLocation(dialogGpsBinding: LayoutBottomsheetBygpsBinding){
 
-        dialogGpsBinding.tvViewLatitude.visibility = View.GONE
-        dialogGpsBinding.tvViewLongitude.visibility = View.GONE
-
-        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED
-            || ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
-
+        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
+            ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             mFusedLocationClient = getFusedLocationProviderClient(requireContext())
-
-            //onSuccessListener()
-            onFailedListener(dialogGpsBinding)
-            onUpdateLocationListener(dialogGpsBinding)
+            onFailedListener()
+            onUpdateLocationListener()
         }
         else {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
             showPermissionDialog()
             return
         }
     }
 
-    private fun onFailedListener(dialogGpsBinding: LayoutBottomsheetBygpsBinding) {
+    private fun onFailedListener() {
         val lm: LocationManager = requireContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
         var gpsEnabled = false
         var networkEnabled = false
@@ -243,27 +226,12 @@ class SettingFragment(viewModelTest: FragmentSettingViewModel? = null) : BaseFra
         } catch (ex: java.lang.Exception) { }
 
         if (!gpsEnabled && !networkEnabled)
-            dialogGpsBinding.tvWarning.text = getString(R.string.please_enable_your_location)
+            setGpsComponentState(EnumStatus.ERROR)
         else
-            dialogGpsBinding.tvWarning.text = getString(R.string.loading)
+            setGpsComponentState(EnumStatus.LOADING)
     }
 
-    /* private fun onSuccessListener(){
-        mFusedLocationClient.lastLocation.addOnSuccessListener {
-            if(it == null)
-                return@addOnSuccessListener
-
-            dialogView.iv_warning.visibility = View.GONE
-            dialogView.tv_warning.visibility = View.GONE
-            dialogView.findViewById<TextView>(R.id.tv_view_latitude).visibility = View.VISIBLE
-            dialogView.findViewById<TextView>(R.id.tv_view_longitude).visibility = View.VISIBLE
-
-            dialogView.tv_gpsDialog_latitude.text = it.latitude.toString()
-            dialogView.tv_gpsDialog_longitude.text= it.longitude.toString()
-        }
-    }*/
-
-    private fun onUpdateLocationListener(dialogGpsBinding: LayoutBottomsheetBygpsBinding) {
+    private fun onUpdateLocationListener() {
         val mLocationRequest: LocationRequest?
         mLocationRequest = LocationRequest()
         mLocationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
@@ -272,37 +240,54 @@ class SettingFragment(viewModelTest: FragmentSettingViewModel? = null) : BaseFra
 
         if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
             ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
-            // TODO: Consider calling
-            //    ActivityCompat#requestPermissions
-            // here to request the missing permissions, and then overriding
-            //   public void onRequestPermissionsResult(int requestCode, String[] permissions,
-            //                                          int[] grantResults)
-            // to handle the case where the user grants the permission. See the documentation
-            // for ActivityCompat#requestPermissions for more details.
+            showPermissionDialog()
             return
         }
 
         getFusedLocationProviderClient(requireContext()).requestLocationUpdates(mLocationRequest, object : LocationCallback() {
-
             override fun onLocationResult(locationResult: LocationResult) {
                 onLocationChanged(locationResult.lastLocation)
             }
-
             private fun onLocationChanged(it: Location?) {
-
                 if(it == null) return
-
-                dialogGpsBinding.ivWarning.visibility = View.GONE
-                dialogGpsBinding.tvWarning.visibility = View.GONE
-                dialogGpsBinding.tvViewLatitude.visibility = View.VISIBLE
-                dialogGpsBinding.tvViewLongitude.visibility = View.VISIBLE
-
+                setGpsComponentState(EnumStatus.SUCCESS)
                 dialogGpsBinding.tvGpsDialogLatitude.text = it.latitude.toString()
                 dialogGpsBinding.tvGpsDialogLongitude.text= it.longitude.toString()
 
             }
         }, Looper.myLooper())
 
+    }
+
+    private fun setGpsComponentState(status: EnumStatus){
+        when(status){
+            EnumStatus.SUCCESS -> {
+                dialogGpsBinding.tvViewLatitude.visibility = View.VISIBLE
+                dialogGpsBinding.tvViewLongitude.visibility = View.VISIBLE
+                dialogGpsBinding.tvGpsDialogLongitude.visibility = View.VISIBLE
+                dialogGpsBinding.tvGpsDialogLatitude.visibility = View.VISIBLE
+                dialogGpsBinding.ivWarning.visibility = View.INVISIBLE
+                dialogGpsBinding.tvWarning.visibility = View.INVISIBLE
+            }
+            EnumStatus.LOADING -> {
+                dialogGpsBinding.ivWarning.visibility = View.VISIBLE
+                dialogGpsBinding.tvWarning.visibility = View.VISIBLE
+                dialogGpsBinding.tvWarning.text = getString(R.string.loading)
+                dialogGpsBinding.tvViewLatitude.visibility = View.INVISIBLE
+                dialogGpsBinding.tvViewLongitude.visibility = View.INVISIBLE
+                dialogGpsBinding.tvGpsDialogLongitude.visibility = View.INVISIBLE
+                dialogGpsBinding.tvGpsDialogLatitude.visibility = View.INVISIBLE
+            }
+            EnumStatus.ERROR -> {
+                dialogGpsBinding.ivWarning.visibility = View.VISIBLE
+                dialogGpsBinding.tvWarning.visibility = View.VISIBLE
+                dialogGpsBinding.tvWarning.text = getString(R.string.please_enable_your_location)
+                dialogGpsBinding.tvGpsDialogLongitude.visibility = View.INVISIBLE
+                dialogGpsBinding.tvGpsDialogLatitude.visibility = View.INVISIBLE
+                dialogGpsBinding.tvViewLatitude.visibility = View.INVISIBLE
+                dialogGpsBinding.tvViewLongitude.visibility = View.INVISIBLE
+            }
+        }
     }
 
 

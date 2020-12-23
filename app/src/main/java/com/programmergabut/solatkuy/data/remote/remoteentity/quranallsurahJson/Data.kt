@@ -7,7 +7,7 @@ data class Data(
     @SerializedName("englishName")
     val englishName: String,
     @SerializedName("englishNameLC")
-    var englishNameLC: String?,
+    var englishNameLowerCase: String?,
     @SerializedName("englishNameTranslation")
     val englishNameTranslation: String,
     @SerializedName("name")

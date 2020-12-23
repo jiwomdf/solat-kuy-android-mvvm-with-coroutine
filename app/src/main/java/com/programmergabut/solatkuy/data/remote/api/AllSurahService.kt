@@ -10,5 +10,4 @@ interface AllSurahService {
 
     @GET("surah")
     suspend fun fetchAllSurah(): AllSurahResponse
-
 }

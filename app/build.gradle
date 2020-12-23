@@ -49,7 +49,7 @@ android {
 
     buildTypes {
         release {
-            minifyEnabled false
+            minifyEnabled true
             debuggable false
             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
         }
@@ -82,6 +82,7 @@ dependencies {
     //Lottie
     implementation 'com.airbnb.android:lottie:3.4.1'
     implementation 'androidx.cardview:cardview:1.0.0'
+    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.2.0'
 
     // Glide
     kapt 'com.github.bumptech.glide:compiler:4.11.0'

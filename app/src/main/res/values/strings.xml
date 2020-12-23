@@ -32,7 +32,7 @@
     <string name="api">Api: </string>
     <string name="qibla">Qibla degrees in \n your location</string>
     <string name="fetch_failed">fetching data failed</string>
-    <string name="fetch_failed_sort">N/A</string>
+    <string name="fetch_failed_na">N/A</string>
     <string name="next_prayer_is_dhuhr">Next prayer is Dhuhr</string>
     <string name="welcome_dialog">Welcome to Solat Kuy! \n Solat Kuy is a reminder prayer time application \n\n in order to start this app \nplease select your location</string>
     <string name="please_tilt_your_phone_until_the_image_is_balanced">Please calibrate your phone compass before using this feature</string>

@@ -5,7 +5,6 @@ import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
 import android.view.View
-import android.view.ViewGroup
 import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.databinding.DataBindingUtil
@@ -31,6 +30,7 @@ import com.programmergabut.solatkuy.util.Resource
 import com.programmergabut.solatkuy.util.EnumConfig
 import com.programmergabut.solatkuy.util.EnumConfig.Companion.ENDED_SURAH
 import com.programmergabut.solatkuy.util.EnumConfig.Companion.STARTED_SURAH
+import com.programmergabut.solatkuy.util.LogConfig.Companion.COROUTINE_TIMER
 import com.programmergabut.solatkuy.util.generator.DuaGenerator
 import com.programmergabut.solatkuy.util.helper.LocationHelper
 import com.programmergabut.solatkuy.util.helper.PushNotificationHelper
@@ -52,25 +52,25 @@ import kotlin.math.abs
 @AndroidEntryPoint
 class MainFragment(viewModelTest: FragmentMainViewModel? = null) : BaseFragment<FragmentMainBinding, FragmentMainViewModel>(
     R.layout.fragment_main, FragmentMainViewModel::class.java, viewModelTest
-){
+), View.OnClickListener{
 
-    private var isTimerHasBinded = false
+    private var isTimerHasBanded = false
     private var coroutineTimerJob: Job? = null
     private var tempMsApi1: MsApi1? = null
     private var mCityName: String? = null
     private lateinit var duaCollectionAdapter: DuaCollectionAdapter
+    private lateinit var dialogBinding: LayoutPopupChooseQuoteSettingBinding
+    private lateinit var dialog: Dialog
 
     override fun onPause() {
         super.onPause()
-
-        isTimerHasBinded = false
+        isTimerHasBanded = false
         coroutineTimerJob?.cancel()
-        Log.d("CoroutineTimer", "Canceled.. $coroutineTimerJob ${Thread.currentThread().id}")
+        Log.d(COROUTINE_TIMER, "Canceled.. $coroutineTimerJob ${Thread.currentThread().id}")
     }
 
     override fun onStart() {
         super.onStart()
-
         binding.tvWidgetPrayerCountdown.text = getString(R.string.loading)
         binding.includeQuranQuote?.tvQuranAyahQuote.visibility = View.GONE
         binding.includeQuranQuote?.tvQuranAyahQuoteClick.visibility = View.VISIBLE
@@ -79,25 +79,62 @@ class MainFragment(viewModelTest: FragmentMainViewModel? = null) : BaseFragment<
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        openPopupQuote()
+        inflateBinding()
         initRvDuaCollection()
         subscribeObserversDB()
         subscribeObserversAPI()
     }
 
+    private fun inflateBinding() {
+        dialogBinding = DataBindingUtil.inflate(
+            layoutInflater, R.layout.layout_popup_choose_quote_setting,
+            null, false
+        )
+        dialog = Dialog(requireContext())
+    }
+
     override fun setListener() {
         super.setListener()
-        tvQuranQuoteClick()
         cbClickListener()
-        binding.includeQuranQuote.ivRefresh.setOnClickListener {
-            viewModel.getMsSetting(0)
+        binding.includeQuranQuote.tvQuranAyahQuoteClick.setOnClickListener(this)
+        binding.includeQuranQuote.tvQuranAyahQuote.setOnClickListener(this)
+        binding.includeQuranQuote.ivRefresh.setOnClickListener(this)
+        binding.includeQuranQuote.ivQuoteSetting.setOnClickListener(this)
+    }
+
+    override fun onClick(v: View?) {
+        when(v?.id){
+            R.id.tv_quran_ayah_quote_click -> {
+                v.visibility = View.GONE
+                binding.includeQuranQuote.tvQuranAyahQuote.visibility = View.VISIBLE
+            }
+            R.id.tv_quran_ayah_quote -> {
+                binding.includeQuranQuote.tvQuranAyahQuoteClick.visibility = View.VISIBLE
+                v.visibility = View.GONE
+            }
+            R.id.iv_refresh -> {
+                viewModel.getMsSetting()
+            }
+            R.id.iv_quote_setting -> {
+                dialog.setContentView(dialogBinding.root)
+                dialog.show()
+
+                dialogBinding.rbFromApi.setOnClickListener {
+                    viewModel.updateIsUsingDBQuotes(false)
+                    dismissDialog()
+                }
+
+                dialogBinding.rbFromFavQuote.setOnClickListener {
+                    viewModel.updateIsUsingDBQuotes(true)
+                    dismissDialog()
+                }
+            }
         }
     }
 
     private fun initRvDuaCollection() {
         duaCollectionAdapter = DuaCollectionAdapter(requireContext())
         duaCollectionAdapter.setData(DuaGenerator.getListDua())
-
         binding.includeInfo.rvDuaCollection.apply {
             adapter = duaCollectionAdapter
             layoutManager = LinearLayoutManager(this@MainFragment.context)
@@ -109,7 +146,6 @@ class MainFragment(viewModelTest: FragmentMainViewModel? = null) : BaseFragment<
         viewModel.notifiedPrayer.observe(viewLifecycleOwner, { retVal ->
             when(retVal.status){
                 EnumStatus.SUCCESS -> {
-
                     if(retVal.data == null)
                         showBottomSheet(isCancelable = false, isFinish = true)
                     if(retVal.data?.isEmpty()!!)
@@ -117,22 +153,17 @@ class MainFragment(viewModelTest: FragmentMainViewModel? = null) : BaseFragment<
 
                     bindCheckBox(retVal.data)
                     updateAlarmManager(retVal.data)
-
-                    val data = createWidgetData(retVal.data)
-                    bindWidget(data)
+                    bindWidget(createWidgetData(retVal.data))
                 }
                 EnumStatus.LOADING -> {
                     Toast.makeText(requireContext(), "Syncing data..", Toast.LENGTH_SHORT).show()
                     bindPrayerText(null)
                 }
-                EnumStatus.ERROR ->{
-                    showBottomSheet(isCancelable = false, isFinish = true)
-                }
+                EnumStatus.ERROR -> showBottomSheet(isCancelable = false, isFinish = true)
             }
         })
 
         viewModel.prayer.observe(viewLifecycleOwner, {
-
             when(it.status){
                 EnumStatus.SUCCESS -> {
                     val sdf = SimpleDateFormat("dd", Locale.getDefault())
@@ -151,55 +182,51 @@ class MainFragment(viewModelTest: FragmentMainViewModel? = null) : BaseFragment<
                     binding.includeInfo.tvGregorianDay.text = gregorianDate?.weekday?.en
                     binding.includeInfo.tvHijriDay.text = hijriDate?.weekday?.en + " / " + hijriDate?.weekday?.ar
                 }
-                EnumStatus.LOADING -> {
-                    setState(it.status)
-                }
-                EnumStatus.ERROR ->{
-                    showBottomSheet(description = getString(R.string.fetch_failed), isCancelable = true, isFinish = false)
-                    setState(it.status)
-                }
+                EnumStatus.LOADING -> setState(it.status)
+                EnumStatus.ERROR -> setState(it.status)
             }
         })
 
-        viewModel.getMsSetting(0)
+        viewModel.getMsSetting()
     }
 
     private fun subscribeObserversDB() {
-
-        viewModel.msApi1.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+        viewModel.msApi1.observe(viewLifecycleOwner,  {
             when(it.status){
                 EnumStatus.SUCCESS -> {
                     if(it.data == null )
-                        return@Observer
+                        return@observe
 
                     /* save temp data */
                     tempMsApi1 = it.data
                     bindWidgetLocation(it.data)
                     updateMonthAndYearMsApi1(it.data)
-                    syncNotifiedPrayer(it.data)
+                    viewModel.syncNotifiedPrayer(it.data)
                 }
-                EnumStatus.ERROR -> {
-                    showBottomSheet(isCancelable = false, isFinish = true)
-                }
-                else -> {}
+                EnumStatus.ERROR -> showBottomSheet(isCancelable = false, isFinish = true)
+                else -> {/*NO-OP*/}
             }
         })
 
-        viewModel.msSetting.observe(viewLifecycleOwner, androidx.lifecycle.Observer {
+        viewModel.msSetting.observe(viewLifecycleOwner, {
             when(it.status){
                 EnumStatus.SUCCESS -> {
                     if(it.data == null)
-                        return@Observer
+                        return@observe
 
-                    if(!it.data.isUsingDBQuotes)
-                        subscribeReadSurahEn()
-                    else
-                        subscribeFavAyah()
+                    if(it.data.isUsingDBQuotes){
+                        dialogBinding.rbgQuotesDataSource.check(R.id.rb_fromFavQuote)
+                        viewModel.getMsFavAyah()
+                        viewModel.readSurahEn.removeObservers(this)
+                    }
+                    else{
+                        dialogBinding.rbgQuotesDataSource.check(R.id.rb_fromApi)
+                        viewModel.fetchReadSurahEn((STARTED_SURAH..ENDED_SURAH).random())
+                        viewModel.favAyah.removeObservers(this)
+                    }
                 }
-                EnumStatus.ERROR -> {
-                    showBottomSheet(isCancelable = false, isFinish = true)
-                }
-                else -> {}
+                EnumStatus.ERROR -> showBottomSheet(isCancelable = false, isFinish = true)
+                else -> {/*NO-OP*/}
             }
         })
 
@@ -210,15 +237,42 @@ class MainFragment(viewModelTest: FragmentMainViewModel? = null) : BaseFragment<
                         showBottomSheet(isCancelable = false, isFinish = true)
 
                     val city = LocationHelper.getCity(requireContext(), retval.data!!.latitude.toDouble(), retval.data.longitude.toDouble())
-
                     binding.includeInfo.tvCity.text = city ?: EnumConfig.CITY_NOT_FOUND_STR
-                    fetchPrayerApi(retval.data)
+                    viewModel.fetchPrayerApi(retval.data)
                 }
                 EnumStatus.ERROR -> showBottomSheet(isCancelable = false, isFinish = true)
                 else -> {/*NO-OP*/}
             }
         })
 
+        viewModel.readSurahEn.observe(viewLifecycleOwner, { apiQuotes ->
+            when(apiQuotes.status){
+                EnumStatus.SUCCESS -> {
+                    bindQuranQuoteApiOnline(apiQuotes)
+                }
+                EnumStatus.LOADING -> {
+                    binding.includeQuranQuote.tvQuranAyahQuote.text = getString(R.string.loading)
+                    binding.includeQuranQuote.tvQuranAyahQuoteClick.text = getString(R.string.loading)
+                }
+                EnumStatus.ERROR -> {
+                    binding.includeQuranQuote.tvQuranAyahQuote.text = getString(R.string.fetch_failed)
+                    binding.includeQuranQuote.tvQuranAyahQuoteClick.text = getString(R.string.fetch_failed)
+                }
+            }
+        })
+
+        viewModel.favAyah.observe(viewLifecycleOwner, { localQuotes ->
+            when(localQuotes.status){
+                EnumStatus.SUCCESS -> {
+                    if(localQuotes.data == null)
+                        throw Exception("localQuotes.data == null")
+
+                    bindQuranSurahDB(localQuotes.data)
+                }
+                EnumStatus.LOADING -> binding.includeQuranQuote.tvQuranAyahQuote.text = getString(R.string.loading)
+                EnumStatus.ERROR -> binding.includeQuranQuote.tvQuranAyahQuoteClick.text = getString(R.string.fetch_failed)
+            }
+        })
     }
 
     private fun setState(status: EnumStatus){
@@ -236,15 +290,14 @@ class MainFragment(viewModelTest: FragmentMainViewModel? = null) : BaseFragment<
             }
             EnumStatus.ERROR ->{
                 binding.includeInfo.tvImsakDate.text = getString(R.string.fetch_failed)
-                binding.includeInfo.tvImsakTime.text = getString(R.string.fetch_failed_sort)
-                binding.includeInfo.tvGregorianDate.text = getString(R.string.fetch_failed_sort)
-                binding.includeInfo.tvHijriDate.text = getString(R.string.fetch_failed_sort)
-                binding.includeInfo.tvGregorianMonth.text = getString(R.string.fetch_failed_sort)
-                binding.includeInfo.tvHijriMonth.text = getString(R.string.fetch_failed_sort)
-                binding.includeInfo.tvGregorianDay.text = getString(R.string.fetch_failed_sort)
-                binding.includeInfo.tvHijriDay.text = getString(R.string.fetch_failed_sort)
+                binding.includeInfo.tvImsakTime.text = getString(R.string.fetch_failed_na)
+                binding.includeInfo.tvGregorianDate.text = getString(R.string.fetch_failed_na)
+                binding.includeInfo.tvHijriDate.text = getString(R.string.fetch_failed_na)
+                binding.includeInfo.tvGregorianMonth.text = getString(R.string.fetch_failed_na)
+                binding.includeInfo.tvHijriMonth.text = getString(R.string.fetch_failed_na)
+                binding.includeInfo.tvGregorianDay.text = getString(R.string.fetch_failed_na)
+                binding.includeInfo.tvHijriDay.text = getString(R.string.fetch_failed_na)
             }
-            else -> {/*NO-OP*/}
         }
     }
 
@@ -265,47 +318,8 @@ class MainFragment(viewModelTest: FragmentMainViewModel? = null) : BaseFragment<
         }
     }
 
-    private fun subscribeReadSurahEn(){
-        viewModel.readSurahEn.observe(viewLifecycleOwner, { apiQuotes ->
-            when(apiQuotes.status){
-                EnumStatus.SUCCESS -> {
-                    bindQuranQuoteApiOnline(apiQuotes)
-                    viewModel.favAyah.removeObservers(this)
-                }
-                EnumStatus.LOADING -> {
-                    binding.includeQuranQuote.tvQuranAyahQuote.text = getString(R.string.loading)
-                    binding.includeQuranQuote.tvQuranAyahQuoteClick.text = getString(R.string.loading)
-                }
-                EnumStatus.ERROR -> {
-                    binding.includeQuranQuote.tvQuranAyahQuote.text = getString(R.string.fetch_failed)
-                    binding.includeQuranQuote.tvQuranAyahQuoteClick.text = getString(R.string.fetch_failed)
-                }
-            }
-        })
-
-        fetchQuranSurah()
-    }
-
-    private fun subscribeFavAyah(){
-        viewModel.favAyah.observe(viewLifecycleOwner, { localQuotes ->
-            when(localQuotes.status){
-                EnumStatus.SUCCESS -> {
-                    if(localQuotes.data == null)
-                        throw Exception("favAyahViewModel.favAyah")
-
-                    bindQuranSurahDB(localQuotes.data)
-                    viewModel.readSurahEn.removeObservers(this)
-                }
-                EnumStatus.LOADING -> binding.includeQuranQuote.tvQuranAyahQuote.text = getString(R.string.loading)
-                EnumStatus.ERROR -> binding.includeQuranQuote.tvQuranAyahQuoteClick.text = getString(R.string.fetch_failed)
-            }
-        })
-    }
-
     private fun createWidgetData(prayer: List<NotifiedPrayer>): MsTimings {
-
         val arrDate = LocalDate.now().toString("dd/MMM/yyyy").split("/")
-
         return MsTimings(
             prayer[0].prayerTime,
             prayer[1].prayerTime,
@@ -321,24 +335,7 @@ class MainFragment(viewModelTest: FragmentMainViewModel? = null) : BaseFragment<
         )
     }
 
-
-    /* fetch API data */
-    private fun syncNotifiedPrayer(msApi1: MsApi1) {
-        viewModel.syncNotifiedPrayer(msApi1)
-    }
-
-    private fun fetchPrayerApi(mMsApi1: MsApi1) {
-        viewModel.fetchPrayerApi(mMsApi1)
-    }
-
-    private fun fetchQuranSurah(){
-        val randSurah = (STARTED_SURAH..ENDED_SURAH).random()
-        viewModel.fetchReadSurahEn(randSurah)
-    }
-
-    /* Database Transaction */
     private fun updatePrayerIsNotified(prayer:String, isNotified:Boolean){
-
         if(isNotified)
             Toasty.success(requireContext(), "$prayer will be notified every day", Toast.LENGTH_SHORT).show()
         else
@@ -347,8 +344,8 @@ class MainFragment(viewModelTest: FragmentMainViewModel? = null) : BaseFragment<
         viewModel.updatePrayerIsNotified(prayer, isNotified)
     }
 
+    /* Widget */
     private fun cbClickListener() {
-
         binding.includePrayerTime.cbFajr.setOnClickListener {
             if(binding.includePrayerTime.cbFajr.isChecked)
                 updatePrayerIsNotified(getString(R.string.fajr), true)
@@ -383,11 +380,9 @@ class MainFragment(viewModelTest: FragmentMainViewModel? = null) : BaseFragment<
             else
                 updatePrayerIsNotified(getString(R.string.isha), false)
         }
-
     }
 
     private fun bindCheckBox(list: List<NotifiedPrayer>) {
-
         list.forEach {
             when {
                 it.prayerName.trim() == getString(R.string.fajr) && it.isNotified -> binding.includePrayerTime.cbFajr.isChecked = true
@@ -399,12 +394,9 @@ class MainFragment(viewModelTest: FragmentMainViewModel? = null) : BaseFragment<
         }
     }
 
-
-    /* Widget */
     private fun bindWidget(data: MsTimings?) {
-
-        if(data == null) return
-
+        if(data == null)
+            return
         val selectedPrayer = SelectPrayerHelper.selectNextPrayerToInt(data)
 
         bindPrayerText(data)
@@ -415,14 +407,12 @@ class MainFragment(viewModelTest: FragmentMainViewModel? = null) : BaseFragment<
 
     private fun bindWidgetLocation(it: MsApi1) {
         mCityName = LocationHelper.getCity(requireContext(), it.latitude.toDouble(), it.longitude.toDouble())
-
         binding.tvViewLatitude.text = it.latitude + " °N"
         binding.tvViewLongitude.text = it.longitude + " °W"
         binding.tvViewCity.text = mCityName ?: EnumConfig.CITY_NOT_FOUND_STR
     }
 
     private fun bindPrayerText(apiData: MsTimings?) {
-
         if(apiData == null){
             binding.includePrayerTime.tvFajrTime.text = getString(R.string.loading)
             binding.includePrayerTime.tvDhuhrTime.text = getString(R.string.loading)
@@ -442,9 +432,7 @@ class MainFragment(viewModelTest: FragmentMainViewModel? = null) : BaseFragment<
     }
 
     private fun selectNextPrayerTime(selectedPrayer: Int, timings: MsTimings) {
-
         val sdfPrayer = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
-
         val nowTime = DateTime(sdfPrayer.parse(org.joda.time.LocalTime.now().toString()))
         var period: Period? = null
 
@@ -461,17 +449,15 @@ class MainFragment(viewModelTest: FragmentMainViewModel? = null) : BaseFragment<
         if(period == null)
             return
 
-        if(!isTimerHasBinded) {
+        if(!isTimerHasBanded) {
             coroutineTimerJob = lifecycleScope.launch(Dispatchers.IO) {
                 coroutineTimer(this, period.hours, period.minutes, 60 - nowTime.secondOfMinute)
             }
-            isTimerHasBinded = true
+            isTimerHasBanded = true
         }
-
     }
 
     private fun selectWidgetTitle(selectedPrayer: Int) {
-
         when(selectedPrayer){
             -1 -> binding.tvWidgetPrayerName.text = getString(R.string.next_prayer_is_dhuhr)
             1 -> binding.tvWidgetPrayerName.text = getString(R.string.fajr)
@@ -485,7 +471,6 @@ class MainFragment(viewModelTest: FragmentMainViewModel? = null) : BaseFragment<
 
     private fun selectWidgetPic(selectedPrayer: Int) {
         var widgetDrawable: Drawable? = null
-
         when(selectedPrayer){
             -1 -> widgetDrawable = getDrawable(context?.applicationContext!!,R.drawable.img_sunrise)
             1 -> widgetDrawable = getDrawable(context?.applicationContext!!,R.drawable.img_fajr)
@@ -497,14 +482,13 @@ class MainFragment(viewModelTest: FragmentMainViewModel? = null) : BaseFragment<
         }
 
         if(widgetDrawable != null){
-            val factory = DrawableCrossFadeFactory.Builder().setCrossFadeEnabled(true).build()
-
+            val crossFadeFactory = DrawableCrossFadeFactory.Builder().setCrossFadeEnabled(true).build()
             Glide.with(this)
                 .load(widgetDrawable)
                 .centerCrop()
                 .diskCacheStrategy(DiskCacheStrategy.NONE)
                 .skipMemoryCache(true)
-                .transition(DrawableTransitionOptions.withCrossFade(factory))
+                .transition(DrawableTransitionOptions.withCrossFade(crossFadeFactory))
                 .into(binding.ivPrayerWidget)
         }
     }
@@ -519,7 +503,6 @@ class MainFragment(viewModelTest: FragmentMainViewModel? = null) : BaseFragment<
     }
 
     private fun bindQuranSurahDB(listAyah: List<MsFavAyah>) {
-
         if(listAyah.isNotEmpty()){
             val randAyah = (listAyah.indices).random()
             val data = listAyah[randAyah]
@@ -532,7 +515,6 @@ class MainFragment(viewModelTest: FragmentMainViewModel? = null) : BaseFragment<
             binding.includeQuranQuote.tvQuranAyahQuote.text = getString(R.string.youHaventFavAnyAyah)
             binding.includeQuranQuote.tvQuranAyahQuoteClick.text = getString(R.string.youHaventFavAnyAyah)
         }
-
     }
 
     /* Coroutine Timer */
@@ -542,19 +524,17 @@ class MainFragment(viewModelTest: FragmentMainViewModel? = null) : BaseFragment<
         minute: Int,
         second: Int
     ){
-        
         var tempHour = abs(hour)
         var tempMinute = abs(minute)
         var tempSecond = abs(second)
         var isMinuteZero = false
 
         while(true){
-
             if(scope.isActive){
-                Log.d("CoroutineTimer", "Running.. $scope $tempSecond ${Thread.currentThread().id}")
+                Log.d(COROUTINE_TIMER, "Running.. $scope $tempSecond ${Thread.currentThread().id}")
             }
             else{
-                Log.d("CoroutineTimer", "Stopping.. $scope $tempSecond ${Thread.currentThread().id}")
+                Log.d(COROUTINE_TIMER, "Stopping.. $scope $tempSecond ${Thread.currentThread().id}")
                 coroutineTimerJob?.cancel()
                 break
             }
@@ -577,17 +557,6 @@ class MainFragment(viewModelTest: FragmentMainViewModel? = null) : BaseFragment<
                     tempHour -= 1
             }
 
-            /* fetching Prayer API */
-            if(tempHour == 0 && tempMinute == 0 && tempSecond == 1){
-                withContext(Dispatchers.Main){
-                    tempMsApi1?.let {
-                        syncNotifiedPrayer(it)
-                        return@withContext
-                    }
-                }
-                break
-            }
-
             withContext(Dispatchers.Main){
                 if(binding.tvWidgetPrayerCountdown != null){
                     val strHour = if(tempHour <= 9) "0$tempHour" else tempHour
@@ -595,10 +564,22 @@ class MainFragment(viewModelTest: FragmentMainViewModel? = null) : BaseFragment<
                     val strSecond = if(tempSecond <= 9) "0$tempSecond" else tempSecond
                     binding.tvWidgetPrayerCountdown.text = "$strHour : $strMinute : $strSecond remaining"
                 }
-                else
+                else{
                     return@withContext
+                }
             }
 
+            /* fetching Prayer API */
+            if(tempHour == 0 && tempMinute == 0 && tempSecond == 1){
+                withContext(Dispatchers.Main){
+                    tempMsApi1?.let {
+                        viewModel.syncNotifiedPrayer(it)
+                        isTimerHasBanded = false
+                        Log.d(COROUTINE_TIMER, "Fetching.. $scope $tempSecond ${Thread.currentThread().id}")
+                    }
+                }
+                break
+            }
         }
     }
 
@@ -612,56 +593,7 @@ class MainFragment(viewModelTest: FragmentMainViewModel? = null) : BaseFragment<
         )
     }
 
-    private fun tvQuranQuoteClick() {
-        binding.includeQuranQuote.tvQuranAyahQuoteClick.setOnClickListener {
-            it.visibility = View.GONE
-            binding.includeQuranQuote.tvQuranAyahQuote.visibility = View.VISIBLE
-        }
-        binding.includeQuranQuote.tvQuranAyahQuote.setOnClickListener {
-            binding.includeQuranQuote.tvQuranAyahQuoteClick.visibility = View.VISIBLE
-            it.visibility = View.GONE
-        }
-    }
-
-    private fun openPopupQuote(){
-        binding.includeQuranQuote.ivQuoteSetting.setOnClickListener {
-
-            val dialog = Dialog(requireContext())
-            val dialogBinding = DataBindingUtil.inflate<LayoutPopupChooseQuoteSettingBinding>(
-                layoutInflater, R.layout.layout_popup_choose_quote_setting, null, true
-            )
-            dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-            dialog.setContentView(dialogBinding.root)
-            dialog.show()
-
-            viewModel.msSetting.observe(viewLifecycleOwner, {
-                when(it.status){
-                    EnumStatus.SUCCESS -> {
-                        if(it.data != null){
-                            if(it.data.isUsingDBQuotes)
-                                dialogBinding.rbgQuotesDataSource.check(R.id.rb_fromFavQuote)
-                            else
-                                dialogBinding.rbgQuotesDataSource.check(R.id.rb_fromApi)
-                        }
-                    }
-                    else -> {}
-                }
-            })
-
-            dialogBinding.rbFromApi.setOnClickListener {
-                viewModel.updateIsUsingDBQuotes(false)
-                dismissDialog(dialog)
-            }
-
-            dialogBinding.rbFromFavQuote.setOnClickListener {
-                viewModel.updateIsUsingDBQuotes(true)
-                dismissDialog(dialog)
-            }
-
-        }
-    }
-
-    private fun dismissDialog(dialog: Dialog){
+    private fun dismissDialog(){
         dialog.dismiss()
         Toasty.success(requireContext(), "Success change the quotes source", Toast.LENGTH_SHORT).show()
     }

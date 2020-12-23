@@ -14,37 +14,73 @@ import java.lang.Exception
 
 class ReadSurahViewModel @ViewModelInject constructor(val quranRepositoryImpl: QuranRepositoryImpl): ViewModel() {
 
+    lateinit var fetchedArSurah: ReadSurahArResponse
     private var _selectedSurahAr = MutableLiveData<Resource<ReadSurahArResponse>>()
     val selectedSurahAr: LiveData<Resource<ReadSurahArResponse>>
         get() = _selectedSurahAr
 
     fun fetchReadSurahAr(surahID: Int){
         viewModelScope.launch {
-
             _selectedSurahAr.postValue(Resource.loading(null))
-
             try {
                 runIdlingResourceIncrement()
-                quranRepositoryImpl.fetchReadSurahAr(surahID).let {
-                    _selectedSurahAr.postValue(Resource.success(it))
-                    runIdlingResourceDecrement()
+                val response = quranRepositoryImpl.fetchReadSurahAr(surahID).await()
+                if(response.statusResponse == "1"){
+                    fetchedArSurah = response
+                    _selectedSurahAr.postValue(Resource.success(response))
                 }
+                else{
+                    _selectedSurahAr.postValue(Resource.error(response.messageResponse, null))
+                }
+                runIdlingResourceDecrement()
             }
             catch (ex: Exception){
-                runIdlingResourceDecrement()
-
                 val err = Resource.error(ex.message.toString(), null)
                 _selectedSurahAr.postValue(err)
+                runIdlingResourceDecrement()
             }
         }
     }
 
     private var favSurahID = MutableLiveData<Int>()
-    val msFavAyahBySurahID: LiveData<Resource<List<MsFavAyah>>> = Transformations.switchMap(favSurahID){
-        quranRepositoryImpl.getListFavAyahBySurahID(it)
+    private var selectedSurahId = 0
+    private var lastSurah = 0
+    private var lastAyah = 0
+    val msFavAyahBySurahID: LiveData<Resource<List<MsFavAyah>>> = Transformations.switchMap(favSurahID) { result ->
+        val data = MediatorLiveData<Resource<List<MsFavAyah>>>()
+        val local = quranRepositoryImpl.getListFavAyahBySurahID(result)
+        data.value = Resource.loading(null)
+
+        data.addSource(local) {
+            if(fetchedArSurah == null)
+                return@addSource
+
+            local.value?.forEach { ayah ->
+                fetchedArSurah.data.ayahs.forEach out@{ remoteAyah ->
+                    if (remoteAyah.numberInSurah == ayah.ayahID && selectedSurahId == ayah.surahID) {
+                        remoteAyah.isFav = true
+                        return@out
+                    }
+                }
+            }
+
+            fetchedArSurah.data.ayahs.forEach out@{ ayah ->
+                if (lastSurah == selectedSurahId && lastAyah == ayah.numberInSurah) {
+                    ayah.isLastRead = true
+                    return@out
+                }
+            }
+
+            data.value = Resource.success(it)
+        }
+
+        return@switchMap data
     }
-    fun getListFavAyahBySurahID(surahID: Int){
+    fun getListFavAyahBySurahID(surahID: Int, selectedSurahId: Int, lastSurah: Int, lastAyah: Int){
         this.favSurahID.value = surahID
+        this.selectedSurahId = selectedSurahId
+        this.lastSurah = lastSurah
+        this.lastAyah = lastAyah
     }
 
     private var ayahID = MutableLiveData<Int>()

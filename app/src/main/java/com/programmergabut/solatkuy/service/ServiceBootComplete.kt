@@ -5,6 +5,8 @@ import android.content.Intent
 import android.os.IBinder
 import android.util.Log
 import com.programmergabut.solatkuy.data.local.SolatKuyRoom
+import com.programmergabut.solatkuy.util.LogConfig.Companion.ERROR
+import com.programmergabut.solatkuy.util.LogConfig.Companion.SERVICE_BOOT_COMPLETE
 import com.programmergabut.solatkuy.util.helper.PushNotificationHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -34,7 +36,7 @@ class ServiceBootComplete: Service() {
                 PushNotificationHelper(this@ServiceBootComplete, data, "-")
             }
             catch(ex: Exception){
-                Log.d("<Error>","ServiceBootComplete, onStartCommand")
+                Log.d(ERROR,"ServiceBootComplete, onStartCommand")
             }
         }
 
@@ -43,6 +45,6 @@ class ServiceBootComplete: Service() {
 
     override fun onDestroy() {
         super.onDestroy()
-        Log.d("ServiceBootComplete","Service Destroyed")
+        Log.d(SERVICE_BOOT_COMPLETE,"Service Destroyed")
     }
 }

@@ -128,6 +128,13 @@ object DummyRetValue {
         ,"test")
     }
 
+    fun fetchAllSurahData(): List<com.programmergabut.solatkuy.data.remote.remoteentity.quranallsurahJson.Data>{
+        return mutableListOf(
+            com.programmergabut.solatkuy.data.remote.remoteentity.quranallsurahJson.Data(
+                "","","","",0,0,"")
+        )
+    }
+
     /* Database */
     fun getMsApi1(): MsApi1 {
         return MsApi1(0, "-7.5633548", "110.8041806", "3","7","2020")

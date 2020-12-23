@@ -30,6 +30,9 @@ abstract class BaseFragment<DB: ViewDataBinding, VM: ViewModel>(
     lateinit var viewModel: VM
     protected lateinit var binding : DB
 
+    private val ALL_PERMISSIONS = 101
+
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -79,10 +82,9 @@ abstract class BaseFragment<DB: ViewDataBinding, VM: ViewModel>(
         dialogBinding.btnOk.setOnClickListener {
             dialog.hide()
 
-            /* if(isFinish){
-                val controller = navHostFragment.findNavController()
-                controller.popBackStack(R.id.fragmentMain, true)
-            } */
+            if(isFinish){
+                activity?.finish()
+            }
         }
     }
 

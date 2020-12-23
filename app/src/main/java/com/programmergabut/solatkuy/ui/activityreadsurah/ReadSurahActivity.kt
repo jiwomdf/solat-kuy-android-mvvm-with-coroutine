@@ -22,6 +22,7 @@ import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonAr.Dat
 import com.programmergabut.solatkuy.databinding.ActivityReadSurahBinding
 import com.programmergabut.solatkuy.databinding.ListReadSurahBinding
 import com.programmergabut.solatkuy.util.EnumStatus
+import com.programmergabut.solatkuy.util.LogConfig.Companion.ERROR
 import dagger.hilt.android.AndroidEntryPoint
 import es.dmoral.toasty.Toasty
 
@@ -30,7 +31,7 @@ import es.dmoral.toasty.Toasty
 class ReadSurahActivity : BaseActivity<ActivityReadSurahBinding, ReadSurahViewModel>(
     R.layout.activity_read_surah,
     ReadSurahViewModel::class.java
-) {
+), View.OnClickListener {
 
     companion object{
         const val SURAH_ID = "SURAH_ID"
@@ -52,7 +53,23 @@ class ReadSurahActivity : BaseActivity<ActivityReadSurahBinding, ReadSurahViewMo
 
         setIntentExtra()
         setFirstView()
-        setListener()
+        setListenerr()
+    }
+
+    override fun onClick(v: View?) {
+        when(v?.id){
+            R.id.fab_brightness -> {
+                if(!getIsBrightnessActive()){
+                    setIsBrightnessActive(true)
+                    setTheme(true)
+                }
+                else{
+                    setIsBrightnessActive(false)
+                    setTheme(false)
+                }
+                readSurahAdapter.notifyDataSetChanged()
+            }
+        }
     }
 
     private fun setIntentExtra() {
@@ -63,7 +80,7 @@ class ReadSurahActivity : BaseActivity<ActivityReadSurahBinding, ReadSurahViewMo
             isAutoScroll = intent.getBooleanExtra(IS_AUTO_SCROLL, false)
         }
         catch (ex: Exception){
-            Log.d("<Error>", ex.message.toString())
+            Log.d(ERROR, ex.message.toString())
             showBottomSheet(
                 resources.getString(R.string.text_error_title),
                 "",
@@ -81,21 +98,7 @@ class ReadSurahActivity : BaseActivity<ActivityReadSurahBinding, ReadSurahViewMo
         setTheme(getIsBrightnessActive())
     }
 
-    private fun setListener() {
-        binding.fabBrightness.setOnClickListener {
-            if(!getIsBrightnessActive()){
-                setIsBrightnessActive(true)
-                setTheme(true)
-            }
-            else{
-                setIsBrightnessActive(false)
-                setTheme(false)
-            }
-
-            readSurahAdapter.notifyDataSetChanged()
-        }
-
-        var data: Data? = null
+    private fun setListenerr() {
 
         viewModel.selectedSurahAr.observe(this, {
             when (it.status) {
@@ -103,13 +106,20 @@ class ReadSurahActivity : BaseActivity<ActivityReadSurahBinding, ReadSurahViewMo
                     if (it.data?.data == null)
                         showBottomSheet(isCancelable = false, isFinish = true)
 
-                    data = it.data?.data!!
+                    if(!checkLastSurahAndAyah())
+                        showBottomSheet("Error Occurred", "Last surah and ayah not found", isCancelable = true, isFinish = true)
+
                     setVisibility(it.status)
-                    setToolBarText(data!!)
-                    viewModel.getListFavAyahBySurahID(selectedSurahId.toInt())
+                    setToolBarText(it.data?.data!!)
+                    viewModel.getListFavAyahBySurahID(
+                        selectedSurahId.toInt(),
+                        selectedSurahId.toInt(),
+                        getLastReadSurah(),
+                        getLastReadAyah()
+                    )
 
                     if(isFirstLoad){
-                        Toast.makeText(this, "Swipe to save last read", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "Swipe left to save your last read", Toast.LENGTH_SHORT).show()
                         isFirstLoad = false
                     }
                 }
@@ -128,49 +138,15 @@ class ReadSurahActivity : BaseActivity<ActivityReadSurahBinding, ReadSurahViewMo
 
         viewModel.msFavAyahBySurahID.observe(this, { local ->
 
-            var lastSurah = getLastReadSurah()
-            var lastAyah = getLastReadAyah()
-
-            if (lastSurah == -1 && lastAyah == -1) {
-                lastSurah = 0
-                lastAyah = 0
-            }
-            else if(lastSurah == -1 || lastAyah == -1){
-                showBottomSheet(
-                    "Error Occurred", "Last surah and ayah not found",
-                    isCancelable = true,
-                    isFinish = true
-                )
-                return@observe
-            }
-
             when (local.status) {
                 EnumStatus.SUCCESS -> {
-                    /* set the favorite ayah */
-                    local.data?.forEach { ayah ->
-                        data?.ayahs?.forEach out@{ remoteAyah ->
-                            if (remoteAyah.numberInSurah == ayah.ayahID && selectedSurahId.toInt() == ayah.surahID) {
-                                remoteAyah.isFav = true
-                                return@out
-                            }
-                        }
-                    }
-                    /* set the last read ayah */
-                    data?.ayahs?.forEach out@{
-                        if (lastSurah == selectedSurahId.toInt() && lastAyah == it.numberInSurah) {
-                            it.isLastRead = true
-                            return@out
-                        }
-                    }
-
                     readSurahAdapter.apply {
-                        listAyah = data?.ayahs!!
+                        listAyah = viewModel.fetchedArSurah.data.ayahs
                         notifyDataSetChanged()
                     }
                     if (isAutoScroll) {
-                        val lastReadAyah = getLastReadAyah()
                         (binding.rvReadSurah.layoutManager as LinearLayoutManager)
-                            .scrollToPositionWithOffset(lastReadAyah - 1, 0)
+                            .scrollToPositionWithOffset(getLastReadAyah() - 1, 0)
                     }
                 }
                 EnumStatus.ERROR -> {
@@ -182,6 +158,18 @@ class ReadSurahActivity : BaseActivity<ActivityReadSurahBinding, ReadSurahViewMo
         })
 
         viewModel.fetchReadSurahAr(selectedSurahId.toInt())
+    }
+
+    private fun checkLastSurahAndAyah(): Boolean {
+        val lastSurah = getLastReadSurah()
+        val lastAyah = getLastReadAyah()
+
+        if (lastSurah == -1 && lastAyah == -1)
+            insertLastReadSharedPref(0, 0)
+        else if(lastSurah == -1 || lastAyah == -1)
+            return false
+
+        return true
     }
 
     private fun setTheme(isBrightnessActive: Boolean){
@@ -365,7 +353,7 @@ class ReadSurahActivity : BaseActivity<ActivityReadSurahBinding, ReadSurahViewMo
             val pos = viewHolder.layoutPosition
             val item = readSurahAdapter.listAyah[pos]
 
-            insertLastReadSharedPref(item.numberInSurah)
+            insertLastReadSharedPref(selectedSurahId.toInt(), item.numberInSurah)
             Toasty.success(
                 this@ReadSurahActivity,
                 "Surah $selectedSurahId ayah ${item.numberInSurah} is now your last read",
@@ -433,8 +421,5 @@ class ReadSurahActivity : BaseActivity<ActivityReadSurahBinding, ReadSurahViewMo
         }
     }
 
-    private fun insertLastReadSharedPref(numberInSurah: Int) {
-        insertLastReadSharedPref(selectedSurahId.toInt(), numberInSurah)
-    }
 
 }

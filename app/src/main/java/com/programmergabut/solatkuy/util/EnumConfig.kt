@@ -10,8 +10,10 @@ import com.programmergabut.solatkuy.data.local.localentity.MsApi1
 class EnumConfig {
     companion object{
 
-        /* IS TESTING */
-        const val IS_TESTING = false
+        /* IS TESTING
+         * if you change IS_TESTING, please rebuild the project
+         */
+        const val IS_TESTING = true
 
         /* DATABASES */
         const val DATABASE_NAME = "solatkuydb"
@@ -38,15 +40,15 @@ class EnumConfig {
 
         /* Prayer Time */
         const val FAJR_TIME = "04:00"
-        const val DHUHR_TIME = "12:00"
+        const val DHUHR_TIME = "13:17"
         const val ASR_TIME = "15:00"
         const val MAGHRIB_TIME = "17:45"
         const val ISHA_TIME = "19:00"
         const val SUNRISE_TIME = "06:00"
 
         /* Notification */
-        const val ID_DUA = 500
-        const val ID_MAIN = 400
+        const val ID_DUA_PENDING_INTENT = 500
+        const val ID_PRAYER_NOTIFICATION = 400
 
         /* City not found */
         const val CITY_NOT_FOUND_STR = "City not found"

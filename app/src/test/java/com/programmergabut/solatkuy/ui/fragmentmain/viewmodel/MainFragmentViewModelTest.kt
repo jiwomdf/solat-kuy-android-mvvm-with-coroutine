@@ -88,7 +88,7 @@ class MainFragmentViewModelTest {
         //given
         val observer = mock<Observer<Resource<ReadSurahEnResponse>>>()
         val dummyQuranSurah = Resource.success(DummyRetValue.surahEnID_1())
-        `when`(quranRepositoryImpl.fetchReadSurahEn(surahID)).thenReturn(dummyQuranSurah.data)
+        `when`(quranRepositoryImpl.fetchReadSurahEn(surahID).await()).thenReturn(dummyQuranSurah.data)
 
         //when
         viewModel.fetchReadSurahEn(surahID)
@@ -118,7 +118,7 @@ class MainFragmentViewModelTest {
         viewModel.msSetting.observeForever(observer)
 
         //when
-        viewModel.getMsSetting(surahID)
+        viewModel.getMsSetting()
         val result = viewModel.msSetting.value
 
         //--verify

@@ -3,7 +3,9 @@ package com.programmergabut.solatkuy.base
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
+import android.view.LayoutInflater
 import android.view.MotionEvent
+import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
@@ -43,7 +45,14 @@ abstract class BaseActivity<DB: ViewDataBinding, VM: ViewModel>(
         viewModelClass?.let {
             viewModel = ViewModelProvider(this).get(it)
         }
+
+        setListener()
     }
+
+    protected open fun setListener(){
+
+    }
+
 
     override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
         val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager

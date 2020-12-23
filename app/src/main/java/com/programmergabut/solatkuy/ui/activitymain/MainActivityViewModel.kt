@@ -13,15 +13,15 @@ class MainActivityViewModel @ViewModelInject constructor(val prayerRepositoryImp
 
     val msSetting = prayerRepositoryImpl.getMsSetting()
 
-    var errStatus = MutableLiveData<EnumStatus>()
-    private var errMessage = ""
-    fun getErrMsg() = errMessage
+    var errMsApi1Status = MutableLiveData<EnumStatus>()
+    private var errMsApi1Message = ""
+    fun getErrMsApi1Msg() = errMsApi1Message
 
     fun updateMsApi1(msApi1: MsApi1) = viewModelScope.launch {
 
         if(msApi1.latitude.isEmpty() || msApi1.longitude.isEmpty() || msApi1.latitude == "." || msApi1.longitude == "."){
-            errMessage = "latitude and longitude cannot be empty"
-            errStatus.postValue(EnumStatus.ERROR)
+            errMsApi1Message = "latitude and longitude cannot be empty"
+            errMsApi1Status.postValue(EnumStatus.ERROR)
             return@launch
         }
 
@@ -29,20 +29,20 @@ class MainActivityViewModel @ViewModelInject constructor(val prayerRepositoryImp
         val arrLongitude = msApi1.longitude.toCharArray()
 
         if(arrLatitude[arrLatitude.size - 1] == '.' || arrLongitude[arrLongitude.size - 1] == '.'){
-            errMessage = "latitude and longitude cannot be ended with ."
-            errStatus.postValue(EnumStatus.ERROR)
+            errMsApi1Message = "latitude and longitude cannot be ended with ."
+            errMsApi1Status.postValue(EnumStatus.ERROR)
             return@launch
         }
 
         if(arrLatitude[0] == '.' || arrLongitude[0] == '.'){
-            errMessage = "latitude and longitude cannot be started with ."
-            errStatus.postValue(EnumStatus.ERROR)
+            errMsApi1Message = "latitude and longitude cannot be started with ."
+            errMsApi1Status.postValue(EnumStatus.ERROR)
             return@launch
         }
 
         prayerRepositoryImpl.updateMsApi1(msApi1)
-        errMessage = "Success change the coordinate"
-        errStatus.postValue(EnumStatus.SUCCESS)
+        errMsApi1Message = "Success change the coordinate"
+        errMsApi1Status.postValue(EnumStatus.SUCCESS)
     }
 
     fun updateIsHasOpenApp(isHasOpen: Boolean) = viewModelScope.launch{

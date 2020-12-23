@@ -7,6 +7,7 @@ import com.programmergabut.solatkuy.CoroutinesTestRule
 import com.programmergabut.solatkuy.DummyRetValue
 import com.programmergabut.solatkuy.data.QuranRepositoryImpl
 import com.programmergabut.solatkuy.data.remote.remoteentity.quranallsurahJson.AllSurahResponse
+import com.programmergabut.solatkuy.data.remote.remoteentity.quranallsurahJson.Data
 import com.programmergabut.solatkuy.ui.activitymain.fragmentquran.QuranFragmentViewModel
 import com.programmergabut.solatkuy.util.Resource
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -49,11 +50,12 @@ class QuranFragmentViewModelTest {
     fun fetchAllSurah() = coroutinesTestRule.testDispatcher.runBlockingTest{
 
         //given
-        val observer = mock<Observer<Resource<AllSurahResponse>>>()
+        val observer = mock<Observer<Resource<List<Data>>>>()
         val dummySelectedSurahAr = Resource.success(DummyRetValue.fetchAllSurah())
+        val dummySelectedSurahData = Resource.success(DummyRetValue.fetchAllSurahData())
 
         //scenario
-        `when`(quranRepositoryImpl.fetchAllSurah()).thenReturn(dummySelectedSurahAr.data)
+        `when`(quranRepositoryImpl.fetchAllSurah().await()).thenReturn(dummySelectedSurahAr.data)
 
         //start observer
         viewModel.allSurah.observeForever(observer)
@@ -65,7 +67,7 @@ class QuranFragmentViewModelTest {
         //--verify
         verify(quranRepositoryImpl).fetchAllSurah()
         assertEquals(dummySelectedSurahAr, result)
-        verify(observer).onChanged(dummySelectedSurahAr)
+        verify(observer).onChanged(dummySelectedSurahData)
 
         //end observer
         viewModel.allSurah.removeObserver(observer)

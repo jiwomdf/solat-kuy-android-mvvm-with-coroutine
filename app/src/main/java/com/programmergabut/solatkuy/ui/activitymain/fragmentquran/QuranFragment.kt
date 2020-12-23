@@ -25,11 +25,11 @@ import java.util.*
 @AndroidEntryPoint
 class QuranFragment(viewModelTest: QuranFragmentViewModel? = null) : BaseFragment<FragmentQuranBinding, QuranFragmentViewModel>(
     R.layout.fragment_quran, QuranFragmentViewModel::class.java, viewModelTest
-), SwipeRefreshLayout.OnRefreshListener {
+), SwipeRefreshLayout.OnRefreshListener, View.OnClickListener {
 
     private lateinit var allSurahAdapter: AllSurahAdapter
     private lateinit var staredSurahAdapter: StaredSurahAdapter
-    private var allSurahDatas: MutableList<Data>? = null
+    private var tempAllSurah: List<Data>? = null
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -44,30 +44,36 @@ class QuranFragment(viewModelTest: QuranFragmentViewModel? = null) : BaseFragmen
     override fun setListener() {
         super.setListener()
         binding.slQuran.setOnRefreshListener(this)
+        binding.cvFavAyah.setOnClickListener(this)
+        binding.cvLastReadAyah.setOnClickListener(this)
+    }
 
-        binding.cvFavAyah.setOnClickListener {
-            gotoIntent(FavAyahActivity::class.java, null)
-        }
-        binding.cvLastReadAyah.setOnClickListener {
-            val surahID = getLastReadSurah()
-            val selectedSurah = allSurahDatas?.find { x -> x.number == surahID }
-
-            val bundle = Bundle()
-            bundle.apply {
-                putString(ReadSurahActivity.SURAH_ID, selectedSurah?.number.toString())
-                putString(ReadSurahActivity.SURAH_NAME, selectedSurah?.englishName)
-                putString(ReadSurahActivity.SURAH_TRANSLATION, selectedSurah?.englishNameTranslation)
-                putBoolean(ReadSurahActivity.IS_AUTO_SCROLL, true)
+    override fun onClick(v: View?) {
+        when(v?.id){
+            R.id.cv_fav_ayah -> {
+                gotoIntent(FavAyahActivity::class.java, null)
             }
-            gotoIntent(ReadSurahActivity::class.java, bundle)
+            R.id.cv_last_read_ayah -> {
+                val selectedSurah = tempAllSurah?.find { x -> x.number == getLastReadSurah() }
+                val bundle = Bundle()
+                bundle.apply {
+                    putString(ReadSurahActivity.SURAH_ID, selectedSurah?.number.toString())
+                    putString(ReadSurahActivity.SURAH_NAME, selectedSurah?.englishName)
+                    putString(ReadSurahActivity.SURAH_TRANSLATION, selectedSurah?.englishNameTranslation)
+                    putBoolean(ReadSurahActivity.IS_AUTO_SCROLL, true)
+                }
+                gotoIntent(ReadSurahActivity::class.java, bundle)
+            }
         }
     }
 
     private fun initSearchSurah() {
         binding.etSearch.addTextChangedListener(object: TextWatcher{
             override fun afterTextChanged(s: Editable?) {
-                val newData = allSurahDatas!!.filter { x -> x.englishNameLC!!.contains(s.toString()) }
-                allSurahAdapter.listData = newData
+                val newData = tempAllSurah?.filter { surah ->
+                    surah.englishNameLowerCase!!.contains(s.toString())
+                }
+                allSurahAdapter.listData = newData ?: emptyList()
                 allSurahAdapter.notifyDataSetChanged()
                 binding.sJuzz.setSelection(0)
             }
@@ -82,18 +88,18 @@ class QuranFragment(viewModelTest: QuranFragmentViewModel? = null) : BaseFragmen
         viewModel.allSurah.observe(viewLifecycleOwner, {
             when(it.status){
                 EnumStatus.SUCCESS -> {
-                    val datas = it?.data?.data as MutableList<Data>
-                    allSurahAdapter.listData = datas
-                    allSurahAdapter.notifyDataSetChanged()
+                    if(it.data == null)
+                        showBottomSheet(description = getString(R.string.fetch_failed))
 
-                    createAllSurahDatas(datas)
+                    tempAllSurah = it.data!!
+                    allSurahAdapter.apply {
+                        listData = it.data
+                        notifyDataSetChanged()
+                    }
                     setVisibility(it.status)
                 }
                 EnumStatus.LOADING -> setVisibility(it.status)
-                EnumStatus.ERROR -> {
-                    setVisibility(it.status)
-                }
-                else -> {/*NO-OP*/}
+                EnumStatus.ERROR -> setVisibility(it.status)
             }
         })
 
@@ -132,23 +138,9 @@ class QuranFragment(viewModelTest: QuranFragmentViewModel? = null) : BaseFragmen
                 binding.rvQuranSurah.visibility = View.INVISIBLE
                 binding.slQuran.isRefreshing = false
             }
-            else -> {/*NO-OP*/}
         }
     }
 
-    private fun createAllSurahDatas(datas: MutableList<Data>) {
-        allSurahDatas = datas.map { x ->
-            Data(
-                x.englishName,
-                x.englishName.toLowerCase(Locale.getDefault()).replace("-", " "),
-                x.englishNameTranslation,
-                x.name,
-                x.number,
-                x.numberOfAyahs,
-                x.revelationType
-            )
-        } as MutableList<Data>
-    }
 
     private fun initJuzzSpinner(){
         val arrJuzz = mutableListOf<String>()
@@ -199,51 +191,14 @@ class QuranFragment(viewModelTest: QuranFragmentViewModel? = null) : BaseFragmen
     }
 
     private fun juzzSurahFilter(juzz: String){
-
-        var datas = emptyList<Data>()
+        val datas: List<Data>
         if(juzz == "All Juzz")
-            datas = allSurahDatas ?: emptyList()
-        else{
-
-            if(allSurahDatas == null)
-                return
-
-            when(juzz.toInt()){
-                1 -> datas = allSurahDatas!!.filter { x -> x.number in 1..2 }
-                2 -> datas = allSurahDatas!!.filter { x -> x.number == 2 }
-                3 -> datas = allSurahDatas!!.filter { x -> x.number in 2..3 }
-                4 -> datas = allSurahDatas!!.filter { x -> x.number in 3..4 }
-                5 -> datas = allSurahDatas!!.filter { x -> x.number == 4 }
-                6 -> datas = allSurahDatas!!.filter { x -> x.number in 4..5 }
-                7 -> datas = allSurahDatas!!.filter { x -> x.number in 5..6 }
-                8 -> datas = allSurahDatas!!.filter { x -> x.number in 6..7 }
-                9 -> datas = allSurahDatas!!.filter { x -> x.number in 7..8 }
-                10 -> datas = allSurahDatas!!.filter { x -> x.number in 8..9 }
-                11 -> datas = allSurahDatas!!.filter { x -> x.number in 9..11 }
-                12 -> datas = allSurahDatas!!.filter { x -> x.number in 11..12 }
-                13 -> datas = allSurahDatas!!.filter { x -> x.number in 12..14 }
-                14 -> datas = allSurahDatas!!.filter { x -> x.number in 15..16 }
-                15 -> datas = allSurahDatas!!.filter { x -> x.number in 17..18 }
-                16 -> datas = allSurahDatas!!.filter { x -> x.number in 18..20 }
-                17 -> datas = allSurahDatas!!.filter { x -> x.number in 21..22 }
-                18 -> datas = allSurahDatas!!.filter { x -> x.number in 23..25 }
-                19 -> datas = allSurahDatas!!.filter { x -> x.number in 25..27 }
-                20 -> datas = allSurahDatas!!.filter { x -> x.number in 27..29 }
-                21 -> datas = allSurahDatas!!.filter { x -> x.number in 29..33 }
-                22 -> datas = allSurahDatas!!.filter { x -> x.number in 33..36 }
-                23 -> datas = allSurahDatas!!.filter { x -> x.number in 36..38 }
-                24 -> datas = allSurahDatas!!.filter { x -> x.number in 39..41 }
-                25 -> datas = allSurahDatas!!.filter { x -> x.number in 41..45 }
-                26 -> datas = allSurahDatas!!.filter { x -> x.number in 46..51 }
-                27 -> datas = allSurahDatas!!.filter { x -> x.number in 51..57 }
-                28 -> datas = allSurahDatas!!.filter { x -> x.number in 58..66 }
-                29 -> datas = allSurahDatas!!.filter { x -> x.number in 67..77 }
-                30 -> datas = allSurahDatas!!.filter { x -> x.number in 78..144 }
-            }
-        }
+            datas = tempAllSurah ?: emptyList()
+        else
+            datas = viewModel.getSurahByJuzz(juzz.toInt())
 
         if(datas.isNotEmpty()){
-            allSurahAdapter.listData = datas ?: listOf()
+            allSurahAdapter.listData = datas
             allSurahAdapter.notifyDataSetChanged()
         }
     }

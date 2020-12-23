@@ -32,9 +32,9 @@ class FavAyahActivity : BaseActivity<ActivityFavAyahBinding, FavAyahViewModel>(
         setListener()
     }
 
-    private fun setListener() {
+    override fun setListener() {
 
-        viewModel.favAyah.observe(this, {
+        viewModel.favAyah().observe(this, {
             when (it.status) {
                 EnumStatus.SUCCESS -> {
                     if (it.data == null)
@@ -48,8 +48,7 @@ class FavAyahActivity : BaseActivity<ActivityFavAyahBinding, FavAyahViewModel>(
                         binding.tvFavAyahEmpty.visibility = View.GONE
                     }
                 }
-                EnumStatus.LOADING -> {
-                }
+                EnumStatus.LOADING -> { }
                 EnumStatus.ERROR -> {
                     showBottomSheet(isCancelable = false, isFinish = true)
                 }

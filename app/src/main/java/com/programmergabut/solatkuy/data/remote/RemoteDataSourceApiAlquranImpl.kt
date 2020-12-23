@@ -8,6 +8,7 @@ import com.programmergabut.solatkuy.data.remote.remoteentity.quranallsurahJson.A
 import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonAr.Ayah
 import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonAr.ReadSurahArResponse
 import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonEn.ReadSurahEnResponse
+import com.programmergabut.solatkuy.data.remote.remoteentity.quranallsurahJson.Data
 import retrofit2.Response
 import javax.inject.Inject
 

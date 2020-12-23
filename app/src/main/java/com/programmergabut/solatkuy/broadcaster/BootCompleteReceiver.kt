@@ -6,6 +6,7 @@ import android.content.Intent
 import android.os.Build
 import android.util.Log
 import com.programmergabut.solatkuy.service.ServiceBootComplete
+import com.programmergabut.solatkuy.util.LogConfig.Companion.ERROR
 
 /*
  * Created by Katili Jiwo Adi Wiyono on 02/04/20.
@@ -36,7 +37,7 @@ class BootCompleteReceiver: BroadcastReceiver() {
                 }*/
             }
             else{
-                Log.d("<Error>","BootCompleteReceiver, context == null")
+                Log.d(ERROR,"BootCompleteReceiver, context == null")
                 throw Exception("Context Null")
             }
 

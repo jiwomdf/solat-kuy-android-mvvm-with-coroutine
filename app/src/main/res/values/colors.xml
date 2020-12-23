@@ -1,24 +1,11 @@
 <?xml version="1.0" encoding="utf-8"?>
 <resources>
-    <color name="orange_200">#ffdb67</color>
-    <color name="orange_500">#f4a935</color>
-    <color name="orange_500_trans">#99f4a935</color>
-    <color name="orange_700">#bd7a00</color>
-    <color name="orange_900">#884e00</color>
     <color name="red_200">#ff7b56</color>
     <color name="red_500">#ef472a</color>
     <color name="red_500_trans">#99ef472a</color>
     <color name="red_700">#b50000</color>
     <color name="blue_200">#feffff</color>
     <color name="blue_500">#cbdee2</color>
-    <color name="blue_500_trans">#77cbdee2</color>
-    <color name="blue_700">#9aacb0</color>
-    <color name="blue_900">#3a7580</color>
-    <color name="blue_maps">#4A89F3</color>
-    <color name="green_200">#38f222</color>
-    <color name="green_500">#99B83C</color>
-    <color name="green_500_trans">#9999B83C</color>
-    <color name="green_700">#36852f</color>
     <color name="dark_200">#313131</color>
     <color name="dark_500">#414141</color>
     <color name="dark_700">#525252</color>
@@ -32,4 +19,6 @@
     <color name="black">#FF000000</color>
     <color name="grey">#737373</color>
     <color name="white">#FFFFFFFF</color>
+
+    <color name="halfTransparentBackground">#aacccccc</color>
 </resources>

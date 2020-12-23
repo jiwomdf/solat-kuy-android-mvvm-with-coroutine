@@ -4,8 +4,6 @@ import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentFactory
 import com.programmergabut.solatkuy.ui.activitymain.fragmentcompass.CompassFragment
 import com.programmergabut.solatkuy.ui.activitymain.fragmentcompass.FragmentCompassViewModel
-import com.programmergabut.solatkuy.ui.activitymain.fragmentinfo.FragmentInfoViewModel
-import com.programmergabut.solatkuy.ui.activitymain.fragmentinfo.InfoFragment
 import com.programmergabut.solatkuy.ui.activitymain.fragmentmain.FragmentMainViewModel
 import com.programmergabut.solatkuy.ui.activitymain.fragmentmain.MainFragment
 import com.programmergabut.solatkuy.ui.activitymain.fragmentquran.QuranFragment
@@ -24,9 +22,6 @@ class TestSolatKuyFragmentFactory @Inject constructor() : FragmentFactory() {
         return when(className){
             CompassFragment::class.java.name -> CompassFragment(
                 FragmentCompassViewModel(FakePrayerRepositoryAndroidTest())
-            )
-            InfoFragment::class.java.name -> InfoFragment(
-                FragmentInfoViewModel(FakePrayerRepositoryAndroidTest())
             )
             QuranFragment::class.java.name -> QuranFragment(
                 QuranFragmentViewModel(FakeQuranRepositoryAndroidTest())

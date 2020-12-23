@@ -10,6 +10,7 @@ import com.programmergabut.solatkuy.data.remote.RemoteDataSourceAladhanImpl
 import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.Timings
 import com.programmergabut.solatkuy.util.Resource
 import com.programmergabut.solatkuy.util.EnumConfig
+import com.programmergabut.solatkuy.util.LogConfig.Companion.ERROR
 import java.lang.Exception
 import java.text.SimpleDateFormat
 import java.util.*
@@ -85,7 +86,6 @@ class PrayerRepositoryImpl @Inject constructor(
                 map = createPrayerTime(timings)
             }
             else{
-                Log.d("<Error>","PrayerRepository, timings is null")
                 return emptyList()
             }
 
@@ -94,7 +94,7 @@ class PrayerRepositoryImpl @Inject constructor(
             }
         }
         catch (ex :Exception){
-            Log.d("<Error>","PrayerRepository, not connected to internet and using the offline data")
+            Log.d(ERROR,"PrayerRepository, not connected to internet and using the offline data")
             return notifiedPrayerDao.getListNotifiedPrayerSync()
         }
 
@@ -150,7 +150,7 @@ class PrayerRepositoryImpl @Inject constructor(
 
         }
         catch (ex :Exception){
-            Log.d("<Error>","PrayerRepository, not connected to internet and using the offline data")
+            Log.d(ERROR,"PrayerRepository, not connected to internet and using the offline data")
             return emptyList()
         }
 

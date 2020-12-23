@@ -69,7 +69,6 @@ class FakePrayerRepository constructor(
 
         try {
             val data = remoteDataSourceAladhanImpl.fetchPrayerApi(msApi1)
-            Log.d("syncNotifiedPrayer", "fetch")
 
             data.let {
                 val sdf = SimpleDateFormat("dd", Locale.getDefault())
@@ -89,7 +88,6 @@ class FakePrayerRepository constructor(
 
                 map.forEach { p ->
                     notifiedPrayerDao.updatePrayerTime(p.key, p.value)
-                    Log.d("syncNotifiedPrayer", "updated")
                 }
             }
         }

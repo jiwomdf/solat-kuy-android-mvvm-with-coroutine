@@ -16,14 +16,16 @@ import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonAr.Rea
 import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonEn.ReadSurahEnResponse
 import com.programmergabut.solatkuy.ui.DummyRetValue
 import com.programmergabut.solatkuy.util.Resource
+import kotlinx.coroutines.*
+import kotlinx.coroutines.Dispatchers.IO
 import javax.inject.Inject
 
 class FakeQuranRepositoryAndroidTest: QuranRepository {
 
     private var listMsFavAyah = DummyRetValue.getListMsFavAyah()
-    private val observableMsFavAyahs = MutableLiveData<Resource<List<MsFavAyah>>>()
+    private val observableMsFavAyahs = MutableLiveData<List<MsFavAyah>>()
     private fun refreshMsFavAyah(){
-        observableMsFavAyahs.postValue(Resource.success(listMsFavAyah))
+        observableMsFavAyahs.postValue(listMsFavAyah)
     }
 
     private var listMsFavSurah = DummyRetValue.getListMsFavSurah()
@@ -38,10 +40,10 @@ class FakeQuranRepositoryAndroidTest: QuranRepository {
      *Room
      */
     /* MsFavAyah */
-    override fun getListFavAyah(): LiveData<Resource<List<MsFavAyah>>> {
+    override fun getListFavAyah(): LiveData<List<MsFavAyah>> {
         return observableMsFavAyahs
     }
-    override fun getListFavAyahBySurahID(surahID: Int): LiveData<Resource<List<MsFavAyah>>> {
+    override fun getListFavAyahBySurahID(surahID: Int): LiveData<List<MsFavAyah>> {
         return observableMsFavAyahs
     }
     override suspend fun insertFavAyah(msFavAyah: MsFavAyah){}
@@ -60,14 +62,20 @@ class FakeQuranRepositoryAndroidTest: QuranRepository {
     /*
      * Retrofit
      */
-    override suspend fun fetchReadSurahEn(surahID: Int): ReadSurahEnResponse {
-        return DummyRetValue.surahEnID_1()
+    override suspend fun fetchReadSurahEn(surahID: Int): Deferred<ReadSurahEnResponse> {
+        return CoroutineScope(IO).async {
+            DummyRetValue.surahEnID_1()
+        }
     }
-    override suspend fun fetchAllSurah(): AllSurahResponse {
-        return DummyRetValue.fetchAllSurah()
+    override suspend fun fetchAllSurah(): Deferred<AllSurahResponse> {
+        return CoroutineScope(IO).async {
+            DummyRetValue.fetchAllSurah()
+        }
     }
-    override suspend fun fetchReadSurahAr(surahID: Int): ReadSurahArResponse {
-        return DummyRetValue.surahArID_1()
+    override suspend fun fetchReadSurahAr(surahID: Int): Deferred<ReadSurahArResponse> {
+        return CoroutineScope(IO).async {
+            DummyRetValue.surahArID_1()
+        }
     }
 
 }

@@ -6,6 +6,7 @@ import androidx.lifecycle.ViewModel
 import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.base.BaseActivity
 import com.programmergabut.solatkuy.databinding.ActivityDuaBinding
+import com.programmergabut.solatkuy.util.LogConfig.Companion.ERROR
 import java.lang.Exception
 
 class DuaActivity : BaseActivity<ActivityDuaBinding, ViewModel>(R.layout.activity_dua, null) {
@@ -25,7 +26,7 @@ class DuaActivity : BaseActivity<ActivityDuaBinding, ViewModel>(R.layout.activit
         setListener()
     }
 
-    private fun setListener(){
+    override fun setListener(){
         try {
             binding.tvPrayerTitle.text = intent.getStringExtra(DUA_TITLE) ?: throw Exception("DuaActivity getExtras $DUA_TITLE")
             binding.tvPrayerAr.text = intent.getStringExtra(DUA_AR) ?: throw Exception("DuaActivity getExtras $DUA_AR")
@@ -35,7 +36,7 @@ class DuaActivity : BaseActivity<ActivityDuaBinding, ViewModel>(R.layout.activit
             binding.tvPrayerRef.text = intent.getStringExtra(DUA_REF) ?: throw Exception("DuaActivity getExtras $DUA_REF")
         }
         catch (ex: Exception){
-            Log.d("<Error>", ex.message.toString())
+            Log.d(ERROR, ex.message.toString())
             showBottomSheet(isCancelable = false, isFinish = true)
         }
     }

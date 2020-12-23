@@ -16,24 +16,22 @@ import java.util.*
  * Created by Katili Jiwo Adi Wiyono on 02/04/20.
  */
 
-class PushNotificationHelper(context: Context, selectedList: MutableList<NotifiedPrayer>, mCityName: String): ContextWrapper(context) {
+class PushNotificationHelper(context: Context, selectedList: MutableList<NotifiedPrayer>, cityName: String): ContextWrapper(context) {
 
     private var mCityName: String? = null
 
     init {
-        this.mCityName = mCityName
+        this.mCityName = cityName
 
         val intent = Intent(context, PrayerBroadcastReceiver::class.java)
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-
         val listPrayerBundle = bundleCreator(selectedList)
 
         val newList = selectedList.filter { x -> x.prayerName !=  EnumConfig.SUNRISE} as MutableList<NotifiedPrayer>
-
         newList.sortBy { x -> x.prayerID }
-        newList.forEachIndexed { _, it ->
+        newList.forEach { prayer ->
 
-            val arrPrayer = it.prayerTime.split(":")
+            val arrPrayer = prayer.prayerTime.split(":")
             val hour = arrPrayer[0].trim()
             val minute = arrPrayer[1].split(" ")[0].trim()
 
@@ -42,18 +40,18 @@ class PushNotificationHelper(context: Context, selectedList: MutableList<Notifie
             calendar.set(Calendar.MINUTE, minute.toInt())
             calendar.set(Calendar.SECOND, 0)
 
-            intent.putExtra(PrayerBroadcastReceiver.prayer_id, it.prayerID)
-            intent.putExtra(PrayerBroadcastReceiver.prayer_name, it.prayerName)
-            intent.putExtra(PrayerBroadcastReceiver.prayer_time, it.prayerTime)
-            intent.putExtra(PrayerBroadcastReceiver.prayer_city, mCityName)
-            intent.putExtra(PrayerBroadcastReceiver.list_prayer_bundle, listPrayerBundle)
+            intent.putExtra(PrayerBroadcastReceiver.PRAYER_ID, prayer.prayerID)
+            intent.putExtra(PrayerBroadcastReceiver.PRAYER_NAME, prayer.prayerName)
+            intent.putExtra(PrayerBroadcastReceiver.PRAYER_TIME, prayer.prayerTime)
+            intent.putExtra(PrayerBroadcastReceiver.PRAYER_CITY, cityName)
+            intent.putExtra(PrayerBroadcastReceiver.LIST_PRAYER_BUNDLE, listPrayerBundle)
 
-            val pendingIntent = PendingIntent.getBroadcast(context, it.prayerID, intent, 0)
+            val pendingIntent = PendingIntent.getBroadcast(context, prayer.prayerID, intent, 0)
 
             if(calendar.before(Calendar.getInstance()))
                 calendar.add(Calendar.DATE, 1)
 
-            if(it.isNotified){
+            if(prayer.isNotified){
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
                     alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
                 else
@@ -66,8 +64,8 @@ class PushNotificationHelper(context: Context, selectedList: MutableList<Notifie
 
         /*
         * Deprecated, 4 June 2020
-        * because change the notification mechanism to fire all the data
-        * then cancel all alarm manager when the notification come, then fire it all again
+        * because the changes of the notification mechanism
+        * first fire all the data then cancel all alarm manager when the notification come, then fire it all again
         * also remove the more time feature
 
         val selPrayer = SelectPrayerHelper.selectNextPrayerToLocalPrayer(selList)
@@ -108,36 +106,36 @@ class PushNotificationHelper(context: Context, selectedList: MutableList<Notifie
 
    private fun bundleCreator(selectedList: MutableList<NotifiedPrayer>): Bundle {
 
-        val listPID = arrayListOf<Int>()
-        val listPName = arrayListOf<String>()
-        val listPTime = arrayListOf<String>()
-        val listPIsNotified = arrayListOf<Int>()
-        val listPCity = arrayListOf<String>()
+        val listPrayerID = arrayListOf<Int>()
+        val listPrayerName = arrayListOf<String>()
+        val listPrayerTime = arrayListOf<String>()
+        val listPrayerIsNotified = arrayListOf<Int>()
+        val listPrayerCity = arrayListOf<String>()
 
         selectedList.forEach {
-            listPID.add(it.prayerID)
-            listPName.add(it.prayerName)
-            listPTime.add(it.prayerTime)
+            listPrayerID.add(it.prayerID)
+            listPrayerName.add(it.prayerName)
+            listPrayerTime.add(it.prayerTime)
 
             if(it.isNotified)
-                listPIsNotified.add(1)
+                listPrayerIsNotified.add(1)
             else
-                listPIsNotified.add(0)
+                listPrayerIsNotified.add(0)
 
             if(mCityName.isNullOrEmpty())
-                listPCity.add("-")
+                listPrayerCity.add("-")
             else
-                listPCity.add(mCityName!!)
+                listPrayerCity.add(mCityName!!)
         }
 
-        val b = Bundle()
-        b.putIntegerArrayList("list_PID", listPID)
-        b.putStringArrayList("list_PName", listPName)
-        b.putStringArrayList("list_PTime", listPTime)
-        b.putIntegerArrayList("list_PIsNotified", listPIsNotified)
-        b.putStringArrayList("list_PCity", listPCity)
+        val bundle = Bundle()
+        bundle.putIntegerArrayList(PrayerBroadcastReceiver.LIST_PRAYER_ID, listPrayerID)
+        bundle.putStringArrayList(PrayerBroadcastReceiver.LIST_PRAYER_NAME, listPrayerName)
+        bundle.putStringArrayList(PrayerBroadcastReceiver.LIST_PRAYER_TIME, listPrayerTime)
+        bundle.putIntegerArrayList(PrayerBroadcastReceiver.LIST_PRAYER_IS_NOTIFIED, listPrayerIsNotified)
+        bundle.putStringArrayList(PrayerBroadcastReceiver.LIST_PRAYER_CITY, listPrayerCity)
 
-        return b
+        return bundle
     }
 
 }
