@@ -11,6 +11,9 @@ import com.programmergabut.solatkuy.data.remote.remoteentity.quranallsurahJson.A
 import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonAr.ReadSurahArResponse
 import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonEn.ReadSurahEnResponse
 import com.programmergabut.solatkuy.util.Resource
+import com.programmergabut.solatkuy.util.helper.RunIdlingResourceHelper
+import com.programmergabut.solatkuy.util.helper.RunIdlingResourceHelper.Companion.runIdlingResourceDecrement
+import com.programmergabut.solatkuy.util.helper.RunIdlingResourceHelper.Companion.runIdlingResourceIncrement
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers.IO
@@ -28,40 +31,14 @@ class QuranRepositoryImpl @Inject constructor(
      *Room
      */
     /* MsFavAyah */
-    override fun getListFavAyah(): LiveData<List<MsFavAyah>> {
-        return msFavAyahDao.getListFavAyah()
-    }
-    override fun getListFavAyahBySurahID(surahID: Int): LiveData<List<MsFavAyah>> {
-        return msFavAyahDao.getListFavAyahBySurahID(surahID)
-    }
+    override fun getListFavAyah(): LiveData<List<MsFavAyah>> = msFavAyahDao.getListFavAyah()
+    override fun getListFavAyahBySurahID(surahID: Int): LiveData<List<MsFavAyah>> = msFavAyahDao.getListFavAyahBySurahID(surahID)
     override suspend fun insertFavAyah(msFavAyah: MsFavAyah) = msFavAyahDao.insertMsAyah(msFavAyah)
     override suspend fun deleteFavAyah(msFavAyah: MsFavAyah) = msFavAyahDao.deleteMsFavAyah(msFavAyah)
 
     /* MsFavSurah */
-    override fun getListFavSurah(): LiveData<Resource<List<MsFavSurah>>> {
-        val data = MediatorLiveData<Resource<List<MsFavSurah>>>()
-        val listfavSurah = msFavSurahDao.getListFavSurah()
-
-        data.value = Resource.loading(null)
-
-        data.addSource(listfavSurah) {
-            data.value = Resource.success(it)
-        }
-
-        return data
-    }
-    override fun getFavSurahBySurahID(surahID: Int): LiveData<Resource<MsFavSurah>> {
-        val data = MediatorLiveData<Resource<MsFavSurah>>()
-        val listfavSurah = msFavSurahDao.getFavSurahBySurahID(surahID)
-
-        data.value = Resource.loading(null)
-
-        data.addSource(listfavSurah) {
-            data.value = Resource.success(it)
-        }
-
-        return data
-    }
+    override fun getListFavSurah(): LiveData<List<MsFavSurah>> = msFavSurahDao.getListFavSurah()
+    override fun getFavSurahBySurahID(surahID: Int): LiveData<MsFavSurah> = msFavSurahDao.getFavSurahBySurahID(surahID)
     override suspend fun insertFavSurah(msFavSurah: MsFavSurah) = msFavSurahDao.insertMsSurah(msFavSurah)
     override suspend fun deleteFavSurah(msFavSurah: MsFavSurah) = msFavSurahDao.deleteMsFavSurah(msFavSurah)
 
@@ -100,6 +77,7 @@ class QuranRepositoryImpl @Inject constructor(
 
     override suspend fun fetchReadSurahAr(surahID: Int): Deferred<ReadSurahArResponse> {
         return CoroutineScope(IO).async {
+            runIdlingResourceIncrement()
             lateinit var response : ReadSurahArResponse
             try {
                 response = remoteDataSourceApiAlquranImpl.fetchReadSurahAr(surahID)
@@ -109,6 +87,7 @@ class QuranRepositoryImpl @Inject constructor(
                 response.statusResponse = "-1"
                 response.messageResponse = ex.message.toString()
             }
+            runIdlingResourceDecrement()
             response
         }
     }

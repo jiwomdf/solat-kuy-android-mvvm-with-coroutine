@@ -94,11 +94,11 @@ abstract class BaseFragment<DB: ViewDataBinding, VM: ViewModel>(
         return sharedPrefUtil.getLastReadSurah()
     }
 
-    protected fun getIsNotHasOpenAnimation(): Boolean {
-        return sharedPrefUtil.getIsNotHasOpenAnimation()
+    protected fun getIsHasOpenAnimation(): Boolean {
+        return sharedPrefUtil.getIsHasOpenAnimation()
     }
 
-    protected fun setIsNotHasOpenAnimation(value: Boolean){
-        sharedPrefUtil.setIsNotHasOpenAnimation(value)
+    protected fun setIsHasOpenAnimation(value: Boolean){
+        sharedPrefUtil.setIsHasOpenAnimation(value)
     }
 }

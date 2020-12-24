@@ -16,7 +16,7 @@ interface NotifiedPrayerDao {
     fun getListNotifiedPrayer(): LiveData<List<NotifiedPrayer>>
 
     @Query("select * from notified_prayer order by prayerID asc")
-    suspend fun getListNotifiedPrayerSync(): List<NotifiedPrayer>
+    fun getListNotifiedPrayerSync(): List<NotifiedPrayer>
 
     @Query("delete from notified_prayer")
     suspend fun deleteAll()
@@ -28,7 +28,7 @@ interface NotifiedPrayerDao {
     suspend fun updateNotifiedPrayer(prayerName: String, isNotified: Boolean, prayerTime: String)
 
     @Query("update notified_prayer set prayerTime = :prayerTime where prayerName = :prayerName")
-    suspend fun updatePrayerTime(prayerName: String, prayerTime: String)
+    fun updatePrayerTime(prayerName: String, prayerTime: String)
 
     @Query("update notified_prayer set isNotified = :isNotified where prayerName = :prayerName")
     suspend fun updatePrayerIsNotified(prayerName: String, isNotified: Boolean)

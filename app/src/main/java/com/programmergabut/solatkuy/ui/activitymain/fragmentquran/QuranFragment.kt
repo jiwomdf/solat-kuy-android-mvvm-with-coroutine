@@ -38,7 +38,6 @@ class QuranFragment(viewModelTest: QuranFragmentViewModel? = null) : BaseFragmen
         initRvStaredSurah()
         initSearchSurah()
         initJuzzSpinner()
-        observeApi()
     }
 
     override fun setListener() {
@@ -46,6 +45,7 @@ class QuranFragment(viewModelTest: QuranFragmentViewModel? = null) : BaseFragmen
         binding.slQuran.setOnRefreshListener(this)
         binding.cvFavAyah.setOnClickListener(this)
         binding.cvLastReadAyah.setOnClickListener(this)
+        observeApi()
     }
 
     override fun onClick(v: View?) {
@@ -104,17 +104,8 @@ class QuranFragment(viewModelTest: QuranFragmentViewModel? = null) : BaseFragmen
         })
 
         viewModel.staredSurah.observe(viewLifecycleOwner, {
-            when(it.status){
-                EnumStatus.SUCCESS -> {
-                    staredSurahAdapter.listData = it.data!!
-                    staredSurahAdapter.notifyDataSetChanged()
-                }
-                EnumStatus.ERROR -> {
-                    showBottomSheet(isCancelable = true, isFinish = true)
-                    return@observe
-                }
-                else -> {/*NO-OP*/}
-            }
+            staredSurahAdapter.listData = it
+            staredSurahAdapter.notifyDataSetChanged()
         })
 
         viewModel.fetchAllSurah()

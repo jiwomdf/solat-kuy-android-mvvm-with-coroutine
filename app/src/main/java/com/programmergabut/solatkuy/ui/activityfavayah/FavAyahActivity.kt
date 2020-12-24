@@ -21,19 +21,16 @@ import dagger.hilt.android.AndroidEntryPoint
 class FavAyahActivity : BaseActivity<ActivityFavAyahBinding, FavAyahViewModel>(
     R.layout.activity_fav_ayah, FavAyahViewModel::class.java,
 ) {
-
     private lateinit var favAyahAdapter: FavAyahAdapter
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-
         binding.tbFavAyah.title = "Ayahs you've been liked"
         initRVFavAyah()
         setListener()
     }
 
     override fun setListener() {
-
         viewModel.favAyah().observe(this, {
             when (it.status) {
                 EnumStatus.SUCCESS -> {
@@ -49,13 +46,10 @@ class FavAyahActivity : BaseActivity<ActivityFavAyahBinding, FavAyahViewModel>(
                     }
                 }
                 EnumStatus.LOADING -> { }
-                EnumStatus.ERROR -> {
-                    showBottomSheet(isCancelable = false, isFinish = true)
-                }
+                EnumStatus.ERROR -> showBottomSheet(isCancelable = false, isFinish = true)
             }
         })
     }
-
     private fun initRVFavAyah() {
         favAyahAdapter = FavAyahAdapter(onClickFavAyah)
         binding.rvFavAyah.apply {
@@ -75,12 +69,12 @@ class FavAyahActivity : BaseActivity<ActivityFavAyahBinding, FavAyahViewModel>(
         dialog.setContentView(dialogView.root)
         dialog.show()
 
-        dialogView.btnLayoutDelDelete.setOnClickListener {
+        dialogView.btnUnfavorite.setOnClickListener {
             viewModel.deleteFavAyah(data)
             dialog.hide()
         }
 
-        dialogView.btnLayoutDelCancel.setOnClickListener {
+        dialogView.btnCancel.setOnClickListener {
             dialog.hide()
         }
     }

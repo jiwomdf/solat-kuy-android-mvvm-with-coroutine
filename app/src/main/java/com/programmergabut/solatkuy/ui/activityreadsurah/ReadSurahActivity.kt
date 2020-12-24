@@ -44,32 +44,16 @@ class ReadSurahActivity : BaseActivity<ActivityReadSurahBinding, ReadSurahViewMo
     private lateinit var selectedSurahId: String
     private lateinit var selectedSurahName: String
     private lateinit var selectedTranslation: String
-    private var isAutoScroll: Boolean = false
-    private var menu: Menu? = null
+    private var isAutoScroll = false
     private var isFirstLoad = true
+    private var menu: Menu? = null
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
         setIntentExtra()
         setFirstView()
-        setListenerr()
-    }
-
-    override fun onClick(v: View?) {
-        when(v?.id){
-            R.id.fab_brightness -> {
-                if(!getIsBrightnessActive()){
-                    setIsBrightnessActive(true)
-                    setTheme(true)
-                }
-                else{
-                    setIsBrightnessActive(false)
-                    setTheme(false)
-                }
-                readSurahAdapter.notifyDataSetChanged()
-            }
-        }
+        viewModel.fetchReadSurahAr(selectedSurahId.toInt())
     }
 
     private fun setIntentExtra() {
@@ -91,14 +75,15 @@ class ReadSurahActivity : BaseActivity<ActivityReadSurahBinding, ReadSurahViewMo
     }
 
     private fun setFirstView() {
-        binding.ccReadQuranLoading.visibility = View.VISIBLE
         setSupportActionBar(binding.tbReadSurah)
         supportActionBar?.setDisplayHomeAsUpEnabled(true)
         initRVReadSurah()
         setTheme(getIsBrightnessActive())
     }
 
-    private fun setListenerr() {
+    override fun setListener() {
+        super.setListener()
+        binding.fabBrightness.setOnClickListener(this)
 
         viewModel.selectedSurahAr.observe(this, {
             when (it.status) {
@@ -112,10 +97,8 @@ class ReadSurahActivity : BaseActivity<ActivityReadSurahBinding, ReadSurahViewMo
                     setVisibility(it.status)
                     setToolBarText(it.data?.data!!)
                     viewModel.getListFavAyahBySurahID(
-                        selectedSurahId.toInt(),
-                        selectedSurahId.toInt(),
-                        getLastReadSurah(),
-                        getLastReadAyah()
+                        selectedSurahId.toInt(), selectedSurahId.toInt(),
+                        getLastReadSurah(), getLastReadAyah()
                     )
 
                     if(isFirstLoad){
@@ -137,7 +120,6 @@ class ReadSurahActivity : BaseActivity<ActivityReadSurahBinding, ReadSurahViewMo
         })
 
         viewModel.msFavAyahBySurahID.observe(this, { local ->
-
             when (local.status) {
                 EnumStatus.SUCCESS -> {
                     readSurahAdapter.apply {
@@ -149,15 +131,35 @@ class ReadSurahActivity : BaseActivity<ActivityReadSurahBinding, ReadSurahViewMo
                             .scrollToPositionWithOffset(getLastReadAyah() - 1, 0)
                     }
                 }
-                EnumStatus.ERROR -> {
-                    showBottomSheet(isCancelable = false, isFinish = true)
-                }
-                else -> {/*NO-OP*/
-                }
+                EnumStatus.ERROR -> showBottomSheet(isCancelable = false, isFinish = true)
+                else -> {/*NO-OP*/}
             }
         })
 
-        viewModel.fetchReadSurahAr(selectedSurahId.toInt())
+        viewModel.msFavSurah.observe(this, {
+            if (it == null)
+                menu?.findItem(R.id.i_star_surah)?.icon =
+                    ContextCompat.getDrawable(this, R.drawable.ic_star_24)
+            else
+                menu?.findItem(R.id.i_star_surah)?.icon =
+                    ContextCompat.getDrawable(this, R.drawable.ic_star_purple_24)
+        })
+    }
+
+    override fun onClick(v: View?) {
+        when(v?.id){
+            R.id.fab_brightness -> {
+                if(!getIsBrightnessActive()){
+                    setIsBrightnessActive(true)
+                    setTheme(true)
+                }
+                else{
+                    setIsBrightnessActive(false)
+                    setTheme(false)
+                }
+                readSurahAdapter.notifyDataSetChanged()
+            }
+        }
     }
 
     private fun checkLastSurahAndAyah(): Boolean {
@@ -216,22 +218,6 @@ class ReadSurahActivity : BaseActivity<ActivityReadSurahBinding, ReadSurahViewMo
         this.menu = menu
         menuInflater.inflate(R.menu.read_surah_menu, menu)
 
-        viewModel.msFavSurah.observe(this, {
-            when (it.status) {
-                EnumStatus.SUCCESS -> {
-                    if (it.data == null)
-                        menu?.findItem(R.id.i_star_surah)?.icon =
-                            ContextCompat.getDrawable(this, R.drawable.ic_star_24)
-                    else
-                        menu?.findItem(R.id.i_star_surah)?.icon =
-                            ContextCompat.getDrawable(this, R.drawable.ic_star_purple_24)
-                }
-                EnumStatus.ERROR -> showBottomSheet(isCancelable = false, isFinish = true)
-                else -> {/*NO-OP*/
-                }
-            }
-        })
-
         viewModel.getFavSurahBySurahID(selectedSurahId.toInt())
         return super.onCreateOptionsMenu(menu)
     }
@@ -282,7 +268,6 @@ class ReadSurahActivity : BaseActivity<ActivityReadSurahBinding, ReadSurahViewMo
             layoutManager = LinearLayoutManager(this@ReadSurahActivity)
             ItemTouchHelper(itemTouchCallback).attachToRecyclerView(this)
         }
-
     }
 
     private val onClickFavAyah = fun(data: Ayah, binding: ListReadSurahBinding){

@@ -9,13 +9,17 @@ import com.programmergabut.solatkuy.data.local.localentity.MsFavAyah
 import com.programmergabut.solatkuy.data.local.localentity.MsSetting
 import com.programmergabut.solatkuy.data.local.localentity.NotifiedPrayer
 import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.PrayerResponse
+import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.Timings
 import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonEn.ReadSurahEnResponse
+import com.programmergabut.solatkuy.util.EnumConfig
 import com.programmergabut.solatkuy.util.Resource
 import com.programmergabut.solatkuy.util.EnumConfig.Companion.IS_TESTING
 import com.programmergabut.solatkuy.util.helper.RunIdlingResourceHelper.Companion.runIdlingResourceDecrement
 import com.programmergabut.solatkuy.util.helper.RunIdlingResourceHelper.Companion.runIdlingResourceIncrement
 import kotlinx.coroutines.launch
 import java.lang.Exception
+import java.text.SimpleDateFormat
+import java.util.*
 
 /*
  * Created by Katili Jiwo Adi Wiyono on 25/03/20.
@@ -57,8 +61,20 @@ class FragmentMainViewModel @ViewModelInject constructor(
                 }
             }
             else {
-                prayerRepository.syncNotifiedPrayer(msApi1).let {
-                    _notifiedPrayer.postValue(Resource.success(it))
+                val response = prayerRepository.fetchPrayerApi(msApi1).await()
+                if(response.statusResponse == "1"){
+                    val currentDate = SimpleDateFormat("dd", Locale.getDefault()).format(Date())
+                    val timings = response.data.find { obj -> obj.date.gregorian?.day == currentDate.toString() }?.timings ?: return@launch
+
+                    val map = createPrayerTime(timings)
+                    map.forEach { prayer -> prayerRepository.updatePrayerTime(prayer.key, prayer.value) }
+
+                    val result = prayerRepository.getListNotifiedPrayerSync()
+                    _notifiedPrayer.postValue(Resource.success(result))
+                    runIdlingResourceDecrement()
+                }
+                else{
+                    _notifiedPrayer.postValue(Resource.error(response.messageResponse, null))
                     runIdlingResourceDecrement()
                 }
             }
@@ -67,6 +83,17 @@ class FragmentMainViewModel @ViewModelInject constructor(
             _notifiedPrayer.postValue(Resource.error(e.message.toString(), null))
             runIdlingResourceDecrement()
         }
+    }
+
+    private fun createPrayerTime(timings: Timings): MutableMap<String, String> {
+        val map = mutableMapOf<String, String>()
+        map[EnumConfig.FAJR] = timings.fajr
+        map[EnumConfig.DHUHR] = timings.dhuhr
+        map[EnumConfig.ASR] = timings.asr
+        map[EnumConfig.MAGHRIB] = timings.maghrib
+        map[EnumConfig.ISHA] = timings.isha
+        map[EnumConfig.SUNRISE] = timings.sunrise
+        return map
     }
 
     private var _readSurahEn = MutableLiveData<Resource<ReadSurahEnResponse>>()
@@ -99,12 +126,16 @@ class FragmentMainViewModel @ViewModelInject constructor(
     fun fetchPrayerApi(msApi1: MsApi1){
         viewModelScope.launch {
 
-            runIdlingResourceIncrement()
             _prayer.postValue(Resource.loading(null))
-
             try{
-                prayerRepository.fetchPrayerApi(msApi1).let {
-                    _prayer.postValue(Resource.success(it))
+                runIdlingResourceIncrement()
+                val response  = prayerRepository.fetchPrayerApi(msApi1).await()
+                if(response.statusResponse == "1"){
+                    _prayer.postValue(Resource.success(response))
+                    runIdlingResourceDecrement()
+                }
+                else{
+                    _prayer.postValue(Resource.error(response.messageResponse, null))
                     runIdlingResourceDecrement()
                 }
             }
@@ -118,7 +149,16 @@ class FragmentMainViewModel @ViewModelInject constructor(
 
     private var _setting = MutableLiveData<Int>()
     var msSetting: LiveData<Resource<MsSetting>> = Transformations.switchMap(_setting){
-        prayerRepository.getMsSetting()
+        val data = MediatorLiveData<Resource<MsSetting>>()
+        val msSetting = prayerRepository.getMsSetting()
+
+        data.value = Resource.loading(null)
+
+        data.addSource(msSetting) {
+            data.value = Resource.success(it)
+        }
+
+        return@switchMap data
     }
     fun getMsSetting(){
         this._setting.value = 0

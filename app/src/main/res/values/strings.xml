@@ -2,17 +2,24 @@
     <item name="item_click_support" type="id" />
 
     <string name="app_name">Solat Kuy</string>
-    <string name="loading">Loading..</string>
+    <string name="welcome_dialog">Welcome to Solat Kuy! \n Solat Kuy is a reminder prayer time application \n\n in order to start this app \nplease select your location</string>
+
+    <!--PRAYER NAME-->
     <string name="fajr">Fajr</string>
     <string name="dhuhr">Dhuhr</string>
     <string name="asr">Asr</string>
     <string name="maghrib">Maghrib</string>
     <string name="isha">Isha</string>
+
+    <string name="loading">Loading..</string>
     <string name="prayer_name">Prayer Name</string>
     <string name="prayer_time">Prayer Time</string>
     <string name="compass">Compass</string>
     <string name="setting">Setting</string>
     <string name="info">Info</string>
+    <string name="next_prayer_is_dhuhr">Next prayer is Dhuhr</string>
+
+    <!--LOCATION-->
     <string name="changelocation">Change Location</string>
     <string name="by_latitude_amp_longitude"><![CDATA[By Latitude & Longitude]]></string>
     <string name="by_gps">By GPS</string>
@@ -20,6 +27,15 @@
     <string name="longitude">Longitude</string>
     <string name="current_location">Current Location</string>
     <string name="city">City</string>
+
+    <!--QIBLA COMPASS-->
+    <string name="compass_art">Compass Art:</string>
+    <string name="qibla">Qibla degrees in \n your location</string>
+    <string name="please_tilt_your_phone_until_the_image_is_balanced">Please calibrate your phone compass before using this feature</string>
+    <string name="please_do_this_move_before_using_the_compass_to_calibrate_the_compass">Please do this move before using the compass, in order to calibrate the compass</string>
+
+    <!--ABOUT-->
+    <string name="see_author_and_credit">see author and credit</string>
     <string name="about_developer">Solat Kuy is an open source reminder prayer \n time app, created to remind us to pray 🌙 \n\n feel free to see and contribute </string>
     <string name="github_link">https://github.com/jiwomdf/Solat-Kuy-Android-MVVM-with-Coroutine</string>
     <string name="powered_by">Powered by</string>
@@ -30,12 +46,8 @@
     <string name="https_unsplash_com">https://unsplash.com</string>
     <string name="images">Images: </string>
     <string name="api">Api: </string>
-    <string name="qibla">Qibla degrees in \n your location</string>
-    <string name="fetch_failed">fetching data failed</string>
-    <string name="fetch_failed_na">N/A</string>
-    <string name="next_prayer_is_dhuhr">Next prayer is Dhuhr</string>
-    <string name="welcome_dialog">Welcome to Solat Kuy! \n Solat Kuy is a reminder prayer time application \n\n in order to start this app \nplease select your location</string>
-    <string name="please_tilt_your_phone_until_the_image_is_balanced">Please calibrate your phone compass before using this feature</string>
+
+    <!--GREGORIAN TO HIJRI-->
     <string name="imsak_info">Imsak Info</string>
     <string name="gregorian_to_hijri">Gregorian to Hijri</string>
     <string name="type">Type</string>
@@ -43,12 +55,16 @@
     <string name="hijri">Hijri</string>
     <string name="date">Date</string>
     <string name="month">Month</string>
-    <string name="please_do_this_move_before_using_the_compass_to_calibrate_the_compass">Please do this move before using the compass, in order to calibrate the compass</string>
-    <string name="hide">Hide</string>
-    <string name="see_author_and_credit">see author and credit</string>
-    <string name="day">Day</string>
-    <string name="compass_art">Compass Art:</string>
+
+    <!--MESSAGE-->
+    <string name="fetch_failed">fetching data failed</string>
+    <string name="fetch_failed_na">N/A</string>
     <string name="please_enable_your_location">please enable your location</string>
+    <string name="text_error_title">Error Occurred</string>
+    <string name="text_error_dsc">Sorry.. there is some error, please try again</string>
+
+    <string name="hide">Hide</string>
+    <string name="day">Day</string>
     <string name="proceeded">Proceed</string>
     <string name="dua_collection">Dua Collection</string>
     <string name="latin">Latin</string>
@@ -75,7 +91,5 @@
     <string name="are_you_sure_want_to_delete_this_ayah">Are you sure want to unfavorite this ayah?</string>
     <string name="api_alquran_cloud">https://api.alquran.cloud</string>
     <string name="solat_kuy">Solat Kuy</string>
-    <string name="text_error_title">Error Occurred</string>
-    <string name="text_error_dsc">Sorry.. there is some error, please try again</string>
     <string name="oke">Oke</string>
 </resources>

@@ -60,23 +60,23 @@ class CompassFragment constructor(viewModelTest: FragmentCompassViewModel? = nul
 
         mSensorManager = activity?.getSystemService(SENSOR_SERVICE) as SensorManager
         openLottieAnimation()
-        subscribeObserversDB()
-        subscribeObserversAPI()
     }
 
     override fun setListener() {
         super.setListener()
         binding.slCompass.setOnRefreshListener(this)
+        subscribeObserversDB()
+        subscribeObserversAPI()
     }
 
     private fun openLottieAnimation() {
-        val isHasNotOpenAnimation = getIsNotHasOpenAnimation()
-        if(isHasNotOpenAnimation)
+        val isHasOpenAnimation = getIsHasOpenAnimation()
+        if(!isHasOpenAnimation)
             createLottieAnimation()
     }
 
     private fun saveSharedPreferences() {
-        setIsNotHasOpenAnimation(true)
+        setIsHasOpenAnimation(true)
     }
 
     /* Subscribe live data */
@@ -97,24 +97,17 @@ class CompassFragment constructor(viewModelTest: FragmentCompassViewModel? = nul
                 EnumStatus.ERROR -> {
                     binding.tvQiblaDir.text = getString(R.string.fetch_failed)
                 }
-                else -> {/* NO-OP*/}
             }
         })
     }
 
     private fun subscribeObserversDB() {
         viewModel.msApi1.observe(viewLifecycleOwner, {
-            when(it.status){
-                EnumStatus.SUCCESS -> {
-                    if(it.data == null)
-                        throw Exception("MsApi1 for Compass Null")
+            if(it == null)
+                showBottomSheet(isCancelable = false, isFinish = true)
 
-                    mMsApi1 = it.data
-                    viewModel.fetchCompassApi(it.data)
-                }
-                EnumStatus.LOADING -> {}
-                EnumStatus.ERROR -> {}
-            }
+            mMsApi1 = it
+            viewModel.fetchCompassApi(it)
         })
     }
 
@@ -172,7 +165,7 @@ class CompassFragment constructor(viewModelTest: FragmentCompassViewModel? = nul
     private fun createLottieAnimation() {
         val dialogBinding: LayoutPhoneTiltBinding = DataBindingUtil.inflate(
             LayoutInflater.from(requireContext()),
-            R.layout.layout_fristopenapp, null, true
+            R.layout.layout_phone_tilt, null, true
         )
         val dialog =  Dialog(requireContext())
         dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)

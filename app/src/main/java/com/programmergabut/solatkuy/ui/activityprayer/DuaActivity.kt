@@ -20,12 +20,6 @@ class DuaActivity : BaseActivity<ActivityDuaBinding, ViewModel>(R.layout.activit
         const val DUA_REF = "duaRef"
     }
 
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-
-        setListener()
-    }
-
     override fun setListener(){
         try {
             binding.tvPrayerTitle.text = intent.getStringExtra(DUA_TITLE) ?: throw Exception("DuaActivity getExtras $DUA_TITLE")

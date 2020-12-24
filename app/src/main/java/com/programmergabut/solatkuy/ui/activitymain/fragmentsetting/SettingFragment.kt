@@ -43,12 +43,11 @@ import org.joda.time.LocalDate
 class SettingFragment(viewModelTest: FragmentSettingViewModel? = null) : BaseFragment<FragmentSettingBinding, FragmentSettingViewModel>(
     R.layout.fragment_setting,
     FragmentSettingViewModel::class.java, viewModelTest
-) {
+), View.OnClickListener {
 
+    private val ALL_PERMISSIONS = 101
     private lateinit var bottomSheetDialog: BottomSheetDialog
     private lateinit var mFusedLocationClient: FusedLocationProviderClient
-    private val ALL_PERMISSIONS = 101
-
     private lateinit var dialogGpsBinding: LayoutBottomsheetBygpsBinding
     private lateinit var dialogLatLngBinding: LayoutBottomsheetBylatitudelongitudeBinding
 
@@ -57,13 +56,16 @@ class SettingFragment(viewModelTest: FragmentSettingViewModel? = null) : BaseFra
 
         bottomSheetDialog = BottomSheetDialog(requireContext())
         inflateBinding()
-        subscribeObserversDB()
-        observeErrorMsg()
     }
 
     override fun setListener() {
         super.setListener()
-        btnSetLatitudeLongitude()
+
+        binding.btnByLatitudeLongitude.setOnClickListener(this)
+        binding.btnByGps.setOnClickListener(this)
+        binding.btnSeeAuthor.setOnClickListener(this)
+        subscribeObserversDB()
+        observeErrorMsg()
     }
 
     private fun inflateBinding() {
@@ -79,24 +81,19 @@ class SettingFragment(viewModelTest: FragmentSettingViewModel? = null) : BaseFra
 
     private fun subscribeObserversDB() {
         viewModel.msApi1.observe(viewLifecycleOwner, {
-            when(it.status){
-                EnumStatus.SUCCESS -> {
-                    val retVal = it.data
-                    if(retVal != null){
-                        val city = LocationHelper.getCity(requireContext(), retVal.latitude.toDouble(), retVal.longitude.toDouble())
-                        binding.tvViewLatitude.text = retVal.latitude + " °S"
-                        binding.tvViewLongitude.text = retVal.longitude + " °E"
-                        binding.tvViewCity.text = city ?: EnumConfig.CITY_NOT_FOUND_STR
-                    }
-                }
-                else -> {/*NO-OP*/}
+            val retVal = it
+            if(retVal != null){
+                val city = LocationHelper.getCity(requireContext(), retVal.latitude.toDouble(), retVal.longitude.toDouble())
+                binding.tvViewLatitude.text = retVal.latitude + " °S"
+                binding.tvViewLongitude.text = retVal.longitude + " °E"
+                binding.tvViewCity.text = city ?: EnumConfig.CITY_NOT_FOUND_STR
             }
         })
     }
 
     private fun observeErrorMsg() {
-        viewModel.errStatus.observe(viewLifecycleOwner, {
-            val errMsg = viewModel.getErrMsg()
+        viewModel.errUpdateMsApi1Status.observe(viewLifecycleOwner, {
+            val errMsg = viewModel.getErrUpdateMsApi1()
             if(errMsg.isEmpty())
                 return@observe
 
@@ -112,41 +109,41 @@ class SettingFragment(viewModelTest: FragmentSettingViewModel? = null) : BaseFra
             }
         })
     }
-    
-    private fun btnSetLatitudeLongitude(){
-        binding.btnByLatitudeLongitude.setOnClickListener {
-            bottomSheetDialog.apply{
-                setContentView(dialogLatLngBinding.root)
-                show()
-            }
-            dialogLatLngBinding.btnProceedByLL.setOnClickListener{
-                val latitude = dialogLatLngBinding.etLlDialogLatitude.text.toString().trim()
-                val longitude = dialogLatLngBinding.etLlDialogLongitude.text.toString().trim()
-                insertLocationSettingToDb(latitude, longitude)
-            }
-        }
 
-        binding.btnByGps.setOnClickListener{
-            bottomSheetDialog.apply{
-                setContentView(dialogGpsBinding.root)
-                show()
-                getGPSLocation(dialogGpsBinding)
+    override fun onClick(v: View?) {
+        when(v?.id){
+            R.id.btn_by_latitude_longitude -> {
+                bottomSheetDialog.apply{
+                    setContentView(dialogLatLngBinding.root)
+                    show()
+                }
+                dialogLatLngBinding.btnProceedByLL.setOnClickListener{
+                    val latitude = dialogLatLngBinding.etLlDialogLatitude.text.toString().trim()
+                    val longitude = dialogLatLngBinding.etLlDialogLongitude.text.toString().trim()
+                    insertLocationSettingToDb(latitude, longitude)
+                }
             }
-            dialogGpsBinding.btnProceedByGps.setOnClickListener{
-                val latitude = dialogGpsBinding.tvGpsDialogLatitude.text.toString().trim()
-                val longitude = dialogGpsBinding.tvGpsDialogLongitude.text.toString().trim()
-                insertLocationSettingToDb(latitude, longitude)
+            R.id.btn_by_gps -> {
+                bottomSheetDialog.apply{
+                    setContentView(dialogGpsBinding.root)
+                    show()
+                    getGPSLocation()
+                }
+                dialogGpsBinding.btnProceedByGps.setOnClickListener{
+                    val latitude = dialogGpsBinding.tvGpsDialogLatitude.text.toString().trim()
+                    val longitude = dialogGpsBinding.tvGpsDialogLongitude.text.toString().trim()
+                    insertLocationSettingToDb(latitude, longitude)
+                }
             }
-        }
-
-        binding.btnSeeAuthor.setOnClickListener{
-            val dialog = Dialog(requireContext())
-            val dialogAuthorBinding = DataBindingUtil.inflate<LayoutAboutAuthorBinding>(
-                LayoutInflater.from(requireContext()),
-                R.layout.layout_about_author, null, true
-            )
-            dialog.setContentView(dialogAuthorBinding.root)
-            dialog.show()
+            R.id.btn_seeAuthor -> {
+                val dialog = Dialog(requireContext())
+                val dialogAuthorBinding = DataBindingUtil.inflate<LayoutAboutAuthorBinding>(
+                    LayoutInflater.from(requireContext()),
+                    R.layout.layout_about_author, null, true
+                )
+                dialog.setContentView(dialogAuthorBinding.root)
+                dialog.show()
+            }
         }
     }
 
@@ -198,8 +195,7 @@ class SettingFragment(viewModelTest: FragmentSettingViewModel? = null) : BaseFra
 
 
     /* supporting function */
-    private fun getGPSLocation(dialogGpsBinding: LayoutBottomsheetBygpsBinding){
-
+    private fun getGPSLocation(){
         if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
             ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
             mFusedLocationClient = getFusedLocationProviderClient(requireContext())
@@ -289,6 +285,5 @@ class SettingFragment(viewModelTest: FragmentSettingViewModel? = null) : BaseFra
             }
         }
     }
-
 
 }

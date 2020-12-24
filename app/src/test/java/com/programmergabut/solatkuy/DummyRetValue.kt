@@ -103,7 +103,8 @@ object DummyRetValue {
                     "","","","","","",""),
                 "", "", "", 0,0, ""
             )
-            ,"")
+            ,
+            "")
     }
 
     fun fetchPrayerApi(): PrayerResponse{

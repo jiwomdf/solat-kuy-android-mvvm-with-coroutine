@@ -2,6 +2,7 @@ package com.programmergabut.solatkuy.ui.activityreadsurah
 
 import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
+import com.programmergabut.solatkuy.data.QuranRepository
 import com.programmergabut.solatkuy.data.QuranRepositoryImpl
 import com.programmergabut.solatkuy.data.local.localentity.MsFavAyah
 import com.programmergabut.solatkuy.data.local.localentity.MsFavSurah
@@ -12,7 +13,7 @@ import com.programmergabut.solatkuy.util.helper.RunIdlingResourceHelper.Companio
 import kotlinx.coroutines.launch
 import java.lang.Exception
 
-class ReadSurahViewModel @ViewModelInject constructor(val quranRepositoryImpl: QuranRepositoryImpl): ViewModel() {
+class ReadSurahViewModel @ViewModelInject constructor(val quranRepositoryImpl: QuranRepository): ViewModel() {
 
     lateinit var fetchedArSurah: ReadSurahArResponse
     private var _selectedSurahAr = MutableLiveData<Resource<ReadSurahArResponse>>()
@@ -84,7 +85,7 @@ class ReadSurahViewModel @ViewModelInject constructor(val quranRepositoryImpl: Q
     }
 
     private var ayahID = MutableLiveData<Int>()
-    var msFavSurah: LiveData<Resource<MsFavSurah>> = Transformations.switchMap(ayahID){
+    var msFavSurah: LiveData<MsFavSurah> = Transformations.switchMap(ayahID){
         quranRepositoryImpl.getFavSurahBySurahID(it)
     }
     fun getFavSurahBySurahID(ayahID: Int){

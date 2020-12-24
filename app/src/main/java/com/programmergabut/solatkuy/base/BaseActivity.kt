@@ -3,9 +3,7 @@ package com.programmergabut.solatkuy.base
 import android.content.Context
 import android.content.Intent
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.MotionEvent
-import android.view.View
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
@@ -111,11 +109,11 @@ abstract class BaseActivity<DB: ViewDataBinding, VM: ViewModel>(
     }
 
     protected fun getIsNotHasOpenAnimation(): Boolean {
-        return sharedPrefUtil.getIsNotHasOpenAnimation()
+        return sharedPrefUtil.getIsHasOpenAnimation()
     }
 
-    protected fun setIsNotHasOpenAnimation(value: Boolean){
-        sharedPrefUtil.setIsNotHasOpenAnimation(value)
+    protected fun setIsHasOpenAnimation(value: Boolean){
+        sharedPrefUtil.setIsHasOpenAnimation(value)
     }
 
     protected fun getIsBrightnessActive(): Boolean {

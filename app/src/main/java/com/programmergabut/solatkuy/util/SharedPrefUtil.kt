@@ -17,13 +17,13 @@ class SharedPrefUtil @Inject constructor() {
         return sharedPref.getInt(LAST_READ_SURAH, -1)
     }
 
-    fun getIsNotHasOpenAnimation(): Boolean {
-        return sharedPref.getBoolean("isHasNotOpenAnimation", true)
+    fun getIsHasOpenAnimation(): Boolean {
+        return sharedPref.getBoolean("isHasOpenAnimation", true)
     }
 
-    fun setIsNotHasOpenAnimation(value: Boolean){
+    fun setIsHasOpenAnimation(value: Boolean){
         sharedPref.edit()?.apply{
-            putBoolean("isHasNotOpenAnimation", value)
+            putBoolean("isHasOpenAnimation", value)
             apply()
         }
     }

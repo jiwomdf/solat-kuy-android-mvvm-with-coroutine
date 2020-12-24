@@ -26,7 +26,6 @@ import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonEn.Rea
 import com.programmergabut.solatkuy.databinding.*
 import com.programmergabut.solatkuy.ui.activitymain.fragmentmain.adapter.DuaCollectionAdapter
 import com.programmergabut.solatkuy.util.EnumStatus
-import com.programmergabut.solatkuy.util.Resource
 import com.programmergabut.solatkuy.util.EnumConfig
 import com.programmergabut.solatkuy.util.EnumConfig.Companion.ENDED_SURAH
 import com.programmergabut.solatkuy.util.EnumConfig.Companion.STARTED_SURAH
@@ -56,7 +55,7 @@ class MainFragment(viewModelTest: FragmentMainViewModel? = null) : BaseFragment<
 
     private var isTimerHasBanded = false
     private var coroutineTimerJob: Job? = null
-    private var tempMsApi1: MsApi1? = null
+    private var tempApi1: MsApi1? = null
     private var mCityName: String? = null
     private lateinit var duaCollectionAdapter: DuaCollectionAdapter
     private lateinit var dialogBinding: LayoutPopupChooseQuoteSettingBinding
@@ -83,6 +82,7 @@ class MainFragment(viewModelTest: FragmentMainViewModel? = null) : BaseFragment<
         initRvDuaCollection()
         subscribeObserversDB()
         subscribeObserversAPI()
+        viewModel.getMsSetting()
     }
 
     private fun inflateBinding() {
@@ -187,34 +187,49 @@ class MainFragment(viewModelTest: FragmentMainViewModel? = null) : BaseFragment<
             }
         })
 
-        viewModel.getMsSetting()
+        viewModel.readSurahEn.observe(viewLifecycleOwner, { apiQuotes ->
+            when(apiQuotes.status){
+                EnumStatus.SUCCESS -> {
+                    if(apiQuotes.data == null)
+                        return@observe
+                    bindQuranQuoteApiOnline(apiQuotes.data)
+                }
+                EnumStatus.LOADING -> {
+                    binding.includeQuranQuote.tvQuranAyahQuote.text = getString(R.string.loading)
+                    binding.includeQuranQuote.tvQuranAyahQuoteClick.text = getString(R.string.loading)
+                }
+                EnumStatus.ERROR -> {
+                    binding.includeQuranQuote.tvQuranAyahQuote.text = getString(R.string.fetch_failed)
+                    binding.includeQuranQuote.tvQuranAyahQuoteClick.text = getString(R.string.fetch_failed)
+                }
+            }
+        })
     }
 
     private fun subscribeObserversDB() {
-        viewModel.msApi1.observe(viewLifecycleOwner,  {
-            when(it.status){
-                EnumStatus.SUCCESS -> {
-                    if(it.data == null )
-                        return@observe
+        viewModel.msApi1.observe(viewLifecycleOwner,  { api1 ->
+            if(api1 == null )
+                return@observe
 
-                    /* save temp data */
-                    tempMsApi1 = it.data
-                    bindWidgetLocation(it.data)
-                    updateMonthAndYearMsApi1(it.data)
-                    viewModel.syncNotifiedPrayer(it.data)
-                }
-                EnumStatus.ERROR -> showBottomSheet(isCancelable = false, isFinish = true)
-                else -> {/*NO-OP*/}
-            }
+            /* save temp data */
+            tempApi1 = api1
+            bindWidgetLocation(api1)
+            updateMonthAndYearMsApi1(api1)
+            viewModel.syncNotifiedPrayer(api1)
+
+            /* info layout */
+            val city = LocationHelper.getCity(requireContext(), api1.latitude.toDouble(), api1.longitude.toDouble())
+            binding.includeInfo.tvCity.text = city ?: EnumConfig.CITY_NOT_FOUND_STR
+            viewModel.fetchPrayerApi(api1)
         })
 
-        viewModel.msSetting.observe(viewLifecycleOwner, {
-            when(it.status){
+        viewModel.msSetting.observe(viewLifecycleOwner, { setting ->
+            when(setting.status){
                 EnumStatus.SUCCESS -> {
-                    if(it.data == null)
+                    if(setting.data == null)
                         return@observe
 
-                    if(it.data.isUsingDBQuotes){
+                    if(setting.data.isUsingDBQuotes){
                         dialogBinding.rbgQuotesDataSource.check(R.id.rb_fromFavQuote)
                         viewModel.getMsFavAyah()
                         viewModel.readSurahEn.removeObservers(this)
@@ -230,42 +245,11 @@ class MainFragment(viewModelTest: FragmentMainViewModel? = null) : BaseFragment<
             }
         })
 
-        viewModel.msApi1.observe(viewLifecycleOwner, { retval ->
-            when(retval.status){
-                EnumStatus.SUCCESS -> {
-                    if(retval.data == null)
-                        showBottomSheet(isCancelable = false, isFinish = true)
-
-                    val city = LocationHelper.getCity(requireContext(), retval.data!!.latitude.toDouble(), retval.data.longitude.toDouble())
-                    binding.includeInfo.tvCity.text = city ?: EnumConfig.CITY_NOT_FOUND_STR
-                    viewModel.fetchPrayerApi(retval.data)
-                }
-                EnumStatus.ERROR -> showBottomSheet(isCancelable = false, isFinish = true)
-                else -> {/*NO-OP*/}
-            }
-        })
-
-        viewModel.readSurahEn.observe(viewLifecycleOwner, { apiQuotes ->
-            when(apiQuotes.status){
-                EnumStatus.SUCCESS -> {
-                    bindQuranQuoteApiOnline(apiQuotes)
-                }
-                EnumStatus.LOADING -> {
-                    binding.includeQuranQuote.tvQuranAyahQuote.text = getString(R.string.loading)
-                    binding.includeQuranQuote.tvQuranAyahQuoteClick.text = getString(R.string.loading)
-                }
-                EnumStatus.ERROR -> {
-                    binding.includeQuranQuote.tvQuranAyahQuote.text = getString(R.string.fetch_failed)
-                    binding.includeQuranQuote.tvQuranAyahQuoteClick.text = getString(R.string.fetch_failed)
-                }
-            }
-        })
-
         viewModel.favAyah.observe(viewLifecycleOwner, { localQuotes ->
             when(localQuotes.status){
                 EnumStatus.SUCCESS -> {
                     if(localQuotes.data == null)
-                        throw Exception("localQuotes.data == null")
+                        return@observe
 
                     bindQuranSurahDB(localQuotes.data)
                 }
@@ -493,8 +477,8 @@ class MainFragment(viewModelTest: FragmentMainViewModel? = null) : BaseFragment<
         }
     }
 
-    private fun bindQuranQuoteApiOnline(retVal: Resource<ReadSurahEnResponse>) {
-        val returnValue = retVal.data?.data!!
+    private fun bindQuranQuoteApiOnline(retVal: ReadSurahEnResponse) {
+        val returnValue = retVal.data
         val randAyah = (returnValue.ayahs.indices).random()
         val ayah = returnValue.ayahs[randAyah].text + " - QS " + returnValue.englishName + " Ayah " + returnValue.numberOfAyahs
 
@@ -572,7 +556,7 @@ class MainFragment(viewModelTest: FragmentMainViewModel? = null) : BaseFragment<
             /* fetching Prayer API */
             if(tempHour == 0 && tempMinute == 0 && tempSecond == 1){
                 withContext(Dispatchers.Main){
-                    tempMsApi1?.let {
+                    tempApi1?.let {
                         viewModel.syncNotifiedPrayer(it)
                         isTimerHasBanded = false
                         Log.d(COROUTINE_TIMER, "Fetching.. $scope $tempSecond ${Thread.currentThread().id}")

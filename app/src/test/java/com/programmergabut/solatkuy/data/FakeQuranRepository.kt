@@ -2,6 +2,7 @@ package com.programmergabut.solatkuy.data
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
+import com.programmergabut.solatkuy.DummyRetValue
 import com.programmergabut.solatkuy.data.local.dao.*
 import com.programmergabut.solatkuy.data.local.localentity.MsFavAyah
 import com.programmergabut.solatkuy.data.local.localentity.MsFavSurah
@@ -10,6 +11,7 @@ import com.programmergabut.solatkuy.data.remote.remoteentity.quranallsurahJson.A
 import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonAr.ReadSurahArResponse
 import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonEn.ReadSurahEnResponse
 import com.programmergabut.solatkuy.util.Resource
+import com.programmergabut.solatkuy.util.helper.RunIdlingResourceHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
@@ -23,8 +25,8 @@ class FakeQuranRepository constructor(
 ): QuranRepository {
 
     /*
-     *Room
-     */
+      *Room
+      */
     /* MsFavAyah */
     override fun getListFavAyah(): LiveData<List<MsFavAyah>> {
         return msFavAyahDao.getListFavAyah()
@@ -98,15 +100,18 @@ class FakeQuranRepository constructor(
 
     override suspend fun fetchReadSurahAr(surahID: Int): Deferred<ReadSurahArResponse> {
         return CoroutineScope(Dispatchers.IO).async {
+            RunIdlingResourceHelper.runIdlingResourceIncrement()
             lateinit var response : ReadSurahArResponse
             try {
                 response = remoteDataSourceApiAlquranImpl.fetchReadSurahAr(surahID)
                 response.statusResponse = "1"
             }
             catch (ex: Exception){
+                response = DummyRetValue.surahArID_1()
                 response.statusResponse = "-1"
                 response.messageResponse = ex.message.toString()
             }
+            RunIdlingResourceHelper.runIdlingResourceDecrement()
             response
         }
     }

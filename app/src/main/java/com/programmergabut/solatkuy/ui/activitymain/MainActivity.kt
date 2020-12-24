@@ -41,12 +41,15 @@ import javax.inject.Inject
  * Created by Katili Jiwo Adi Wiyono on 25/03/20.
  */
 @AndroidEntryPoint
-class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>(R.layout.activity_main, MainActivityViewModel::class.java) {
+class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>(
+    R.layout.activity_main, MainActivityViewModel::class.java
+) {
 
+    private val ALL_PERMISSIONS = 101
     private lateinit var bottomSheetDialog: Dialog
     private lateinit var firstOpenDialog: Dialog
     private lateinit var bsByGpsBinding: LayoutBottomsheetBygpsBinding
-    private val ALL_PERMISSIONS = 101
+    private lateinit var dialogBinding: LayoutFristopenappBinding
 
     @Inject
     lateinit var fragmentFactory: SolatKuyFragmentFactory
@@ -54,8 +57,8 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>(R.
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
+        inflateBinding()
         supportFragmentManager.fragmentFactory = fragmentFactory
-        setListener()
     }
 
     override fun setListener() {
@@ -64,29 +67,27 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>(R.
     }
 
     override fun onDestroy() {
-        setIsNotHasOpenAnimation(false)
+        setIsHasOpenAnimation(false)
         super.onDestroy()
+    }
+
+    private fun inflateBinding() {
+        dialogBinding = DataBindingUtil.inflate(
+            LayoutInflater.from(this),
+            R.layout.layout_fristopenapp, null, true
+        )
     }
 
     private fun observeDb(){
         viewModel.msSetting.observe(this, {
-            when(it.status){
-                EnumStatus.SUCCESS -> {
-                    if(it.data != null)
-                        if(it.data.isHasOpenApp){
-                            initBottomNav()
-                        }
-                        else{
-                            initDialog()
-                        }
-                    else{
-                        SolatKuyRoom.populateDatabase(getDatabase())
-                    }
-                }
-                EnumStatus.ERROR -> {
-                    showBottomSheet(isCancelable = false, isFinish =  true)
-                }
-                else -> {/* NO-OP */}
+            if(it != null){
+                if(it.isHasOpenApp)
+                    initBottomNav()
+                else
+                    initDialog()
+            }
+            else{
+                SolatKuyRoom.populateDatabase(getDatabase())
             }
         })
     }
@@ -110,20 +111,14 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>(R.
         })
     }
 
-    /* DIALOG */
     private fun initDialog() {
-        val dialogFirstOpenAppBinding = DataBindingUtil.inflate<LayoutFristopenappBinding>(
-            LayoutInflater.from(this),
-            R.layout.layout_fristopenapp, null, true
-        )
-
         firstOpenDialog =  Dialog(this@MainActivity)
         firstOpenDialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
         firstOpenDialog.setCancelable(false)
-        firstOpenDialog.setContentView(dialogFirstOpenAppBinding.root)
+        firstOpenDialog.setContentView(dialogBinding.root)
         firstOpenDialog.show()
 
-        btnSetLatitudeLongitude(dialogFirstOpenAppBinding)
+        btnSetLatitudeLongitude()
     }
 
     private fun initBottomNav() {
@@ -145,7 +140,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>(R.
     }
 
     /* Function listener */
-    private fun btnSetLatitudeLongitude(dialogBinding: LayoutFristopenappBinding){
+    private fun btnSetLatitudeLongitude(){
         bottomSheetDialog = BottomSheetDialog(this)
 
         dialogBinding.btnByLatitudeLongitude.setOnClickListener {

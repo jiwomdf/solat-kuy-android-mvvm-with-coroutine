@@ -13,7 +13,7 @@ class EnumConfig {
         /* IS TESTING
          * if you change IS_TESTING, please rebuild the project
          */
-        const val IS_TESTING = true
+        const val IS_TESTING = false
 
         /* DATABASES */
         const val DATABASE_NAME = "solatkuydb"
