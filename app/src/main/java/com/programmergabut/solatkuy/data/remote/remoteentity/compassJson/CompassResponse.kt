@@ -4,11 +4,13 @@ package com.programmergabut.solatkuy.data.remote.remoteentity.compassJson
 import com.google.gson.annotations.SerializedName
 import com.programmergabut.solatkuy.base.BaseResponse
 
-data class CompassResponse(
+class CompassResponse: BaseResponse() {
     @SerializedName("code")
-    val code: Int,
+    val code: Int = 0
+
     @SerializedName("data")
-    val `data`: Data,
+    lateinit var `data`: Data
+
     @SerializedName("status")
-    val status: String
-): BaseResponse()
+    lateinit var status: String
+}

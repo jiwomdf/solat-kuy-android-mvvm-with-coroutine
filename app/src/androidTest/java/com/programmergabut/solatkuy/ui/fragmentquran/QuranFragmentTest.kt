@@ -50,7 +50,7 @@ class QuranFragmentTest{
         onView(withId(R.id.et_search)).check(matches(isDisplayed()))
         onView(withId(R.id.s_juzz)).check(matches(isDisplayed()))
         onView(withId(R.id.cv_fav_ayah)).check(matches(isDisplayed()))
-        onView(withId(R.id.rv_stared_ayah)).check(matches(isDisplayed()))
+        //onView(withId(R.id.rv_stared_ayah)).check(matches(isDisplayed()))
     }
 
     @Test

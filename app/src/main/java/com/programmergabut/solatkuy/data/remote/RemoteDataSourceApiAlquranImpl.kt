@@ -27,6 +27,10 @@ class RemoteDataSourceApiAlquranImpl @Inject constructor(
     }
 
     override suspend fun fetchReadSurahAr(surahID: Int): ReadSurahArResponse {
+        return readSurahArService.fetchReadSurahAr(surahID)
+    }
+
+    /* override suspend fun fetchReadSurahAr(surahID: Int): ReadSurahArResponse {
         val listAyah: MutableList<Ayah>
 
         val retValAr = readSurahArService.fetchReadSurahAr(surahID)
@@ -58,6 +62,6 @@ class RemoteDataSourceApiAlquranImpl @Inject constructor(
         Log.d("fetchReadSurahAr", "listAyah")
 
         return retValAr
-    }
+    } */
 
 }

@@ -18,7 +18,7 @@ interface PrayerRepository {
     suspend fun updateIsUsingDBQuotes(isUsingDBQuotes: Boolean)
     suspend fun updateMsApi1MonthAndYear(api1ID: Int, month: String, year:String)
     suspend fun updateIsHasOpenApp(isHasOpen: Boolean)
-    suspend fun fetchCompass(msApi1: MsApi1): CompassResponse
+    suspend fun fetchCompass(msApi1: MsApi1): Deferred<CompassResponse>
     suspend fun fetchPrayerApi(msApi1: MsApi1): Deferred<PrayerResponse>
     suspend fun syncNotifiedPrayerTesting(): List<NotifiedPrayer>
     fun getListNotifiedPrayerSync(): List<NotifiedPrayer>

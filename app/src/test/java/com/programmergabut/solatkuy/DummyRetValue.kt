@@ -15,7 +15,6 @@ import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonEn.Aya
 import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonEn.Edition
 import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonEn.ReadSurahEnResponse
 import com.programmergabut.solatkuy.util.Resource
-import com.programmergabut.solatkuy.util.EnumConfig
 
 object DummyRetValue {
 
@@ -27,47 +26,46 @@ object DummyRetValue {
 
         listNotifiedPrayer.add(
             NotifiedPrayer(
-                EnumConfig.FAJR,
+                EnumConfigTesting.FAJR,
                 true,
-                "04:29"
+                EnumConfigTesting.FAJR_TIME
             )
         )
         listNotifiedPrayer.add(
             NotifiedPrayer(
-                EnumConfig.DHUHR,
+                EnumConfigTesting.DHUHR,
                 true,
-                "11:35"
+                EnumConfigTesting.DHUHR_TIME
             )
         )
         listNotifiedPrayer.add(
             NotifiedPrayer(
-                EnumConfig.ASR,
+                EnumConfigTesting.ASR,
                 true,
-                "14:56"
+                EnumConfigTesting.ASR_TIME
             )
         )
         listNotifiedPrayer.add(
             NotifiedPrayer(
-                EnumConfig.MAGHRIB,
+                EnumConfigTesting.MAGHRIB,
                 true,
-                "17:26"
+                EnumConfigTesting.MAGHRIB_TIME
             )
         )
         listNotifiedPrayer.add(
             NotifiedPrayer(
-                EnumConfig.ISHA,
+                EnumConfigTesting.ISHA,
                 true,
-                "18:36"
+                EnumConfigTesting.ISHA_TIME
             )
         )
         listNotifiedPrayer.add(
             NotifiedPrayer(
-                EnumConfig.SUNRISE,
+                EnumConfigTesting.SUNRISE,
                 true,
-                "05:00"
+                EnumConfigTesting.SUNRISE_TIME
             )
         )
-
 
         return listNotifiedPrayer
     }
@@ -111,7 +109,9 @@ object DummyRetValue {
         val listData = mutableListOf<com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.Data>()
         listData.add(com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.Data(
             Date(null, null, null, null),null,
-            Timings("", "", "", "", "", "", "", "", "")))
+            Timings(EnumConfigTesting.ASR_TIME, EnumConfigTesting.DHUHR_TIME,
+                EnumConfigTesting.FAJR_TIME, EnumConfigTesting.IMSAK_TIME, EnumConfigTesting.ISHA_TIME,
+                EnumConfigTesting.MAGHRIB_TIME, EnumConfigTesting.MID_NIGHT_TIME, EnumConfigTesting.SUNRISE_TIME, EnumConfigTesting.SUNSET_TIME)))
 
         return PrayerResponse(0, listData,"testing")
     }

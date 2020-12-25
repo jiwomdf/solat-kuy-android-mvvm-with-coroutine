@@ -26,7 +26,8 @@ import java.util.*
  */
 
 class FragmentMainViewModel @ViewModelInject constructor(
-    val prayerRepository: PrayerRepository, val quranRepository: QuranRepository
+    private val prayerRepository: PrayerRepository,
+    private val quranRepository: QuranRepository
 ): ViewModel() {
 
     val msApi1 = prayerRepository.getMsApi1()
@@ -62,25 +63,31 @@ class FragmentMainViewModel @ViewModelInject constructor(
             }
             else {
                 val response = prayerRepository.fetchPrayerApi(msApi1).await()
+                val result = prayerRepository.getListNotifiedPrayerSync()
+
                 if(response.statusResponse == "1"){
                     val currentDate = SimpleDateFormat("dd", Locale.getDefault()).format(Date())
-                    val timings = response.data.find { obj -> obj.date.gregorian?.day == currentDate.toString() }?.timings ?: return@launch
+                    val timings = response.data.find { obj -> obj.date.gregorian?.day == currentDate.toString() }?.timings
 
-                    val map = createPrayerTime(timings)
-                    map.forEach { prayer -> prayerRepository.updatePrayerTime(prayer.key, prayer.value) }
-
-                    val result = prayerRepository.getListNotifiedPrayerSync()
-                    _notifiedPrayer.postValue(Resource.success(result))
-                    runIdlingResourceDecrement()
+                    if(timings != null){
+                        createPrayerTime(timings).forEach { prayer -> prayerRepository.updatePrayerTime(prayer.key, prayer.value) }
+                        _notifiedPrayer.postValue(Resource.success(result))
+                    }
+                    else{
+                        _notifiedPrayer.postValue(Resource.error("Today prayer data is not found", result))
+                        runIdlingResourceDecrement()
+                        return@launch
+                    }
                 }
                 else{
-                    _notifiedPrayer.postValue(Resource.error(response.messageResponse, null))
+                    _notifiedPrayer.postValue(Resource.error("Application Offline", result))
                     runIdlingResourceDecrement()
+                    return@launch
                 }
             }
         }
-        catch (e: Exception){
-            _notifiedPrayer.postValue(Resource.error(e.message.toString(), null))
+        catch (ex: Exception){
+            _notifiedPrayer.postValue(Resource.error(ex.message.toString(), null))
             runIdlingResourceDecrement()
         }
     }

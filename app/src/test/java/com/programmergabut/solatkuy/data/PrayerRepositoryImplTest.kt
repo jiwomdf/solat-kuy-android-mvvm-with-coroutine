@@ -78,7 +78,7 @@ class PrayerRepositoryImplTest{
         assertNotNull(asmaAlHusnaApi.value)
     } */
 
-    @Test
+    /* @Test
     fun syncNotifiedPrayer() = coroutinesTestRule.testDispatcher.runBlockingTest {
         val retVal = MutableLiveData<List<NotifiedPrayer>>()
 
@@ -87,13 +87,13 @@ class PrayerRepositoryImplTest{
         val notifiedPrayerDummy = DummyRetValue.getNotifiedPrayer()
         Mockito.`when`(notifiedPrayerDao.getListNotifiedPrayerSync()).thenReturn(notifiedPrayerDummy)
 
-        retVal.value = prayerRepository.syncNotifiedPrayer(msApi1)
+        retVal.value = prayerRepository.fetchPrayerApi(msApi1)
 
         Mockito.verify(remoteDataSourceAladhan).fetchPrayerApi(msApi1)
         Mockito.verify(notifiedPrayerDao).getListNotifiedPrayerSync()
 
         assertNotNull(retVal)
-    }
+    } */
 
 
     /* Database */

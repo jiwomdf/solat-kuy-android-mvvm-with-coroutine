@@ -7,6 +7,7 @@ import com.programmergabut.solatkuy.data.local.dao.*
 import com.programmergabut.solatkuy.data.local.localentity.*
 import com.programmergabut.solatkuy.data.remote.RemoteDataSourceAladhan
 import com.programmergabut.solatkuy.data.remote.RemoteDataSourceAladhanImpl
+import com.programmergabut.solatkuy.data.remote.remoteentity.compassJson.CompassResponse
 import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.PrayerResponse
 import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.Timings
 import com.programmergabut.solatkuy.util.Resource
@@ -53,7 +54,21 @@ class PrayerRepositoryImpl @Inject constructor(
     /*
      * Retrofit
      */
-    override suspend fun fetchCompass(msApi1: MsApi1) = remoteDataSourceAladhan.fetchCompassApi(msApi1)
+    override suspend fun fetchCompass(msApi1: MsApi1): Deferred<CompassResponse> {
+      return CoroutineScope(IO).async {
+          lateinit var response: CompassResponse
+          try {
+              response = remoteDataSourceAladhan.fetchCompassApi(msApi1)
+              response.statusResponse = "1"
+          }
+          catch (ex: Exception){
+              response = CompassResponse()
+              response.statusResponse = "-1"
+              response.messageResponse = ex.message.toString()
+          }
+          response
+      }
+    }
     override suspend fun fetchPrayerApi(msApi1: MsApi1): Deferred<PrayerResponse> {
         return CoroutineScope(IO).async {
             lateinit var response: PrayerResponse
@@ -62,6 +77,7 @@ class PrayerRepositoryImpl @Inject constructor(
                 response.statusResponse= "1"
             }
             catch (ex: Exception){
+                response = PrayerResponse()
                 response.statusResponse= "-1"
                 response.messageResponse = ex.message.toString()
             }

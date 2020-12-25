@@ -136,7 +136,7 @@ object DummyRetValue {
         return MsApi1(0, "-7.5633548", "110.8041806", "3","7","2020")
     }
 
-    fun getListMsFavAyah(): List<MsFavAyah> {
+    fun getListMsFavAyah(): MutableList<MsFavAyah> {
         return mutableListOf(MsFavAyah(1, 2,"","",""))
     }
 

@@ -10,6 +10,11 @@ import com.programmergabut.solatkuy.data.remote.remoteentity.compassJson.Compass
 import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.PrayerResponse
 import com.programmergabut.solatkuy.ui.DummyRetValue
 import com.programmergabut.solatkuy.util.Resource
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.Dispatchers
+import kotlinx.coroutines.Dispatchers.IO
+import kotlinx.coroutines.async
 
 /*
  * Created by Katili Jiwo Adi Wiyono on 26/03/20.
@@ -18,24 +23,27 @@ import com.programmergabut.solatkuy.util.Resource
 class FakePrayerRepositoryAndroidTest: PrayerRepository {
 
     private var msApi11 = DummyRetValue.getMsApi1()
-    private val observableMsApi1 = MutableLiveData<Resource<MsApi1>>()
+    private val observableMsApi1 = MutableLiveData<MsApi1>()
     private fun refreshMsApi1(){
-        observableMsApi1.postValue(Resource.success(msApi11))
+        observableMsApi1.postValue(msApi11)
     }
 
     private var msSetting = DummyRetValue.getMsSetting()
-    private val observableMsSetting = MutableLiveData<Resource<MsSetting>>()
+    private val observableMsSetting = MutableLiveData<MsSetting>()
     private fun refreshMsSetting(){
-        observableMsSetting.postValue(Resource.success(msSetting))
+        observableMsSetting.postValue(msSetting)
     }
 
 
     /* Room */
     /* NotifiedPrayer */
     override suspend fun updatePrayerIsNotified(prayerName: String, isNotified: Boolean){}
+    override fun updatePrayerTime(prayerName: String, prayerTime: String) {
+
+    }
 
     /* MsApi1 */
-    override fun getMsApi1(): LiveData<Resource<MsApi1>> {
+    override fun getMsApi1(): LiveData<MsApi1> {
         return observableMsApi1
     }
     override suspend fun updateMsApi1(msApi1: MsApi1){
@@ -44,7 +52,7 @@ class FakePrayerRepositoryAndroidTest: PrayerRepository {
     }
 
     /* MsSetting */
-    override fun getMsSetting(): LiveData<Resource<MsSetting>> {
+    override fun getMsSetting(): LiveData<MsSetting> {
         return observableMsSetting
     }
     override suspend fun updateIsUsingDBQuotes(isUsingDBQuotes: Boolean){
@@ -63,16 +71,22 @@ class FakePrayerRepositoryAndroidTest: PrayerRepository {
     /*
      * Retrofit
      */
-    override suspend fun fetchCompass(msApi1: MsApi1): CompassResponse {
-        return DummyRetValue.fetchCompassApi()
+    override suspend fun fetchCompass(msApi1: MsApi1): Deferred<CompassResponse> {
+        return CoroutineScope(IO).async {
+            DummyRetValue.fetchCompassApi()
+        }
     }
-    override suspend fun fetchPrayerApi(msApi1: MsApi1): PrayerResponse {
-        return DummyRetValue.fetchPrayerApi()
+    override suspend fun fetchPrayerApi(msApi1: MsApi1): Deferred<PrayerResponse> {
+        return CoroutineScope(IO).async {
+            DummyRetValue.fetchPrayerApi()
+        }
     }
-    override suspend fun syncNotifiedPrayer(msApi1: MsApi1): List<NotifiedPrayer> {
+
+    override suspend fun syncNotifiedPrayerTesting(): List<NotifiedPrayer> {
         return DummyRetValue.getNotifiedPrayer()
     }
-    override suspend fun syncNotifiedPrayerTesting(): List<NotifiedPrayer> {
+
+    override fun getListNotifiedPrayerSync(): List<NotifiedPrayer> {
         return DummyRetValue.getNotifiedPrayer()
     }
 }

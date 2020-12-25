@@ -24,13 +24,16 @@ class FragmentCompassViewModel @ViewModelInject constructor(val prayerRepository
         get() = _compass
 
     fun fetchCompassApi(msApi1: MsApi1){
-
         viewModelScope.launch {
             runIdlingResourceIncrement()
             _compass.postValue(Resource.loading(null))
             try {
-                prayerRepository.fetchCompass(msApi1).let {
-                    _compass.postValue(Resource.success(it))
+                val response = prayerRepository.fetchCompass(msApi1).await()
+                if(response.statusResponse == "1"){
+                    _compass.postValue(Resource.success(response))
+                }
+                else{
+                    _compass.postValue(Resource.error(response.messageResponse, null))
                 }
                 runIdlingResourceDecrement()
             }

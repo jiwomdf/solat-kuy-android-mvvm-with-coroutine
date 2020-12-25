@@ -29,10 +29,10 @@ class FakeQuranRepositoryAndroidTest: QuranRepository {
     }
 
     private var listMsFavSurah = DummyRetValue.getListMsFavSurah()
-    private val observableMsFavSurahs = MutableLiveData<Resource<List<MsFavSurah>>>()
-    private val observableMsFavSurah = MutableLiveData<Resource<MsFavSurah>>()
+    private val observableMsFavSurahs = MutableLiveData<List<MsFavSurah>>()
+    private val observableMsFavSurah = MutableLiveData<MsFavSurah>()
     private fun refreshMsFavSurah(){
-        observableMsFavSurahs.postValue(Resource.success(listMsFavSurah))
+        observableMsFavSurahs.postValue(listMsFavSurah)
     }
 
 
@@ -46,18 +46,30 @@ class FakeQuranRepositoryAndroidTest: QuranRepository {
     override fun getListFavAyahBySurahID(surahID: Int): LiveData<List<MsFavAyah>> {
         return observableMsFavAyahs
     }
-    override suspend fun insertFavAyah(msFavAyah: MsFavAyah){}
-    override suspend fun deleteFavAyah(msFavAyah: MsFavAyah){}
+    override suspend fun insertFavAyah(msFavAyah: MsFavAyah){
+        listMsFavAyah.add(msFavAyah)
+        refreshMsFavAyah()
+    }
+    override suspend fun deleteFavAyah(msFavAyah: MsFavAyah){
+        listMsFavAyah.remove(msFavAyah)
+        refreshMsFavAyah()
+    }
 
     /* MsFavSurah */
-    override fun getListFavSurah(): LiveData<Resource<List<MsFavSurah>>> {
+    override fun getListFavSurah(): LiveData<List<MsFavSurah>> {
         return observableMsFavSurahs
     }
-    override fun getFavSurahBySurahID(surahID: Int): LiveData<Resource<MsFavSurah>> {
+    override fun getFavSurahBySurahID(surahID: Int): LiveData<MsFavSurah> {
         return observableMsFavSurah
     }
-    override suspend fun insertFavSurah(msFavSurah: MsFavSurah){}
-    override suspend fun deleteFavSurah(msFavSurah: MsFavSurah){}
+    override suspend fun insertFavSurah(msFavSurah: MsFavSurah){
+        listMsFavSurah.add(msFavSurah)
+        refreshMsFavSurah()
+    }
+    override suspend fun deleteFavSurah(msFavSurah: MsFavSurah){
+        listMsFavSurah.add(msFavSurah)
+        refreshMsFavSurah()
+    }
 
     /*
      * Retrofit

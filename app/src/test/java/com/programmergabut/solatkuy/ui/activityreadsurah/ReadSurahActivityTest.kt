@@ -54,14 +54,20 @@ class ReadSurahActivityTest{
 
         //given
         val observer = mock<Observer<Resource<ReadSurahArResponse>>>()
-        val dummyData = DummyRetValue.surahArID_1()
-        dummyData.statusResponse = "1"
-        val dummySelectedSurahAr = Resource.success(dummyData)
+
+        val dummyDataAr = DummyRetValue.surahArID_1()
+        dummyDataAr.statusResponse = "1"
+        val dummySelectedSurahAr = Resource.success(dummyDataAr)
+
+        val dummyDataEn = DummyRetValue.surahEnID_1()
+        dummyDataEn.statusResponse = "1"
+        val dummySelectedSurahEn = Resource.success(dummyDataEn)
+
         viewModel.fetchedArSurah = DummyRetValue.surahArID_1()
 
         //scenario
         Mockito.`when`(fakeQuranRepository.fetchReadSurahAr(surahID)).thenReturn(dummySelectedSurahAr.data!!.toDeferred())
-
+        Mockito.`when`(fakeQuranRepository.fetchReadSurahEn(surahID)).thenReturn(dummySelectedSurahEn.data!!.toDeferred())
         //start observer
         viewModel.selectedSurahAr.observeForever(observer)
 
@@ -82,9 +88,9 @@ class ReadSurahActivityTest{
     fun getFavSurahBySurahID() = coroutinesTestRule.testDispatcher.runBlockingTest{
 
         //given
-        val observer = mock<Observer<Resource<MsFavSurah>>>()
-        val dummyLiveData: MutableLiveData<Resource<MsFavSurah>> = MutableLiveData()
-        dummyLiveData.value = Resource.success(DummyRetValue.getFavSurahBySurahID(surahID)[0])
+        val observer = mock<Observer<MsFavSurah>>()
+        val dummyLiveData: MutableLiveData<MsFavSurah> = MutableLiveData()
+        dummyLiveData.value = DummyRetValue.getFavSurahBySurahID(surahID)[0]
 
         //scenario
         Mockito.`when`(fakeQuranRepository.getFavSurahBySurahID(surahID)).thenReturn(dummyLiveData)

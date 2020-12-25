@@ -4,11 +4,13 @@ package com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson
 import com.google.gson.annotations.SerializedName
 import com.programmergabut.solatkuy.base.BaseResponse
 
-data class PrayerResponse(
+class PrayerResponse: BaseResponse() {
     @SerializedName("code")
-    val code: Int,
+    var code: Int = 0
+
     @SerializedName("data")
-    val `data`: List<Data>,
+    lateinit var `data`: List<Data>
+
     @SerializedName("status")
-    val status: String
-): BaseResponse()
+    lateinit var status: String
+}

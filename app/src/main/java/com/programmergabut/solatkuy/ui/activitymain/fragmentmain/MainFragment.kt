@@ -30,6 +30,7 @@ import com.programmergabut.solatkuy.util.EnumConfig
 import com.programmergabut.solatkuy.util.EnumConfig.Companion.ENDED_SURAH
 import com.programmergabut.solatkuy.util.EnumConfig.Companion.STARTED_SURAH
 import com.programmergabut.solatkuy.util.LogConfig.Companion.COROUTINE_TIMER
+import com.programmergabut.solatkuy.util.LogConfig.Companion.ERROR
 import com.programmergabut.solatkuy.util.generator.DuaGenerator
 import com.programmergabut.solatkuy.util.helper.LocationHelper
 import com.programmergabut.solatkuy.util.helper.PushNotificationHelper
@@ -73,6 +74,13 @@ class MainFragment(viewModelTest: FragmentMainViewModel? = null) : BaseFragment<
         binding.tvWidgetPrayerCountdown.text = getString(R.string.loading)
         binding.includeQuranQuote?.tvQuranAyahQuote.visibility = View.GONE
         binding.includeQuranQuote?.tvQuranAyahQuoteClick.visibility = View.VISIBLE
+
+        if(viewModel.notifiedPrayer.value?.data != null){
+            val data = viewModel.notifiedPrayer.value?.data!!
+            val timing = createWidgetData(data)
+            val selectedPrayer = SelectPrayerHelper.selectNextPrayerToInt(timing)
+            selectNextPrayerTime(selectedPrayer, timing)
+        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
@@ -80,17 +88,7 @@ class MainFragment(viewModelTest: FragmentMainViewModel? = null) : BaseFragment<
 
         inflateBinding()
         initRvDuaCollection()
-        subscribeObserversDB()
-        subscribeObserversAPI()
         viewModel.getMsSetting()
-    }
-
-    private fun inflateBinding() {
-        dialogBinding = DataBindingUtil.inflate(
-            layoutInflater, R.layout.layout_popup_choose_quote_setting,
-            null, false
-        )
-        dialog = Dialog(requireContext())
     }
 
     override fun setListener() {
@@ -100,6 +98,16 @@ class MainFragment(viewModelTest: FragmentMainViewModel? = null) : BaseFragment<
         binding.includeQuranQuote.tvQuranAyahQuote.setOnClickListener(this)
         binding.includeQuranQuote.ivRefresh.setOnClickListener(this)
         binding.includeQuranQuote.ivQuoteSetting.setOnClickListener(this)
+        subscribeObserversDB()
+        subscribeObserversAPI()
+    }
+
+    private fun inflateBinding() {
+        dialogBinding = DataBindingUtil.inflate(
+            layoutInflater, R.layout.layout_popup_choose_quote_setting,
+            null, false
+        )
+        dialog = Dialog(requireContext())
     }
 
     override fun onClick(v: View?) {
@@ -159,7 +167,17 @@ class MainFragment(viewModelTest: FragmentMainViewModel? = null) : BaseFragment<
                     Toast.makeText(requireContext(), "Syncing data..", Toast.LENGTH_SHORT).show()
                     bindPrayerText(null)
                 }
-                EnumStatus.ERROR -> showBottomSheet(isCancelable = false, isFinish = true)
+                EnumStatus.ERROR -> {
+                    Log.d(ERROR, retVal.message.toString())
+                    if(retVal.data == null)
+                        showBottomSheet(isCancelable = false, isFinish = true)
+                    if(retVal.data?.isEmpty()!!)
+                        return@observe
+
+                    bindCheckBox(retVal.data)
+                    updateAlarmManager(retVal.data)
+                    bindWidget(createWidgetData(retVal.data))
+                }
             }
         })
 

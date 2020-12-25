@@ -53,6 +53,7 @@ class QuranRepositoryImpl @Inject constructor(
                 response.statusResponse = "1"
             }
             catch (ex: Exception){
+                response = ReadSurahEnResponse()
                 response.statusResponse = "-1"
                 response.messageResponse = ex.message.toString()
             }
@@ -68,6 +69,7 @@ class QuranRepositoryImpl @Inject constructor(
                 response.statusResponse = "1"
             }
             catch (ex: Exception){
+                response = AllSurahResponse()
                 response.statusResponse = "-1"
                 response.messageResponse = ex.message.toString()
             }
@@ -77,17 +79,16 @@ class QuranRepositoryImpl @Inject constructor(
 
     override suspend fun fetchReadSurahAr(surahID: Int): Deferred<ReadSurahArResponse> {
         return CoroutineScope(IO).async {
-            runIdlingResourceIncrement()
             lateinit var response : ReadSurahArResponse
             try {
                 response = remoteDataSourceApiAlquranImpl.fetchReadSurahAr(surahID)
                 response.statusResponse = "1"
             }
             catch (ex: Exception){
+                response = ReadSurahArResponse()
                 response.statusResponse = "-1"
                 response.messageResponse = ex.message.toString()
             }
-            runIdlingResourceDecrement()
             response
         }
     }
