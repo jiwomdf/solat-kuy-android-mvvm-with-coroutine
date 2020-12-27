@@ -127,7 +127,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>(
             binding.navHostFragment.findNavController()
                 .addOnDestinationChangedListener { _, destination, _ ->
                     when(destination.id){
-                        R.id.fragmentMain, R.id.fragmentCompass, R.id.quranFragment, R.id.fragmentInfo, R.id.fragmentSetting ->
+                        R.id.fragmentMain, R.id.fragmentCompass, R.id.quranFragment, R.id.fragmentSetting ->
                             binding.bottomNavigation.visibility = View.VISIBLE
                         else -> binding.bottomNavigation.visibility = View.GONE
                     }

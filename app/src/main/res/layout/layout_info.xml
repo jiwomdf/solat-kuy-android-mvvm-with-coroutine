@@ -24,11 +24,10 @@
                     android:id="@+id/tv_imsak_info_title"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:textStyle="bold"
                     android:layout_marginStart="@dimen/medium_margin"
                     android:layout_marginTop="@dimen/medium_margin"
                     android:text="@string/imsak_info"
-                    android:textSize="@dimen/large_text_size"
+                    android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
 
@@ -80,7 +79,6 @@
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
                 android:background="@color/dark_700"
-                android:paddingTop="@dimen/smaller_margin"
                 android:orientation="vertical">
 
                 <LinearLayout
@@ -88,17 +86,17 @@
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
                     android:gravity="center"
+                    android:layout_marginTop="@dimen/medium_margin"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
                     <TextView
-                        android:id="@+id/textView3"
+                        android:id="@+id/tv_title_date_info"
                         android:layout_width="wrap_content"
                         android:layout_height="wrap_content"
+                        android:textStyle="bold"
                         android:layout_marginStart="@dimen/medium_margin"
-                        android:text="@string/gregorian_to_hijri"
-                        android:textSize="@dimen/large_text_size"
-                        android:textStyle="bold"/>
+                        android:text="@string/gregorian_to_hijri" />
                 </LinearLayout>
 
 
@@ -109,6 +107,7 @@
                     android:layout_marginStart="@dimen/medium_margin"
                     android:layout_marginTop="@dimen/smaller_margin"
                     android:stretchColumns="*"
+                    android:textStyle="bold"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/ll_title_date_info">
@@ -238,16 +237,16 @@
                 <LinearLayout
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
+                    android:layout_marginTop="@dimen/medium_margin"
+                    android:layout_marginBottom="@dimen/smaller_margin"
                     android:gravity="center"
-                    android:layout_margin="@dimen/smaller_margin"
                     android:orientation="horizontal">
                     <TextView
-                        android:text="@string/dua_collection"
-                        android:layout_marginStart="@dimen/medium_margin"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:textSize="@dimen/large_text_size"
-                        android:textStyle="bold"/>
+                        android:textStyle="bold"
+                        android:text="@string/dua_collection"
+                        android:layout_marginStart="@dimen/medium_margin" />
                 </LinearLayout>
 
                 <androidx.recyclerview.widget.RecyclerView
@@ -259,7 +258,6 @@
 
             </LinearLayout>
         </androidx.cardview.widget.CardView>
-
     </LinearLayout>
 
 </layout>

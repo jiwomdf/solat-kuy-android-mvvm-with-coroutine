@@ -164,7 +164,7 @@ class MainFragment(viewModelTest: FragmentMainViewModel? = null) : BaseFragment<
                     bindWidget(createWidgetData(retVal.data))
                 }
                 EnumStatus.LOADING -> {
-                    Toast.makeText(requireContext(), "Syncing data..", Toast.LENGTH_SHORT).show()
+                    Toast.makeText(requireContext(), getString(R.string.syncdata), Toast.LENGTH_SHORT).show()
                     bindPrayerText(null)
                 }
                 EnumStatus.ERROR -> {
@@ -174,6 +174,7 @@ class MainFragment(viewModelTest: FragmentMainViewModel? = null) : BaseFragment<
                     if(retVal.data?.isEmpty()!!)
                         return@observe
 
+                    Toast.makeText(requireContext(), getString(R.string.offline), Toast.LENGTH_SHORT).show()
                     bindCheckBox(retVal.data)
                     updateAlarmManager(retVal.data)
                     bindWidget(createWidgetData(retVal.data))

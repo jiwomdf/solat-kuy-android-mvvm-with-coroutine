@@ -80,8 +80,7 @@ class SettingFragment(viewModelTest: FragmentSettingViewModel? = null) : BaseFra
     }
 
     private fun subscribeObserversDB() {
-        viewModel.msApi1.observe(viewLifecycleOwner, {
-            val retVal = it
+        viewModel.msApi1.observe(viewLifecycleOwner, { retVal ->
             if(retVal != null){
                 val city = LocationHelper.getCity(requireContext(), retVal.latitude.toDouble(), retVal.longitude.toDouble())
                 binding.tvViewLatitude.text = retVal.latitude + " °S"

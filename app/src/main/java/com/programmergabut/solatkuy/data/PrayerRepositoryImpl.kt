@@ -98,8 +98,10 @@ class PrayerRepositoryImpl @Inject constructor(
             map[EnumConfig.ISHA] = EnumConfig.ISHA_TIME
             map[EnumConfig.SUNRISE] = EnumConfig.SUNRISE_TIME
 
+            var prayerID = 1
             map.forEach { p ->
-                listData.add(NotifiedPrayer(p.key, true, p.value))
+                listData.add(NotifiedPrayer(prayerID, p.key, true, p.value))
+                prayerID++
             }
 
         }

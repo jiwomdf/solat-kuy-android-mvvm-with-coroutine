@@ -70,7 +70,8 @@ class FragmentMainViewModel @ViewModelInject constructor(
                     val timings = response.data.find { obj -> obj.date.gregorian?.day == currentDate.toString() }?.timings
 
                     if(timings != null){
-                        createPrayerTime(timings).forEach { prayer -> prayerRepository.updatePrayerTime(prayer.key, prayer.value) }
+                        val prayers = createPrayerTime(timings)
+                        prayers.forEach { prayer -> prayerRepository.updatePrayerTime(prayer.key, prayer.value) }
                         _notifiedPrayer.postValue(Resource.success(result))
                     }
                     else{

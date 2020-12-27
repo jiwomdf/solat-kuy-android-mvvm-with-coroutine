@@ -14,10 +14,8 @@ import android.os.Vibrator
 import androidx.core.app.NotificationCompat
 import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.util.EnumConfig
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.delay
-import kotlinx.coroutines.launch
+import com.programmergabut.solatkuy.util.EnumConfig.Companion.AWAIT_VIBRATE_MS
+import com.programmergabut.solatkuy.util.EnumConfig.Companion.VIBRATE_MS
 
 
 /*
@@ -32,7 +30,11 @@ class NotificationHelper(context: Context): ContextWrapper(context) {
 
     init {
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
-            val channelNotificationPrayer =  NotificationChannel(channelNotificationPrayerID, channelNotificationPrayerName, NotificationManager.IMPORTANCE_DEFAULT)
+            val channelNotificationPrayer =  NotificationChannel(
+                channelNotificationPrayerID,
+                channelNotificationPrayerName,
+                NotificationManager.IMPORTANCE_DEFAULT
+            )
 
             channelNotificationPrayer.enableLights(true)
             channelNotificationPrayer.vibrationPattern = longArrayOf(0)
@@ -52,7 +54,8 @@ class NotificationHelper(context: Context): ContextWrapper(context) {
     }
 
     fun getPrayerReminderNC(/* pID: Int, */ pTime: String, pCity: String, pName: String,
-        /* listPrayerBundle: Bundle, */ intent: PendingIntent): NotificationCompat.Builder {
+        /* listPrayerBundle: Bundle, */ intent: PendingIntent
+    ): NotificationCompat.Builder {
 
         val message = "now is $pTime in $pCity let's pray $pName"
 
@@ -72,24 +75,33 @@ class NotificationHelper(context: Context): ContextWrapper(context) {
         val actionIntent = PendingIntent.getBroadcast(this, 0, moreTimeIntent,
             PendingIntent.FLAG_UPDATE_CURRENT) */
 
-        val bitmap = BitmapFactory.decodeResource(resources, when(pName){
-            getString(R.string.fajr) -> R.drawable.img_fajr
-            getString(R.string.dhuhr) -> R.drawable.img_dhuhr
-            getString(R.string.asr) -> R.drawable.img_asr
-            getString(R.string.maghrib) -> R.drawable.img_maghrib
-            getString(R.string.isha) -> R.drawable.img_isha
-            else -> R.drawable.img_fajr
-        })
+        val bitmap = BitmapFactory.decodeResource(
+            resources, when (pName) {
+                getString(R.string.fajr) -> R.drawable.img_fajr
+                getString(R.string.dhuhr) -> R.drawable.img_dhuhr
+                getString(R.string.asr) -> R.drawable.img_asr
+                getString(R.string.maghrib) -> R.drawable.img_maghrib
+                getString(R.string.isha) -> R.drawable.img_isha
+                else -> R.drawable.img_fajr
+            }
+        )
 
         val vibrator = this.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
         if(vibrator.hasVibrator()){
-            val vibrationPattern = longArrayOf(0, 200, 120, 200, 120, 200, 120, 200)
+            val vibrationPattern = longArrayOf(0, VIBRATE_MS, AWAIT_VIBRATE_MS, VIBRATE_MS, AWAIT_VIBRATE_MS, VIBRATE_MS, AWAIT_VIBRATE_MS, VIBRATE_MS)
+            val mAmplitudes = intArrayOf(0, 225, 0, 225, 0, 225, 0, 225)
+
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-               vibrator.vibrate(VibrationEffect.createWaveform(vibrationPattern, VibrationEffect.DEFAULT_AMPLITUDE))
+                vibrator.vibrate(
+                    VibrationEffect.createWaveform(
+                        vibrationPattern,
+                        mAmplitudes,
+                        -1
+                    )
+                )
             else
                 vibrator.vibrate(vibrationPattern, -1)
         }
-
 
         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
             return NotificationCompat.Builder(applicationContext, channelNotificationPrayerID)
@@ -101,7 +113,7 @@ class NotificationHelper(context: Context): ContextWrapper(context) {
                 .setAutoCancel(true)
                 //.addAction(R.mipmap.ic_launcher, "remind me 10 more minute", actionIntent)
                 .setLargeIcon(bitmap)
-                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .setSmallIcon(R.drawable.ic_notifications_active_24dp)
                 .setContentIntent(intent)
                 .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
                 .setOnlyAlertOnce(true)
@@ -113,7 +125,7 @@ class NotificationHelper(context: Context): ContextWrapper(context) {
                 .setContentText(message)
                 .setSubText(EnumConfig.DUA_AFTER_ADHAN_STR)
                 .setVibrate(longArrayOf(500, 500, 500))
-                .setSmallIcon(R.drawable.ic_launcher_foreground)
+                .setSmallIcon(R.drawable.ic_notifications_active_24dp)
                 .setAutoCancel(true)
                 .setStyle(NotificationCompat.DecoratedCustomViewStyle())
         }

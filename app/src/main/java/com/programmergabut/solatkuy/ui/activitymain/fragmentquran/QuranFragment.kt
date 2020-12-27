@@ -55,11 +55,17 @@ class QuranFragment(viewModelTest: QuranFragmentViewModel? = null) : BaseFragmen
             }
             R.id.cv_last_read_ayah -> {
                 val selectedSurah = tempAllSurah?.find { x -> x.number == getLastReadSurah() }
+                if(selectedSurah == null){
+                    showBottomSheet(getString(R.string.last_read_ayah_not_found_title),
+                    getString(R.string.last_read_ayah_not_found_dsc))
+                    return
+                }
+
                 val bundle = Bundle()
                 bundle.apply {
-                    putString(ReadSurahActivity.SURAH_ID, selectedSurah?.number.toString())
-                    putString(ReadSurahActivity.SURAH_NAME, selectedSurah?.englishName)
-                    putString(ReadSurahActivity.SURAH_TRANSLATION, selectedSurah?.englishNameTranslation)
+                    putString(ReadSurahActivity.SURAH_ID, selectedSurah.number.toString())
+                    putString(ReadSurahActivity.SURAH_NAME, selectedSurah.englishName)
+                    putString(ReadSurahActivity.SURAH_TRANSLATION, selectedSurah.englishNameTranslation)
                     putBoolean(ReadSurahActivity.IS_AUTO_SCROLL, true)
                 }
                 gotoIntent(ReadSurahActivity::class.java, bundle)

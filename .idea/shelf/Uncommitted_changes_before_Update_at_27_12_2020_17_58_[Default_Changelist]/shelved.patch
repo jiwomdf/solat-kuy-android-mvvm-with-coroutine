@@ -1,0 +1,772 @@
+Index: app/build.gradle
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>apply plugin: 'com.android.application'\r\napply plugin: 'kotlin-android'\r\napply plugin: 'kotlin-kapt'\r\napply plugin: 'dagger.hilt.android.plugin'\r\n\r\nandroid {\r\n    compileSdkVersion 30\r\n    buildToolsVersion \"29.0.3\"\r\n\r\n    defaultConfig {\r\n        applicationId \"com.programmergabut.solatkuy\"\r\n        minSdkVersion 21\r\n        targetSdkVersion 30\r\n        versionCode 41\r\n        versionName \"4.0\"\r\n        multiDexEnabled true\r\n\r\n        //signingConfig signingConfigs.release\r\n        //testInstrumentationRunner \"androidx.test.runner.AndroidJUnitRunner\"\r\n        testInstrumentationRunner \"com.programmergabut.solatkuy.HiltTestRunner\"\r\n\r\n        buildConfigField \"String\" , \"BASE_URL_ALADHAN\", base_url_aladhan\r\n        buildConfigField \"String\" , \"BASE_URL_QURAN_API\", base_url_quran_api\r\n\r\n        javaCompileOptions {\r\n            annotationProcessorOptions {\r\n                arguments += [\"room.schemaLocation\" : \"$projectDir/schemas\".toString()]\r\n            }\r\n        }\r\n    }\r\n\r\n    buildFeatures {\r\n        dataBinding = true\r\n        // viewBinding = true\r\n    }\r\n    testOptions {\r\n        unitTests.returnDefaultValues = true\r\n    }\r\n\r\n    compileOptions {\r\n        sourceCompatibility JavaVersion.VERSION_1_8\r\n        targetCompatibility JavaVersion.VERSION_1_8\r\n    }\r\n\r\n    kotlinOptions {\r\n        jvmTarget = JavaVersion.VERSION_1_8.toString()\r\n    }\r\n\r\n\r\n    buildTypes {\r\n        release {\r\n            minifyEnabled true\r\n            debuggable false\r\n            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'\r\n        }\r\n        debug {\r\n            minifyEnabled false\r\n            debuggable true\r\n            proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'\r\n        }\r\n    }\r\n\r\n    packagingOptions {\r\n        exclude 'META-INF/AL2.0'\r\n        exclude 'META-INF/LGPL2.1'\r\n    }\r\n\r\n}\r\n\r\ndependencies {\r\n\r\n    implementation fileTree(dir: 'libs', include: ['*.jar'])\r\n    implementation \"org.jetbrains.kotlin:kotlin-stdlib-jdk7:$kotlin_version\"\r\n    implementation 'androidx.appcompat:appcompat:1.2.0'\r\n    implementation 'androidx.core:core-ktx:1.3.2'\r\n    implementation 'androidx.constraintlayout:constraintlayout:2.0.4'\r\n    implementation 'androidx.legacy:legacy-support-v4:1.0.0'\r\n\r\n    // Material Dependencies\r\n    api 'com.google.android.material:material:1.3.0-beta01'\r\n\r\n    //Lottie\r\n    implementation 'com.airbnb.android:lottie:3.4.1'\r\n    implementation 'androidx.cardview:cardview:1.0.0'\r\n    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.2.0'\r\n\r\n    // Glide\r\n    kapt 'com.github.bumptech.glide:compiler:4.11.0'\r\n    implementation 'com.github.bumptech.glide:glide:4.11.0'\r\n\r\n    // JodaTime\r\n    implementation 'joda-time:joda-time:2.10.5'\r\n\r\n    // Room\r\n    def roomVersion = '2.2.6'\r\n    implementation \"androidx.room:room-runtime:$roomVersion\"\r\n    implementation \"androidx.room:room-ktx:$roomVersion\"\r\n    kapt \"androidx.room:room-compiler:$roomVersion\"\r\n    androidTestImplementation \"androidx.room:room-testing:$roomVersion\"\r\n\r\n    // Coroutines\r\n    api \"org.jetbrains.kotlinx:kotlinx-coroutines-android:1.3.9\"\r\n    implementation 'com.jakewharton.retrofit:retrofit2-kotlin-coroutines-adapter:0.9.2'\r\n    implementation 'org.jetbrains.kotlinx:kotlinx-coroutines-test:1.3.7'\r\n\r\n    /* ViewModel Kotlin support */\r\n    implementation \"androidx.lifecycle:lifecycle-viewmodel-ktx:2.2.0\"\r\n    implementation \"androidx.lifecycle:lifecycle-runtime-ktx:2.2.0\"\r\n\r\n    // Lifecycle\r\n    implementation \"androidx.recyclerview:recyclerview:1.1.0\"\r\n    implementation 'android.arch.lifecycle:extensions:1.1.1'\r\n\r\n    // Retrofit\r\n    implementation 'com.squareup.retrofit2:retrofit:2.9.0'\r\n\r\n    // Gson\r\n    implementation 'com.google.code.gson:gson:2.8.6'\r\n    implementation 'com.squareup.retrofit2:converter-gson:2.9.0'\r\n\r\n    //Toasty\r\n    implementation 'com.github.GrenderG:Toasty:1.4.2'\r\n\r\n    //GPS\r\n    implementation 'com.google.android.gms:play-services-location:17.1.0'\r\n\r\n    //Dagger - Hilt\r\n    implementation \"com.google.dagger:hilt-android:2.28.3-alpha\"\r\n    kapt \"com.google.dagger:hilt-android-compiler:2.28.3-alpha\"\r\n    implementation \"androidx.hilt:hilt-lifecycle-viewmodel:1.0.0-alpha02\"\r\n    kapt \"androidx.hilt:hilt-compiler:1.0.0-alpha02\"\r\n\r\n    //Multidex\r\n    implementation 'androidx.multidex:multidex:2.0.1'\r\n\r\n    //Navigation Component\r\n    def nav_version = \"2.3.2\"\r\n    androidTestImplementation \"androidx.navigation:navigation-testing:$nav_version\"\r\n    implementation \"androidx.navigation:navigation-fragment-ktx:$nav_version\"\r\n    implementation \"androidx.navigation:navigation-ui-ktx:$nav_version\"\r\n\r\n    //espresso idling source\r\n    implementation \"androidx.test.espresso:espresso-idling-resource:3.2.0\"\r\n    implementation \"com.android.support.test.espresso:espresso-idling-resource:3.0.2\"\r\n\r\n    //Unit Testing\r\n    testImplementation \"junit:junit:4.13\"\r\n    testImplementation \"org.hamcrest:hamcrest-all:1.3\"\r\n    testImplementation \"androidx.arch.core:core-testing:2.1.0\"\r\n    testImplementation \"org.robolectric:robolectric:4.3.1\"\r\n    testImplementation \"org.jetbrains.kotlinx:kotlinx-coroutines-test:1.3.7\"\r\n    testImplementation \"org.mockito:mockito-core:3.3.3\"\r\n    testImplementation 'org.mockito:mockito-inline:3.3.3'\r\n    testImplementation \"com.nhaarman.mockitokotlin2:mockito-kotlin:2.2.0\"\r\n\r\n    // Instrumented Unit Tests\r\n    androidTestImplementation \"junit:junit:4.13\"\r\n    androidTestImplementation \"androidx.test:rules:1.2.0\"\r\n    androidTestImplementation \"org.jetbrains.kotlinx:kotlinx-coroutines-test:1.3.7\"\r\n    androidTestImplementation \"androidx.arch.core:core-testing:2.1.0\"\r\n    androidTestImplementation \"com.google.truth:truth:1.0.1\"\r\n    androidTestImplementation 'androidx.test.ext:junit:1.1.1'\r\n    androidTestImplementation \"org.mockito:mockito-core:3.3.3\"\r\n    androidTestImplementation 'androidx.test.espresso:espresso-core:3.3.0'\r\n    androidTestImplementation \"androidx.test.espresso:espresso-contrib:3.3.0\"\r\n    androidTestImplementation 'org.mockito:mockito-android:2.24.5'\r\n\r\n    // Testing with hilt\r\n    androidTestImplementation 'com.google.dagger:hilt-android-testing:2.28.1-alpha'\r\n    kaptAndroidTest 'com.google.dagger:hilt-android-compiler:2.28.1-alpha'\r\n\r\n    // Testing fragment\r\n    debugImplementation \"androidx.fragment:fragment-testing:1.3.0-alpha08\"\r\n\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/build.gradle	(revision eb3a97fe3e1e4e39c4d0f9ab965337c48959d492)
++++ app/build.gradle	(date 1609045337641)
+@@ -49,7 +49,7 @@
+ 
+     buildTypes {
+         release {
+-            minifyEnabled true
++            minifyEnabled false
+             debuggable false
+             proguardFiles getDefaultProguardFile('proguard-android.txt'), 'proguard-rules.pro'
+         }
+Index: app/src/main/res/layout/fragment_info.xml
+===================================================================
+--- app/src/main/res/layout/fragment_info.xml	(revision eb3a97fe3e1e4e39c4d0f9ab965337c48959d492)
++++ app/src/main/res/layout/fragment_info.xml	(revision eb3a97fe3e1e4e39c4d0f9ab965337c48959d492)
+@@ -1,318 +0,0 @@
+-<?xml version="1.0" encoding="utf-8"?>
+-<layout
+-    xmlns:android="http://schemas.android.com/apk/res/android"
+-    xmlns:app="http://schemas.android.com/apk/res-auto"
+-    xmlns:tools="http://schemas.android.com/tools"
+-    tools:context=".ui.activitymain.fragmentinfo.InfoFragment">
+-
+-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+-        android:id="@+id/sl_info"
+-        android:layout_width="match_parent"
+-        android:layout_height="match_parent"
+-        android:orientation="vertical">
+-
+-        <ScrollView
+-            android:layout_width="match_parent"
+-            android:layout_height="match_parent">
+-            <LinearLayout
+-                android:layout_width="match_parent"
+-                android:layout_height="wrap_content"
+-                android:orientation="vertical">
+-
+-                <androidx.cardview.widget.CardView
+-                    android:layout_width="match_parent"
+-                    android:layout_height="wrap_content"
+-                    app:cardCornerRadius="@dimen/medium_margin"
+-                    android:layout_margin="@dimen/small_margin">
+-
+-                    <androidx.constraintlayout.widget.ConstraintLayout
+-                        android:layout_width="match_parent"
+-                        android:layout_height="match_parent"
+-                        android:background="@color/dark_700"
+-                        android:orientation="vertical">
+-
+-                        <TextView
+-                            android:id="@+id/tv_imsak_info_title"
+-                            android:layout_width="wrap_content"
+-                            android:layout_height="wrap_content"
+-                            android:textStyle="bold"
+-                            android:layout_marginStart="@dimen/medium_margin"
+-                            android:layout_marginTop="@dimen/medium_margin"
+-                            android:text="@string/imsak_info"
+-                            android:textSize="@dimen/large_text_size"
+-                            app:layout_constraintStart_toStartOf="parent"
+-                            app:layout_constraintTop_toTopOf="parent" />
+-
+-                        <TextView
+-                            android:id="@+id/tv_imsak_date"
+-                            android:layout_width="wrap_content"
+-                            android:layout_height="wrap_content"
+-                            android:layout_marginStart="@dimen/medium_margin"
+-                            android:layout_marginTop="@dimen/small_margin"
+-                            android:layout_marginBottom="@dimen/small_margin"
+-                            tools:text="April 24 2020"
+-                            app:layout_constraintStart_toStartOf="parent"
+-                            app:layout_constraintTop_toBottomOf="@+id/tv_imsak_info_title" />
+-
+-                        <TextView
+-                            android:id="@+id/tv_city"
+-                            android:layout_width="wrap_content"
+-                            android:layout_height="wrap_content"
+-                            tools:text="Surakarta"
+-                            android:layout_marginStart="@dimen/medium_margin"
+-                            android:layout_marginTop="@dimen/small_margin"
+-                            android:layout_marginBottom="@dimen/medium_margin"
+-                            app:layout_constraintBottom_toBottomOf="parent"
+-                            app:layout_constraintStart_toStartOf="parent"
+-                            app:layout_constraintTop_toBottomOf="@id/tv_imsak_date" />
+-
+-                        <TextView
+-                            android:id="@+id/tv_imsak_time"
+-                            android:layout_width="wrap_content"
+-                            android:layout_height="wrap_content"
+-                            android:layout_marginEnd="@dimen/medium_margin"
+-                            android:textSize="@dimen/large2_text_size"
+-                            app:layout_constraintBottom_toBottomOf="parent"
+-                            app:layout_constraintEnd_toEndOf="parent"
+-                            app:layout_constraintTop_toTopOf="parent"
+-                            android:text="@string/loading"
+-                            tools:text="04:34 (WIB)" />
+-
+-                    </androidx.constraintlayout.widget.ConstraintLayout>
+-                </androidx.cardview.widget.CardView>
+-
+-                <androidx.cardview.widget.CardView
+-                    android:layout_width="match_parent"
+-                    android:layout_height="wrap_content"
+-                    app:cardCornerRadius="@dimen/medium_margin"
+-                    android:layout_margin="@dimen/small_margin">
+-
+-                    <androidx.constraintlayout.widget.ConstraintLayout
+-                        android:layout_width="match_parent"
+-                        android:layout_height="match_parent"
+-                        android:background="@color/dark_700"
+-                        android:paddingTop="@dimen/small_margin"
+-                        android:orientation="vertical">
+-
+-                        <LinearLayout
+-                            android:id="@+id/ll_title_date_info"
+-                            android:layout_width="wrap_content"
+-                            android:layout_height="wrap_content"
+-                            android:gravity="center"
+-                            app:layout_constraintStart_toStartOf="parent"
+-                            app:layout_constraintTop_toTopOf="parent">
+-
+-                            <TextView
+-                                android:id="@+id/textView3"
+-                                android:layout_width="wrap_content"
+-                                android:layout_height="wrap_content"
+-                                android:layout_marginStart="@dimen/medium_margin"
+-                                android:text="@string/gregorian_to_hijri"
+-                                android:textSize="@dimen/large_text_size"
+-                                android:textStyle="bold"/>
+-                        </LinearLayout>
+-
+-
+-                        <TableLayout
+-                            android:id="@+id/tableLayout"
+-                            android:layout_width="match_parent"
+-                            android:layout_height="wrap_content"
+-                            android:layout_marginStart="@dimen/medium_margin"
+-                            android:layout_marginTop="@dimen/small_margin"
+-                            android:stretchColumns="*"
+-                            app:layout_constraintEnd_toEndOf="parent"
+-                            app:layout_constraintStart_toStartOf="parent"
+-                            app:layout_constraintTop_toBottomOf="@+id/ll_title_date_info">
+-
+-                            <TableRow
+-                                android:layout_width="match_parent"
+-                                android:layout_height="match_parent"
+-                                android:layout_marginTop="@dimen/small_margin">
+-
+-                                <TextView
+-                                    android:layout_width="match_parent"
+-                                    android:layout_height="match_parent"
+-                                    android:layout_margin="@dimen/smaller_margin"
+-                                    android:text="@string/type" />
+-
+-                                <TextView
+-                                    android:layout_width="match_parent"
+-                                    android:layout_height="match_parent"
+-                                    android:layout_margin="@dimen/smaller_margin"
+-                                    android:text="@string/gregorian" />
+-
+-                                <TextView
+-                                    android:layout_width="match_parent"
+-                                    android:layout_height="match_parent"
+-                                    android:layout_margin="@dimen/smaller_margin"
+-                                    android:text="@string/hijri" />
+-                            </TableRow>
+-
+-                            <TableRow
+-                                android:layout_width="match_parent"
+-                                android:layout_height="match_parent">
+-
+-                                <TextView
+-                                    android:layout_width="match_parent"
+-                                    android:layout_height="match_parent"
+-                                    android:layout_margin="@dimen/smaller_margin"
+-                                    android:text="@string/date" />
+-
+-                                <TextView
+-                                    android:id="@+id/tv_gregorian_date"
+-                                    android:layout_width="match_parent"
+-                                    android:layout_height="match_parent"
+-                                    android:layout_margin="@dimen/smaller_margin"
+-                                    android:text="@string/loading"
+-                                    tools:text="01-03-2020" />
+-
+-                                <TextView
+-                                    android:id="@+id/tv_hijri_date"
+-                                    android:layout_width="match_parent"
+-                                    android:layout_height="match_parent"
+-                                    android:layout_margin="@dimen/smaller_margin"
+-                                    android:text="@string/loading"
+-                                    tools:text="06-07-1441" />
+-                            </TableRow>
+-
+-                            <TableRow
+-                                android:layout_width="match_parent"
+-                                android:layout_height="match_parent">
+-
+-                                <TextView
+-                                    android:layout_width="match_parent"
+-                                    android:layout_height="match_parent"
+-                                    android:layout_margin="@dimen/smaller_margin"
+-                                    android:text="@string/month" />
+-
+-                                <TextView
+-                                    android:id="@+id/tv_gregorian_month"
+-                                    android:layout_width="match_parent"
+-                                    android:layout_height="match_parent"
+-                                    android:layout_margin="@dimen/smaller_margin"
+-                                    android:text="@string/loading"
+-                                    tools:text="March" />
+-
+-                                <TextView
+-                                    android:id="@+id/tv_hijri_month"
+-                                    android:layout_width="match_parent"
+-                                    android:layout_height="match_parent"
+-                                    android:layout_margin="@dimen/smaller_margin"
+-                                    android:text="@string/loading"
+-                                    tools:text="Rajab / رَجَب" />
+-                            </TableRow>
+-
+-                            <TableRow
+-                                android:layout_width="match_parent"
+-                                android:layout_height="match_parent"
+-                                android:layout_marginBottom="@dimen/small_margin">
+-
+-                                <TextView
+-                                    android:layout_width="match_parent"
+-                                    android:layout_height="match_parent"
+-                                    android:layout_margin="@dimen/smaller_margin"
+-                                    android:text="@string/day" />
+-
+-                                <TextView
+-                                    android:id="@+id/tv_gregorian_day"
+-                                    android:layout_width="match_parent"
+-                                    android:layout_height="match_parent"
+-                                    android:layout_margin="@dimen/smaller_margin"
+-                                    android:text="@string/loading"
+-                                    tools:text="Sunday" />
+-
+-                                <TextView
+-                                    android:id="@+id/tv_hijri_day"
+-                                    android:layout_width="match_parent"
+-                                    android:layout_height="match_parent"
+-                                    android:layout_margin="@dimen/smaller_margin"
+-                                    android:text="@string/loading"
+-                                    tools:text="Al Ahad / الاحد" />
+-                            </TableRow>
+-                        </TableLayout>
+-
+-                    </androidx.constraintlayout.widget.ConstraintLayout>
+-                </androidx.cardview.widget.CardView>
+-
+-                <!--            <androidx.cardview.widget.CardView-->
+-                <!--                android:layout_width="match_parent"-->
+-                <!--                android:layout_height="wrap_content"-->
+-                <!--                app:cardCornerRadius="@dimen/medium_margin"-->
+-                <!--                android:layout_margin="@dimen/small_margin">-->
+-                <!--                <LinearLayout-->
+-                <!--                    android:layout_width="match_parent"-->
+-                <!--                    android:layout_height="wrap_content"-->
+-                <!--                    android:orientation="vertical">-->
+-                <!--                    <TextView-->
+-                <!--                        android:layout_width="match_parent"-->
+-                <!--                        android:layout_height="wrap_content"-->
+-                <!--                        android:textSize="@dimen/large_text_size"-->
+-                <!--                        android:layout_marginTop="@dimen/medium_margin"-->
+-                <!--                        android:layout_marginStart="@dimen/medium_margin"-->
+-                <!--                        android:text="@string/asma_al_husna"/>-->
+-                <!--                    <TextView-->
+-                <!--                        android:id="@+id/tv_ah_loading"-->
+-                <!--                        android:layout_width="match_parent"-->
+-                <!--                        android:layout_height="wrap_content"-->
+-                <!--                       -->
+-                <!--                        android:textSize="@dimen/large_text_size"-->
+-                <!--                        android:gravity="center"-->
+-                <!--                        android:layout_marginTop="@dimen/medium_margin"-->
+-                <!--                        android:layout_marginStart="@dimen/medium_margin"-->
+-                <!--                        android:layout_marginBottom="@dimen/medium_margin"-->
+-                <!--                        android:text="@string/loading"/>-->
+-                <!--                    <androidx.recyclerview.widget.RecyclerView-->
+-                <!--                        android:id="@+id/rv_ah"-->
+-                <!--                        android:layout_width="match_parent"-->
+-                <!--                        android:layout_height="wrap_content"-->
+-                <!--                        android:layout_marginBottom="@dimen/medium_margin"-->
+-                <!--                        android:layout_margin="@dimen/small_margin"/>-->
+-                <!--                </LinearLayout>-->
+-
+-                <!--            </androidx.cardview.widget.CardView>-->
+-
+-                <androidx.cardview.widget.CardView
+-                    android:layout_width="match_parent"
+-                    android:layout_height="wrap_content"
+-                    app:cardCornerRadius="@dimen/medium_margin"
+-                    android:layout_margin="@dimen/small_margin">
+-
+-                    <LinearLayout
+-                        android:layout_width="match_parent"
+-                        android:layout_height="match_parent"
+-                        android:background="@color/dark_700"
+-                        android:orientation="vertical">
+-
+-                        <LinearLayout
+-                            android:layout_width="match_parent"
+-                            android:layout_height="wrap_content"
+-                            android:gravity="center"
+-                            android:layout_margin="@dimen/small_margin"
+-                            android:orientation="horizontal">
+-                            <TextView
+-                                android:text="@string/dua_collection"
+-                                android:layout_width="match_parent"
+-                                android:layout_height="wrap_content"
+-                                android:textSize="@dimen/large_text_size"
+-                                android:textStyle="bold"/>
+-                        </LinearLayout>
+-
+-                        <androidx.recyclerview.widget.RecyclerView
+-                            android:id="@+id/rvDuaCollection"
+-                            android:layout_width="match_parent"
+-                            android:layout_height="match_parent"
+-                            android:layout_marginBottom="@dimen/small_margin"
+-                            tools:listitem="@layout/list_dua"/>
+-
+-                    </LinearLayout>
+-                </androidx.cardview.widget.CardView>
+-                <LinearLayout
+-                    android:layout_width="match_parent"
+-                    android:layout_height="?attr/actionBarSize"
+-                    tools:ignore="UselessLeaf" />
+-            </LinearLayout>
+-        </ScrollView>
+-
+-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+-
+-</layout>
+\ No newline at end of file
+Index: app/src/main/java/com/programmergabut/solatkuy/ui/activitymain/fragmentquran/QuranFragment.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.programmergabut.solatkuy.ui.activitymain.fragmentquran\r\n\r\nimport android.os.Bundle\r\nimport android.text.Editable\r\nimport android.text.TextWatcher\r\nimport android.view.View\r\nimport android.widget.AdapterView\r\nimport android.widget.ArrayAdapter\r\nimport androidx.recyclerview.widget.LinearLayoutManager\r\nimport androidx.swiperefreshlayout.widget.SwipeRefreshLayout\r\nimport com.programmergabut.solatkuy.R\r\nimport com.programmergabut.solatkuy.base.BaseFragment\r\nimport com.programmergabut.solatkuy.data.remote.remoteentity.quranallsurahJson.Data\r\nimport com.programmergabut.solatkuy.databinding.FragmentQuranBinding\r\nimport com.programmergabut.solatkuy.ui.activityfavayah.FavAyahActivity\r\nimport com.programmergabut.solatkuy.ui.activityreadsurah.ReadSurahActivity\r\nimport com.programmergabut.solatkuy.util.EnumStatus\r\nimport dagger.hilt.android.AndroidEntryPoint\r\nimport java.util.*\r\n\r\n/*\r\n * Created by Katili Jiwo Adi Wiyono on 25/06/20.\r\n */\r\n\r\n@AndroidEntryPoint\r\nclass QuranFragment(viewModelTest: QuranFragmentViewModel? = null) : BaseFragment<FragmentQuranBinding, QuranFragmentViewModel>(\r\n    R.layout.fragment_quran, QuranFragmentViewModel::class.java, viewModelTest\r\n), SwipeRefreshLayout.OnRefreshListener, View.OnClickListener {\r\n\r\n    private lateinit var allSurahAdapter: AllSurahAdapter\r\n    private lateinit var staredSurahAdapter: StaredSurahAdapter\r\n    private var tempAllSurah: List<Data>? = null\r\n\r\n    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {\r\n        super.onViewCreated(view, savedInstanceState)\r\n\r\n        initRvAllSurah()\r\n        initRvStaredSurah()\r\n        initSearchSurah()\r\n        initJuzzSpinner()\r\n    }\r\n\r\n    override fun setListener() {\r\n        super.setListener()\r\n        binding.slQuran.setOnRefreshListener(this)\r\n        binding.cvFavAyah.setOnClickListener(this)\r\n        binding.cvLastReadAyah.setOnClickListener(this)\r\n        observeApi()\r\n    }\r\n\r\n    override fun onClick(v: View?) {\r\n        when(v?.id){\r\n            R.id.cv_fav_ayah -> {\r\n                gotoIntent(FavAyahActivity::class.java, null)\r\n            }\r\n            R.id.cv_last_read_ayah -> {\r\n                val selectedSurah = tempAllSurah?.find { x -> x.number == getLastReadSurah() }\r\n                val bundle = Bundle()\r\n                bundle.apply {\r\n                    putString(ReadSurahActivity.SURAH_ID, selectedSurah?.number.toString())\r\n                    putString(ReadSurahActivity.SURAH_NAME, selectedSurah?.englishName)\r\n                    putString(ReadSurahActivity.SURAH_TRANSLATION, selectedSurah?.englishNameTranslation)\r\n                    putBoolean(ReadSurahActivity.IS_AUTO_SCROLL, true)\r\n                }\r\n                gotoIntent(ReadSurahActivity::class.java, bundle)\r\n            }\r\n        }\r\n    }\r\n\r\n    private fun initSearchSurah() {\r\n        binding.etSearch.addTextChangedListener(object: TextWatcher{\r\n            override fun afterTextChanged(s: Editable?) {\r\n                val newData = tempAllSurah?.filter { surah ->\r\n                    surah.englishNameLowerCase!!.contains(s.toString())\r\n                }\r\n                allSurahAdapter.listData = newData ?: emptyList()\r\n                allSurahAdapter.notifyDataSetChanged()\r\n                binding.sJuzz.setSelection(0)\r\n            }\r\n            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}\r\n            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}\r\n        })\r\n\r\n        binding.sJuzz.setSelection(0, true)\r\n    }\r\n\r\n    private fun observeApi(){\r\n        viewModel.allSurah.observe(viewLifecycleOwner, {\r\n            when(it.status){\r\n                EnumStatus.SUCCESS -> {\r\n                    if(it.data == null)\r\n                        showBottomSheet(description = getString(R.string.fetch_failed))\r\n\r\n                    tempAllSurah = it.data!!\r\n                    allSurahAdapter.apply {\r\n                        listData = it.data\r\n                        notifyDataSetChanged()\r\n                    }\r\n                    setVisibility(it.status)\r\n                }\r\n                EnumStatus.LOADING -> setVisibility(it.status)\r\n                EnumStatus.ERROR -> setVisibility(it.status)\r\n            }\r\n        })\r\n\r\n        viewModel.staredSurah.observe(viewLifecycleOwner, {\r\n            staredSurahAdapter.listData = it\r\n            staredSurahAdapter.notifyDataSetChanged()\r\n        })\r\n\r\n        viewModel.fetchAllSurah()\r\n    }\r\n\r\n    private fun setVisibility(status: EnumStatus){\r\n        when(status){\r\n            EnumStatus.SUCCESS -> {\r\n                binding.tvLoadingAllSurah.text = getString(R.string.loading)\r\n                binding.tvLoadingAllSurah.visibility = View.GONE\r\n                binding.rvQuranSurah.visibility = View.VISIBLE\r\n                binding.slQuran.isRefreshing = false\r\n            }\r\n            EnumStatus.LOADING -> {\r\n                binding.rvQuranSurah.visibility = View.INVISIBLE\r\n                binding.tvLoadingAllSurah.visibility = View.VISIBLE\r\n            }\r\n            EnumStatus.ERROR -> {\r\n                showBottomSheet(description = getString(R.string.fetch_failed), isCancelable = true, isFinish = false)\r\n                binding.tvLoadingAllSurah.text = getString(R.string.fetch_failed)\r\n                binding.rvQuranSurah.visibility = View.INVISIBLE\r\n                binding.slQuran.isRefreshing = false\r\n            }\r\n        }\r\n    }\r\n\r\n\r\n    private fun initJuzzSpinner(){\r\n        val arrJuzz = mutableListOf<String>()\r\n        arrJuzz.add(\"All Juzz\")\r\n        for (i in 1..30){\r\n            arrJuzz.add(i.toString())\r\n        }\r\n\r\n        binding.sJuzz.adapter = ArrayAdapter(requireContext(), R.layout.spinner_item, arrJuzz)\r\n        binding.sJuzz.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{\r\n            override fun onNothingSelected(parent: AdapterView<*>?) {}\r\n            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {\r\n                juzzSurahFilter(binding.sJuzz.selectedItem.toString())\r\n            }\r\n        }\r\n    }\r\n\r\n    private fun initRvAllSurah() {\r\n        allSurahAdapter = AllSurahAdapter { number, englishName, englishNameTranslation ->\r\n            val bundle = Bundle()\r\n            bundle.apply {\r\n                putString(ReadSurahActivity.SURAH_ID, number)\r\n                putString(ReadSurahActivity.SURAH_NAME, englishName)\r\n                putString(ReadSurahActivity.SURAH_TRANSLATION, englishNameTranslation)\r\n            }\r\n            gotoIntent(ReadSurahActivity::class.java, bundle)\r\n        }\r\n        binding.rvQuranSurah.apply {\r\n            adapter = allSurahAdapter\r\n            layoutManager = LinearLayoutManager(this@QuranFragment.context)\r\n        }\r\n    }\r\n\r\n    private fun initRvStaredSurah() {\r\n        staredSurahAdapter = StaredSurahAdapter{ surahID, surahName, surahTranslation ->\r\n            val bundle = Bundle()\r\n            bundle.apply {\r\n                putString(ReadSurahActivity.SURAH_ID, surahID)\r\n                putString(ReadSurahActivity.SURAH_NAME, surahName)\r\n                putString(ReadSurahActivity.SURAH_TRANSLATION, surahTranslation)\r\n            }\r\n            gotoIntent(ReadSurahActivity::class.java, bundle)\r\n        }\r\n        binding.rvStaredAyah.apply {\r\n            adapter = staredSurahAdapter\r\n            layoutManager = LinearLayoutManager(this@QuranFragment.context, LinearLayoutManager.HORIZONTAL, false)\r\n        }\r\n    }\r\n\r\n    private fun juzzSurahFilter(juzz: String){\r\n        val datas: List<Data>\r\n        if(juzz == \"All Juzz\")\r\n            datas = tempAllSurah ?: emptyList()\r\n        else\r\n            datas = viewModel.getSurahByJuzz(juzz.toInt())\r\n\r\n        if(datas.isNotEmpty()){\r\n            allSurahAdapter.listData = datas\r\n            allSurahAdapter.notifyDataSetChanged()\r\n        }\r\n    }\r\n\r\n    override fun onRefresh() {\r\n        viewModel.fetchAllSurah()\r\n        binding.sJuzz.setSelection(0)\r\n    }\r\n\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/programmergabut/solatkuy/ui/activitymain/fragmentquran/QuranFragment.kt	(revision eb3a97fe3e1e4e39c4d0f9ab965337c48959d492)
++++ app/src/main/java/com/programmergabut/solatkuy/ui/activitymain/fragmentquran/QuranFragment.kt	(date 1608955864968)
+@@ -55,11 +55,17 @@
+             }
+             R.id.cv_last_read_ayah -> {
+                 val selectedSurah = tempAllSurah?.find { x -> x.number == getLastReadSurah() }
++                if(selectedSurah == null){
++                    showBottomSheet(getString(R.string.last_read_ayah_not_found_title),
++                    getString(R.string.last_read_ayah_not_found_dsc))
++                    return
++                }
++
+                 val bundle = Bundle()
+                 bundle.apply {
+-                    putString(ReadSurahActivity.SURAH_ID, selectedSurah?.number.toString())
+-                    putString(ReadSurahActivity.SURAH_NAME, selectedSurah?.englishName)
+-                    putString(ReadSurahActivity.SURAH_TRANSLATION, selectedSurah?.englishNameTranslation)
++                    putString(ReadSurahActivity.SURAH_ID, selectedSurah.number.toString())
++                    putString(ReadSurahActivity.SURAH_NAME, selectedSurah.englishName)
++                    putString(ReadSurahActivity.SURAH_TRANSLATION, selectedSurah.englishNameTranslation)
+                     putBoolean(ReadSurahActivity.IS_AUTO_SCROLL, true)
+                 }
+                 gotoIntent(ReadSurahActivity::class.java, bundle)
+Index: app/src/main/res/layout/layout_bottomsheet_bygps.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<layout\r\n    xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    xmlns:app=\"http://schemas.android.com/apk/res-auto\">\r\n\r\n    <androidx.constraintlayout.widget.ConstraintLayout\r\n        android:layout_width=\"match_parent\"\r\n        android:background=\"@color/dark_200\"\r\n        android:layout_height=\"@dimen/bottomSheet_size\">\r\n\r\n        <TextView\r\n            android:id=\"@+id/tv_llDialog_title\"\r\n            android:layout_width=\"wrap_content\"\r\n            android:layout_height=\"wrap_content\"\r\n            android:layout_marginStart=\"16dp\"\r\n            android:layout_marginTop=\"16dp\"\r\n            android:text=\"@string/by_gps\"\r\n            android:textSize=\"@dimen/medium_text_size\"\r\n            android:textStyle=\"bold\"\r\n            app:layout_constraintStart_toStartOf=\"parent\"\r\n            app:layout_constraintTop_toTopOf=\"parent\" />\r\n\r\n        <TextView\r\n            android:id=\"@+id/tv_view_latitude\"\r\n            android:layout_width=\"@dimen/info_width_size\"\r\n            android:layout_height=\"wrap_content\"\r\n            android:layout_marginStart=\"16dp\"\r\n            android:text=\"@string/latitude\"\r\n            app:layout_constraintBottom_toTopOf=\"@id/tv_view_longitude\"\r\n            app:layout_constraintStart_toStartOf=\"parent\"\r\n            app:layout_constraintTop_toBottomOf=\"@+id/tv_llDialog_title\" />\r\n\r\n        <TextView\r\n            android:id=\"@+id/tv_gpsDialog_latitude\"\r\n            android:layout_width=\"@dimen/editText_size\"\r\n            android:layout_height=\"wrap_content\"\r\n            android:layout_marginTop=\"16dp\"\r\n            app:layout_constraintBottom_toTopOf=\"@+id/tv_gpsDialog_longitude\"\r\n            app:layout_constraintEnd_toEndOf=\"parent\"\r\n            app:layout_constraintStart_toEndOf=\"@+id/tv_view_latitude\"\r\n            app:layout_constraintTop_toBottomOf=\"@+id/tv_llDialog_title\" />\r\n\r\n        <ImageView\r\n            android:id=\"@+id/iv_warning\"\r\n            android:layout_width=\"@dimen/avatar_size\"\r\n            android:layout_height=\"@dimen/avatar_size\"\r\n            android:src=\"@drawable/ic_warning_24dp\"\r\n            app:layout_constraintBottom_toBottomOf=\"parent\"\r\n            app:layout_constraintEnd_toEndOf=\"parent\"\r\n            app:layout_constraintHorizontal_bias=\"0.498\"\r\n            app:layout_constraintStart_toStartOf=\"parent\"\r\n            app:layout_constraintTop_toTopOf=\"parent\"\r\n            app:layout_constraintVertical_bias=\"0.323\"\r\n            android:contentDescription=\"@string/notactivelocationicon\" />\r\n\r\n        <TextView\r\n            android:id=\"@+id/tv_warning\"\r\n            android:layout_width=\"wrap_content\"\r\n            android:layout_height=\"wrap_content\"\r\n            android:layout_marginTop=\"8dp\"\r\n            android:text=\"@string/please_enable_your_location\"\r\n            app:layout_constraintEnd_toEndOf=\"parent\"\r\n            app:layout_constraintStart_toStartOf=\"parent\"\r\n            app:layout_constraintTop_toBottomOf=\"@+id/iv_warning\" />\r\n\r\n        <TextView\r\n            android:id=\"@+id/tv_view_longitude\"\r\n            android:layout_width=\"@dimen/info_width_size\"\r\n            android:layout_height=\"wrap_content\"\r\n            android:layout_marginStart=\"16dp\"\r\n            android:text=\"@string/longitude\"\r\n            app:layout_constraintBottom_toTopOf=\"@+id/btn_proceedByGps\"\r\n            app:layout_constraintStart_toStartOf=\"parent\"\r\n            app:layout_constraintTop_toBottomOf=\"@+id/tv_view_latitude\" />\r\n\r\n        <TextView\r\n            android:id=\"@+id/tv_gpsDialog_longitude\"\r\n            android:layout_width=\"@dimen/editText_size\"\r\n            android:layout_height=\"wrap_content\"\r\n            android:layout_marginTop=\"16dp\"\r\n            app:layout_constraintBottom_toTopOf=\"@+id/btn_proceedByGps\"\r\n            app:layout_constraintEnd_toEndOf=\"parent\"\r\n            app:layout_constraintStart_toEndOf=\"@+id/tv_view_longitude\"\r\n            app:layout_constraintTop_toBottomOf=\"@id/tv_gpsDialog_latitude\" />\r\n\r\n        <Button\r\n            android:id=\"@+id/btn_proceedByGps\"\r\n            android:layout_width=\"wrap_content\"\r\n            android:layout_height=\"wrap_content\"\r\n            android:backgroundTint=\"@color/purple_700\"\r\n            android:layout_marginTop=\"16dp\"\r\n            android:layout_marginBottom=\"16dp\"\r\n            android:text=\"@string/proceeded\"\r\n            app:layout_constraintBottom_toBottomOf=\"parent\"\r\n            app:layout_constraintEnd_toEndOf=\"parent\"\r\n            app:layout_constraintStart_toStartOf=\"parent\"\r\n            app:layout_constraintTop_toBottomOf=\"@id/tv_gpsDialog_longitude\" />\r\n\r\n\r\n    </androidx.constraintlayout.widget.ConstraintLayout>\r\n\r\n</layout>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/layout/layout_bottomsheet_bygps.xml	(revision eb3a97fe3e1e4e39c4d0f9ab965337c48959d492)
++++ app/src/main/res/layout/layout_bottomsheet_bygps.xml	(date 1608954316174)
+@@ -25,6 +25,7 @@
+             android:layout_width="@dimen/info_width_size"
+             android:layout_height="wrap_content"
+             android:layout_marginStart="16dp"
++            android:visibility="invisible"
+             android:text="@string/latitude"
+             app:layout_constraintBottom_toTopOf="@id/tv_view_longitude"
+             app:layout_constraintStart_toStartOf="parent"
+@@ -35,6 +36,7 @@
+             android:layout_width="@dimen/editText_size"
+             android:layout_height="wrap_content"
+             android:layout_marginTop="16dp"
++            android:visibility="invisible"
+             app:layout_constraintBottom_toTopOf="@+id/tv_gpsDialog_longitude"
+             app:layout_constraintEnd_toEndOf="parent"
+             app:layout_constraintStart_toEndOf="@+id/tv_view_latitude"
+Index: app/src/main/java/com/programmergabut/solatkuy/ui/activitymain/fragmentmain/FragmentMainViewModel.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.programmergabut.solatkuy.ui.activitymain.fragmentmain\r\n\r\nimport androidx.hilt.lifecycle.ViewModelInject\r\nimport androidx.lifecycle.*\r\nimport com.programmergabut.solatkuy.data.PrayerRepository\r\nimport com.programmergabut.solatkuy.data.QuranRepository\r\nimport com.programmergabut.solatkuy.data.local.localentity.MsApi1\r\nimport com.programmergabut.solatkuy.data.local.localentity.MsFavAyah\r\nimport com.programmergabut.solatkuy.data.local.localentity.MsSetting\r\nimport com.programmergabut.solatkuy.data.local.localentity.NotifiedPrayer\r\nimport com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.PrayerResponse\r\nimport com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.Timings\r\nimport com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonEn.ReadSurahEnResponse\r\nimport com.programmergabut.solatkuy.util.EnumConfig\r\nimport com.programmergabut.solatkuy.util.Resource\r\nimport com.programmergabut.solatkuy.util.EnumConfig.Companion.IS_TESTING\r\nimport com.programmergabut.solatkuy.util.helper.RunIdlingResourceHelper.Companion.runIdlingResourceDecrement\r\nimport com.programmergabut.solatkuy.util.helper.RunIdlingResourceHelper.Companion.runIdlingResourceIncrement\r\nimport kotlinx.coroutines.launch\r\nimport java.lang.Exception\r\nimport java.text.SimpleDateFormat\r\nimport java.util.*\r\n\r\n/*\r\n * Created by Katili Jiwo Adi Wiyono on 25/03/20.\r\n */\r\n\r\nclass FragmentMainViewModel @ViewModelInject constructor(\r\n    private val prayerRepository: PrayerRepository,\r\n    private val quranRepository: QuranRepository\r\n): ViewModel() {\r\n\r\n    val msApi1 = prayerRepository.getMsApi1()\r\n\r\n    private var _favAyah = MutableLiveData<Int>()\r\n    val favAyah: LiveData<Resource<List<MsFavAyah>>> = Transformations.switchMap(_favAyah){ result ->\r\n        val data = MediatorLiveData<Resource<List<MsFavAyah>>>()\r\n        val local = quranRepository.getListFavAyah()\r\n        data.value = Resource.loading(null)\r\n\r\n        data.addSource(local){\r\n            data.value = Resource.success(it)\r\n        }\r\n\r\n        return@switchMap data\r\n    }\r\n    fun getMsFavAyah() {\r\n        this._favAyah.value = 0\r\n    }\r\n\r\n    private var _notifiedPrayer = MutableLiveData<Resource<List<NotifiedPrayer>>>()\r\n    val notifiedPrayer: LiveData<Resource<List<NotifiedPrayer>>>\r\n        get() = _notifiedPrayer\r\n    fun syncNotifiedPrayer(msApi1: MsApi1) = viewModelScope.launch {\r\n        _notifiedPrayer.postValue(Resource.loading(null))\r\n        try {\r\n            runIdlingResourceIncrement()\r\n            if(IS_TESTING){\r\n                prayerRepository.syncNotifiedPrayerTesting().let {\r\n                    _notifiedPrayer.postValue(Resource.success(it))\r\n                    runIdlingResourceDecrement()\r\n                }\r\n            }\r\n            else {\r\n                val response = prayerRepository.fetchPrayerApi(msApi1).await()\r\n                val result = prayerRepository.getListNotifiedPrayerSync()\r\n\r\n                if(response.statusResponse == \"1\"){\r\n                    val currentDate = SimpleDateFormat(\"dd\", Locale.getDefault()).format(Date())\r\n                    val timings = response.data.find { obj -> obj.date.gregorian?.day == currentDate.toString() }?.timings\r\n\r\n                    if(timings != null){\r\n                        createPrayerTime(timings).forEach { prayer -> prayerRepository.updatePrayerTime(prayer.key, prayer.value) }\r\n                        _notifiedPrayer.postValue(Resource.success(result))\r\n                    }\r\n                    else{\r\n                        _notifiedPrayer.postValue(Resource.error(\"Today prayer data is not found\", result))\r\n                        runIdlingResourceDecrement()\r\n                        return@launch\r\n                    }\r\n                }\r\n                else{\r\n                    _notifiedPrayer.postValue(Resource.error(\"Application Offline\", result))\r\n                    runIdlingResourceDecrement()\r\n                    return@launch\r\n                }\r\n            }\r\n        }\r\n        catch (ex: Exception){\r\n            _notifiedPrayer.postValue(Resource.error(ex.message.toString(), null))\r\n            runIdlingResourceDecrement()\r\n        }\r\n    }\r\n\r\n    private fun createPrayerTime(timings: Timings): MutableMap<String, String> {\r\n        val map = mutableMapOf<String, String>()\r\n        map[EnumConfig.FAJR] = timings.fajr\r\n        map[EnumConfig.DHUHR] = timings.dhuhr\r\n        map[EnumConfig.ASR] = timings.asr\r\n        map[EnumConfig.MAGHRIB] = timings.maghrib\r\n        map[EnumConfig.ISHA] = timings.isha\r\n        map[EnumConfig.SUNRISE] = timings.sunrise\r\n        return map\r\n    }\r\n\r\n    private var _readSurahEn = MutableLiveData<Resource<ReadSurahEnResponse>>()\r\n    val readSurahEn: LiveData<Resource<ReadSurahEnResponse>>\r\n        get() = _readSurahEn\r\n    fun fetchReadSurahEn(nInSurah: Int) = viewModelScope.launch{\r\n\r\n        _readSurahEn.postValue(Resource.loading(null))\r\n        try {\r\n            runIdlingResourceIncrement()\r\n            val response = quranRepository.fetchReadSurahEn(nInSurah).await()\r\n            if(response.statusResponse == \"1\"){\r\n                _readSurahEn.postValue(Resource.success(response))\r\n            }\r\n            else{\r\n                _readSurahEn.postValue(Resource.error(response.messageResponse, null))\r\n            }\r\n            runIdlingResourceDecrement()\r\n        }\r\n        catch (e: Exception){\r\n            _readSurahEn.postValue(Resource.error(e.message.toString(), null))\r\n            runIdlingResourceDecrement()\r\n        }\r\n\r\n    }\r\n\r\n    private var _prayer = MutableLiveData<Resource<PrayerResponse>>()\r\n    val prayer: LiveData<Resource<PrayerResponse>>\r\n        get() = _prayer\r\n    fun fetchPrayerApi(msApi1: MsApi1){\r\n        viewModelScope.launch {\r\n\r\n            _prayer.postValue(Resource.loading(null))\r\n            try{\r\n                runIdlingResourceIncrement()\r\n                val response  = prayerRepository.fetchPrayerApi(msApi1).await()\r\n                if(response.statusResponse == \"1\"){\r\n                    _prayer.postValue(Resource.success(response))\r\n                    runIdlingResourceDecrement()\r\n                }\r\n                else{\r\n                    _prayer.postValue(Resource.error(response.messageResponse, null))\r\n                    runIdlingResourceDecrement()\r\n                }\r\n            }\r\n            catch (ex: Exception){\r\n                _prayer.postValue(Resource.error(ex.message.toString(), null))\r\n                runIdlingResourceDecrement()\r\n            }\r\n\r\n        }\r\n    }\r\n\r\n    private var _setting = MutableLiveData<Int>()\r\n    var msSetting: LiveData<Resource<MsSetting>> = Transformations.switchMap(_setting){\r\n        val data = MediatorLiveData<Resource<MsSetting>>()\r\n        val msSetting = prayerRepository.getMsSetting()\r\n\r\n        data.value = Resource.loading(null)\r\n\r\n        data.addSource(msSetting) {\r\n            data.value = Resource.success(it)\r\n        }\r\n\r\n        return@switchMap data\r\n    }\r\n    fun getMsSetting(){\r\n        this._setting.value = 0\r\n    }\r\n\r\n    /*fun updateNotifiedPrayer(NotifiedPrayer: NotifiedPrayer){\r\n        repository.updateNotifiedPrayer(NotifiedPrayer)\r\n    }*/\r\n\r\n    fun updateMsApi1(msApi1: MsApi1) = viewModelScope.launch {\r\n        prayerRepository.updateMsApi1(msApi1)\r\n    }\r\n\r\n    fun updatePrayerIsNotified(prayerName: String, isNotified: Boolean) = viewModelScope.launch {\r\n        prayerRepository.updatePrayerIsNotified(prayerName, isNotified)\r\n    }\r\n\r\n    fun updateIsUsingDBQuotes(isUsingDBQuotes: Boolean) = viewModelScope.launch {\r\n        prayerRepository.updateIsUsingDBQuotes(isUsingDBQuotes)\r\n    }\r\n\r\n    fun updateMsApi1MonthAndYear(api1ID: Int, month: String, year:String) = viewModelScope.launch{\r\n        prayerRepository.updateMsApi1MonthAndYear(api1ID, month, year)\r\n    }\r\n\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/programmergabut/solatkuy/ui/activitymain/fragmentmain/FragmentMainViewModel.kt	(revision eb3a97fe3e1e4e39c4d0f9ab965337c48959d492)
++++ app/src/main/java/com/programmergabut/solatkuy/ui/activitymain/fragmentmain/FragmentMainViewModel.kt	(date 1608953917229)
+@@ -70,7 +70,8 @@
+                     val timings = response.data.find { obj -> obj.date.gregorian?.day == currentDate.toString() }?.timings
+ 
+                     if(timings != null){
+-                        createPrayerTime(timings).forEach { prayer -> prayerRepository.updatePrayerTime(prayer.key, prayer.value) }
++                        val prayers = createPrayerTime(timings)
++                        prayers.forEach { prayer -> prayerRepository.updatePrayerTime(prayer.key, prayer.value) }
+                         _notifiedPrayer.postValue(Resource.success(result))
+                     }
+                     else{
+Index: app/src/main/res/layout/layout_info.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<layout xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    xmlns:app=\"http://schemas.android.com/apk/res-auto\"\r\n    xmlns:tools=\"http://schemas.android.com/tools\">\r\n\r\n    <LinearLayout\r\n        android:layout_width=\"match_parent\"\r\n        android:layout_height=\"wrap_content\"\r\n        android:orientation=\"vertical\">\r\n\r\n        <androidx.cardview.widget.CardView\r\n            android:layout_width=\"match_parent\"\r\n            android:layout_height=\"wrap_content\"\r\n            app:cardCornerRadius=\"@dimen/medium_margin\"\r\n            android:layout_margin=\"@dimen/smaller_margin\">\r\n\r\n            <androidx.constraintlayout.widget.ConstraintLayout\r\n                android:layout_width=\"match_parent\"\r\n                android:layout_height=\"match_parent\"\r\n                android:background=\"@color/dark_700\"\r\n                android:orientation=\"vertical\">\r\n\r\n                <TextView\r\n                    android:id=\"@+id/tv_imsak_info_title\"\r\n                    android:layout_width=\"wrap_content\"\r\n                    android:layout_height=\"wrap_content\"\r\n                    android:textStyle=\"bold\"\r\n                    android:layout_marginStart=\"@dimen/medium_margin\"\r\n                    android:layout_marginTop=\"@dimen/medium_margin\"\r\n                    android:text=\"@string/imsak_info\"\r\n                    android:textSize=\"@dimen/large_text_size\"\r\n                    app:layout_constraintStart_toStartOf=\"parent\"\r\n                    app:layout_constraintTop_toTopOf=\"parent\" />\r\n\r\n                <TextView\r\n                    android:id=\"@+id/tv_imsak_date\"\r\n                    android:layout_width=\"wrap_content\"\r\n                    android:layout_height=\"wrap_content\"\r\n                    android:layout_marginStart=\"@dimen/medium_margin\"\r\n                    android:layout_marginTop=\"@dimen/smaller_margin\"\r\n                    android:layout_marginBottom=\"@dimen/smaller_margin\"\r\n                    tools:text=\"April 24 2020\"\r\n                    app:layout_constraintStart_toStartOf=\"parent\"\r\n                    app:layout_constraintTop_toBottomOf=\"@+id/tv_imsak_info_title\" />\r\n\r\n                <TextView\r\n                    android:id=\"@+id/tv_city\"\r\n                    android:layout_width=\"wrap_content\"\r\n                    android:layout_height=\"wrap_content\"\r\n                    tools:text=\"Surakarta\"\r\n                    android:layout_marginStart=\"@dimen/medium_margin\"\r\n                    android:layout_marginTop=\"@dimen/smaller_margin\"\r\n                    android:layout_marginBottom=\"@dimen/medium_margin\"\r\n                    app:layout_constraintBottom_toBottomOf=\"parent\"\r\n                    app:layout_constraintStart_toStartOf=\"parent\"\r\n                    app:layout_constraintTop_toBottomOf=\"@id/tv_imsak_date\" />\r\n\r\n                <TextView\r\n                    android:id=\"@+id/tv_imsak_time\"\r\n                    android:layout_width=\"wrap_content\"\r\n                    android:layout_height=\"wrap_content\"\r\n                    android:layout_marginEnd=\"@dimen/medium_margin\"\r\n                    android:textSize=\"@dimen/large2_text_size\"\r\n                    app:layout_constraintBottom_toBottomOf=\"parent\"\r\n                    app:layout_constraintEnd_toEndOf=\"parent\"\r\n                    app:layout_constraintTop_toTopOf=\"parent\"\r\n                    android:text=\"@string/loading\"\r\n                    tools:text=\"04:34 (WIB)\" />\r\n\r\n            </androidx.constraintlayout.widget.ConstraintLayout>\r\n        </androidx.cardview.widget.CardView>\r\n\r\n        <androidx.cardview.widget.CardView\r\n            android:layout_width=\"match_parent\"\r\n            android:layout_height=\"wrap_content\"\r\n            app:cardCornerRadius=\"@dimen/medium_margin\"\r\n            android:layout_margin=\"@dimen/smaller_margin\">\r\n\r\n            <androidx.constraintlayout.widget.ConstraintLayout\r\n                android:layout_width=\"match_parent\"\r\n                android:layout_height=\"match_parent\"\r\n                android:background=\"@color/dark_700\"\r\n                android:paddingTop=\"@dimen/smaller_margin\"\r\n                android:orientation=\"vertical\">\r\n\r\n                <LinearLayout\r\n                    android:id=\"@+id/ll_title_date_info\"\r\n                    android:layout_width=\"wrap_content\"\r\n                    android:layout_height=\"wrap_content\"\r\n                    android:gravity=\"center\"\r\n                    app:layout_constraintStart_toStartOf=\"parent\"\r\n                    app:layout_constraintTop_toTopOf=\"parent\">\r\n\r\n                    <TextView\r\n                        android:id=\"@+id/textView3\"\r\n                        android:layout_width=\"wrap_content\"\r\n                        android:layout_height=\"wrap_content\"\r\n                        android:layout_marginStart=\"@dimen/medium_margin\"\r\n                        android:text=\"@string/gregorian_to_hijri\"\r\n                        android:textSize=\"@dimen/large_text_size\"\r\n                        android:textStyle=\"bold\"/>\r\n                </LinearLayout>\r\n\r\n\r\n                <TableLayout\r\n                    android:id=\"@+id/tableLayout\"\r\n                    android:layout_width=\"match_parent\"\r\n                    android:layout_height=\"wrap_content\"\r\n                    android:layout_marginStart=\"@dimen/medium_margin\"\r\n                    android:layout_marginTop=\"@dimen/smaller_margin\"\r\n                    android:stretchColumns=\"*\"\r\n                    app:layout_constraintEnd_toEndOf=\"parent\"\r\n                    app:layout_constraintStart_toStartOf=\"parent\"\r\n                    app:layout_constraintTop_toBottomOf=\"@+id/ll_title_date_info\">\r\n\r\n                    <TableRow\r\n                        android:layout_width=\"match_parent\"\r\n                        android:layout_height=\"match_parent\"\r\n                        android:layout_marginTop=\"@dimen/smaller_margin\">\r\n\r\n                        <TextView\r\n                            android:layout_width=\"match_parent\"\r\n                            android:layout_height=\"match_parent\"\r\n                            android:layout_margin=\"@dimen/smaller_margin\"\r\n                            android:text=\"@string/type\" />\r\n\r\n                        <TextView\r\n                            android:layout_width=\"match_parent\"\r\n                            android:layout_height=\"match_parent\"\r\n                            android:layout_margin=\"@dimen/smaller_margin\"\r\n                            android:text=\"@string/gregorian\" />\r\n\r\n                        <TextView\r\n                            android:layout_width=\"match_parent\"\r\n                            android:layout_height=\"match_parent\"\r\n                            android:layout_margin=\"@dimen/smaller_margin\"\r\n                            android:text=\"@string/hijri\" />\r\n                    </TableRow>\r\n\r\n                    <TableRow\r\n                        android:layout_width=\"match_parent\"\r\n                        android:layout_height=\"match_parent\">\r\n\r\n                        <TextView\r\n                            android:layout_width=\"match_parent\"\r\n                            android:layout_height=\"match_parent\"\r\n                            android:layout_margin=\"@dimen/smaller_margin\"\r\n                            android:text=\"@string/date\" />\r\n\r\n                        <TextView\r\n                            android:id=\"@+id/tv_gregorian_date\"\r\n                            android:layout_width=\"match_parent\"\r\n                            android:layout_height=\"match_parent\"\r\n                            android:layout_margin=\"@dimen/smaller_margin\"\r\n                            android:text=\"@string/loading\"\r\n                            tools:text=\"01-03-2020\" />\r\n\r\n                        <TextView\r\n                            android:id=\"@+id/tv_hijri_date\"\r\n                            android:layout_width=\"match_parent\"\r\n                            android:layout_height=\"match_parent\"\r\n                            android:layout_margin=\"@dimen/smaller_margin\"\r\n                            android:text=\"@string/loading\"\r\n                            tools:text=\"06-07-1441\" />\r\n                    </TableRow>\r\n\r\n                    <TableRow\r\n                        android:layout_width=\"match_parent\"\r\n                        android:layout_height=\"match_parent\">\r\n\r\n                        <TextView\r\n                            android:layout_width=\"match_parent\"\r\n                            android:layout_height=\"match_parent\"\r\n                            android:layout_margin=\"@dimen/smaller_margin\"\r\n                            android:text=\"@string/month\" />\r\n\r\n                        <TextView\r\n                            android:id=\"@+id/tv_gregorian_month\"\r\n                            android:layout_width=\"match_parent\"\r\n                            android:layout_height=\"match_parent\"\r\n                            android:layout_margin=\"@dimen/smaller_margin\"\r\n                            android:text=\"@string/loading\"\r\n                            tools:text=\"March\" />\r\n\r\n                        <TextView\r\n                            android:id=\"@+id/tv_hijri_month\"\r\n                            android:layout_width=\"match_parent\"\r\n                            android:layout_height=\"match_parent\"\r\n                            android:layout_margin=\"@dimen/smaller_margin\"\r\n                            android:text=\"@string/loading\"\r\n                            tools:text=\"Rajab / رَجَب\" />\r\n                    </TableRow>\r\n\r\n                    <TableRow\r\n                        android:layout_width=\"match_parent\"\r\n                        android:layout_height=\"match_parent\"\r\n                        android:layout_marginBottom=\"@dimen/smaller_margin\">\r\n\r\n                        <TextView\r\n                            android:layout_width=\"match_parent\"\r\n                            android:layout_height=\"match_parent\"\r\n                            android:layout_margin=\"@dimen/smaller_margin\"\r\n                            android:text=\"@string/day\" />\r\n\r\n                        <TextView\r\n                            android:id=\"@+id/tv_gregorian_day\"\r\n                            android:layout_width=\"match_parent\"\r\n                            android:layout_height=\"match_parent\"\r\n                            android:layout_margin=\"@dimen/smaller_margin\"\r\n                            android:text=\"@string/loading\"\r\n                            tools:text=\"Sunday\" />\r\n\r\n                        <TextView\r\n                            android:id=\"@+id/tv_hijri_day\"\r\n                            android:layout_width=\"match_parent\"\r\n                            android:layout_height=\"match_parent\"\r\n                            android:layout_margin=\"@dimen/smaller_margin\"\r\n                            android:text=\"@string/loading\"\r\n                            tools:text=\"Al Ahad / الاحد\" />\r\n                    </TableRow>\r\n                </TableLayout>\r\n\r\n            </androidx.constraintlayout.widget.ConstraintLayout>\r\n        </androidx.cardview.widget.CardView>\r\n\r\n        <androidx.cardview.widget.CardView\r\n            android:layout_width=\"match_parent\"\r\n            android:layout_height=\"wrap_content\"\r\n            app:cardCornerRadius=\"@dimen/medium_margin\"\r\n            android:layout_margin=\"@dimen/smaller_margin\">\r\n\r\n            <LinearLayout\r\n                android:layout_width=\"match_parent\"\r\n                android:layout_height=\"match_parent\"\r\n                android:background=\"@color/dark_700\"\r\n                android:orientation=\"vertical\">\r\n\r\n                <LinearLayout\r\n                    android:layout_width=\"match_parent\"\r\n                    android:layout_height=\"wrap_content\"\r\n                    android:gravity=\"center\"\r\n                    android:layout_margin=\"@dimen/smaller_margin\"\r\n                    android:orientation=\"horizontal\">\r\n                    <TextView\r\n                        android:text=\"@string/dua_collection\"\r\n                        android:layout_marginStart=\"@dimen/medium_margin\"\r\n                        android:layout_width=\"match_parent\"\r\n                        android:layout_height=\"wrap_content\"\r\n                        android:textSize=\"@dimen/large_text_size\"\r\n                        android:textStyle=\"bold\"/>\r\n                </LinearLayout>\r\n\r\n                <androidx.recyclerview.widget.RecyclerView\r\n                    android:id=\"@+id/rvDuaCollection\"\r\n                    android:layout_width=\"match_parent\"\r\n                    android:layout_height=\"match_parent\"\r\n                    android:layout_marginBottom=\"@dimen/smaller_margin\"\r\n                    tools:listitem=\"@layout/list_dua\"/>\r\n\r\n            </LinearLayout>\r\n        </androidx.cardview.widget.CardView>\r\n\r\n    </LinearLayout>\r\n\r\n</layout>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/layout/layout_info.xml	(revision eb3a97fe3e1e4e39c4d0f9ab965337c48959d492)
++++ app/src/main/res/layout/layout_info.xml	(date 1609066580119)
+@@ -24,11 +24,10 @@
+                     android:id="@+id/tv_imsak_info_title"
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+-                    android:textStyle="bold"
+                     android:layout_marginStart="@dimen/medium_margin"
+                     android:layout_marginTop="@dimen/medium_margin"
+                     android:text="@string/imsak_info"
+-                    android:textSize="@dimen/large_text_size"
++                    android:textStyle="bold"
+                     app:layout_constraintStart_toStartOf="parent"
+                     app:layout_constraintTop_toTopOf="parent" />
+ 
+@@ -80,7 +79,6 @@
+                 android:layout_width="match_parent"
+                 android:layout_height="match_parent"
+                 android:background="@color/dark_700"
+-                android:paddingTop="@dimen/smaller_margin"
+                 android:orientation="vertical">
+ 
+                 <LinearLayout
+@@ -88,17 +86,17 @@
+                     android:layout_width="wrap_content"
+                     android:layout_height="wrap_content"
+                     android:gravity="center"
++                    android:layout_marginTop="@dimen/medium_margin"
+                     app:layout_constraintStart_toStartOf="parent"
+                     app:layout_constraintTop_toTopOf="parent">
+ 
+                     <TextView
+-                        android:id="@+id/textView3"
++                        android:id="@+id/tv_title_date_info"
+                         android:layout_width="wrap_content"
+                         android:layout_height="wrap_content"
++                        android:textStyle="bold"
+                         android:layout_marginStart="@dimen/medium_margin"
+-                        android:text="@string/gregorian_to_hijri"
+-                        android:textSize="@dimen/large_text_size"
+-                        android:textStyle="bold"/>
++                        android:text="@string/gregorian_to_hijri" />
+                 </LinearLayout>
+ 
+ 
+@@ -109,6 +107,7 @@
+                     android:layout_marginStart="@dimen/medium_margin"
+                     android:layout_marginTop="@dimen/smaller_margin"
+                     android:stretchColumns="*"
++                    android:textStyle="bold"
+                     app:layout_constraintEnd_toEndOf="parent"
+                     app:layout_constraintStart_toStartOf="parent"
+                     app:layout_constraintTop_toBottomOf="@+id/ll_title_date_info">
+@@ -238,16 +237,16 @@
+                 <LinearLayout
+                     android:layout_width="match_parent"
+                     android:layout_height="wrap_content"
++                    android:layout_marginTop="@dimen/medium_margin"
++                    android:layout_marginBottom="@dimen/smaller_margin"
+                     android:gravity="center"
+-                    android:layout_margin="@dimen/smaller_margin"
+                     android:orientation="horizontal">
+                     <TextView
+-                        android:text="@string/dua_collection"
+-                        android:layout_marginStart="@dimen/medium_margin"
+                         android:layout_width="match_parent"
+                         android:layout_height="wrap_content"
+-                        android:textSize="@dimen/large_text_size"
+-                        android:textStyle="bold"/>
++                        android:textStyle="bold"
++                        android:text="@string/dua_collection"
++                        android:layout_marginStart="@dimen/medium_margin" />
+                 </LinearLayout>
+ 
+                 <androidx.recyclerview.widget.RecyclerView
+@@ -259,7 +258,6 @@
+ 
+             </LinearLayout>
+         </androidx.cardview.widget.CardView>
+-
+     </LinearLayout>
+ 
+ </layout>
+\ No newline at end of file
+Index: app/src/main/java/com/programmergabut/solatkuy/data/PrayerRepositoryImpl.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.programmergabut.solatkuy.data\r\n\r\nimport android.util.Log\r\nimport androidx.lifecycle.LiveData\r\nimport androidx.lifecycle.MediatorLiveData\r\nimport com.programmergabut.solatkuy.data.local.dao.*\r\nimport com.programmergabut.solatkuy.data.local.localentity.*\r\nimport com.programmergabut.solatkuy.data.remote.RemoteDataSourceAladhan\r\nimport com.programmergabut.solatkuy.data.remote.RemoteDataSourceAladhanImpl\r\nimport com.programmergabut.solatkuy.data.remote.remoteentity.compassJson.CompassResponse\r\nimport com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.PrayerResponse\r\nimport com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.Timings\r\nimport com.programmergabut.solatkuy.util.Resource\r\nimport com.programmergabut.solatkuy.util.EnumConfig\r\nimport com.programmergabut.solatkuy.util.LogConfig.Companion.ERROR\r\nimport kotlinx.coroutines.CoroutineScope\r\nimport kotlinx.coroutines.Deferred\r\nimport kotlinx.coroutines.Dispatchers\r\nimport kotlinx.coroutines.Dispatchers.IO\r\nimport kotlinx.coroutines.async\r\nimport java.lang.Exception\r\nimport java.text.SimpleDateFormat\r\nimport java.util.*\r\nimport javax.inject.Inject\r\n\r\n/*\r\n * Created by Katili Jiwo Adi Wiyono on 26/03/20.\r\n */\r\n\r\nclass PrayerRepositoryImpl @Inject constructor(\r\n    private val remoteDataSourceAladhan: RemoteDataSourceAladhan,\r\n    private val notifiedPrayerDao: NotifiedPrayerDao,\r\n    private val msApi1Dao: MsApi1Dao,\r\n    private val msSettingDao: MsSettingDao,\r\n): PrayerRepository {\r\n\r\n    /* Room */\r\n    /* NotifiedPrayer */\r\n    override suspend fun updatePrayerIsNotified(prayerName: String, isNotified: Boolean) = notifiedPrayerDao.updatePrayerIsNotified(prayerName, isNotified)\r\n    override fun updatePrayerTime(prayerName: String, prayerTime: String) = notifiedPrayerDao.updatePrayerTime(prayerName, prayerTime)\r\n    override fun getListNotifiedPrayerSync() = notifiedPrayerDao.getListNotifiedPrayerSync()\r\n\r\n    /* MsApi1 */\r\n    override fun getMsApi1(): LiveData<MsApi1> = msApi1Dao.getMsApi1()\r\n    override suspend fun updateMsApi1(msApi1: MsApi1) = msApi1Dao.updateMsApi1(msApi1.api1ID, msApi1.latitude,\r\n        msApi1.longitude, msApi1.method, msApi1.month, msApi1.year)\r\n\r\n    /* MsSetting */\r\n    override fun getMsSetting(): LiveData<MsSetting> = msSettingDao.getMsSetting()\r\n    override suspend fun updateIsUsingDBQuotes(isUsingDBQuotes: Boolean) = msSettingDao.updateIsUsingDBQuotes(isUsingDBQuotes)\r\n    override suspend fun updateMsApi1MonthAndYear(api1ID: Int, month: String, year:String) = msApi1Dao.updateMsApi1MonthAndYear(api1ID, month, year)\r\n    override suspend fun updateIsHasOpenApp(isHasOpen: Boolean) = msSettingDao.updateIsHasOpenApp(isHasOpen)\r\n\r\n    /*\r\n     * Retrofit\r\n     */\r\n    override suspend fun fetchCompass(msApi1: MsApi1): Deferred<CompassResponse> {\r\n      return CoroutineScope(IO).async {\r\n          lateinit var response: CompassResponse\r\n          try {\r\n              response = remoteDataSourceAladhan.fetchCompassApi(msApi1)\r\n              response.statusResponse = \"1\"\r\n          }\r\n          catch (ex: Exception){\r\n              response = CompassResponse()\r\n              response.statusResponse = \"-1\"\r\n              response.messageResponse = ex.message.toString()\r\n          }\r\n          response\r\n      }\r\n    }\r\n    override suspend fun fetchPrayerApi(msApi1: MsApi1): Deferred<PrayerResponse> {\r\n        return CoroutineScope(IO).async {\r\n            lateinit var response: PrayerResponse\r\n            try {\r\n                response = remoteDataSourceAladhan.fetchPrayerApi(msApi1)\r\n                response.statusResponse= \"1\"\r\n            }\r\n            catch (ex: Exception){\r\n                response = PrayerResponse()\r\n                response.statusResponse= \"-1\"\r\n                response.messageResponse = ex.message.toString()\r\n            }\r\n            response\r\n        }\r\n    }\r\n\r\n    override suspend fun syncNotifiedPrayerTesting(): List<NotifiedPrayer> {\r\n\r\n        val listData = mutableListOf<NotifiedPrayer>()\r\n\r\n        try {\r\n            val map = mutableMapOf<String, String>()\r\n            map[EnumConfig.FAJR] = EnumConfig.FAJR_TIME\r\n            map[EnumConfig.DHUHR] = EnumConfig.DHUHR_TIME\r\n            map[EnumConfig.ASR] = EnumConfig.ASR_TIME\r\n            map[EnumConfig.MAGHRIB] = EnumConfig.MAGHRIB_TIME\r\n            map[EnumConfig.ISHA] = EnumConfig.ISHA_TIME\r\n            map[EnumConfig.SUNRISE] = EnumConfig.SUNRISE_TIME\r\n\r\n            map.forEach { p ->\r\n                listData.add(NotifiedPrayer(p.key, true, p.value))\r\n            }\r\n\r\n        }\r\n        catch (ex :Exception){\r\n            Log.d(ERROR,\"PrayerRepository, not connected to internet and using the offline data\")\r\n            return emptyList()\r\n        }\r\n\r\n        return listData\r\n    }\r\n}\r\n\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/programmergabut/solatkuy/data/PrayerRepositoryImpl.kt	(revision eb3a97fe3e1e4e39c4d0f9ab965337c48959d492)
++++ app/src/main/java/com/programmergabut/solatkuy/data/PrayerRepositoryImpl.kt	(date 1609052965287)
+@@ -98,8 +98,10 @@
+             map[EnumConfig.ISHA] = EnumConfig.ISHA_TIME
+             map[EnumConfig.SUNRISE] = EnumConfig.SUNRISE_TIME
+ 
++            var prayerID = 1
+             map.forEach { p ->
+-                listData.add(NotifiedPrayer(p.key, true, p.value))
++                listData.add(NotifiedPrayer(prayerID, p.key, true, p.value))
++                prayerID++
+             }
+ 
+         }
+Index: app/src/main/java/com/programmergabut/solatkuy/util/EnumConfig.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.programmergabut.solatkuy.util\r\n\r\nimport com.programmergabut.solatkuy.data.local.localentity.MsApi1\r\n\r\n/*\r\n * Created by Katili Jiwo Adi Wiyono on 12/04/20.\r\n */\r\n\r\n\r\nclass EnumConfig {\r\n    companion object{\r\n\r\n        /* IS TESTING\r\n         * if you change IS_TESTING, please rebuild the project\r\n         */\r\n        const val IS_TESTING = false\r\n\r\n        /* DATABASES */\r\n        const val DATABASE_NAME = \"solatkuydb\"\r\n\r\n        /* Al-Quran */\r\n        const val STARTED_SURAH = 1\r\n        const val ENDED_SURAH = 114\r\n\r\n        /* MsApi1 */\r\n        const val START_LAT = \"0.0\"\r\n        const val START_LNG = \"0.0\"\r\n        const val START_METHOD = \"3\"\r\n        const val START_MONTH = \"1\"\r\n        const val START_YEAR = \"2020\"\r\n\r\n        /* Prayer Name */\r\n        const val FAJR = \"Fajr\"\r\n        const val DHUHR = \"Dhuhr\"\r\n        const val ASR = \"Asr\"\r\n        const val MAGHRIB = \"Maghrib\"\r\n        const val ISHA = \"Isha\"\r\n        const val SUNRISE = \"Sunrise\"\r\n        const val IMSAK = \"Imsak\"\r\n\r\n        /* Prayer Time */\r\n        const val FAJR_TIME = \"04:00\"\r\n        const val DHUHR_TIME = \"13:17\"\r\n        const val ASR_TIME = \"15:00\"\r\n        const val MAGHRIB_TIME = \"17:45\"\r\n        const val ISHA_TIME = \"19:00\"\r\n        const val SUNRISE_TIME = \"06:00\"\r\n\r\n        /* Notification */\r\n        const val ID_DUA_PENDING_INTENT = 500\r\n        const val ID_PRAYER_NOTIFICATION = 400\r\n\r\n        /* City not found */\r\n        const val CITY_NOT_FOUND_STR = \"City not found\"\r\n\r\n        /* Dua after adhan*/\r\n        const val DUA_AFTER_ADHAN_STR = \"Tap to see the dua after adhan \\uD83D\\uDE4F\"\r\n    }\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/programmergabut/solatkuy/util/EnumConfig.kt	(revision eb3a97fe3e1e4e39c4d0f9ab965337c48959d492)
++++ app/src/main/java/com/programmergabut/solatkuy/util/EnumConfig.kt	(date 1609053645862)
+@@ -22,7 +22,7 @@
+         const val STARTED_SURAH = 1
+         const val ENDED_SURAH = 114
+ 
+-        /* MsApi1 */
++        /* MsApi1 for the first populate Database data */
+         const val START_LAT = "0.0"
+         const val START_LNG = "0.0"
+         const val START_METHOD = "3"
+@@ -38,10 +38,10 @@
+         const val SUNRISE = "Sunrise"
+         const val IMSAK = "Imsak"
+ 
+-        /* Prayer Time */
++        /* Prayer Time for testing */
+         const val FAJR_TIME = "04:00"
+-        const val DHUHR_TIME = "13:17"
+-        const val ASR_TIME = "15:00"
++        const val DHUHR_TIME = "12:00"
++        const val ASR_TIME = "14:20"
+         const val MAGHRIB_TIME = "17:45"
+         const val ISHA_TIME = "19:00"
+         const val SUNRISE_TIME = "06:00"
+Index: app/src/main/res/navigation/nav_graph.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><?xml version=\"1.0\" encoding=\"utf-8\"?>\r\n<navigation xmlns:android=\"http://schemas.android.com/apk/res/android\"\r\n    xmlns:app=\"http://schemas.android.com/apk/res-auto\"\r\n    xmlns:tools=\"http://schemas.android.com/tools\"\r\n    android:id=\"@+id/nav_graph\"\r\n    app:startDestination=\"@id/fragmentMain\">\r\n\r\n    <fragment\r\n        android:id=\"@+id/fragmentCompass\"\r\n        android:name=\"com.programmergabut.solatkuy.ui.activitymain.fragmentcompass.CompassFragment\"\r\n        android:label=\"fragment_compass\"\r\n        tools:layout=\"@layout/fragment_compass\" />\r\n    <fragment\r\n        android:id=\"@+id/fragmentInfo\"\r\n        android:name=\"com.programmergabut.solatkuy.ui.activitymain.fragmentinfo.InfoFragment\"\r\n        android:label=\"fragment_info\"\r\n        tools:layout=\"@layout/fragment_info\" />\r\n    <fragment\r\n        android:id=\"@+id/fragmentMain\"\r\n        android:name=\"com.programmergabut.solatkuy.ui.activitymain.fragmentmain.MainFragment\"\r\n        android:label=\"fragment_main\"\r\n        tools:layout=\"@layout/fragment_main\" />\r\n    <fragment\r\n        android:id=\"@+id/fragmentSetting\"\r\n        android:name=\"com.programmergabut.solatkuy.ui.activitymain.fragmentsetting.SettingFragment\"\r\n        android:label=\"fragment_setting\"\r\n        tools:layout=\"@layout/fragment_setting\" />\r\n    <fragment\r\n        android:id=\"@+id/quranFragment\"\r\n        android:name=\"com.programmergabut.solatkuy.ui.activitymain.fragmentquran.QuranFragment\"\r\n        android:label=\"fragment_quran\"\r\n        tools:layout=\"@layout/fragment_quran\" />\r\n</navigation>
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/navigation/nav_graph.xml	(revision eb3a97fe3e1e4e39c4d0f9ab965337c48959d492)
++++ app/src/main/res/navigation/nav_graph.xml	(date 1609062963693)
+@@ -11,11 +11,6 @@
+         android:label="fragment_compass"
+         tools:layout="@layout/fragment_compass" />
+     <fragment
+-        android:id="@+id/fragmentInfo"
+-        android:name="com.programmergabut.solatkuy.ui.activitymain.fragmentinfo.InfoFragment"
+-        android:label="fragment_info"
+-        tools:layout="@layout/fragment_info" />
+-    <fragment
+         android:id="@+id/fragmentMain"
+         android:name="com.programmergabut.solatkuy.ui.activitymain.fragmentmain.MainFragment"
+         android:label="fragment_main"
+Index: app/src/main/java/com/programmergabut/solatkuy/ui/activitymain/fragmentsetting/SettingFragment.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.programmergabut.solatkuy.ui.activitymain.fragmentsetting\r\n\r\nimport android.Manifest\r\nimport android.app.AlertDialog\r\nimport android.app.Dialog\r\nimport android.content.Context\r\nimport android.content.DialogInterface\r\nimport android.content.pm.PackageManager\r\nimport android.location.Location\r\nimport android.location.LocationManager\r\nimport android.os.Bundle\r\nimport android.os.Looper\r\nimport android.view.LayoutInflater\r\nimport android.view.View\r\nimport android.widget.Toast\r\nimport androidx.core.app.ActivityCompat\r\nimport androidx.databinding.DataBindingUtil\r\nimport com.google.android.gms.location.FusedLocationProviderClient\r\nimport com.google.android.gms.location.LocationCallback\r\nimport com.google.android.gms.location.LocationRequest\r\nimport com.google.android.gms.location.LocationResult\r\nimport com.google.android.gms.location.LocationServices.getFusedLocationProviderClient\r\nimport com.google.android.material.bottomsheet.BottomSheetDialog\r\nimport com.programmergabut.solatkuy.R\r\nimport com.programmergabut.solatkuy.base.BaseFragment\r\nimport com.programmergabut.solatkuy.data.local.localentity.MsApi1\r\nimport com.programmergabut.solatkuy.databinding.FragmentSettingBinding\r\nimport com.programmergabut.solatkuy.databinding.LayoutAboutAuthorBinding\r\nimport com.programmergabut.solatkuy.databinding.LayoutBottomsheetBygpsBinding\r\nimport com.programmergabut.solatkuy.databinding.LayoutBottomsheetBylatitudelongitudeBinding\r\nimport com.programmergabut.solatkuy.util.EnumConfig\r\nimport com.programmergabut.solatkuy.util.EnumStatus\r\nimport com.programmergabut.solatkuy.util.helper.LocationHelper\r\nimport dagger.hilt.android.AndroidEntryPoint\r\nimport es.dmoral.toasty.Toasty\r\nimport org.joda.time.LocalDate\r\n\r\n/*\r\n * Created by Katili Jiwo Adi Wiyono on 25/03/20.\r\n */\r\n\r\n@AndroidEntryPoint\r\nclass SettingFragment(viewModelTest: FragmentSettingViewModel? = null) : BaseFragment<FragmentSettingBinding, FragmentSettingViewModel>(\r\n    R.layout.fragment_setting,\r\n    FragmentSettingViewModel::class.java, viewModelTest\r\n), View.OnClickListener {\r\n\r\n    private val ALL_PERMISSIONS = 101\r\n    private lateinit var bottomSheetDialog: BottomSheetDialog\r\n    private lateinit var mFusedLocationClient: FusedLocationProviderClient\r\n    private lateinit var dialogGpsBinding: LayoutBottomsheetBygpsBinding\r\n    private lateinit var dialogLatLngBinding: LayoutBottomsheetBylatitudelongitudeBinding\r\n\r\n    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {\r\n        super.onViewCreated(view, savedInstanceState)\r\n\r\n        bottomSheetDialog = BottomSheetDialog(requireContext())\r\n        inflateBinding()\r\n    }\r\n\r\n    override fun setListener() {\r\n        super.setListener()\r\n\r\n        binding.btnByLatitudeLongitude.setOnClickListener(this)\r\n        binding.btnByGps.setOnClickListener(this)\r\n        binding.btnSeeAuthor.setOnClickListener(this)\r\n        subscribeObserversDB()\r\n        observeErrorMsg()\r\n    }\r\n\r\n    private fun inflateBinding() {\r\n        dialogGpsBinding = DataBindingUtil.inflate(\r\n            LayoutInflater.from(requireContext()),\r\n            R.layout.layout_bottomsheet_bygps, null, true\r\n        )\r\n        dialogLatLngBinding = DataBindingUtil.inflate(\r\n            LayoutInflater.from(requireContext()),\r\n            R.layout.layout_bottomsheet_bylatitudelongitude, null, true\r\n        )\r\n    }\r\n\r\n    private fun subscribeObserversDB() {\r\n        viewModel.msApi1.observe(viewLifecycleOwner, {\r\n            val retVal = it\r\n            if(retVal != null){\r\n                val city = LocationHelper.getCity(requireContext(), retVal.latitude.toDouble(), retVal.longitude.toDouble())\r\n                binding.tvViewLatitude.text = retVal.latitude + \" °S\"\r\n                binding.tvViewLongitude.text = retVal.longitude + \" °E\"\r\n                binding.tvViewCity.text = city ?: EnumConfig.CITY_NOT_FOUND_STR\r\n            }\r\n        })\r\n    }\r\n\r\n    private fun observeErrorMsg() {\r\n        viewModel.errUpdateMsApi1Status.observe(viewLifecycleOwner, {\r\n            val errMsg = viewModel.getErrUpdateMsApi1()\r\n            if(errMsg.isEmpty())\r\n                return@observe\r\n\r\n            when(it){\r\n                EnumStatus.SUCCESS -> {\r\n                    Toasty.success(requireContext(),errMsg , Toasty.LENGTH_SHORT).show()\r\n                    bottomSheetDialog.dismiss()\r\n                }\r\n                EnumStatus.ERROR -> {\r\n                    Toasty.error(requireContext(), errMsg, Toasty.LENGTH_SHORT).show()\r\n                }\r\n                else -> {/*NO-OP*/}\r\n            }\r\n        })\r\n    }\r\n\r\n    override fun onClick(v: View?) {\r\n        when(v?.id){\r\n            R.id.btn_by_latitude_longitude -> {\r\n                bottomSheetDialog.apply{\r\n                    setContentView(dialogLatLngBinding.root)\r\n                    show()\r\n                }\r\n                dialogLatLngBinding.btnProceedByLL.setOnClickListener{\r\n                    val latitude = dialogLatLngBinding.etLlDialogLatitude.text.toString().trim()\r\n                    val longitude = dialogLatLngBinding.etLlDialogLongitude.text.toString().trim()\r\n                    insertLocationSettingToDb(latitude, longitude)\r\n                }\r\n            }\r\n            R.id.btn_by_gps -> {\r\n                bottomSheetDialog.apply{\r\n                    setContentView(dialogGpsBinding.root)\r\n                    show()\r\n                    getGPSLocation()\r\n                }\r\n                dialogGpsBinding.btnProceedByGps.setOnClickListener{\r\n                    val latitude = dialogGpsBinding.tvGpsDialogLatitude.text.toString().trim()\r\n                    val longitude = dialogGpsBinding.tvGpsDialogLongitude.text.toString().trim()\r\n                    insertLocationSettingToDb(latitude, longitude)\r\n                }\r\n            }\r\n            R.id.btn_seeAuthor -> {\r\n                val dialog = Dialog(requireContext())\r\n                val dialogAuthorBinding = DataBindingUtil.inflate<LayoutAboutAuthorBinding>(\r\n                    LayoutInflater.from(requireContext()),\r\n                    R.layout.layout_about_author, null, true\r\n                )\r\n                dialog.setContentView(dialogAuthorBinding.root)\r\n                dialog.show()\r\n            }\r\n        }\r\n    }\r\n\r\n    /* Database Transaction */\r\n    private fun insertLocationSettingToDb(latitude: String, longitude: String) {\r\n        val currDate = LocalDate()\r\n        val data = MsApi1(\r\n            1,\r\n            latitude,\r\n            longitude,\r\n            \"3\",\r\n            currDate.monthOfYear.toString(),\r\n            currDate.year.toString()\r\n        )\r\n\r\n        viewModel.updateMsApi1(data)\r\n    }\r\n\r\n    /* permission */\r\n    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {\r\n        super.onRequestPermissionsResult(requestCode, permissions, grantResults)\r\n\r\n        if(requestCode == ALL_PERMISSIONS){\r\n            if(grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED)\r\n                onUpdateLocationListener()\r\n            else\r\n                Toasty.error(requireContext(), \"All Permission Denied\", Toast.LENGTH_SHORT).show()\r\n        }\r\n\r\n    }\r\n\r\n    private fun showPermissionDialog(){\r\n        AlertDialog.Builder(requireContext())\r\n            .setTitle(\"Location Needed\")\r\n            .setMessage(\"Permission is needed to run the Gps\")\r\n            .setPositiveButton(\"ok\") { _: DialogInterface, _: Int ->\r\n                ActivityCompat.requestPermissions(\r\n                    this.requireActivity(),\r\n                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION),\r\n                    ALL_PERMISSIONS\r\n                )\r\n            }\r\n            .setNegativeButton(\"cancel\") { _: DialogInterface, _: Int ->\r\n                bottomSheetDialog.dismiss()\r\n            }\r\n            .create()\r\n            .show()\r\n    }\r\n\r\n\r\n    /* supporting function */\r\n    private fun getGPSLocation(){\r\n        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||\r\n            ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {\r\n            mFusedLocationClient = getFusedLocationProviderClient(requireContext())\r\n            onFailedListener()\r\n            onUpdateLocationListener()\r\n        }\r\n        else {\r\n            showPermissionDialog()\r\n            return\r\n        }\r\n    }\r\n\r\n    private fun onFailedListener() {\r\n        val lm: LocationManager = requireContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager\r\n        var gpsEnabled = false\r\n        var networkEnabled = false\r\n\r\n        try {\r\n            gpsEnabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER)\r\n        } catch (ex: java.lang.Exception) { }\r\n\r\n        try {\r\n            networkEnabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER)\r\n        } catch (ex: java.lang.Exception) { }\r\n\r\n        if (!gpsEnabled && !networkEnabled)\r\n            setGpsComponentState(EnumStatus.ERROR)\r\n        else\r\n            setGpsComponentState(EnumStatus.LOADING)\r\n    }\r\n\r\n    private fun onUpdateLocationListener() {\r\n        val mLocationRequest: LocationRequest?\r\n        mLocationRequest = LocationRequest()\r\n        mLocationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY\r\n        mLocationRequest.interval = 10 * 10000 /* 1 minute */\r\n        mLocationRequest.fastestInterval = 10 * 10000 /* 1 minute */\r\n\r\n        if (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&\r\n            ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {\r\n            showPermissionDialog()\r\n            return\r\n        }\r\n\r\n        getFusedLocationProviderClient(requireContext()).requestLocationUpdates(mLocationRequest, object : LocationCallback() {\r\n            override fun onLocationResult(locationResult: LocationResult) {\r\n                onLocationChanged(locationResult.lastLocation)\r\n            }\r\n            private fun onLocationChanged(it: Location?) {\r\n                if(it == null) return\r\n                setGpsComponentState(EnumStatus.SUCCESS)\r\n                dialogGpsBinding.tvGpsDialogLatitude.text = it.latitude.toString()\r\n                dialogGpsBinding.tvGpsDialogLongitude.text= it.longitude.toString()\r\n\r\n            }\r\n        }, Looper.myLooper())\r\n\r\n    }\r\n\r\n    private fun setGpsComponentState(status: EnumStatus){\r\n        when(status){\r\n            EnumStatus.SUCCESS -> {\r\n                dialogGpsBinding.tvViewLatitude.visibility = View.VISIBLE\r\n                dialogGpsBinding.tvViewLongitude.visibility = View.VISIBLE\r\n                dialogGpsBinding.tvGpsDialogLongitude.visibility = View.VISIBLE\r\n                dialogGpsBinding.tvGpsDialogLatitude.visibility = View.VISIBLE\r\n                dialogGpsBinding.ivWarning.visibility = View.INVISIBLE\r\n                dialogGpsBinding.tvWarning.visibility = View.INVISIBLE\r\n            }\r\n            EnumStatus.LOADING -> {\r\n                dialogGpsBinding.ivWarning.visibility = View.VISIBLE\r\n                dialogGpsBinding.tvWarning.visibility = View.VISIBLE\r\n                dialogGpsBinding.tvWarning.text = getString(R.string.loading)\r\n                dialogGpsBinding.tvViewLatitude.visibility = View.INVISIBLE\r\n                dialogGpsBinding.tvViewLongitude.visibility = View.INVISIBLE\r\n                dialogGpsBinding.tvGpsDialogLongitude.visibility = View.INVISIBLE\r\n                dialogGpsBinding.tvGpsDialogLatitude.visibility = View.INVISIBLE\r\n            }\r\n            EnumStatus.ERROR -> {\r\n                dialogGpsBinding.ivWarning.visibility = View.VISIBLE\r\n                dialogGpsBinding.tvWarning.visibility = View.VISIBLE\r\n                dialogGpsBinding.tvWarning.text = getString(R.string.please_enable_your_location)\r\n                dialogGpsBinding.tvGpsDialogLongitude.visibility = View.INVISIBLE\r\n                dialogGpsBinding.tvGpsDialogLatitude.visibility = View.INVISIBLE\r\n                dialogGpsBinding.tvViewLatitude.visibility = View.INVISIBLE\r\n                dialogGpsBinding.tvViewLongitude.visibility = View.INVISIBLE\r\n            }\r\n        }\r\n    }\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/programmergabut/solatkuy/ui/activitymain/fragmentsetting/SettingFragment.kt	(revision eb3a97fe3e1e4e39c4d0f9ab965337c48959d492)
++++ app/src/main/java/com/programmergabut/solatkuy/ui/activitymain/fragmentsetting/SettingFragment.kt	(date 1609065918451)
+@@ -80,8 +80,7 @@
+     }
+ 
+     private fun subscribeObserversDB() {
+-        viewModel.msApi1.observe(viewLifecycleOwner, {
+-            val retVal = it
++        viewModel.msApi1.observe(viewLifecycleOwner, { retVal ->
+             if(retVal != null){
+                 val city = LocationHelper.getCity(requireContext(), retVal.latitude.toDouble(), retVal.longitude.toDouble())
+                 binding.tvViewLatitude.text = retVal.latitude + " °S"
+Index: app/src/main/java/com/programmergabut/solatkuy/broadcaster/PrayerBroadcastReceiver.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.programmergabut.solatkuy.broadcaster\r\n\r\nimport android.app.AlarmManager\r\nimport android.app.PendingIntent\r\nimport android.content.BroadcastReceiver\r\nimport android.content.Context\r\nimport android.content.Intent\r\nimport android.os.Build\r\nimport android.os.Bundle\r\nimport android.util.Log\r\nimport com.programmergabut.solatkuy.data.local.localentity.NotifiedPrayer\r\nimport com.programmergabut.solatkuy.ui.activityprayer.DuaActivity\r\nimport com.programmergabut.solatkuy.util.EnumConfig\r\nimport com.programmergabut.solatkuy.util.LogConfig.Companion.ERROR\r\nimport com.programmergabut.solatkuy.util.helper.NotificationHelper\r\nimport com.programmergabut.solatkuy.util.generator.DuaGenerator\r\nimport java.util.*\r\n\r\n/*\r\n * Created by Katili Jiwo Adi Wiyono on 27/03/20.\r\n */\r\n\r\nclass PrayerBroadcastReceiver: BroadcastReceiver() {\r\n\r\n    companion object{\r\n        const val PRAYER_ID = \"prayer_id\"\r\n        const val PRAYER_NAME = \"prayer_name\"\r\n        const val PRAYER_TIME = \"prayer_time\"\r\n        const val PRAYER_CITY = \"prayer_city\"\r\n        const val LIST_PRAYER_BUNDLE = \"list_prayer_bundle\"\r\n\r\n        const val LIST_PRAYER_ID = \"list_PID\"\r\n        const val LIST_PRAYER_NAME = \"list_PName\"\r\n        const val LIST_PRAYER_TIME = \"list_PTime\"\r\n        const val LIST_PRAYER_IS_NOTIFIED = \"list_PIsNotified\"\r\n        const val LIST_PRAYER_CITY = \"listPrayerCity\"\r\n    }\r\n\r\n    override fun onReceive(context: Context?, intent: Intent?) {\r\n        val mNotificationHelper = NotificationHelper(context!!)\r\n\r\n        val pID = intent?.getIntExtra(PRAYER_ID, -1)\r\n        val pName = intent?.getStringExtra(PRAYER_NAME)\r\n        val pTime = intent?.getStringExtra(PRAYER_TIME)\r\n        var pCity = intent?.getStringExtra(PRAYER_CITY)\r\n        val listPrayerBundle = intent?.extras?.getBundle(LIST_PRAYER_BUNDLE)\r\n\r\n        val listData = bundleDeserializer(listPrayerBundle)\r\n\r\n        if(pID == -1 || pName.isNullOrEmpty() || pTime.isNullOrEmpty() || listPrayerBundle == null){\r\n            Log.d(ERROR,\"PrayerBroadcastReceiver, pID == -1 || pName.isNullOrEmpty() || pTime.isNullOrEmpty() || listPrayerBundle == null\")\r\n            throw Exception(\"PrayerBroadcastReceiver\")\r\n        }\r\n\r\n        removeAllNotification(context, listData)\r\n\r\n        if(pCity == null)\r\n            pCity = \"-\"\r\n\r\n        val duaIntent = intentToDuaAfterAdhanGenerator(context)\r\n\r\n        /*\r\n        * Deprecated, 4 June 2020\r\n        * because the changes of the notification mechanism\r\n        * first fire all the data then cancel all alarm manager when the notification come, then fire it all again\r\n        * also remove the more time feature\r\n\r\n          when (pID!!) {\r\n            EnumConfig.nId1 -> {\r\n                val pendingIntent = PendingIntent.getActivity(context, EnumConfig.nId1, nextIntent, PendingIntent.FLAG_UPDATE_CURRENT)\r\n\r\n                val nb = mNotificationHelper.getPrayerReminderNC(EnumConfig.nId1, pTime!!, pCity!!, pName!!, listPrayerBundle, pendingIntent)\r\n                mNotificationHelper.getManager()?.notify(EnumConfig.nId1, nb.build())\r\n            }\r\n            EnumConfig.nId2 -> {\r\n                val pendingIntent = PendingIntent.getActivity(context, EnumConfig.nId2, nextIntent, PendingIntent.FLAG_UPDATE_CURRENT)\r\n\r\n                val nb = mNotificationHelper.getPrayerReminderNC(EnumConfig.nId2, pTime!!, pCity!!, pName!!, listPrayerBundle, pendingIntent)\r\n                mNotificationHelper.getManager()?.notify(EnumConfig.nId2, nb.build())\r\n            }\r\n            else -> {\r\n                val pendingIntent = PendingIntent.getActivity(context, EnumConfig.nIdMain, nextIntent, PendingIntent.FLAG_UPDATE_CURRENT)\r\n\r\n                val nb = mNotificationHelper.getPrayerReminderNC(pID!!, pTime!!, pCity!!, pName!!, listPrayerBundle, pendingIntent)\r\n                mNotificationHelper.getManager()?.notify(EnumConfig.nIdMain, nb.build())\r\n\r\n                executeNextNotification(listPrayerBundle,context, pCity!!)\r\n            }\r\n        } */\r\n\r\n        val pendingIntent = PendingIntent.getActivity(context, EnumConfig.ID_DUA_PENDING_INTENT, duaIntent, PendingIntent.FLAG_UPDATE_CURRENT)\r\n\r\n        val nb = mNotificationHelper.getPrayerReminderNC(/* pID!!,*/ pTime, pCity, pName, /* listPrayerBundle, */ pendingIntent)\r\n        mNotificationHelper.getManager()?.notify(EnumConfig.ID_PRAYER_NOTIFICATION, nb.build())\r\n\r\n        executeNextNotification(listData, listPrayerBundle, context, pCity)\r\n    }\r\n\r\n    private fun removeAllNotification(context: Context, listData: MutableList<NotifiedPrayer>){\r\n        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager\r\n        val intent = Intent(context, PrayerBroadcastReceiver::class.java)\r\n\r\n        for (id in 1 until listData.size){\r\n            val pendingIntent = PendingIntent.getBroadcast(context, id, intent, 0)\r\n            alarmManager.cancel(pendingIntent)\r\n        }\r\n    }\r\n\r\n    private fun executeNextNotification(listPrayer: MutableList<NotifiedPrayer>, listPrayerBundle: Bundle?, context: Context, pCity: String) {\r\n\r\n        val intent = Intent(context, PrayerBroadcastReceiver::class.java)\r\n        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager\r\n\r\n        /* remove img_sunrise */\r\n        val newPrayerList = listPrayer.filter { x -> x.prayerName !=  EnumConfig.SUNRISE} as MutableList<NotifiedPrayer>\r\n\r\n        newPrayerList.sortBy { prayer -> prayer.prayerID }\r\n        newPrayerList.forEach{ prayer ->\r\n\r\n            val arrPrayer = prayer.prayerTime.split(\":\")\r\n            val hour = arrPrayer[0].trim()\r\n            val minute = arrPrayer[1].split(\" \")[0].trim()\r\n\r\n            val calendar = Calendar.getInstance()\r\n            calendar.set(Calendar.HOUR_OF_DAY, hour.toInt())\r\n            calendar.set(Calendar.MINUTE, minute.toInt())\r\n            calendar.set(Calendar.SECOND, 0)\r\n\r\n            intent.putExtra(PRAYER_ID, prayer.prayerID)\r\n            intent.putExtra(PRAYER_NAME, prayer.prayerName)\r\n            intent.putExtra(PRAYER_TIME, prayer.prayerTime)\r\n            intent.putExtra(PRAYER_CITY, pCity)\r\n            intent.putExtra(LIST_PRAYER_BUNDLE, listPrayerBundle)\r\n\r\n            val pendingIntent = PendingIntent.getBroadcast(context, prayer.prayerID, intent, 0)\r\n\r\n            if(calendar.before(Calendar.getInstance()))\r\n                calendar.add(Calendar.DATE, 1)\r\n\r\n            if(prayer.isNotified)\r\n                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)\r\n                    alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)\r\n                else\r\n                    alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)\r\n            else\r\n                alarmManager.cancel(pendingIntent)\r\n        }\r\n\r\n        /*\r\n        * Deprecated, 4 June 2020\r\n        * because the changes of the notification mechanism\r\n        * first fire all the data then cancel all alarm manager when the notification come, then fire it all again\r\n        * also remove the more time feature\r\n\r\n        val selID = SelectPrayerHelper.selNextPrayerByLastID(newList, pID!!)\r\n        //val selID = NotifiedPrayer(2,\"mantap 2\",true,\"18:46\") //#testing purpose\r\n\r\n        selID?.let{\r\n\r\n            val arrPrayer = it.prayerTime.split(\":\")\r\n\r\n            val hour = arrPrayer[0].trim()\r\n            val minute = arrPrayer[1].split(\" \")[0].trim()\r\n\r\n            val c = Calendar.getInstance()\r\n            c.set(Calendar.HOUR_OF_DAY, hour.toInt())\r\n            c.set(Calendar.MINUTE, minute.toInt())\r\n            c.set(Calendar.SECOND, 0)\r\n\r\n            intent.putExtra(\"prayer_id\", it.prayerID)\r\n            intent.putExtra(\"prayer_name\", it.prayerName)\r\n            intent.putExtra(\"prayer_time\", it.prayerTime)\r\n            intent.putExtra(\"prayer_city\", pCity)\r\n            intent.putExtra(\"list_prayer_bundle\", listPrayerBundle)\r\n\r\n            val pendingIntent = PendingIntent.getBroadcast(context, it.prayerID, intent, 0)\r\n\r\n            if(c.before(Calendar.getInstance()))\r\n                c.add(Calendar.DATE, 1)\r\n\r\n            if(it.isNotified)\r\n                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)\r\n                    alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, c.timeInMillis, pendingIntent)\r\n                else\r\n                    alarmManager.setExact(AlarmManager.RTC_WAKEUP, c.timeInMillis, pendingIntent)\r\n            else\r\n                alarmManager.cancel(pendingIntent)\r\n        } */\r\n    }\r\n\r\n    private fun bundleDeserializer(listPrayerBundle: Bundle?): MutableList<NotifiedPrayer> {\r\n\r\n        val listData = mutableListOf<NotifiedPrayer>()\r\n\r\n        val listPrayerID  =  listPrayerBundle?.getIntegerArrayList(LIST_PRAYER_ID)\r\n        val listPrayerName = listPrayerBundle?.getStringArrayList(LIST_PRAYER_NAME)\r\n        val listPrayerTime = listPrayerBundle?.getStringArrayList(LIST_PRAYER_TIME)\r\n        val listPrayerIsNotified = listPrayerBundle?.getIntegerArrayList(LIST_PRAYER_IS_NOTIFIED)\r\n        /* val listPCity = listPrayerBundle?.getStringArrayList(LIST_PRAYER_CITY) */\r\n\r\n        val listCount = listPrayerID?.count()\r\n\r\n        for(i in 0 until listCount!!){\r\n\r\n            val isNotified: Boolean = listPrayerIsNotified!![i] == 1\r\n\r\n            listData.add(\r\n                NotifiedPrayer(\r\n                    listPrayerID[i],\r\n                    listPrayerName?.get(i)!!,\r\n                    isNotified,\r\n                    listPrayerTime?.get(i)!!\r\n                )\r\n            )\r\n        }\r\n\r\n        return listData\r\n    }\r\n\r\n    private fun intentToDuaAfterAdhanGenerator(context: Context): Intent {\r\n        val intent = Intent(context, DuaActivity::class.java)\r\n        val duaAfterAdhan = DuaGenerator.getListDua().find { x -> x.id == 1}\r\n\r\n        intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK\r\n        intent.putExtra(DuaActivity.DUA_TITLE, duaAfterAdhan?.title)\r\n        intent.putExtra(DuaActivity.DUA_AR, duaAfterAdhan?.arab)\r\n        intent.putExtra(DuaActivity.DUA_LT, duaAfterAdhan?.latin)\r\n        intent.putExtra(DuaActivity.DUA_EN, duaAfterAdhan?.english)\r\n        intent.putExtra(DuaActivity.DUA_IN, duaAfterAdhan?.indonesia)\r\n        intent.putExtra(DuaActivity.DUA_REF, duaAfterAdhan?.reference)\r\n\r\n        return intent\r\n    }\r\n\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/programmergabut/solatkuy/broadcaster/PrayerBroadcastReceiver.kt	(revision eb3a97fe3e1e4e39c4d0f9ab965337c48959d492)
++++ app/src/main/java/com/programmergabut/solatkuy/broadcaster/PrayerBroadcastReceiver.kt	(date 1609049655323)
+@@ -37,6 +37,9 @@
+     }
+ 
+     override fun onReceive(context: Context?, intent: Intent?) {
++
++        Log.d("<ERROR>","PrayerBroadcastReceiver, pID == -1 || pName.isNullOrEmpty() || pTime.isNullOrEmpty() || listPrayerBundle == null")
++
+         val mNotificationHelper = NotificationHelper(context!!)
+ 
+         val pID = intent?.getIntExtra(PRAYER_ID, -1)
+@@ -48,7 +51,7 @@
+         val listData = bundleDeserializer(listPrayerBundle)
+ 
+         if(pID == -1 || pName.isNullOrEmpty() || pTime.isNullOrEmpty() || listPrayerBundle == null){
+-            Log.d(ERROR,"PrayerBroadcastReceiver, pID == -1 || pName.isNullOrEmpty() || pTime.isNullOrEmpty() || listPrayerBundle == null")
++            Log.d("<ERROR>","PrayerBroadcastReceiver, pID == -1 || pName.isNullOrEmpty() || pTime.isNullOrEmpty() || listPrayerBundle == null")
+             throw Exception("PrayerBroadcastReceiver")
+         }
+ 
+Index: app/src/main/res/values/strings.xml
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+><resources>\r\n    <item name=\"item_click_support\" type=\"id\" />\r\n\r\n    <string name=\"app_name\">Solat Kuy</string>\r\n    <string name=\"welcome_dialog\">Welcome to Solat Kuy! \\n Solat Kuy is a reminder prayer time application \\n\\n in order to start this app \\nplease select your location</string>\r\n\r\n    <!--PRAYER NAME-->\r\n    <string name=\"fajr\">Fajr</string>\r\n    <string name=\"dhuhr\">Dhuhr</string>\r\n    <string name=\"asr\">Asr</string>\r\n    <string name=\"maghrib\">Maghrib</string>\r\n    <string name=\"isha\">Isha</string>\r\n\r\n    <string name=\"loading\">Loading..</string>\r\n    <string name=\"prayer_name\">Prayer Name</string>\r\n    <string name=\"prayer_time\">Prayer Time</string>\r\n    <string name=\"compass\">Compass</string>\r\n    <string name=\"setting\">Setting</string>\r\n    <string name=\"info\">Info</string>\r\n    <string name=\"next_prayer_is_dhuhr\">Next prayer is Dhuhr</string>\r\n\r\n    <!--LOCATION-->\r\n    <string name=\"changelocation\">Change Location</string>\r\n    <string name=\"by_latitude_amp_longitude\"><![CDATA[By Latitude & Longitude]]></string>\r\n    <string name=\"by_gps\">By GPS</string>\r\n    <string name=\"latitude\">Latitude</string>\r\n    <string name=\"longitude\">Longitude</string>\r\n    <string name=\"current_location\">Current Location</string>\r\n    <string name=\"city\">City</string>\r\n\r\n    <!--QIBLA COMPASS-->\r\n    <string name=\"compass_art\">Compass Art:</string>\r\n    <string name=\"qibla\">Qibla degrees in \\n your location</string>\r\n    <string name=\"please_tilt_your_phone_until_the_image_is_balanced\">Please calibrate your phone compass before using this feature</string>\r\n    <string name=\"please_do_this_move_before_using_the_compass_to_calibrate_the_compass\">Please do this move before using the compass, in order to calibrate the compass</string>\r\n\r\n    <!--ABOUT-->\r\n    <string name=\"see_author_and_credit\">see author and credit</string>\r\n    <string name=\"about_developer\">Solat Kuy is an open source reminder prayer \\n time app, created to remind us to pray \uD83C\uDF19 \\n\\n feel free to see and contribute </string>\r\n    <string name=\"github_link\">https://github.com/jiwomdf/Solat-Kuy-Android-MVVM-with-Coroutine</string>\r\n    <string name=\"powered_by\">Powered by</string>\r\n    <string name=\"https_aladhan_com\">https://aladhan.com</string>\r\n    <string name=\"katili_jiwo_a_w\">© Katili Jiwo A.W.</string>\r\n    <string name=\"author_credit\">Author &amp; Credit</string>\r\n    <string name=\"https_cleanpng_com\">https://cleanpng.com</string>\r\n    <string name=\"https_unsplash_com\">https://unsplash.com</string>\r\n    <string name=\"images\">Images: </string>\r\n    <string name=\"api\">Api: </string>\r\n\r\n    <!--GREGORIAN TO HIJRI-->\r\n    <string name=\"imsak_info\">Imsak Info</string>\r\n    <string name=\"gregorian_to_hijri\">Gregorian to Hijri</string>\r\n    <string name=\"type\">Type</string>\r\n    <string name=\"gregorian\">Gregorian</string>\r\n    <string name=\"hijri\">Hijri</string>\r\n    <string name=\"date\">Date</string>\r\n    <string name=\"month\">Month</string>\r\n\r\n    <!--MESSAGE-->\r\n    <string name=\"fetch_failed\">fetching data failed</string>\r\n    <string name=\"fetch_failed_na\">N/A</string>\r\n    <string name=\"please_enable_your_location\">please enable your location</string>\r\n    <string name=\"text_error_title\">Error Occurred</string>\r\n    <string name=\"text_error_dsc\">Sorry.. there is some error, please try again</string>\r\n\r\n    <string name=\"hide\">Hide</string>\r\n    <string name=\"day\">Day</string>\r\n    <string name=\"proceeded\">Proceed</string>\r\n    <string name=\"dua_collection\">Dua Collection</string>\r\n    <string name=\"latin\">Latin</string>\r\n    <string name=\"english\">English</string>\r\n    <string name=\"indonesia\">Indonesia</string>\r\n    <string name=\"notification_icon\">notification_icon</string>\r\n    <string name=\"reference\">Reference</string>\r\n    <string name=\"locationicon\">locationIcon</string>\r\n    <string name=\"abouticon\">aboutIcon</string>\r\n    <string name=\"notactivelocationicon\">notActiveLocationIcon</string>\r\n    <string name=\"solatkuyicon\">solatKuyIcon</string>\r\n    <string name=\"widgetwallpaper\">widgetWallpaper</string>\r\n    <string name=\"holy_quran\">Holy Quran</string>\r\n    <string name=\"hello_blank_fragment\">Hello blank fragment</string>\r\n    <string name=\"search_surah_name\">Search Surah by Name</string>\r\n    <string name=\"favotite_ayah\">favotite_ayah</string>\r\n    <string name=\"please_wait_for_a_while\">Please wait for a while..</string>\r\n    <string name=\"select_the_quotes_from\">Select the quotes from</string>\r\n    <string name=\"from_fav_quote\">From favorite ayahs</string>\r\n    <string name=\"from_api\">From api.alquran.cloud</string>\r\n    <string name=\"youHaventFavAnyAyah\">You haven\\'t favorite any ayah</string>\r\n    <string name=\"unfavorite\">Unfavorite</string>\r\n    <string name=\"cancel\">Cancel</string>\r\n    <string name=\"are_you_sure_want_to_delete_this_ayah\">Are you sure want to unfavorite this ayah?</string>\r\n    <string name=\"api_alquran_cloud\">https://api.alquran.cloud</string>\r\n    <string name=\"solat_kuy\">Solat Kuy</string>\r\n    <string name=\"oke\">Oke</string>\r\n</resources>\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/res/values/strings.xml	(revision eb3a97fe3e1e4e39c4d0f9ab965337c48959d492)
++++ app/src/main/res/values/strings.xml	(date 1608956041253)
+@@ -62,6 +62,9 @@
+     <string name="please_enable_your_location">please enable your location</string>
+     <string name="text_error_title">Error Occurred</string>
+     <string name="text_error_dsc">Sorry.. there is some error, please try again</string>
++    <string name="last_read_ayah_not_found_title">Last read ayah not found</string>
++    <string name="last_read_ayah_not_found_dsc">You have not swipe any ayah, you can save the last read ayah by swipe left the ayah when reading the quran</string>
++
+ 
+     <string name="hide">Hide</string>
+     <string name="day">Day</string>
+Index: app/src/main/java/com/programmergabut/solatkuy/ui/activitymain/MainActivity.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.programmergabut.solatkuy.ui.activitymain\r\n\r\nimport android.Manifest\r\nimport android.app.AlertDialog\r\nimport android.app.Dialog\r\nimport android.content.Context\r\nimport android.content.DialogInterface\r\nimport android.content.pm.PackageManager\r\nimport android.location.Location\r\nimport android.location.LocationManager\r\nimport android.os.Bundle\r\nimport android.os.Looper\r\nimport android.view.LayoutInflater\r\nimport android.view.View\r\nimport android.view.ViewGroup\r\nimport androidx.core.app.ActivityCompat\r\nimport androidx.databinding.DataBindingUtil\r\nimport androidx.navigation.findNavController\r\nimport androidx.navigation.ui.setupWithNavController\r\nimport com.google.android.gms.location.LocationCallback\r\nimport com.google.android.gms.location.LocationRequest\r\nimport com.google.android.gms.location.LocationResult\r\nimport com.google.android.gms.location.LocationServices\r\nimport com.google.android.material.bottomsheet.BottomSheetDialog\r\nimport com.programmergabut.solatkuy.R\r\nimport com.programmergabut.solatkuy.base.BaseActivity\r\nimport com.programmergabut.solatkuy.data.local.SolatKuyRoom\r\nimport com.programmergabut.solatkuy.data.local.localentity.MsApi1\r\nimport com.programmergabut.solatkuy.databinding.ActivityMainBinding\r\nimport com.programmergabut.solatkuy.databinding.LayoutBottomsheetBygpsBinding\r\nimport com.programmergabut.solatkuy.databinding.LayoutBottomsheetBylatitudelongitudeBinding\r\nimport com.programmergabut.solatkuy.databinding.LayoutFristopenappBinding\r\nimport com.programmergabut.solatkuy.ui.SolatKuyFragmentFactory\r\nimport com.programmergabut.solatkuy.util.EnumStatus\r\nimport dagger.hilt.android.AndroidEntryPoint\r\nimport es.dmoral.toasty.Toasty\r\nimport org.joda.time.LocalDate\r\nimport javax.inject.Inject\r\n\r\n/*\r\n * Created by Katili Jiwo Adi Wiyono on 25/03/20.\r\n */\r\n@AndroidEntryPoint\r\nclass MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>(\r\n    R.layout.activity_main, MainActivityViewModel::class.java\r\n) {\r\n\r\n    private val ALL_PERMISSIONS = 101\r\n    private lateinit var bottomSheetDialog: Dialog\r\n    private lateinit var firstOpenDialog: Dialog\r\n    private lateinit var bsByGpsBinding: LayoutBottomsheetBygpsBinding\r\n    private lateinit var dialogBinding: LayoutFristopenappBinding\r\n\r\n    @Inject\r\n    lateinit var fragmentFactory: SolatKuyFragmentFactory\r\n\r\n    override fun onCreate(savedInstanceState: Bundle?) {\r\n        super.onCreate(savedInstanceState)\r\n\r\n        inflateBinding()\r\n        supportFragmentManager.fragmentFactory = fragmentFactory\r\n    }\r\n\r\n    override fun setListener() {\r\n        observeDb()\r\n        observeErrorMsg()\r\n    }\r\n\r\n    override fun onDestroy() {\r\n        setIsHasOpenAnimation(false)\r\n        super.onDestroy()\r\n    }\r\n\r\n    private fun inflateBinding() {\r\n        dialogBinding = DataBindingUtil.inflate(\r\n            LayoutInflater.from(this),\r\n            R.layout.layout_fristopenapp, null, true\r\n        )\r\n    }\r\n\r\n    private fun observeDb(){\r\n        viewModel.msSetting.observe(this, {\r\n            if(it != null){\r\n                if(it.isHasOpenApp)\r\n                    initBottomNav()\r\n                else\r\n                    initDialog()\r\n            }\r\n            else{\r\n                SolatKuyRoom.populateDatabase(getDatabase())\r\n            }\r\n        })\r\n    }\r\n\r\n    private fun observeErrorMsg() {\r\n        viewModel.errMsApi1Status.observe(this, {\r\n            val errMsg = viewModel.getErrMsApi1Msg()\r\n            if(errMsg.isEmpty())\r\n                return@observe\r\n\r\n            when(it) {\r\n                EnumStatus.SUCCESS -> {\r\n                    Toasty.success(this, errMsg, Toasty.LENGTH_SHORT).show()\r\n                    updateIsHasOpenApp()\r\n                }\r\n                EnumStatus.ERROR -> {\r\n                    Toasty.error(this, errMsg, Toasty.LENGTH_SHORT).show()\r\n                }\r\n                else -> {/* NO-OP */}\r\n            }\r\n        })\r\n    }\r\n\r\n    private fun initDialog() {\r\n        firstOpenDialog =  Dialog(this@MainActivity)\r\n        firstOpenDialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)\r\n        firstOpenDialog.setCancelable(false)\r\n        firstOpenDialog.setContentView(dialogBinding.root)\r\n        firstOpenDialog.show()\r\n\r\n        btnSetLatitudeLongitude()\r\n    }\r\n\r\n    private fun initBottomNav() {\r\n        try{\r\n            binding.bottomNavigation.setupWithNavController(binding.navHostFragment.findNavController())\r\n            binding.navHostFragment.findNavController()\r\n                .addOnDestinationChangedListener { _, destination, _ ->\r\n                    when(destination.id){\r\n                        R.id.fragmentMain, R.id.fragmentCompass, R.id.quranFragment, R.id.fragmentInfo, R.id.fragmentSetting ->\r\n                            binding.bottomNavigation.visibility = View.VISIBLE\r\n                        else -> binding.bottomNavigation.visibility = View.GONE\r\n                    }\r\n                }\r\n            binding.bottomNavigation.setOnNavigationItemReselectedListener {/* NO-OP */ }\r\n        }\r\n        catch (ex: Exception){\r\n            print(ex.message)\r\n        }\r\n    }\r\n\r\n    /* Function listener */\r\n    private fun btnSetLatitudeLongitude(){\r\n        bottomSheetDialog = BottomSheetDialog(this)\r\n\r\n        dialogBinding.btnByLatitudeLongitude.setOnClickListener {\r\n            val bsByLatLngBinding = DataBindingUtil.inflate<LayoutBottomsheetBylatitudelongitudeBinding>(\r\n                LayoutInflater.from(this),\r\n                R.layout.layout_bottomsheet_bylatitudelongitude, null, true\r\n            )\r\n            bottomSheetDialog.setContentView(bsByLatLngBinding.root)\r\n            bottomSheetDialog.show()\r\n            bsByLatLngBinding.btnProceedByLL.setOnClickListener byLl@{\r\n                val latitude = bsByLatLngBinding.etLlDialogLatitude.text.toString().trim()\r\n                val longitude = bsByLatLngBinding.etLlDialogLongitude.text.toString().trim()\r\n                insertLocationSettingToDb(latitude, longitude)\r\n            }\r\n        }\r\n\r\n        dialogBinding.btnByGps.setOnClickListener{\r\n            bsByGpsBinding = DataBindingUtil.inflate(\r\n                LayoutInflater.from(this),\r\n                R.layout.layout_bottomsheet_bygps, null, true\r\n            )\r\n            bottomSheetDialog.setContentView(bsByGpsBinding.root)\r\n            bottomSheetDialog.show()\r\n            getGPSLocation()\r\n            bsByGpsBinding.btnProceedByGps.setOnClickListener byGps@{\r\n                val latitude = bsByGpsBinding.tvGpsDialogLatitude.text.toString().trim()\r\n                val longitude = bsByGpsBinding.tvGpsDialogLongitude.text.toString().trim()\r\n                insertLocationSettingToDb(latitude, longitude)\r\n            }\r\n        }\r\n    }\r\n\r\n    private fun updateIsHasOpenApp() {\r\n        bottomSheetDialog.dismiss()\r\n        firstOpenDialog.dismiss()\r\n        viewModel.updateIsHasOpenApp(true)\r\n    }\r\n\r\n    /* Database Transaction */\r\n    private fun insertLocationSettingToDb(latitude: String, longitude: String) {\r\n        val currDate = LocalDate()\r\n        val data = MsApi1(1,\r\n            latitude,\r\n            longitude,\r\n            \"3\",\r\n            currDate.monthOfYear.toString(),\r\n            currDate.year.toString())\r\n\r\n        viewModel.updateMsApi1(data)\r\n    }\r\n\r\n    /* Permission */\r\n    private fun showPermissionDialog(){\r\n        AlertDialog.Builder(this)\r\n            .setTitle(\"Location Needed\")\r\n            .setMessage(\"Permission is needed to run the Gps\")\r\n            .setPositiveButton(\"ok\") { _: DialogInterface, _: Int ->\r\n                ActivityCompat.requestPermissions(\r\n                    this,\r\n                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION),\r\n                    ALL_PERMISSIONS\r\n                )\r\n            }\r\n            .setNegativeButton(\"cancel\") { _: DialogInterface, _: Int ->\r\n                bottomSheetDialog.dismiss()\r\n            }\r\n            .create()\r\n            .show()\r\n    }\r\n\r\n    /* supporting function */\r\n    private fun getGPSLocation(){\r\n        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||\r\n            ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {\r\n            setGpsBottomSheetState()\r\n            onUpdateLocationListener()\r\n        }\r\n        else {\r\n            showPermissionDialog()\r\n            return\r\n        }\r\n    }\r\n\r\n    private fun setGpsBottomSheetState() {\r\n        val lm: LocationManager = this.getSystemService(Context.LOCATION_SERVICE) as LocationManager\r\n        var gpsEnabled = false\r\n        var networkEnabled = false\r\n\r\n        try {\r\n            gpsEnabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER)\r\n        } catch (ex: java.lang.Exception) { }\r\n\r\n        try {\r\n            networkEnabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER)\r\n        } catch (ex: java.lang.Exception) { }\r\n\r\n        if (!gpsEnabled && !networkEnabled)\r\n            setGpsComponentState(EnumStatus.ERROR)\r\n        else\r\n            setGpsComponentState(EnumStatus.LOADING)\r\n    }\r\n\r\n    private fun onUpdateLocationListener(){\r\n        val mLocationRequest = LocationRequest()\r\n        mLocationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY\r\n        mLocationRequest.interval = 10 * 10000 /* 1 minute */\r\n        mLocationRequest.fastestInterval = 10 * 10000 /* 1 minute */\r\n\r\n        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&\r\n            ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {\r\n            showPermissionDialog()\r\n            return\r\n        }\r\n\r\n        LocationServices.getFusedLocationProviderClient(this)\r\n            .requestLocationUpdates(mLocationRequest, object : LocationCallback() {\r\n                override fun onLocationResult(locationResult: LocationResult) {\r\n                    // do work here\r\n                    onLocationChanged(locationResult.lastLocation)\r\n                }\r\n                private fun onLocationChanged(it: Location?) {\r\n                    if(it == null)\r\n                        return\r\n                    setGpsComponentState(EnumStatus.SUCCESS)\r\n                    bsByGpsBinding.tvGpsDialogLatitude.text = it.latitude.toString()\r\n                    bsByGpsBinding.tvGpsDialogLongitude.text= it.longitude.toString()\r\n                }\r\n            }, Looper.myLooper())\r\n    }\r\n\r\n    private fun setGpsComponentState(status: EnumStatus){\r\n        when(status){\r\n            EnumStatus.SUCCESS -> {\r\n                bsByGpsBinding.tvViewLatitude.visibility = View.VISIBLE\r\n                bsByGpsBinding.tvViewLongitude.visibility = View.VISIBLE\r\n                bsByGpsBinding.tvGpsDialogLongitude.visibility = View.VISIBLE\r\n                bsByGpsBinding.tvGpsDialogLatitude.visibility = View.VISIBLE\r\n                bsByGpsBinding.ivWarning.visibility = View.INVISIBLE\r\n                bsByGpsBinding.tvWarning.visibility = View.INVISIBLE\r\n            }\r\n            EnumStatus.LOADING -> {\r\n                bsByGpsBinding.ivWarning.visibility = View.VISIBLE\r\n                bsByGpsBinding.tvWarning.visibility = View.VISIBLE\r\n                bsByGpsBinding.tvWarning.text = getString(R.string.loading)\r\n                bsByGpsBinding.tvViewLatitude.visibility = View.INVISIBLE\r\n                bsByGpsBinding.tvViewLongitude.visibility = View.INVISIBLE\r\n                bsByGpsBinding.tvGpsDialogLongitude.visibility = View.INVISIBLE\r\n                bsByGpsBinding.tvGpsDialogLatitude.visibility = View.INVISIBLE\r\n            }\r\n            EnumStatus.ERROR -> {\r\n                bsByGpsBinding.ivWarning.visibility = View.VISIBLE\r\n                bsByGpsBinding.tvWarning.visibility = View.VISIBLE\r\n                bsByGpsBinding.tvWarning.text = getString(R.string.please_enable_your_location)\r\n                bsByGpsBinding.tvGpsDialogLongitude.visibility = View.INVISIBLE\r\n                bsByGpsBinding.tvGpsDialogLatitude.visibility = View.INVISIBLE\r\n                bsByGpsBinding.tvViewLatitude.visibility = View.INVISIBLE\r\n                bsByGpsBinding.tvViewLongitude.visibility = View.INVISIBLE\r\n            }\r\n        }\r\n    }\r\n\r\n    /* VIEW PAGER */\r\n    /* override fun onNavigationItemSelected(item: MenuItem): Boolean {\r\n        when(item.itemId) {\r\n            R.id.i_prayer_time -> vp2_main.currentItem = 0\r\n            R.id.i_compass -> vp2_main.currentItem = 1\r\n            R.id.i_quran -> vp2_main.currentItem = 2\r\n            R.id.i_info -> vp2_main.currentItem = 3\r\n            R.id.i_setting -> vp2_main.currentItem = 4\r\n        }\r\n        return true\r\n    } */\r\n\r\n    /* Animation */\r\n    /* private inner class ZoomOutPageTransformer : ViewPager.PageTransformer, ViewPager2.PageTransformer {\r\n\r\n        private val MIN_SCALE = 0.85f\r\n        private val MIN_ALPHA = 0.5f\r\n        override fun transformPage(view: View, position: Float) {\r\n            view.apply {\r\n                val pageWidth = width\r\n                val pageHeight = height\r\n                when {\r\n                    position < -1 -> alpha = 0f\r\n                    position <= 1 -> {\r\n                        // Modify the default slide transition to shrink the page as well\r\n                        val scaleFactor = MIN_SCALE.coerceAtLeast(1 - kotlin.math.abs(position))\r\n                        val vertMargin = pageHeight * (1 - scaleFactor) / 2\r\n                        val horzMargin = pageWidth * (1 - scaleFactor) / 2\r\n                        translationX = if (position < 0) horzMargin - vertMargin / 2 else horzMargin + vertMargin / 2\r\n                        // Scale the page down (between MIN_SCALE and 1)\r\n                        scaleX = scaleFactor\r\n                        scaleY = scaleFactor\r\n                        // Fade the page relative to its size.\r\n                        alpha = (MIN_ALPHA + (((scaleFactor - MIN_SCALE) / (1 - MIN_SCALE)) * (1 - MIN_ALPHA)))\r\n                    }\r\n                    else -> alpha = 0f\r\n                }\r\n            }\r\n        }\r\n    } */\r\n\r\n\r\n}\r\n
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/programmergabut/solatkuy/ui/activitymain/MainActivity.kt	(revision eb3a97fe3e1e4e39c4d0f9ab965337c48959d492)
++++ app/src/main/java/com/programmergabut/solatkuy/ui/activitymain/MainActivity.kt	(date 1609063038035)
+@@ -127,7 +127,7 @@
+             binding.navHostFragment.findNavController()
+                 .addOnDestinationChangedListener { _, destination, _ ->
+                     when(destination.id){
+-                        R.id.fragmentMain, R.id.fragmentCompass, R.id.quranFragment, R.id.fragmentInfo, R.id.fragmentSetting ->
++                        R.id.fragmentMain, R.id.fragmentCompass, R.id.quranFragment, R.id.fragmentSetting ->
+                             binding.bottomNavigation.visibility = View.VISIBLE
+                         else -> binding.bottomNavigation.visibility = View.GONE
+                     }
+Index: app/src/main/java/com/programmergabut/solatkuy/util/helper/NotificationHelper.kt
+IDEA additional info:
+Subsystem: com.intellij.openapi.diff.impl.patch.BaseRevisionTextPatchEP
+<+>package com.programmergabut.solatkuy.util.helper\r\n\r\nimport android.app.Notification\r\nimport android.app.NotificationChannel\r\nimport android.app.NotificationManager\r\nimport android.app.PendingIntent\r\nimport android.content.Context\r\nimport android.content.ContextWrapper\r\nimport android.graphics.BitmapFactory\r\nimport android.media.RingtoneManager\r\nimport android.os.Build\r\nimport android.os.VibrationEffect\r\nimport android.os.Vibrator\r\nimport androidx.core.app.NotificationCompat\r\nimport com.programmergabut.solatkuy.R\r\nimport com.programmergabut.solatkuy.util.EnumConfig\r\nimport kotlinx.coroutines.CoroutineScope\r\nimport kotlinx.coroutines.Dispatchers\r\nimport kotlinx.coroutines.delay\r\nimport kotlinx.coroutines.launch\r\n\r\n\r\n/*\r\n * Created by Katili Jiwo Adi Wiyono on 27/03/20.\r\n */\r\n\r\nclass NotificationHelper(context: Context): ContextWrapper(context) {\r\n\r\n    private val channelNotificationPrayerID: String = \"channel_notification_prayer_1\"\r\n    private val channelNotificationPrayerName: String = \"channel_notification_prayer_name_1\"\r\n    private var mManager: NotificationManager? = null\r\n\r\n    init {\r\n        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {\r\n            val channelNotificationPrayer =  NotificationChannel(channelNotificationPrayerID, channelNotificationPrayerName, NotificationManager.IMPORTANCE_DEFAULT)\r\n\r\n            channelNotificationPrayer.enableLights(true)\r\n            channelNotificationPrayer.vibrationPattern = longArrayOf(0)\r\n            channelNotificationPrayer.enableVibration(true)\r\n            channelNotificationPrayer.lightColor = R.color.purple_500\r\n            channelNotificationPrayer.lockscreenVisibility = Notification.VISIBILITY_PUBLIC\r\n\r\n            getManager()?.createNotificationChannel(channelNotificationPrayer)\r\n        }\r\n    }\r\n\r\n    fun getManager(): NotificationManager? {\r\n        if(mManager == null)\r\n            mManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager?\r\n\r\n        return mManager\r\n    }\r\n\r\n    fun getPrayerReminderNC(/* pID: Int, */ pTime: String, pCity: String, pName: String,\r\n        /* listPrayerBundle: Bundle, */ intent: PendingIntent): NotificationCompat.Builder {\r\n\r\n        val message = \"now is $pTime in $pCity let's pray $pName\"\r\n\r\n        /*\r\n        * Deprecated, 4 June 2020\r\n        * because the changes of the notification mechanism\r\n        * first fire all the data then cancel all alarm manager when the notification come, then fire it all again\r\n        * also remove the more time feature\r\n        *\r\n        val moreTimeIntent = Intent(this, MoreTimeBroadcastReceiver::class.java)\r\n        moreTimeIntent.putExtra(\"moreTime_prayerID\", pID)\r\n        moreTimeIntent.putExtra(\"moreTime_prayerTime\", pTime)\r\n        moreTimeIntent.putExtra(\"moreTime_prayerCity\", pCity)\r\n        moreTimeIntent.putExtra(\"moreTime_prayerName\", pName)\r\n        moreTimeIntent.putExtra(\"moreTime_listPrayerBundle\", listPrayerBundle)\r\n\r\n        val actionIntent = PendingIntent.getBroadcast(this, 0, moreTimeIntent,\r\n            PendingIntent.FLAG_UPDATE_CURRENT) */\r\n\r\n        val bitmap = BitmapFactory.decodeResource(resources, when(pName){\r\n            getString(R.string.fajr) -> R.drawable.img_fajr\r\n            getString(R.string.dhuhr) -> R.drawable.img_dhuhr\r\n            getString(R.string.asr) -> R.drawable.img_asr\r\n            getString(R.string.maghrib) -> R.drawable.img_maghrib\r\n            getString(R.string.isha) -> R.drawable.img_isha\r\n            else -> R.drawable.img_fajr\r\n        })\r\n\r\n        val vibrator = this.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator\r\n        if(vibrator.hasVibrator()){\r\n            val vibrationPattern = longArrayOf(0, 200, 120, 200, 120, 200, 120, 200)\r\n            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)\r\n               vibrator.vibrate(VibrationEffect.createWaveform(vibrationPattern, VibrationEffect.DEFAULT_AMPLITUDE))\r\n            else\r\n                vibrator.vibrate(vibrationPattern, -1)\r\n        }\r\n\r\n\r\n        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){\r\n            return NotificationCompat.Builder(applicationContext, channelNotificationPrayerID)\r\n                .setContentTitle(pName)\r\n                .setContentText(message)\r\n                .setSubText(EnumConfig.DUA_AFTER_ADHAN_STR)\r\n                .setColor(getColor(R.color.dark_500))\r\n                .setStyle(NotificationCompat.BigTextStyle().bigText(message))\r\n                .setAutoCancel(true)\r\n                //.addAction(R.mipmap.ic_launcher, \"remind me 10 more minute\", actionIntent)\r\n                .setLargeIcon(bitmap)\r\n                .setSmallIcon(R.drawable.ic_launcher_foreground)\r\n                .setContentIntent(intent)\r\n                .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))\r\n                .setOnlyAlertOnce(true)\r\n                .setPriority(NotificationCompat.DEFAULT_ALL)\r\n        }\r\n        else{\r\n            return NotificationCompat.Builder(this, channelNotificationPrayerID)\r\n                .setContentTitle(pName)\r\n                .setContentText(message)\r\n                .setSubText(EnumConfig.DUA_AFTER_ADHAN_STR)\r\n                .setVibrate(longArrayOf(500, 500, 500))\r\n                .setSmallIcon(R.drawable.ic_launcher_foreground)\r\n                .setAutoCancel(true)\r\n                .setStyle(NotificationCompat.DecoratedCustomViewStyle())\r\n        }\r\n    }\r\n\r\n}
+Subsystem: com.intellij.openapi.diff.impl.patch.CharsetEP
+<+>UTF-8
+===================================================================
+--- app/src/main/java/com/programmergabut/solatkuy/util/helper/NotificationHelper.kt	(revision eb3a97fe3e1e4e39c4d0f9ab965337c48959d492)
++++ app/src/main/java/com/programmergabut/solatkuy/util/helper/NotificationHelper.kt	(date 1609053333756)
+@@ -14,10 +14,6 @@
+ import androidx.core.app.NotificationCompat
+ import com.programmergabut.solatkuy.R
+ import com.programmergabut.solatkuy.util.EnumConfig
+-import kotlinx.coroutines.CoroutineScope
+-import kotlinx.coroutines.Dispatchers
+-import kotlinx.coroutines.delay
+-import kotlinx.coroutines.launch
+ 
+ 
+ /*
+@@ -32,7 +28,11 @@
+ 
+     init {
+         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O) {
+-            val channelNotificationPrayer =  NotificationChannel(channelNotificationPrayerID, channelNotificationPrayerName, NotificationManager.IMPORTANCE_DEFAULT)
++            val channelNotificationPrayer =  NotificationChannel(
++                channelNotificationPrayerID,
++                channelNotificationPrayerName,
++                NotificationManager.IMPORTANCE_DEFAULT
++            )
+ 
+             channelNotificationPrayer.enableLights(true)
+             channelNotificationPrayer.vibrationPattern = longArrayOf(0)
+@@ -52,7 +52,8 @@
+     }
+ 
+     fun getPrayerReminderNC(/* pID: Int, */ pTime: String, pCity: String, pName: String,
+-        /* listPrayerBundle: Bundle, */ intent: PendingIntent): NotificationCompat.Builder {
++        /* listPrayerBundle: Bundle, */ intent: PendingIntent
++    ): NotificationCompat.Builder {
+ 
+         val message = "now is $pTime in $pCity let's pray $pName"
+ 
+@@ -72,25 +73,34 @@
+         val actionIntent = PendingIntent.getBroadcast(this, 0, moreTimeIntent,
+             PendingIntent.FLAG_UPDATE_CURRENT) */
+ 
+-        val bitmap = BitmapFactory.decodeResource(resources, when(pName){
+-            getString(R.string.fajr) -> R.drawable.img_fajr
+-            getString(R.string.dhuhr) -> R.drawable.img_dhuhr
+-            getString(R.string.asr) -> R.drawable.img_asr
+-            getString(R.string.maghrib) -> R.drawable.img_maghrib
+-            getString(R.string.isha) -> R.drawable.img_isha
+-            else -> R.drawable.img_fajr
+-        })
++        val bitmap = BitmapFactory.decodeResource(
++            resources, when (pName) {
++                getString(R.string.fajr) -> R.drawable.img_fajr
++                getString(R.string.dhuhr) -> R.drawable.img_dhuhr
++                getString(R.string.asr) -> R.drawable.img_asr
++                getString(R.string.maghrib) -> R.drawable.img_maghrib
++                getString(R.string.isha) -> R.drawable.img_isha
++                else -> R.drawable.img_fajr
++            }
++        )
+ 
+         val vibrator = this.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
+         if(vibrator.hasVibrator()){
+-            val vibrationPattern = longArrayOf(0, 200, 120, 200, 120, 200, 120, 200)
++            val vibrationPattern = longArrayOf(0, 800, 900, 800, 900, 800, 900, 800)
++            val mAmplitudes = intArrayOf(0, 225, 0, 225, 0, 225, 0, 225)
++
+             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
+-               vibrator.vibrate(VibrationEffect.createWaveform(vibrationPattern, VibrationEffect.DEFAULT_AMPLITUDE))
++                vibrator.vibrate(
++                    VibrationEffect.createWaveform(
++                        vibrationPattern,
++                        mAmplitudes,
++                        -1
++                    )
++                )
+             else
+                 vibrator.vibrate(vibrationPattern, -1)
+         }
+ 
+-
+         if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+             return NotificationCompat.Builder(applicationContext, channelNotificationPrayerID)
+                 .setContentTitle(pName)
+@@ -101,7 +111,7 @@
+                 .setAutoCancel(true)
+                 //.addAction(R.mipmap.ic_launcher, "remind me 10 more minute", actionIntent)
+                 .setLargeIcon(bitmap)
+-                .setSmallIcon(R.drawable.ic_launcher_foreground)
++                .setSmallIcon(R.drawable.ic_notifications_active_24dp)
+                 .setContentIntent(intent)
+                 .setSound(RingtoneManager.getDefaultUri(RingtoneManager.TYPE_NOTIFICATION))
+                 .setOnlyAlertOnce(true)
+@@ -113,7 +123,7 @@
+                 .setContentText(message)
+                 .setSubText(EnumConfig.DUA_AFTER_ADHAN_STR)
+                 .setVibrate(longArrayOf(500, 500, 500))
+-                .setSmallIcon(R.drawable.ic_launcher_foreground)
++                .setSmallIcon(R.drawable.ic_notifications_active_24dp)
+                 .setAutoCancel(true)
+                 .setStyle(NotificationCompat.DecoratedCustomViewStyle())
+         }

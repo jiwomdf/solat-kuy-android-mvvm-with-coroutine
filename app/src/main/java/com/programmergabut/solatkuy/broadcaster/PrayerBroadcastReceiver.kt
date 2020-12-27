@@ -37,6 +37,9 @@ class PrayerBroadcastReceiver: BroadcastReceiver() {
     }
 
     override fun onReceive(context: Context?, intent: Intent?) {
+
+        Log.d("<ERROR>","PrayerBroadcastReceiver, pID == -1 || pName.isNullOrEmpty() || pTime.isNullOrEmpty() || listPrayerBundle == null")
+
         val mNotificationHelper = NotificationHelper(context!!)
 
         val pID = intent?.getIntExtra(PRAYER_ID, -1)
@@ -48,7 +51,7 @@ class PrayerBroadcastReceiver: BroadcastReceiver() {
         val listData = bundleDeserializer(listPrayerBundle)
 
         if(pID == -1 || pName.isNullOrEmpty() || pTime.isNullOrEmpty() || listPrayerBundle == null){
-            Log.d(ERROR,"PrayerBroadcastReceiver, pID == -1 || pName.isNullOrEmpty() || pTime.isNullOrEmpty() || listPrayerBundle == null")
+            Log.d("<ERROR>","PrayerBroadcastReceiver, pID == -1 || pName.isNullOrEmpty() || pTime.isNullOrEmpty() || listPrayerBundle == null")
             throw Exception("PrayerBroadcastReceiver")
         }
 

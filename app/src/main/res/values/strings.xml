@@ -62,7 +62,12 @@
     <string name="please_enable_your_location">please enable your location</string>
     <string name="text_error_title">Error Occurred</string>
     <string name="text_error_dsc">Sorry.. there is some error, please try again</string>
+    <string name="last_read_ayah_not_found_title">Last read ayah not found</string>
+    <string name="last_read_ayah_not_found_dsc">You have not swipe any ayah, you can save the last read ayah by swipe left the ayah when reading the quran</string>
 
+
+    <string name="syncdata">Syncing data..</string>
+    <string name="offline">You are offline..</string>
     <string name="hide">Hide</string>
     <string name="day">Day</string>
     <string name="proceeded">Proceed</string>
