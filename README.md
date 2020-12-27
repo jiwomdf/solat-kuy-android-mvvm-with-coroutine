@@ -10,6 +10,7 @@ created with:
 - Coroutine
 - Retrofit 
 - Dagger Hilt
+- Data Binding
 - Navigation Component
 - Motion Layout
 - Material Design 
