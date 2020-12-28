@@ -48,6 +48,7 @@ class SettingFragment(viewModelTest: FragmentSettingViewModel? = null) : BaseFra
     FragmentSettingViewModel::class.java, viewModelTest
 ), View.OnClickListener {
 
+    private lateinit var aboutAuthorDialog: Dialog
     private lateinit var bottomSheetDialog: BottomSheetDialog
     private lateinit var mFusedLocationClient: FusedLocationProviderClient
     private lateinit var dialogGpsBinding: LayoutBottomsheetBygpsBinding
@@ -57,6 +58,7 @@ class SettingFragment(viewModelTest: FragmentSettingViewModel? = null) : BaseFra
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
+        aboutAuthorDialog = Dialog(requireContext())
         bottomSheetDialog = BottomSheetDialog(requireContext())
     }
 
@@ -146,9 +148,8 @@ class SettingFragment(viewModelTest: FragmentSettingViewModel? = null) : BaseFra
                 }
             }
             R.id.btn_seeAuthor -> {
-                val dialog = Dialog(requireContext())
-                dialog.setContentView(dialogAuthorBinding.root)
-                dialog.show()
+                aboutAuthorDialog.setContentView(dialogAuthorBinding.root)
+                aboutAuthorDialog.show()
             }
         }
     }
