@@ -17,6 +17,8 @@ created with:
 - Testing with Mockito, espresso, & Junit4
 - minifyEnabled
 
+To try the testing please change the IS_TESTING = true in com.programmergabut.solatkuy.util.EnumConfig, than rebuild the project
+
 Feel free to see and contribute
 
 ![](https://firebasestorage.googleapis.com/v0/b/personalwebsite-cbad4.appspot.com/o/screenshoot%2FScreenshot_20201214-151910_Solat%20Kuy.jpg?alt=media&token=b7857cf8-c9b5-4862-a770-c9a55bfaa427)
