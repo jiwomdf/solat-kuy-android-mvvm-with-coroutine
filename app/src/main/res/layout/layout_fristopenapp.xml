@@ -12,7 +12,6 @@
         android:paddingRight="@dimen/larger_margin"
         android:paddingBottom="@dimen/medium_margin">
 
-
         <ImageView
             android:id="@+id/iv_location_logo"
             android:layout_width="@dimen/list_width_size"
@@ -23,7 +22,6 @@
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent"
             android:contentDescription="@string/solatkuyicon" />
-
 
         <TextView
             android:id="@+id/tv_changeLocation"
@@ -65,7 +63,6 @@
                 android:text="@string/by_gps"
                 android:textSize="@dimen/small_text_size" />
         </LinearLayout>
-
     </androidx.constraintlayout.widget.ConstraintLayout>
 
 </layout>

@@ -7,7 +7,7 @@ import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.programmergabut.solatkuy.CoroutinesTestRule
 import com.programmergabut.solatkuy.DummyArgument
-import com.programmergabut.solatkuy.DummyRetValue
+import com.programmergabut.solatkuy.DummyRetValueTest
 import com.programmergabut.solatkuy.data.FakeQuranRepository
 import com.programmergabut.solatkuy.data.local.localentity.MsFavAyah
 import com.programmergabut.solatkuy.data.local.localentity.MsFavSurah
@@ -55,15 +55,15 @@ class ReadSurahActivityTest{
         //given
         val observer = mock<Observer<Resource<ReadSurahArResponse>>>()
 
-        val dummyDataAr = DummyRetValue.surahArID_1()
+        val dummyDataAr = DummyRetValueTest.surahArID_1()
         dummyDataAr.statusResponse = "1"
         val dummySelectedSurahAr = Resource.success(dummyDataAr)
 
-        val dummyDataEn = DummyRetValue.surahEnID_1()
+        val dummyDataEn = DummyRetValueTest.surahEnID_1()
         dummyDataEn.statusResponse = "1"
         val dummySelectedSurahEn = Resource.success(dummyDataEn)
 
-        viewModel.fetchedArSurah = DummyRetValue.surahArID_1()
+        viewModel.fetchedArSurah = DummyRetValueTest.surahArID_1()
 
         //scenario
         Mockito.`when`(fakeQuranRepository.fetchReadSurahAr(surahID)).thenReturn(dummySelectedSurahAr.data!!.toDeferred())
@@ -90,7 +90,7 @@ class ReadSurahActivityTest{
         //given
         val observer = mock<Observer<MsFavSurah>>()
         val dummyLiveData: MutableLiveData<MsFavSurah> = MutableLiveData()
-        dummyLiveData.value = DummyRetValue.getFavSurahBySurahID(surahID)[0]
+        dummyLiveData.value = DummyRetValueTest.getFavSurahBySurahID(surahID)[0]
 
         //scenario
         Mockito.`when`(fakeQuranRepository.getFavSurahBySurahID(surahID)).thenReturn(dummyLiveData)
@@ -117,8 +117,8 @@ class ReadSurahActivityTest{
         //given
         val observer = mock<Observer<Resource<List<MsFavAyah>>>>()
         val dummyLiveData: MutableLiveData<List<MsFavAyah>> = MutableLiveData()
-        dummyLiveData.value = DummyRetValue.getListMsFavAyah()
-        viewModel.fetchedArSurah = DummyRetValue.surahArID_1()
+        dummyLiveData.value = DummyRetValueTest.getListMsFavAyah()
+        viewModel.fetchedArSurah = DummyRetValueTest.surahArID_1()
 
         //scenario
         Mockito.`when`(fakeQuranRepository.getListFavAyahBySurahID(surahID)).thenReturn(dummyLiveData)

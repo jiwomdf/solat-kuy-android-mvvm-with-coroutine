@@ -6,7 +6,7 @@ import com.programmergabut.solatkuy.base.BaseResponse
 
 class ReadSurahArResponse: BaseResponse() {
     @SerializedName("code")
-    val code: Int = 0
+    var code: Int = 0
     @SerializedName("data")
     lateinit var `data`: Data
     @SerializedName("status")

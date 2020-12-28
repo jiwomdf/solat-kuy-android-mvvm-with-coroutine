@@ -1,10 +1,13 @@
 package com.programmergabut.solatkuy.base
 
+import android.Manifest
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
@@ -30,8 +33,7 @@ abstract class BaseFragment<DB: ViewDataBinding, VM: ViewModel>(
     lateinit var viewModel: VM
     protected lateinit var binding : DB
 
-    private val ALL_PERMISSIONS = 101
-
+    protected val LOCATION_PERMISSIONS = 101
 
     override fun onCreateView(
         inflater: LayoutInflater,
@@ -55,6 +57,15 @@ abstract class BaseFragment<DB: ViewDataBinding, VM: ViewModel>(
 
     }
 
+    protected fun isLocationPermissionGranted(): Boolean {
+        return (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+    }
+
+    protected fun listLocationPermission(): Array<String> {
+        return arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
+    }
+
     protected fun <T : Any> gotoIntent(classIntent : Class<T>, bundle : Bundle? = null, isFinish : Boolean = false){
         val intent = Intent(this.activity, classIntent)
         if(bundle != null)
@@ -67,7 +78,7 @@ abstract class BaseFragment<DB: ViewDataBinding, VM: ViewModel>(
     protected fun showBottomSheet(title : String = resources.getString(R.string.text_error_title), description : String = "",
                                   isCancelable : Boolean = true, isFinish : Boolean = false) {
 
-        val dialogBinding = DataBindingUtil.inflate<LayoutErrorBottomsheetBinding>(
+        val dialogBinding: LayoutErrorBottomsheetBinding = DataBindingUtil.inflate(
             layoutInflater, R.layout.layout_error_bottomsheet, null, true
         )
 

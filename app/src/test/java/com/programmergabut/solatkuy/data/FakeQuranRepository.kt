@@ -4,6 +4,7 @@ import androidx.lifecycle.LiveData
 import com.programmergabut.solatkuy.data.local.dao.*
 import com.programmergabut.solatkuy.data.local.localentity.MsFavAyah
 import com.programmergabut.solatkuy.data.local.localentity.MsFavSurah
+import com.programmergabut.solatkuy.data.remote.FakeRemoteDataSourceAlQuran
 import com.programmergabut.solatkuy.data.remote.RemoteDataSourceApiAlquran
 import com.programmergabut.solatkuy.data.remote.remoteentity.quranallsurahJson.AllSurahResponse
 import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonAr.ReadSurahArResponse
@@ -16,7 +17,7 @@ import kotlinx.coroutines.async
 import java.lang.Exception
 
 class FakeQuranRepository constructor(
-    private val remoteDataSourceApiAlquran: RemoteDataSourceApiAlquran,
+    private val remoteDataSourceApiAlquran: FakeRemoteDataSourceAlQuran,
     private val msFavAyahDao: MsFavAyahDao,
     private val msFavSurahDao: MsFavSurahDao
 ): QuranRepository {

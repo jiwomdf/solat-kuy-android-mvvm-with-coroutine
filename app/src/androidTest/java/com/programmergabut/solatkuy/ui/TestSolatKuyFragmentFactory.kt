@@ -10,8 +10,8 @@ import com.programmergabut.solatkuy.ui.activitymain.fragmentquran.QuranFragment
 import com.programmergabut.solatkuy.ui.activitymain.fragmentquran.QuranFragmentViewModel
 import com.programmergabut.solatkuy.ui.activitymain.fragmentsetting.FragmentSettingViewModel
 import com.programmergabut.solatkuy.ui.activitymain.fragmentsetting.SettingFragment
-import com.programmergabut.solatkuy.viewmodel.FakePrayerRepositoryAndroidTest
-import com.programmergabut.solatkuy.viewmodel.FakeQuranRepositoryAndroidTest
+import com.programmergabut.solatkuy.data.FakePrayerRepositoryAndroidTest
+import com.programmergabut.solatkuy.data.FakeQuranRepositoryAndroidTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import javax.inject.Inject
 

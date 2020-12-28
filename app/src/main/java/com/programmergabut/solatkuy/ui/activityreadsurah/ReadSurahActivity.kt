@@ -102,7 +102,7 @@ class ReadSurahActivity : BaseActivity<ActivityReadSurahBinding, ReadSurahViewMo
                     )
 
                     if(isFirstLoad){
-                        Toast.makeText(this, "Swipe left to save your last read", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(this, "Swipe left to save your last read ayah", Toast.LENGTH_SHORT).show()
                         isFirstLoad = false
                     }
                 }

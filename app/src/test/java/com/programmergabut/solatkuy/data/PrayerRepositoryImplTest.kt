@@ -2,18 +2,17 @@ package com.programmergabut.solatkuy.data
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
+import com.programmergabut.solatkuy.CoroutineTestUtil.Companion.toDeferred
 import com.programmergabut.solatkuy.CoroutinesTestRule
 import com.programmergabut.solatkuy.DummyArgument
 import com.programmergabut.solatkuy.data.local.dao.*
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
 import com.programmergabut.solatkuy.data.remote.RemoteDataSourceAladhanImpl
-import com.programmergabut.solatkuy.data.remote.RemoteDataSourceApiAlquranImpl
-import com.programmergabut.solatkuy.DummyRetValue
-import com.programmergabut.solatkuy.data.local.localentity.MsFavAyah
-import com.programmergabut.solatkuy.data.local.localentity.NotifiedPrayer
+import com.programmergabut.solatkuy.DummyRetValueTest
 import junit.framework.Assert.assertNotNull
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
+import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mockito
@@ -42,10 +41,9 @@ class PrayerRepositoryImplTest{
     /* Remote */
     @Test
     fun fetchPrayerApi() = coroutinesTestRule.testDispatcher.runBlockingTest {
-        prayerRepository.fetchPrayerApi(msApi1)
+        val dummyPrayerApi = DummyRetValueTest.fetchPrayerApi()
 
-        val dummyPrayerApi = DummyRetValue.fetchPrayerApi()
-
+        remoteDataSourceAladhan.fetchPrayerApi(msApi1)
         Mockito.`when`(remoteDataSourceAladhan.fetchPrayerApi(msApi1)).thenReturn(dummyPrayerApi)
         Mockito.verify(remoteDataSourceAladhan).fetchPrayerApi(msApi1)
 
@@ -56,7 +54,7 @@ class PrayerRepositoryImplTest{
     fun fetchCompass() = coroutinesTestRule.testDispatcher.runBlockingTest {
         prayerRepository.fetchCompass(msApi1)
 
-        val dummyCompassApi = DummyRetValue.fetchCompassApi()
+        val dummyCompassApi = DummyRetValueTest.fetchCompassApi()
 
         Mockito.`when`(remoteDataSourceAladhan.fetchCompassApi(msApi1)).thenReturn(dummyCompassApi)
         Mockito.verify(remoteDataSourceAladhan).fetchCompassApi(msApi1)
@@ -101,7 +99,7 @@ class PrayerRepositoryImplTest{
     fun getMsApi1(){
         prayerRepository.getMsApi1()
 
-        val dummyMsApi1 = DummyRetValue.getMsApi1()
+        val dummyMsApi1 = DummyRetValueTest.getMsApi1()
         val msApi1 = MutableLiveData<MsApi1>()
         msApi1.value = dummyMsApi1
         Mockito.`when`(msApi1Dao.getMsApi1()).thenReturn(msApi1)

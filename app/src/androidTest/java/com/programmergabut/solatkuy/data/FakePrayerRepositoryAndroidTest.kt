@@ -1,4 +1,4 @@
-package com.programmergabut.solatkuy.viewmodel
+package com.programmergabut.solatkuy.data
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -8,11 +8,9 @@ import com.programmergabut.solatkuy.data.local.localentity.MsSetting
 import com.programmergabut.solatkuy.data.local.localentity.NotifiedPrayer
 import com.programmergabut.solatkuy.data.remote.remoteentity.compassJson.CompassResponse
 import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.PrayerResponse
-import com.programmergabut.solatkuy.ui.DummyRetValue
-import com.programmergabut.solatkuy.util.Resource
+import com.programmergabut.solatkuy.ui.DummyRetValueAndroidTest
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.async
 
@@ -22,13 +20,13 @@ import kotlinx.coroutines.async
 
 class FakePrayerRepositoryAndroidTest: PrayerRepository {
 
-    private var msApi11 = DummyRetValue.getMsApi1()
+    private var msApi11 = DummyRetValueAndroidTest.getMsApi1()
     private val observableMsApi1 = MutableLiveData<MsApi1>()
     private fun refreshMsApi1(){
         observableMsApi1.postValue(msApi11)
     }
 
-    private var msSetting = DummyRetValue.getMsSetting()
+    private var msSetting = DummyRetValueAndroidTest.getMsSetting()
     private val observableMsSetting = MutableLiveData<MsSetting>()
     private fun refreshMsSetting(){
         observableMsSetting.postValue(msSetting)
@@ -73,21 +71,21 @@ class FakePrayerRepositoryAndroidTest: PrayerRepository {
      */
     override suspend fun fetchCompass(msApi1: MsApi1): Deferred<CompassResponse> {
         return CoroutineScope(IO).async {
-            DummyRetValue.fetchCompassApi()
+            DummyRetValueAndroidTest.fetchCompassApi()
         }
     }
     override suspend fun fetchPrayerApi(msApi1: MsApi1): Deferred<PrayerResponse> {
         return CoroutineScope(IO).async {
-            DummyRetValue.fetchPrayerApi()
+            DummyRetValueAndroidTest.fetchPrayerApi()
         }
     }
 
     override suspend fun syncNotifiedPrayerTesting(): List<NotifiedPrayer> {
-        return DummyRetValue.getNotifiedPrayer()
+        return DummyRetValueAndroidTest.getNotifiedPrayer()
     }
 
     override fun getListNotifiedPrayerSync(): List<NotifiedPrayer> {
-        return DummyRetValue.getNotifiedPrayer()
+        return DummyRetValueAndroidTest.getNotifiedPrayer()
     }
 }
 

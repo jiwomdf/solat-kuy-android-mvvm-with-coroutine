@@ -10,13 +10,12 @@ import com.programmergabut.solatkuy.DummyArgument
 import com.programmergabut.solatkuy.data.local.localentity.NotifiedPrayer
 import com.programmergabut.solatkuy.ui.activitymain.fragmentmain.FragmentMainViewModel
 import com.programmergabut.solatkuy.util.Resource
-import com.programmergabut.solatkuy.DummyRetValue
+import com.programmergabut.solatkuy.DummyRetValueTest
 import com.programmergabut.solatkuy.data.FakePrayerRepository
 import com.programmergabut.solatkuy.data.FakeQuranRepository
 import com.programmergabut.solatkuy.data.local.localentity.MsSetting
 import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonEn.ReadSurahEnResponse
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Assert.assertEquals
 import org.junit.Before
@@ -63,8 +62,8 @@ class MainFragmentViewModelTest {
     fun syncNotifiedPrayer() = coroutinesTestRule.testDispatcher.runBlockingTest{
         //given
         val observer = mock<Observer<Resource<List<NotifiedPrayer>>>>()
-        val dummyNotifiedPrayer = Resource.success(DummyRetValue.fetchPrayerApi())
-        val dummyPrayerResponse = Resource.success(DummyRetValue.getNotifiedPrayer())
+        val dummyNotifiedPrayer = Resource.success(DummyRetValueTest.fetchPrayerApi())
+        val dummyPrayerResponse = Resource.success(DummyRetValueTest.getNotifiedPrayer())
         dummyNotifiedPrayer.data?.statusResponse = "1"
         `when`(fakePrayerRepository.fetchPrayerApi(msApi1)).thenReturn(dummyNotifiedPrayer.data!!.toDeferred())
         `when`(fakePrayerRepository.getListNotifiedPrayerSync()).thenReturn(dummyPrayerResponse.data)
@@ -86,7 +85,7 @@ class MainFragmentViewModelTest {
     fun fetchReadSurahEn() = coroutinesTestRule.testDispatcher.runBlockingTest{
         //given
         val observer = mock<Observer<Resource<ReadSurahEnResponse>>>()
-        val dummyQuranSurah = Resource.success(DummyRetValue.surahEnID_1())
+        val dummyQuranSurah = Resource.success(DummyRetValueTest.surahEnID_1())
         dummyQuranSurah.data?.statusResponse= "1"
         `when`(fakeQuranRepository.fetchReadSurahEn(surahID)).thenReturn(dummyQuranSurah.data!!.toDeferred())
 
@@ -109,7 +108,7 @@ class MainFragmentViewModelTest {
         //given
         val observer = mock<Observer<Resource<MsSetting>>>()
         val dummyLiveData: MutableLiveData<MsSetting> = MutableLiveData()
-        dummyLiveData.value = DummyRetValue.getMsSetting()
+        dummyLiveData.value = DummyRetValueTest.getMsSetting()
 
         //scenario
         `when`(fakePrayerRepository.getMsSetting()).thenReturn(dummyLiveData)

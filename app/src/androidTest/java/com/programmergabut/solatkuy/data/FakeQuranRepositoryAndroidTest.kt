@@ -1,34 +1,26 @@
-package com.programmergabut.solatkuy.viewmodel
+package com.programmergabut.solatkuy.data
 
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
 import androidx.lifecycle.MutableLiveData
 import com.programmergabut.solatkuy.data.QuranRepository
-import com.programmergabut.solatkuy.data.local.dao.*
-import com.programmergabut.solatkuy.data.local.localentity.MsApi1
 import com.programmergabut.solatkuy.data.local.localentity.MsFavAyah
 import com.programmergabut.solatkuy.data.local.localentity.MsFavSurah
-import com.programmergabut.solatkuy.data.local.localentity.MsSetting
-import com.programmergabut.solatkuy.data.remote.RemoteDataSourceAladhanImpl
-import com.programmergabut.solatkuy.data.remote.RemoteDataSourceApiAlquranImpl
 import com.programmergabut.solatkuy.data.remote.remoteentity.quranallsurahJson.AllSurahResponse
 import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonAr.ReadSurahArResponse
 import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonEn.ReadSurahEnResponse
-import com.programmergabut.solatkuy.ui.DummyRetValue
-import com.programmergabut.solatkuy.util.Resource
+import com.programmergabut.solatkuy.ui.DummyRetValueAndroidTest
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
-import javax.inject.Inject
 
 class FakeQuranRepositoryAndroidTest: QuranRepository {
 
-    private var listMsFavAyah = DummyRetValue.getListMsFavAyah()
+    private var listMsFavAyah = DummyRetValueAndroidTest.getListMsFavAyah()
     private val observableMsFavAyahs = MutableLiveData<List<MsFavAyah>>()
     private fun refreshMsFavAyah(){
         observableMsFavAyahs.postValue(listMsFavAyah)
     }
 
-    private var listMsFavSurah = DummyRetValue.getListMsFavSurah()
+    private var listMsFavSurah = DummyRetValueAndroidTest.getListMsFavSurah()
     private val observableMsFavSurahs = MutableLiveData<List<MsFavSurah>>()
     private val observableMsFavSurah = MutableLiveData<MsFavSurah>()
     private fun refreshMsFavSurah(){
@@ -76,17 +68,17 @@ class FakeQuranRepositoryAndroidTest: QuranRepository {
      */
     override suspend fun fetchReadSurahEn(surahID: Int): Deferred<ReadSurahEnResponse> {
         return CoroutineScope(IO).async {
-            DummyRetValue.surahEnID_1()
+            DummyRetValueAndroidTest.surahEnID_1()
         }
     }
     override suspend fun fetchAllSurah(): Deferred<AllSurahResponse> {
         return CoroutineScope(IO).async {
-            DummyRetValue.fetchAllSurah()
+            DummyRetValueAndroidTest.fetchAllSurah()
         }
     }
     override suspend fun fetchReadSurahAr(surahID: Int): Deferred<ReadSurahArResponse> {
         return CoroutineScope(IO).async {
-            DummyRetValue.surahArID_1()
+            DummyRetValueAndroidTest.surahArID_1()
         }
     }
 

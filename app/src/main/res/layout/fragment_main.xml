@@ -99,12 +99,14 @@
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
                     android:orientation="vertical">
+
                     <include
                         android:id="@+id/include_quran_quote"
                         layout="@layout/layout_quran_quote"
                         android:layout_width="match_parent"
                         android:layout_height="wrap_content"
                         android:layout_margin="@dimen/smaller_margin" />
+
                     <include
                         android:id="@+id/include_prayer_time"
                         layout="@layout/layout_prayer_time"

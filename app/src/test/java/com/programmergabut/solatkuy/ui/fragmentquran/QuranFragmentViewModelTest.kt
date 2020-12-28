@@ -5,12 +5,11 @@ import androidx.lifecycle.Observer
 import com.nhaarman.mockitokotlin2.mock
 import com.programmergabut.solatkuy.CoroutineTestUtil.Companion.toDeferred
 import com.programmergabut.solatkuy.CoroutinesTestRule
-import com.programmergabut.solatkuy.DummyRetValue
+import com.programmergabut.solatkuy.DummyRetValueTest
 import com.programmergabut.solatkuy.data.FakeQuranRepository
 import com.programmergabut.solatkuy.data.remote.remoteentity.quranallsurahJson.Data
 import com.programmergabut.solatkuy.ui.activitymain.fragmentquran.QuranFragmentViewModel
 import com.programmergabut.solatkuy.util.Resource
-import kotlinx.coroutines.CompletableDeferred
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before
@@ -51,9 +50,9 @@ class QuranFragmentViewModelTest {
 
         //given
         val observer = mock<Observer<Resource<List<Data>>>>()
-        val dummySelectedSurahAr = Resource.success(DummyRetValue.fetchAllSurah())
+        val dummySelectedSurahAr = Resource.success(DummyRetValueTest.fetchAllSurah())
         dummySelectedSurahAr.data?.statusResponse = "1"
-        val dummySelectedSurahData = Resource.success(DummyRetValue.fetchAllSurahData())
+        val dummySelectedSurahData = Resource.success(DummyRetValueTest.fetchAllSurahData())
 
         //scenario
         `when`(fakeQuranRepository.fetchAllSurah()).thenReturn(dummySelectedSurahAr.data!!.toDeferred())

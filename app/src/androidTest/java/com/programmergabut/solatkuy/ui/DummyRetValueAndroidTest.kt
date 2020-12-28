@@ -15,7 +15,7 @@ import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonEn.Rea
 import com.programmergabut.solatkuy.util.Resource
 import com.programmergabut.solatkuy.util.EnumConfig
 
-object DummyRetValue {
+object DummyRetValueAndroidTest {
 
     /* Last update : 2 July 2020 */
 
@@ -82,12 +82,16 @@ object DummyRetValue {
     fun surahEnID_1(): ReadSurahEnResponse{
         val listAyah = mutableListOf<Ayah>()
         listAyah.add(Ayah(0,0,0,0,0,0,0,"test"))
-        return ReadSurahEnResponse(0,
-            com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonEn.Data(listAyah,
-                Edition("","","","","","",""),
-                "", "", "", 0,0, ""
-            )
-            ,"")
+        val data = com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonEn.Data(listAyah,
+            Edition("","","","","","",""),
+            "", "", "", 0,0, ""
+        )
+        val response =  ReadSurahEnResponse()
+        response.code = 0
+        response.data = data
+        response.status = ""
+
+        return  response
     }
 
     fun surahArID_1(): ReadSurahArResponse{
@@ -95,13 +99,17 @@ object DummyRetValue {
         listAyah.add(com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonAr.Ayah(
             0,0,0,0,0,0,0,"test","test",false, isLastRead = false
         ))
-        return ReadSurahArResponse(0,
-            com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonAr.Data(listAyah,
-                com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonAr.Edition(
-                    "","","","","","",""),
-                "", "", "", 0,0, ""
-            )
-            ,"")
+        val data = com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonAr.Data(listAyah,
+            com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonAr.Edition(
+                "","","","","","",""),
+            "", "", "", 0,0, ""
+        )
+        val response = ReadSurahArResponse()
+        response.code = 0
+        response.data = data
+        response.status = ""
+
+        return response
     }
 
     fun fetchPrayerApi(): PrayerResponse{
@@ -115,20 +123,34 @@ object DummyRetValue {
                 "20:00", "18:00", "00:00", "06:00", "17:00"))
         )
 
-        return PrayerResponse(0, listData,"testing")
+        val response =  PrayerResponse()
+        response.code = 0
+        response.data = listData
+        response.status = ""
+
+        return response
     }
 
     fun fetchCompassApi(): CompassResponse{
-        return CompassResponse(0,com.programmergabut.solatkuy.data.remote.remoteentity.compassJson.Data(0.0,0.0,0.0),"testing")
+        val response =  CompassResponse()
+        response.code = 0
+        response.data = com.programmergabut.solatkuy.data.remote.remoteentity.compassJson.Data(0.0,0.0,0.0)
+        response.status = ""
+
+        return response
     }
 
     fun fetchAllSurah(): AllSurahResponse{
-        return AllSurahResponse(0,
-            mutableListOf(
-                com.programmergabut.solatkuy.data.remote.remoteentity.quranallsurahJson.Data(
-                    "","","","",0,0,"")
-            )
-        ,"test")
+        val data = mutableListOf(
+            com.programmergabut.solatkuy.data.remote.remoteentity.quranallsurahJson.Data(
+                "","","","",0,0,"")
+        )
+        val response = AllSurahResponse()
+        response.code = 0
+        response.data = data
+        response.status = ""
+
+        return response
     }
 
     /* Database */

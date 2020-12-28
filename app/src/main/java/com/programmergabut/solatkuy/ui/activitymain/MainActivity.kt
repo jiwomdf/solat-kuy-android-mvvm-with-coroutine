@@ -1,18 +1,22 @@
 package com.programmergabut.solatkuy.ui.activitymain
 
 import android.Manifest
+import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
+import android.content.Intent
 import android.content.pm.PackageManager
 import android.location.Location
 import android.location.LocationManager
 import android.os.Bundle
 import android.os.Looper
+import android.provider.Settings.ACTION_SETTINGS
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.navigation.findNavController
@@ -43,12 +47,12 @@ import javax.inject.Inject
 @AndroidEntryPoint
 class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>(
     R.layout.activity_main, MainActivityViewModel::class.java
-) {
+), View.OnClickListener {
 
-    private val ALL_PERMISSIONS = 101
     private lateinit var bottomSheetDialog: Dialog
     private lateinit var firstOpenDialog: Dialog
     private lateinit var bsByGpsBinding: LayoutBottomsheetBygpsBinding
+    private lateinit var bsByLatLngBinding: LayoutBottomsheetBylatitudelongitudeBinding
     private lateinit var dialogBinding: LayoutFristopenappBinding
 
     @Inject
@@ -57,11 +61,18 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>(
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
 
-        inflateBinding()
+        bottomSheetDialog = BottomSheetDialog(this)
         supportFragmentManager.fragmentFactory = fragmentFactory
     }
 
     override fun setListener() {
+        super.setListener()
+
+        inflateBinding()
+        dialogBinding.btnByLatitudeLongitude.setOnClickListener(this)
+        dialogBinding.btnByGps.setOnClickListener(this)
+        bsByGpsBinding.btnProceedByGps.setOnClickListener(this)
+        bsByLatLngBinding.btnProceedByLL.setOnClickListener(this)
         observeDb()
         observeErrorMsg()
     }
@@ -74,8 +85,46 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>(
     private fun inflateBinding() {
         dialogBinding = DataBindingUtil.inflate(
             LayoutInflater.from(this),
-            R.layout.layout_fristopenapp, null, true
+            R.layout.layout_fristopenapp, null, false
         )
+        bsByLatLngBinding = DataBindingUtil.inflate(
+            LayoutInflater.from(this),
+            R.layout.layout_bottomsheet_bylatitudelongitude, null, false
+        )
+        bsByGpsBinding = DataBindingUtil.inflate(
+            LayoutInflater.from(this),
+            R.layout.layout_bottomsheet_bygps, null, false
+        )
+    }
+
+    override fun onClick(v: View?) {
+        when(v?.id){
+            R.id.btn_by_latitude_longitude -> {
+                bottomSheetDialog.setContentView(bsByLatLngBinding.root)
+                bottomSheetDialog.show()
+            }
+            R.id.btn_proceedByLL -> {
+                val latitude = bsByLatLngBinding.etLlDialogLatitude.text.toString().trim()
+                val longitude = bsByLatLngBinding.etLlDialogLongitude.text.toString().trim()
+                insertLocationSettingToDb(latitude, longitude)
+            }
+            R.id.btn_by_gps -> {
+                bottomSheetDialog.setContentView(bsByGpsBinding.root)
+                bottomSheetDialog.show()
+                getGPSLocation()
+            }
+            R.id.btn_proceedByGps -> {
+                if(bsByGpsBinding.tvGpsDialogLatitude.visibility != View.VISIBLE &&
+                    bsByGpsBinding.tvViewLongitude.visibility != View.VISIBLE){
+                    startActivity(Intent(ACTION_SETTINGS))
+                }
+                else{
+                    val latitude = bsByGpsBinding.tvGpsDialogLatitude.text.toString().trim()
+                    val longitude = bsByGpsBinding.tvGpsDialogLongitude.text.toString().trim()
+                    insertLocationSettingToDb(latitude, longitude)
+                }
+            }
+        }
     }
 
     private fun observeDb(){
@@ -117,8 +166,6 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>(
         firstOpenDialog.setCancelable(false)
         firstOpenDialog.setContentView(dialogBinding.root)
         firstOpenDialog.show()
-
-        btnSetLatitudeLongitude()
     }
 
     private fun initBottomNav() {
@@ -127,8 +174,10 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>(
             binding.navHostFragment.findNavController()
                 .addOnDestinationChangedListener { _, destination, _ ->
                     when(destination.id){
-                        R.id.fragmentMain, R.id.fragmentCompass, R.id.quranFragment, R.id.fragmentSetting ->
-                            binding.bottomNavigation.visibility = View.VISIBLE
+                        R.id.fragmentMain,
+                        R.id.fragmentCompass,
+                        R.id.quranFragment,
+                        R.id.fragmentSetting -> binding.bottomNavigation.visibility = View.VISIBLE
                         else -> binding.bottomNavigation.visibility = View.GONE
                     }
                 }
@@ -136,40 +185,6 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>(
         }
         catch (ex: Exception){
             print(ex.message)
-        }
-    }
-
-    /* Function listener */
-    private fun btnSetLatitudeLongitude(){
-        bottomSheetDialog = BottomSheetDialog(this)
-
-        dialogBinding.btnByLatitudeLongitude.setOnClickListener {
-            val bsByLatLngBinding = DataBindingUtil.inflate<LayoutBottomsheetBylatitudelongitudeBinding>(
-                LayoutInflater.from(this),
-                R.layout.layout_bottomsheet_bylatitudelongitude, null, true
-            )
-            bottomSheetDialog.setContentView(bsByLatLngBinding.root)
-            bottomSheetDialog.show()
-            bsByLatLngBinding.btnProceedByLL.setOnClickListener byLl@{
-                val latitude = bsByLatLngBinding.etLlDialogLatitude.text.toString().trim()
-                val longitude = bsByLatLngBinding.etLlDialogLongitude.text.toString().trim()
-                insertLocationSettingToDb(latitude, longitude)
-            }
-        }
-
-        dialogBinding.btnByGps.setOnClickListener{
-            bsByGpsBinding = DataBindingUtil.inflate(
-                LayoutInflater.from(this),
-                R.layout.layout_bottomsheet_bygps, null, true
-            )
-            bottomSheetDialog.setContentView(bsByGpsBinding.root)
-            bottomSheetDialog.show()
-            getGPSLocation()
-            bsByGpsBinding.btnProceedByGps.setOnClickListener byGps@{
-                val latitude = bsByGpsBinding.tvGpsDialogLatitude.text.toString().trim()
-                val longitude = bsByGpsBinding.tvGpsDialogLongitude.text.toString().trim()
-                insertLocationSettingToDb(latitude, longitude)
-            }
         }
     }
 
@@ -192,19 +207,30 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>(
         viewModel.updateMsApi1(data)
     }
 
-    /* Permission */
+    /* permission */
+    override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
+        super.onRequestPermissionsResult(requestCode, permissions, grantResults)
+
+        if(requestCode == LOCATION_PERMISSIONS){
+            if(grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED){
+                onUpdateLocationListener()
+            }
+            else{
+                bottomSheetDialog.dismiss()
+                Toasty.error(this, getString(R.string.permission_is_needed_to_run_the_gps), Toast.LENGTH_SHORT).show()
+            }
+        }
+    }
+
     private fun showPermissionDialog(){
         AlertDialog.Builder(this)
-            .setTitle("Location Needed")
-            .setMessage("Permission is needed to run the Gps")
-            .setPositiveButton("ok") { _: DialogInterface, _: Int ->
-                ActivityCompat.requestPermissions(
-                    this,
-                    arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION),
-                    ALL_PERMISSIONS
-                )
+            .setTitle(getString(R.string.location_needed))
+            .setMessage(getString(R.string.permission_is_needed_to_run_the_gps))
+            .setCancelable(false)
+            .setPositiveButton(getString(R.string.oke)) { _: DialogInterface, _: Int ->
+                ActivityCompat.requestPermissions(this, listLocationPermission(), LOCATION_PERMISSIONS)
             }
-            .setNegativeButton("cancel") { _: DialogInterface, _: Int ->
+            .setNegativeButton(getString(R.string.cancel)) { _: DialogInterface, _: Int ->
                 bottomSheetDialog.dismiss()
             }
             .create()
@@ -213,8 +239,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>(
 
     /* supporting function */
     private fun getGPSLocation(){
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED ||
-            ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED) {
+        if (isLocationPermissionGranted()) {
             setGpsBottomSheetState()
             onUpdateLocationListener()
         }
@@ -243,14 +268,14 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>(
             setGpsComponentState(EnumStatus.LOADING)
     }
 
+    @SuppressLint("MissingPermission")
     private fun onUpdateLocationListener(){
         val mLocationRequest = LocationRequest()
         mLocationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-        mLocationRequest.interval = 10 * 10000 /* 1 minute */
-        mLocationRequest.fastestInterval = 10 * 10000 /* 1 minute */
+        mLocationRequest.interval = 60 * 1000 /* 1 minute */
+        mLocationRequest.fastestInterval = 1 * 1000 /* 1 second */
 
-        if (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) != PackageManager.PERMISSION_GRANTED &&
-            ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) != PackageManager.PERMISSION_GRANTED) {
+        if (!isLocationPermissionGranted()) {
             showPermissionDialog()
             return
         }
@@ -258,15 +283,10 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>(
         LocationServices.getFusedLocationProviderClient(this)
             .requestLocationUpdates(mLocationRequest, object : LocationCallback() {
                 override fun onLocationResult(locationResult: LocationResult) {
-                    // do work here
-                    onLocationChanged(locationResult.lastLocation)
-                }
-                private fun onLocationChanged(it: Location?) {
-                    if(it == null)
-                        return
+                    val location = locationResult.lastLocation ?: return
                     setGpsComponentState(EnumStatus.SUCCESS)
-                    bsByGpsBinding.tvGpsDialogLatitude.text = it.latitude.toString()
-                    bsByGpsBinding.tvGpsDialogLongitude.text= it.longitude.toString()
+                    bsByGpsBinding.tvGpsDialogLatitude.text = location.latitude.toString()
+                    bsByGpsBinding.tvGpsDialogLongitude.text= location.longitude.toString()
                 }
             }, Looper.myLooper())
     }
@@ -280,6 +300,10 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>(
                 bsByGpsBinding.tvGpsDialogLatitude.visibility = View.VISIBLE
                 bsByGpsBinding.ivWarning.visibility = View.INVISIBLE
                 bsByGpsBinding.tvWarning.visibility = View.INVISIBLE
+                bsByGpsBinding.btnProceedByGps.text = getString(R.string.proceed)
+
+                bsByGpsBinding.btnProceedByGps.visibility = View.VISIBLE
+                bsByGpsBinding.btnProceedByGps.text = getString(R.string.proceed)
             }
             EnumStatus.LOADING -> {
                 bsByGpsBinding.ivWarning.visibility = View.VISIBLE
@@ -289,6 +313,8 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>(
                 bsByGpsBinding.tvViewLongitude.visibility = View.INVISIBLE
                 bsByGpsBinding.tvGpsDialogLongitude.visibility = View.INVISIBLE
                 bsByGpsBinding.tvGpsDialogLatitude.visibility = View.INVISIBLE
+
+                bsByGpsBinding.btnProceedByGps.visibility = View.INVISIBLE
             }
             EnumStatus.ERROR -> {
                 bsByGpsBinding.ivWarning.visibility = View.VISIBLE
@@ -298,6 +324,10 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>(
                 bsByGpsBinding.tvGpsDialogLatitude.visibility = View.INVISIBLE
                 bsByGpsBinding.tvViewLatitude.visibility = View.INVISIBLE
                 bsByGpsBinding.tvViewLongitude.visibility = View.INVISIBLE
+                bsByGpsBinding.btnProceedByGps.text = getString(R.string.open_setting)
+
+                bsByGpsBinding.btnProceedByGps.visibility = View.VISIBLE
+                bsByGpsBinding.btnProceedByGps.text = getString(R.string.open_setting)
             }
         }
     }

@@ -50,8 +50,8 @@ import kotlin.math.abs
  */
 
 @AndroidEntryPoint
-class MainFragment(viewModelTest: FragmentMainViewModel? = null) : BaseFragment<FragmentMainBinding, FragmentMainViewModel>(
-    R.layout.fragment_main, FragmentMainViewModel::class.java, viewModelTest
+class MainFragment(viewModelTestFragment: FragmentMainViewModel? = null) : BaseFragment<FragmentMainBinding, FragmentMainViewModel>(
+    R.layout.fragment_main, FragmentMainViewModel::class.java, viewModelTestFragment
 ), View.OnClickListener{
 
     private var isTimerHasBanded = false
@@ -86,13 +86,14 @@ class MainFragment(viewModelTest: FragmentMainViewModel? = null) : BaseFragment<
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
-        inflateBinding()
         initRvDuaCollection()
         viewModel.getMsSetting()
     }
 
     override fun setListener() {
         super.setListener()
+
+        inflateBinding()
         cbClickListener()
         binding.includeQuranQuote.tvQuranAyahQuoteClick.setOnClickListener(this)
         binding.includeQuranQuote.tvQuranAyahQuote.setOnClickListener(this)
@@ -174,7 +175,6 @@ class MainFragment(viewModelTest: FragmentMainViewModel? = null) : BaseFragment<
                     if(retVal.data?.isEmpty()!!)
                         return@observe
 
-                    Toast.makeText(requireContext(), getString(R.string.offline), Toast.LENGTH_SHORT).show()
                     bindCheckBox(retVal.data)
                     updateAlarmManager(retVal.data)
                     bindWidget(createWidgetData(retVal.data))

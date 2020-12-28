@@ -3,9 +3,9 @@ package com.programmergabut.solatkuy.ui.fragmentcompass.viewmodel
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.Observer
 import com.nhaarman.mockitokotlin2.mock
+import com.programmergabut.solatkuy.CoroutineTestUtil.Companion.toDeferred
 import com.programmergabut.solatkuy.CoroutinesTestRule
-import com.programmergabut.solatkuy.DummyRetValue
-import com.programmergabut.solatkuy.data.PrayerRepository
+import com.programmergabut.solatkuy.DummyRetValueTest
 import com.programmergabut.solatkuy.data.PrayerRepositoryImpl
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
 import com.programmergabut.solatkuy.data.remote.remoteentity.compassJson.CompassResponse
@@ -52,15 +52,16 @@ class CompassFragmentViewModelTest {
 
         //given
         val observer = mock<Observer<Resource<CompassResponse>>>()
-        val dummyCompass = Resource.success(DummyRetValue.fetchCompassApi())
-        `when`(prayerRepository.fetchCompass(msApi1)).thenReturn(dummyCompass.data)
+        val dummyCompass = Resource.success(DummyRetValueTest.fetchCompassApi())
+        dummyCompass.data?.statusResponse = "1"
+        `when`(prayerRepository.fetchCompass(msApi1)).thenReturn(dummyCompass.data!!.toDeferred())
 
         //when
         viewModel.fetchCompassApi(msApi1)
         val result = viewModel.compass.value
 
         //--return value
-        Mockito.verify(prayerRepository).fetchCompass(msApi1)
+        Mockito.verify(prayerRepository).fetchCompass(msApi1).toDeferred()
         Assert.assertEquals(dummyCompass, result)
 
         //--observer

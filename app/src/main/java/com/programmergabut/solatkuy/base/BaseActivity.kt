@@ -1,12 +1,15 @@
 package com.programmergabut.solatkuy.base
 
+import android.Manifest
 import android.content.Context
 import android.content.Intent
+import android.content.pm.PackageManager
 import android.os.Bundle
 import android.view.MotionEvent
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
+import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.ViewModel
@@ -27,6 +30,8 @@ abstract class BaseActivity<DB: ViewDataBinding, VM: ViewModel>(
     lateinit var db : SolatKuyRoom
     @Inject
     lateinit var sharedPrefUtil: SharedPrefUtil
+
+    protected val LOCATION_PERMISSIONS = 101
 
     protected lateinit var binding : DB
     protected lateinit var viewModel: VM
@@ -51,6 +56,14 @@ abstract class BaseActivity<DB: ViewDataBinding, VM: ViewModel>(
 
     }
 
+    protected fun isLocationPermissionGranted(): Boolean {
+        return (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+    }
+
+    protected fun listLocationPermission(): Array<String> {
+        return arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
+    }
 
     override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
         val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
