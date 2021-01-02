@@ -1,6 +1,5 @@
 package com.programmergabut.solatkuy.ui.activitymain.fragmentsetting
 
-import android.Manifest
 import android.annotation.SuppressLint
 import android.app.AlertDialog
 import android.app.Dialog
@@ -8,11 +7,9 @@ import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
 import android.content.pm.PackageManager
-import android.location.Location
 import android.location.LocationManager
 import android.os.Bundle
 import android.os.Looper
-import android.provider.Settings
 import android.view.LayoutInflater
 import android.view.View
 import android.widget.Toast
@@ -139,7 +136,7 @@ class SettingFragment(viewModelTest: FragmentSettingViewModel? = null) : BaseFra
             R.id.btn_proceedByGps -> {
                 if(dialogGpsBinding.tvGpsDialogLatitude.visibility != View.VISIBLE &&
                     dialogGpsBinding.tvViewLongitude.visibility != View.VISIBLE){
-                    startActivity(Intent(Settings.ACTION_SETTINGS))
+                    startActivity(Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS))
                 }
                 else {
                     val latitude = dialogGpsBinding.tvGpsDialogLatitude.text.toString().trim()

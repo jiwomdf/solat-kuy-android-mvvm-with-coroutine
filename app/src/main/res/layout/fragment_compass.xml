@@ -88,22 +88,11 @@
                     android:gravity="center"
                     android:text="@string/please_tilt_your_phone_until_the_image_is_balanced"
                     android:textStyle="bold"
-                    app:layout_constraintBottom_toTopOf="@+id/ll_UselessLeaf"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.461"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/cv_compass"
                     app:layout_constraintVertical_bias="0.0" />
-
-                <LinearLayout
-                    android:id="@+id/ll_UselessLeaf"
-                    android:layout_width="match_parent"
-                    android:layout_height="?attr/actionBarSize"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    tools:ignore="UselessLeaf"
-                    android:orientation="vertical" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 

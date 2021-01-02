@@ -56,7 +56,7 @@ class QuranFragmentViewModel @ViewModelInject constructor(private val quranRepos
         if(allSurahSync == null)
             return listOf()
 
-        val allSurahDatas = allSurahSync!!
+        val allSurahDatas = allSurahSync
         return when(juzz){
             1 -> allSurahDatas.filter { x -> x.number in 1..2 }
             2 -> allSurahDatas.filter { x -> x.number == 2 }
