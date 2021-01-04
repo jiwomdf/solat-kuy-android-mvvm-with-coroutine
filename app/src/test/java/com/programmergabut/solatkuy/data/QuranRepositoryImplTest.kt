@@ -41,7 +41,7 @@ class QuranRepositoryImplTest {
     /* Remote */
     @Test
     fun fetchReadSurahEn() = coroutinesTestRule.testDispatcher.runBlockingTest {
-        val dummyQuranSurah = DummyRetValueTest.surahEnID_1()
+        val dummyQuranSurah = DummyRetValueTest.surahEnID_1<QuranRepositoryImplTest>()
 
         Mockito.`when`(fakeRemoteDataSourceAlQuran.fetchReadSurahEn(surahID)).thenReturn(dummyQuranSurah)
         quranRepository.fetchReadSurahEn(surahID).toDeferred()
@@ -52,7 +52,7 @@ class QuranRepositoryImplTest {
 
     @Test
     fun fetchReadSurahAr() = coroutinesTestRule.testDispatcher.runBlockingTest {
-        val dummyQuranSurah = DummyRetValueTest.surahArID_1()
+        val dummyQuranSurah = DummyRetValueTest.surahArID_1<QuranRepositoryImplTest>()
 
         Mockito.`when`(fakeRemoteDataSourceAlQuran.fetchReadSurahAr(surahID)).thenReturn(dummyQuranSurah)
         quranRepository.fetchReadSurahAr(surahID).toDeferred()
@@ -63,7 +63,7 @@ class QuranRepositoryImplTest {
 
     @Test
     fun fetchAllSurah() = coroutinesTestRule.testDispatcher.runBlockingTest {
-        val dummyQuranSurah = DummyRetValueTest.fetchAllSurah()
+        val dummyQuranSurah = DummyRetValueTest.fetchAllSurahAr<QuranRepositoryImplTest>()
 
         Mockito.`when`(fakeRemoteDataSourceAlQuran.fetchAllSurah()).thenReturn(dummyQuranSurah)
         quranRepository.fetchAllSurah().toDeferred()

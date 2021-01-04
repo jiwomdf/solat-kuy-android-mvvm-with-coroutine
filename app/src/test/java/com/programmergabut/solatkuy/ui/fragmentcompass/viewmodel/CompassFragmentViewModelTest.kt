@@ -53,7 +53,7 @@ class CompassFragmentViewModelTest {
 
         //given
         val observer = mock<Observer<Resource<CompassResponse>>>()
-        val dummyCompass = Resource.success(DummyRetValueTest.fetchCompassApi())
+        val dummyCompass = Resource.success(DummyRetValueTest.fetchCompassApi<CompassFragmentViewModelTest>())
         dummyCompass.data?.statusResponse = "1"
         `when`(prayerRepository.fetchCompass(msApi1)).thenReturn(dummyCompass.data!!.toDeferred())
 

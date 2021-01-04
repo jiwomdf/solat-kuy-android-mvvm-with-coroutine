@@ -7,6 +7,7 @@ import com.programmergabut.solatkuy.CoroutineTestUtil.Companion.toDeferred
 import com.programmergabut.solatkuy.CoroutinesTestRule
 import com.programmergabut.solatkuy.DummyRetValueTest
 import com.programmergabut.solatkuy.data.FakeQuranRepository
+import com.programmergabut.solatkuy.data.QuranRepositoryImplTest
 import com.programmergabut.solatkuy.data.remote.remoteentity.quranallsurahJson.Data
 import com.programmergabut.solatkuy.ui.activitymain.fragmentquran.QuranFragmentViewModel
 import com.programmergabut.solatkuy.util.Resource
@@ -50,9 +51,9 @@ class QuranFragmentViewModelTest {
 
         //given
         val observer = mock<Observer<Resource<List<Data>>>>()
-        val dummySelectedSurahAr = Resource.success(DummyRetValueTest.fetchAllSurah())
+        val dummySelectedSurahAr = Resource.success(DummyRetValueTest.fetchAllSurahAr<QuranRepositoryImplTest>())
         dummySelectedSurahAr.data?.statusResponse = "1"
-        val dummySelectedSurahData = Resource.success(DummyRetValueTest.fetchAllSurahData())
+        val dummySelectedSurahData = Resource.success(DummyRetValueTest.fetchAllSurahWithLowerCase<QuranFragmentViewModelTest>())
 
         //scenario
         `when`(fakeQuranRepository.fetchAllSurah()).thenReturn(dummySelectedSurahAr.data!!.toDeferred())

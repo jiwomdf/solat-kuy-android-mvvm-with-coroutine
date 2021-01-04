@@ -1,4 +1,4 @@
-package com.programmergabut.solatkuy.ui
+package com.programmergabut.solatkuy
 
 import androidx.lifecycle.MutableLiveData
 import com.programmergabut.solatkuy.data.local.localentity.*
@@ -17,7 +17,13 @@ import com.programmergabut.solatkuy.util.EnumConfig
 
 object DummyRetValueAndroidTest {
 
-    /* Last update : 2 July 2020 */
+    /* Last update : 4 Jan 2021 */
+    val ALL_SURAH_SERVICE_JSON = "allSurahService.json"
+    val CALENDAR_API_SERVICE_JSON = "calendarApiService.json"
+    val QIBLA_API_SERVICE_JSON = "qiblaApiService.json"
+    val READ_SURAH_EN_SERVICE_JSON = "readSurahEnService.json"
+    val READ_SURAH_SERVICE_JSON = "readSurahService.json"
+
 
     /* Remote */
     fun getNotifiedPrayer(): List<NotifiedPrayer> {
@@ -70,87 +76,28 @@ object DummyRetValueAndroidTest {
         return listNotifiedPrayer
     }
 
-    fun fetchAsmaAlHusnaApi(): AsmaAlHusnaResponse {
-
-        val list = mutableListOf<Data>()
-
-        list.add(Data(En("test"),"test",0,"test"))
-
-        return AsmaAlHusnaResponse(0, list, "testing")
+    inline fun <reified BASE> fetchAsmaAlHusnaApi(): AsmaAlHusnaResponse {
+        return JsonToPojoConverterAndroidTest.convertJson<BASE, AsmaAlHusnaResponse>(READ_SURAH_EN_SERVICE_JSON)
     }
 
-    fun surahEnID_1(): ReadSurahEnResponse{
-        val listAyah = mutableListOf<Ayah>()
-        listAyah.add(Ayah(0,0,0,0,0,0,0,"test"))
-        val data = com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonEn.Data(listAyah,
-            Edition("","","","","","",""),
-            "", "", "", 0,0, ""
-        )
-        val response =  ReadSurahEnResponse()
-        response.code = 0
-        response.data = data
-        response.status = ""
-
-        return  response
+    inline fun <reified BASE> surahEnID_1(): ReadSurahEnResponse{
+        return JsonToPojoConverterAndroidTest.convertJson<BASE, ReadSurahEnResponse>(READ_SURAH_EN_SERVICE_JSON)
     }
 
-    fun surahArID_1(): ReadSurahArResponse{
-        val listAyah = mutableListOf<com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonAr.Ayah>()
-        listAyah.add(com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonAr.Ayah(
-            0,0,0,0,0,0,0,"test","test",false, isLastRead = false
-        ))
-        val data = com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonAr.Data(listAyah,
-            com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonAr.Edition(
-                "","","","","","",""),
-            "", "", "", 0,0, ""
-        )
-        val response = ReadSurahArResponse()
-        response.code = 0
-        response.data = data
-        response.status = ""
-
-        return response
+    inline fun <reified BASE> surahArID_1(): ReadSurahArResponse{
+        return JsonToPojoConverterAndroidTest.convertJson<BASE, ReadSurahArResponse>(READ_SURAH_SERVICE_JSON)
     }
 
-    fun fetchPrayerApi(): PrayerResponse{
-        val listData = mutableListOf<com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.Data>()
-        listData.add(
-            Data(
-            Date(Gregorian("","", Designation("", ""),"", Month("", 1), Weekday(""),""),
-                Hijri("","", DesignationX("",""),"", listOf(), MonthX("","",1), WeekdayX("",""),""),
-                "", ""),null,
-            Timings("15:00", "12:00", "04:00", "05:00",
-                "20:00", "18:00", "00:00", "06:00", "17:00"))
-        )
-
-        val response =  PrayerResponse()
-        response.code = 0
-        response.data = listData
-        response.status = ""
-
-        return response
+    inline fun <reified BASE> fetchPrayerApi(): PrayerResponse{
+        return JsonToPojoConverterAndroidTest.convertJson<BASE, PrayerResponse>(CALENDAR_API_SERVICE_JSON)
     }
 
-    fun fetchCompassApi(): CompassResponse{
-        val response =  CompassResponse()
-        response.code = 0
-        response.data = com.programmergabut.solatkuy.data.remote.remoteentity.compassJson.Data(0.0,0.0,0.0)
-        response.status = ""
-
-        return response
+    inline fun <reified BASE> fetchCompassApi(): CompassResponse{
+        return JsonToPojoConverterAndroidTest.convertJson<BASE, CompassResponse>(QIBLA_API_SERVICE_JSON)
     }
 
-    fun fetchAllSurah(): AllSurahResponse{
-        val data = mutableListOf(
-            com.programmergabut.solatkuy.data.remote.remoteentity.quranallsurahJson.Data(
-                "","","","",0,0,"")
-        )
-        val response = AllSurahResponse()
-        response.code = 0
-        response.data = data
-        response.status = ""
-
-        return response
+    inline fun <reified BASE> fetchAllSurah(): AllSurahResponse{
+        return JsonToPojoConverterAndroidTest.convertJson<BASE, AllSurahResponse>(ALL_SURAH_SERVICE_JSON)
     }
 
     /* Database */
@@ -159,7 +106,7 @@ object DummyRetValueAndroidTest {
     }
 
     fun getListMsFavAyah(): MutableList<MsFavAyah> {
-        return mutableListOf(MsFavAyah(1, 2,"","",""))
+        return mutableListOf(MsFavAyah(1, 2,"test","test","test"))
     }
 
     fun getListMsFavSurah(): MutableList<MsFavSurah> {

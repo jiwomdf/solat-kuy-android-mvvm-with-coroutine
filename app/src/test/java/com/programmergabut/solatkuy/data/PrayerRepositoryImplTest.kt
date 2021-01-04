@@ -41,7 +41,7 @@ class PrayerRepositoryImplTest{
     /* Remote */
     @Test
     fun fetchPrayerApi() = coroutinesTestRule.testDispatcher.runBlockingTest {
-        val dummyPrayerApi = DummyRetValueTest.fetchPrayerApi()
+        val dummyPrayerApi = DummyRetValueTest.fetchPrayerApi<PrayerRepositoryImplTest>()
 
         remoteDataSourceAladhan.fetchPrayerApi(msApi1)
         Mockito.`when`(remoteDataSourceAladhan.fetchPrayerApi(msApi1)).thenReturn(dummyPrayerApi)
@@ -54,7 +54,7 @@ class PrayerRepositoryImplTest{
     fun fetchCompass() = coroutinesTestRule.testDispatcher.runBlockingTest {
         prayerRepository.fetchCompass(msApi1)
 
-        val dummyCompassApi = DummyRetValueTest.fetchCompassApi()
+        val dummyCompassApi = DummyRetValueTest.fetchCompassApi<PrayerRepositoryImplTest>()
 
         Mockito.`when`(remoteDataSourceAladhan.fetchCompassApi(msApi1)).thenReturn(dummyCompassApi)
         Mockito.verify(remoteDataSourceAladhan).fetchCompassApi(msApi1)

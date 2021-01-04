@@ -55,15 +55,15 @@ class ReadSurahActivityTest{
         //given
         val observer = mock<Observer<Resource<ReadSurahArResponse>>>()
 
-        val dummyDataAr = DummyRetValueTest.surahArID_1()
+        val dummyDataAr = DummyRetValueTest.surahArID_1<ReadSurahActivityTest>()
         dummyDataAr.statusResponse = "1"
         val dummySelectedSurahAr = Resource.success(dummyDataAr)
 
-        val dummyDataEn = DummyRetValueTest.surahEnID_1()
+        val dummyDataEn = DummyRetValueTest.surahEnID_1<ReadSurahActivityTest>()
         dummyDataEn.statusResponse = "1"
         val dummySelectedSurahEn = Resource.success(dummyDataEn)
 
-        viewModel.fetchedArSurah = DummyRetValueTest.surahArID_1()
+        viewModel.fetchedArSurah = DummyRetValueTest.surahArID_1<ReadSurahActivityTest>()
 
         //scenario
         Mockito.`when`(fakeQuranRepository.fetchReadSurahAr(surahID)).thenReturn(dummySelectedSurahAr.data!!.toDeferred())
@@ -118,7 +118,7 @@ class ReadSurahActivityTest{
         val observer = mock<Observer<Resource<List<MsFavAyah>>>>()
         val dummyLiveData: MutableLiveData<List<MsFavAyah>> = MutableLiveData()
         dummyLiveData.value = DummyRetValueTest.getListMsFavAyah()
-        viewModel.fetchedArSurah = DummyRetValueTest.surahArID_1()
+        viewModel.fetchedArSurah = DummyRetValueTest.surahArID_1<ReadSurahActivityTest>()
 
         //scenario
         Mockito.`when`(fakeQuranRepository.getListFavAyahBySurahID(surahID)).thenReturn(dummyLiveData)

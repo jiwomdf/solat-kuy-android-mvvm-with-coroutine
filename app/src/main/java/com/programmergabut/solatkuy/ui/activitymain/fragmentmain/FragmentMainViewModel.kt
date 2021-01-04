@@ -13,7 +13,6 @@ import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.Timings
 import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonEn.ReadSurahEnResponse
 import com.programmergabut.solatkuy.util.EnumConfig
 import com.programmergabut.solatkuy.util.Resource
-import com.programmergabut.solatkuy.util.EnumConfig.Companion.IS_TESTING
 import com.programmergabut.solatkuy.util.helper.RunIdlingResourceHelper.Companion.runIdlingResourceDecrement
 import com.programmergabut.solatkuy.util.helper.RunIdlingResourceHelper.Companion.runIdlingResourceIncrement
 import kotlinx.coroutines.launch
@@ -55,36 +54,38 @@ class FragmentMainViewModel @ViewModelInject constructor(
         _notifiedPrayer.postValue(Resource.loading(null))
         try {
             runIdlingResourceIncrement()
-            if(IS_TESTING){
+
+            /* if you want to change the prayer time manually for testing,
+             * uncomment it and comment the code below
+             *
                 prayerRepository.syncNotifiedPrayerTesting().let {
-                    _notifiedPrayer.postValue(Resource.success(it))
+                _notifiedPrayer.postValue(Resource.success(it))
+                runIdlingResourceDecrement()
+            } */
+
+            val response = prayerRepository.fetchPrayerApi(msApi1).await()
+            val result = prayerRepository.getListNotifiedPrayerSync()
+
+            if(response.statusResponse == "1"){
+                val currentDate = SimpleDateFormat("dd", Locale.getDefault()).format(Date())
+                val timings = response.data.find { obj -> obj.date.gregorian?.day == currentDate.toString() }?.timings
+
+                if(timings != null){
+                    val prayers = createPrayerTime(timings)
+                    prayers.forEach { prayer -> prayerRepository.updatePrayerTime(prayer.key, prayer.value) }
+                    _notifiedPrayer.postValue(Resource.success(result))
                     runIdlingResourceDecrement()
                 }
-            }
-            else {
-                val response = prayerRepository.fetchPrayerApi(msApi1).await()
-                val result = prayerRepository.getListNotifiedPrayerSync()
-
-                if(response.statusResponse == "1"){
-                    val currentDate = SimpleDateFormat("dd", Locale.getDefault()).format(Date())
-                    val timings = response.data.find { obj -> obj.date.gregorian?.day == currentDate.toString() }?.timings
-
-                    if(timings != null){
-                        val prayers = createPrayerTime(timings)
-                        prayers.forEach { prayer -> prayerRepository.updatePrayerTime(prayer.key, prayer.value) }
-                        _notifiedPrayer.postValue(Resource.success(result))
-                    }
-                    else{
-                        _notifiedPrayer.postValue(Resource.error("Today prayer data is not found", result))
-                        runIdlingResourceDecrement()
-                        return@launch
-                    }
-                }
                 else{
-                    _notifiedPrayer.postValue(Resource.error("Application Offline", result))
+                    _notifiedPrayer.postValue(Resource.error("Today prayer data is not found", result))
                     runIdlingResourceDecrement()
                     return@launch
                 }
+            }
+            else{
+                _notifiedPrayer.postValue(Resource.error("Application Offline", result))
+                runIdlingResourceDecrement()
+                return@launch
             }
         }
         catch (ex: Exception){

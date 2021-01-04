@@ -1,4 +1,4 @@
-package com.programmergabut.solatkuy.ui
+package com.programmergabut.solatkuy
 
 import com.programmergabut.solatkuy.R
 

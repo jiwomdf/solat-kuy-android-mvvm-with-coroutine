@@ -2,13 +2,12 @@ package com.programmergabut.solatkuy.data
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.programmergabut.solatkuy.data.PrayerRepository
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
 import com.programmergabut.solatkuy.data.local.localentity.MsSetting
 import com.programmergabut.solatkuy.data.local.localentity.NotifiedPrayer
 import com.programmergabut.solatkuy.data.remote.remoteentity.compassJson.CompassResponse
 import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.PrayerResponse
-import com.programmergabut.solatkuy.ui.DummyRetValueAndroidTest
+import com.programmergabut.solatkuy.DummyRetValueAndroidTest
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers.IO
@@ -71,12 +70,12 @@ class FakePrayerRepositoryAndroidTest: PrayerRepository {
      */
     override suspend fun fetchCompass(msApi1: MsApi1): Deferred<CompassResponse> {
         return CoroutineScope(IO).async {
-            DummyRetValueAndroidTest.fetchCompassApi()
+            DummyRetValueAndroidTest.fetchCompassApi<FakePrayerRepositoryAndroidTest>()
         }
     }
     override suspend fun fetchPrayerApi(msApi1: MsApi1): Deferred<PrayerResponse> {
         return CoroutineScope(IO).async {
-            DummyRetValueAndroidTest.fetchPrayerApi()
+            DummyRetValueAndroidTest.fetchPrayerApi<FakePrayerRepositoryAndroidTest>()
         }
     }
 

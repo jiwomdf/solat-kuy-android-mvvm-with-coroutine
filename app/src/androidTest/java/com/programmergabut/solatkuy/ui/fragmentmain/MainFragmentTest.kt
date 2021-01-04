@@ -26,15 +26,29 @@ import androidx.test.espresso.action.ViewActions
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions
 import androidx.test.espresso.matcher.ViewMatchers
+import com.programmergabut.android_jetpack_testing.getOrAwaitValue
+import com.programmergabut.solatkuy.DummyRetValueAndroidTest
+import com.programmergabut.solatkuy.data.FakePrayerRepositoryAndroidTest
+import com.programmergabut.solatkuy.data.FakeQuranRepositoryAndroidTest
+import com.programmergabut.solatkuy.launchFragmentInHiltContainer
+import com.programmergabut.solatkuy.ui.SolatKuyFragmentFactory
+import com.programmergabut.solatkuy.ui.activitymain.fragmentmain.FragmentMainViewModel
+import com.programmergabut.solatkuy.ui.activitymain.fragmentmain.MainFragment
 import com.programmergabut.solatkuy.ui.nestedScrollTo
+import kotlinx.coroutines.ExperimentalCoroutinesApi
+import javax.inject.Inject
 
 
+//@ExperimentalCoroutinesApi
 @RunWith(AndroidJUnit4::class)
 @HiltAndroidTest
 class MainFragmentTest{
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
+
+    //@Inject
+    //lateinit var fragmentFactory: SolatKuyFragmentFactory
 
     @Before
     fun setUp() {
@@ -53,6 +67,14 @@ class MainFragmentTest{
         activityScenario.onActivity {
             it.findNavController(R.id.navHostFragment).navigate(R.id.fragmentMain)
         }
+
+        /* val activityScenario = ActivityScenario.launch(MainActivity::class.java)
+        activityScenario.onActivity {
+            it.findNavController(R.id.navHostFragment).navigate(R.id.fragmentMain)
+        } */
+
+        //testViewModel.notifiedPrayer.getOrAwaitValue()
+        //testViewModel.syncNotifiedPrayer(DummyRetValueAndroidTest.getMsApi1())
 
         onView(withId(R.id.tv_view_city)).check(matches(isDisplayed()))
         onView(withId(R.id.tv_view_latitude)).check(matches(isDisplayed()))

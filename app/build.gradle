@@ -29,6 +29,15 @@ android {
         }
     }
 
+    sourceSets {
+        test {
+            resources.srcDirs += ['src/test/resources']
+        }
+        androidTest {
+            resources.srcDirs += ['src/androidTest/resources']
+        }
+    }
+
     buildFeatures {
         dataBinding = true
         // viewBinding = true

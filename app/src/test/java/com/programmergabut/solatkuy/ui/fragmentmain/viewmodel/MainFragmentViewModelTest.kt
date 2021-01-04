@@ -57,12 +57,11 @@ class MainFragmentViewModelTest {
         verify(fakePrayerRepository).getMsApi1()
     }
 
-    /* Because the dummy data is not ready, so its return error */
     @Test
     fun syncNotifiedPrayer() = coroutinesTestRule.testDispatcher.runBlockingTest{
         //given
         val observer = mock<Observer<Resource<List<NotifiedPrayer>>>>()
-        val dummyNotifiedPrayer = Resource.success(DummyRetValueTest.fetchPrayerApi())
+        val dummyNotifiedPrayer = Resource.success(DummyRetValueTest.fetchPrayerApi<MainFragmentViewModelTest>())
         val dummyPrayerResponse = Resource.success(DummyRetValueTest.getNotifiedPrayer())
         dummyNotifiedPrayer.data?.statusResponse = "1"
         `when`(fakePrayerRepository.fetchPrayerApi(msApi1)).thenReturn(dummyNotifiedPrayer.data!!.toDeferred())
@@ -85,7 +84,7 @@ class MainFragmentViewModelTest {
     fun fetchReadSurahEn() = coroutinesTestRule.testDispatcher.runBlockingTest{
         //given
         val observer = mock<Observer<Resource<ReadSurahEnResponse>>>()
-        val dummyQuranSurah = Resource.success(DummyRetValueTest.surahEnID_1())
+        val dummyQuranSurah = Resource.success(DummyRetValueTest.surahEnID_1<MainFragmentViewModelTest>())
         dummyQuranSurah.data?.statusResponse= "1"
         `when`(fakeQuranRepository.fetchReadSurahEn(surahID)).thenReturn(dummyQuranSurah.data!!.toDeferred())
 

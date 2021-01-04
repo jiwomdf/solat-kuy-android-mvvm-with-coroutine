@@ -2,13 +2,12 @@ package com.programmergabut.solatkuy.data
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import com.programmergabut.solatkuy.data.QuranRepository
 import com.programmergabut.solatkuy.data.local.localentity.MsFavAyah
 import com.programmergabut.solatkuy.data.local.localentity.MsFavSurah
 import com.programmergabut.solatkuy.data.remote.remoteentity.quranallsurahJson.AllSurahResponse
 import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonAr.ReadSurahArResponse
 import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonEn.ReadSurahEnResponse
-import com.programmergabut.solatkuy.ui.DummyRetValueAndroidTest
+import com.programmergabut.solatkuy.DummyRetValueAndroidTest
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
 
@@ -68,17 +67,17 @@ class FakeQuranRepositoryAndroidTest: QuranRepository {
      */
     override suspend fun fetchReadSurahEn(surahID: Int): Deferred<ReadSurahEnResponse> {
         return CoroutineScope(IO).async {
-            DummyRetValueAndroidTest.surahEnID_1()
+            DummyRetValueAndroidTest.surahEnID_1<FakeQuranRepositoryAndroidTest>()
         }
     }
     override suspend fun fetchAllSurah(): Deferred<AllSurahResponse> {
         return CoroutineScope(IO).async {
-            DummyRetValueAndroidTest.fetchAllSurah()
+            DummyRetValueAndroidTest.fetchAllSurah<FakeQuranRepositoryAndroidTest>()
         }
     }
     override suspend fun fetchReadSurahAr(surahID: Int): Deferred<ReadSurahArResponse> {
         return CoroutineScope(IO).async {
-            DummyRetValueAndroidTest.surahArID_1()
+            DummyRetValueAndroidTest.surahArID_1<FakeQuranRepositoryAndroidTest>()
         }
     }
 
