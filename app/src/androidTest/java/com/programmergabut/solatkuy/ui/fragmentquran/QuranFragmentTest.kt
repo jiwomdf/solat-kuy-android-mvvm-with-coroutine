@@ -3,15 +3,18 @@ package com.programmergabut.solatkuy.ui.fragmentquran
 import androidx.navigation.findNavController
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.core.app.ActivityScenario
+import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.action.ViewActions.click
+import androidx.test.espresso.action.ViewActions.swipeLeft
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.programmergabut.solatkuy.R
+import com.programmergabut.solatkuy.ui.RecyclerViewItemCountAssertion
 import com.programmergabut.solatkuy.ui.activitymain.MainActivity
 import com.programmergabut.solatkuy.util.EspressoIdlingResource
 import dagger.hilt.android.testing.HiltAndroidRule
@@ -72,12 +75,16 @@ class QuranFragmentTest{
         }
 
         onView(withId(R.id.rv_quran_surah)).perform(RecyclerViewActions
-            .actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click())) //click last surah
+            .actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click())) //click first surah
 
         onView(withId(R.id.ab_readQuran)).check(matches(isDisplayed()))
         onView(withId(R.id.tb_readSurah)).check(matches(isDisplayed()))
         //openActionBarOverflowOrOptionsMenu(getInstrumentation().targetContext)
         onView(withId(R.id.i_star_surah)).perform(click())
+
+        Espresso.pressBack()
+
+        onView(withId(R.id.rv_stared_ayah)).check(RecyclerViewItemCountAssertion(0))
     }
 
     @Test
@@ -86,5 +93,23 @@ class QuranFragmentTest{
         activityScenario.onActivity {
             it.findNavController(R.id.navHostFragment).navigate(R.id.quranFragment)
         }
+    }
+
+    @Test
+    fun test_open_last_surah_than_swipe_left(){
+        val activityScenario = ActivityScenario.launch(MainActivity::class.java)
+        activityScenario.onActivity {
+            it.findNavController(R.id.navHostFragment).navigate(R.id.quranFragment)
+        }
+
+        onView(withId(R.id.rv_quran_surah)).perform(RecyclerViewActions
+            .actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click())) //click last surah
+
+        onView(withId(R.id.rv_read_surah)).perform(RecyclerViewActions
+            .actionOnItemAtPosition<RecyclerView.ViewHolder>(0, swipeLeft())) //swipe first ayah
+
+        Espresso.pressBack()
+
+        onView(withId(R.id.iv_last_read_ayah)).perform(click())
     }
 }

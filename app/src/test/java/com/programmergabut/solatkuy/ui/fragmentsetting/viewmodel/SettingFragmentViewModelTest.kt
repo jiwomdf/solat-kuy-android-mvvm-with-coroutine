@@ -3,7 +3,7 @@ package com.programmergabut.solatkuy.ui.fragmentsetting.viewmodel
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.programmergabut.solatkuy.CoroutinesTestRule
 import com.programmergabut.solatkuy.DummyArgument
-import com.programmergabut.solatkuy.data.PrayerRepositoryImpl
+import com.programmergabut.solatkuy.data.FakePrayerRepository
 import com.programmergabut.solatkuy.ui.activitymain.fragmentsetting.FragmentSettingViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
@@ -29,20 +29,20 @@ class SettingFragmentViewModelTest {
     val coroutinesTestRule: CoroutinesTestRule = CoroutinesTestRule()
 
     @Mock
-    private lateinit var prayerRepositoryImpl: PrayerRepositoryImpl
+    private lateinit var prayerRepository: FakePrayerRepository
 
     private val msApi1 = DummyArgument.msApi1
 
     @Before
     fun setUp() {
-        viewModel = FragmentSettingViewModel(prayerRepositoryImpl)
-        verify(prayerRepositoryImpl).getMsApi1()
+        viewModel = FragmentSettingViewModel(prayerRepository)
+        verify(prayerRepository).getMsApi1()
     }
 
     @Test
     fun updateMsApi1() = coroutinesTestRule.testDispatcher.runBlockingTest{
         viewModel.updateMsApi1(msApi1)
-        verify(prayerRepositoryImpl).updateMsApi1(msApi1)
+        verify(prayerRepository).updateMsApi1(msApi1)
     }
 
 }

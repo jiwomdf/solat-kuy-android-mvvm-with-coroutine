@@ -3,7 +3,7 @@ package com.programmergabut.solatkuy.ui.activityfavayah
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.programmergabut.solatkuy.CoroutinesTestRule
 import com.programmergabut.solatkuy.DummyArgument
-import com.programmergabut.solatkuy.data.QuranRepositoryImpl
+import com.programmergabut.solatkuy.data.FakeQuranRepository
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before
@@ -28,24 +28,24 @@ class FavAyahViewModelTest {
     val coroutinesTestRule: CoroutinesTestRule = CoroutinesTestRule()
 
     @Mock
-    private lateinit var quranRepositoryImpl: QuranRepositoryImpl
+    private lateinit var quranRepository: FakeQuranRepository
 
     private val msFavAyah = DummyArgument.msFavAyah
 
     @Before
     fun setUp() {
-        viewModel = FavAyahViewModel(quranRepositoryImpl)
+        viewModel = FavAyahViewModel(quranRepository)
     }
 
     @Test
     fun getFavAyah() = coroutinesTestRule.testDispatcher.runBlockingTest {
         viewModel.favAyah()
-        verify(quranRepositoryImpl).getListFavAyah()
+        verify(quranRepository).getListFavAyah()
     }
 
     @Test
     fun deleteFavAyah() = coroutinesTestRule.testDispatcher.runBlockingTest{
         viewModel.deleteFavAyah(msFavAyah)
-        verify(quranRepositoryImpl).deleteFavAyah(msFavAyah)
+        verify(quranRepository).deleteFavAyah(msFavAyah)
     }
 }
