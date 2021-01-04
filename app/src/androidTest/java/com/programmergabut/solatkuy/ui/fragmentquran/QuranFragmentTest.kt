@@ -86,7 +86,5 @@ class QuranFragmentTest{
         activityScenario.onActivity {
             it.findNavController(R.id.navHostFragment).navigate(R.id.quranFragment)
         }
-
-
     }
 }
