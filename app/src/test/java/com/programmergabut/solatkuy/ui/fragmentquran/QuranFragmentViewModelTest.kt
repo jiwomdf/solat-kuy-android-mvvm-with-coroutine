@@ -9,7 +9,6 @@ import com.programmergabut.solatkuy.DummyRetValueTest
 import com.programmergabut.solatkuy.data.FakeQuranRepository
 import com.programmergabut.solatkuy.data.QuranRepositoryImplTest
 import com.programmergabut.solatkuy.data.remote.remoteentity.quranallsurahJson.Data
-import com.programmergabut.solatkuy.ui.activitymain.fragmentquran.QuranFragmentViewModel
 import com.programmergabut.solatkuy.util.Resource
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
@@ -42,7 +41,7 @@ class QuranFragmentViewModelTest {
     fun setUp(){
         viewModel = QuranFragmentViewModel(fakeQuranRepository)
 
-        verify(fakeQuranRepository).getListFavSurah()
+        verify(fakeQuranRepository).observeListFavSurah()
     }
 
 

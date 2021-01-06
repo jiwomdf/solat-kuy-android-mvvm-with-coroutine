@@ -21,11 +21,9 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:targetApi="n">
-        <activity android:name=".ui.activityfavayah.FavAyahActivity" />
-        <activity android:name=".ui.activityreadsurah.ReadSurahActivity" />
-        <activity android:name=".ui.activityprayer.DuaActivity" />
+        <activity android:name=".ui.DuaActivity" />
         <activity
-            android:name=".ui.activitymain.MainActivity"
+            android:name=".ui.MainActivity"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity">
             <intent-filter>

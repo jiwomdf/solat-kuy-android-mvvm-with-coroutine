@@ -1,26 +1,36 @@
 package com.programmergabut.solatkuy.ui.fragmentcompass
 
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.espresso.IdlingRegistry
-import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.programmergabut.solatkuy.util.EspressoIdlingResource
+import com.programmergabut.solatkuy.launchFragmentInHiltContainer
+import com.programmergabut.solatkuy.ui.SolatKuyFragmentFactoryAndroidTest
+import com.programmergabut.solatkuy.util.idlingresource.EspressoIdlingResource
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.junit.runner.RunWith
+import javax.inject.Inject
 
 
-@RunWith(AndroidJUnit4::class)
 @HiltAndroidTest
+@ExperimentalCoroutinesApi
 class CompassFragmentTest {
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
 
+    @get:Rule
+    val instantTaskExecutorRule = InstantTaskExecutorRule()
+
+    @Inject
+    lateinit var fragmentFactory: SolatKuyFragmentFactoryAndroidTest
+
     @Before
     fun setUp() {
+        hiltRule.inject()
         IdlingRegistry.getInstance().register(EspressoIdlingResource.espressoTestIdlingResource)
     }
 
@@ -32,15 +42,21 @@ class CompassFragmentTest {
     @Test
     fun test_visibility_fragmentCompass(){
 
-        /* val activityScenario = ActivityScenario.launch(MainActivity::class.java)
-        activityScenario.onActivity {
-            it.findNavController(R.id.navHostFragment).navigate(R.id.fragmentCompass)
+        var testViewModel: FragmentCompassViewModel? = null
+        launchFragmentInHiltContainer<CompassFragment>(fragmentFactory = fragmentFactory) {
+            testViewModel = viewModel
         }
 
-        onView(ViewMatchers.withId(R.id.cv_qiblaDegrees)).check(matches(isDisplayed()))
-        onView(ViewMatchers.withId(R.id.tv_qibla_dir)).check(matches(isDisplayed()))
-        onView(ViewMatchers.withId(R.id.iv_compass)).check(matches(isDisplayed()))
-        onView(ViewMatchers.withId(R.id.tv_compass_cuation)).check(matches(isDisplayed())) */
+        //val uiDevice: UiDevice = UiDevice.getInstance(InstrumentationRegistry.getInstrumentation())
+        //val button = uiDevice.findObject(UiSelector().text("Hide"))
+        //if (button.exists() && button.isEnabled) {
+        //    button.click()
+        //}
+
+        //onView(withId(R.id.cv_qiblaDegrees)).check(matches(isDisplayed()))
+        //onView(withId(R.id.tv_qibla_dir)).check(matches(isDisplayed()))
+        //onView(withId(R.id.iv_compass)).check(matches(isDisplayed()))
+        //onView(withId(R.id.tv_compass_cuation)).check(matches(isDisplayed()))
     }
 
 }

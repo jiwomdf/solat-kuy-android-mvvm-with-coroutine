@@ -9,9 +9,10 @@ import androidx.room.PrimaryKey
 
 
 @Entity(tableName = "notified_prayer")
-class NotifiedPrayer (val prayerName: String,
-                      val isNotified: Boolean,
-                      val prayerTime: String){
+class NotifiedPrayer (
+    var prayerName: String,
+    var isNotified: Boolean,
+    var prayerTime: String){
 
     @PrimaryKey(autoGenerate = true)
     var prayerID: Int = 0

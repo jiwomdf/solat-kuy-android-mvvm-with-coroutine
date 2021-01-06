@@ -1,93 +1,84 @@
 package com.programmergabut.solatkuy.ui.fragmentmain
 
-import androidx.navigation.findNavController
-import androidx.test.core.app.ActivityScenario
-import androidx.test.espresso.Espresso
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
-import androidx.test.ext.junit.runners.AndroidJUnit4
-import com.programmergabut.solatkuy.R
-import com.programmergabut.solatkuy.ui.activitymain.MainActivity
-import com.programmergabut.solatkuy.util.EspressoIdlingResource
+import com.programmergabut.solatkuy.util.idlingresource.EspressoIdlingResource
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.junit.runner.RunWith
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 
-import androidx.test.espresso.action.ViewActions
-
-import androidx.test.espresso.Espresso.onView
-import androidx.test.espresso.assertion.ViewAssertions
-import androidx.test.espresso.matcher.ViewMatchers
+import androidx.test.filters.MediumTest
 import com.programmergabut.android_jetpack_testing.getOrAwaitValue
-import com.programmergabut.solatkuy.DummyRetValueAndroidTest
-import com.programmergabut.solatkuy.data.FakePrayerRepositoryAndroidTest
-import com.programmergabut.solatkuy.data.FakeQuranRepositoryAndroidTest
-import com.programmergabut.solatkuy.launchFragmentInHiltContainer
-import com.programmergabut.solatkuy.ui.SolatKuyFragmentFactory
-import com.programmergabut.solatkuy.ui.activitymain.fragmentmain.FragmentMainViewModel
-import com.programmergabut.solatkuy.ui.activitymain.fragmentmain.MainFragment
+import com.programmergabut.solatkuy.*
+import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.Data
+import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.PrayerResponse
+import com.programmergabut.solatkuy.ui.EnumConfigAndroidTesting
+import com.programmergabut.solatkuy.ui.SolatKuyFragmentFactoryAndroidTest
 import com.programmergabut.solatkuy.ui.nestedScrollTo
+import junit.framework.Assert.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import java.text.SimpleDateFormat
+import java.util.*
 import javax.inject.Inject
 
 
-//@ExperimentalCoroutinesApi
-@RunWith(AndroidJUnit4::class)
+@MediumTest
 @HiltAndroidTest
+@ExperimentalCoroutinesApi
 class MainFragmentTest{
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
 
-    //@Inject
-    //lateinit var fragmentFactory: SolatKuyFragmentFactory
+    @get:Rule
+    val instantTaskExecutorRule = InstantTaskExecutorRule()
+
+    @Inject
+    lateinit var fragmentFactory: SolatKuyFragmentFactoryAndroidTest
 
     @Before
-    fun setUp() {
+    fun test_setUp() {
+        hiltRule.inject()
         IdlingRegistry.getInstance().register(EspressoIdlingResource.espressoTestIdlingResource)
     }
 
     @After
-    fun tearDown() {
+    fun test_tearDown() {
         IdlingRegistry.getInstance().unregister(EspressoIdlingResource.espressoTestIdlingResource)
     }
 
     @Test
-    fun testVisibilityWidget(){
-
-        val activityScenario = ActivityScenario.launch(MainActivity::class.java)
-        activityScenario.onActivity {
-            it.findNavController(R.id.navHostFragment).navigate(R.id.fragmentMain)
+    fun test_widget_visibility_and_data(){
+        var testViewModel: FragmentMainViewModel? = null
+        launchFragmentInHiltContainer<MainFragment>(fragmentFactory = fragmentFactory) {
+            testViewModel = viewModel
         }
-
-        /* val activityScenario = ActivityScenario.launch(MainActivity::class.java)
-        activityScenario.onActivity {
-            it.findNavController(R.id.navHostFragment).navigate(R.id.fragmentMain)
-        } */
-
-        //testViewModel.notifiedPrayer.getOrAwaitValue()
-        //testViewModel.syncNotifiedPrayer(DummyRetValueAndroidTest.getMsApi1())
 
         onView(withId(R.id.tv_view_city)).check(matches(isDisplayed()))
         onView(withId(R.id.tv_view_latitude)).check(matches(isDisplayed()))
         onView(withId(R.id.tv_view_longitude)).check(matches(isDisplayed()))
         onView(withId(R.id.tv_widget_prayer_countdown)).check(matches(isDisplayed()))
         onView(withId(R.id.tv_widget_prayer_name)).check(matches(isDisplayed()))
+
+        val data = DummyRetValueAndroidTest.getMsApi1()
+        onView(withId(R.id.tv_view_city)).check(matches(withText("Kota Surakarta")))
+        onView(withId(R.id.tv_view_latitude)).check(matches(withText("${data.latitude} °N")))
+        onView(withId(R.id.tv_view_longitude)).check(matches(withText("${data.longitude} °W")))
     }
 
     @Test
-    fun testVisibilityQuote(){
-        val activityScenario = ActivityScenario.launch(MainActivity::class.java)
-        activityScenario.onActivity {
-            it.findNavController(R.id.navHostFragment).navigate(R.id.fragmentMain)
+    fun test_visibility_quote(){
+        var testViewModel: FragmentMainViewModel? = null
+        launchFragmentInHiltContainer<MainFragment>(fragmentFactory = fragmentFactory) {
+            testViewModel = viewModel
         }
 
         onView(withId(R.id.tv_quran_ayah_quote_click)).check(matches(isDisplayed()))
@@ -96,10 +87,10 @@ class MainFragmentTest{
     }
 
     @Test
-    fun testVisibilityPrayer(){
-        val activityScenario = ActivityScenario.launch(MainActivity::class.java)
-        activityScenario.onActivity {
-            it.findNavController(R.id.navHostFragment).navigate(R.id.fragmentMain)
+    fun test_visibility_and_data_prayer(){
+        var testViewModel: FragmentMainViewModel? = null
+        launchFragmentInHiltContainer<MainFragment>(fragmentFactory = fragmentFactory) {
+            testViewModel = viewModel
         }
 
         onView(withId(R.id.include_prayer_time))
@@ -110,13 +101,35 @@ class MainFragmentTest{
         onView(withId(R.id.cb_asr)).check(matches(isDisplayed()))
         onView(withId(R.id.cb_maghrib)).check(matches(isDisplayed()))
         onView(withId(R.id.cb_isha)).check(matches(isDisplayed()))
+
+        val prayers = testViewModel?.notifiedPrayer?.getOrAwaitValue()
+        prayers?.data?.forEach { prayer ->
+            when(prayer.prayerName){
+                EnumConfigAndroidTesting.FAJR -> {
+                    onView(withId(R.id.tv_fajr_time)).check(matches(withText(prayer.prayerTime)))
+                }
+                EnumConfigAndroidTesting.DHUHR -> {
+                    onView(withId(R.id.tv_dhuhr_time)).check(matches(withText(prayer.prayerTime)))
+                }
+                EnumConfigAndroidTesting.ASR -> {
+                    onView(withId(R.id.tv_asr_time)).check(matches(withText(prayer.prayerTime)))
+                }
+                EnumConfigAndroidTesting.MAGHRIB -> {
+                    onView(withId(R.id.tv_maghrib_time)).check(matches(withText(prayer.prayerTime)))
+                }
+                EnumConfigAndroidTesting.ISHA -> {
+                    onView(withId(R.id.tv_isha_time)).check(matches(withText(prayer.prayerTime)))
+                }
+                else -> {}
+            }
+        }
     }
 
     @Test
-    fun testVisibilityInfo(){
-        val activityScenario = ActivityScenario.launch(MainActivity::class.java)
-        activityScenario.onActivity {
-            it.findNavController(R.id.navHostFragment).navigate(R.id.fragmentMain)
+    fun test_visibility_and_data_info(){
+        var testViewModel: FragmentMainViewModel? = null
+        launchFragmentInHiltContainer<MainFragment>(fragmentFactory = fragmentFactory) {
+            testViewModel = viewModel
         }
 
         onView(withId(R.id.include_info))
@@ -135,31 +148,53 @@ class MainFragmentTest{
         onView(withId(R.id.tv_hijri_day)).check(matches(isDisplayed()))
 
         onView(withId(R.id.rvDuaCollection)).check(matches(isDisplayed()))
+
+        val sdf = SimpleDateFormat("dd", Locale.getDefault())
+        val currentDate = sdf.format(Date())
+        val response = testViewModel?.prayer?.getOrAwaitValue()
+        val data = createTodayData(response?.data, currentDate)
+        val date = data?.date
+        val hijriDate = date?.hijri
+        val gregorianDate = date?.gregorian
+
+        onView(withId(R.id.tv_imsak_info_title)).check(matches(withText("Imsak Info")))
+        onView(withId(R.id.tv_imsak_time)).check(matches(withText(data?.timings?.imsak)))
+
+        onView(withId(R.id.tv_gregorian_date)).check(matches(withText(gregorianDate?.date)))
+        onView(withId(R.id.tv_hijri_date)).check(matches(withText(hijriDate?.date)))
+        onView(withId(R.id.tv_gregorian_month)).check(matches(withText(gregorianDate?.month?.en)))
+        onView(withId(R.id.tv_hijri_month)).check(matches(withText(hijriDate?.month?.en + " / " + hijriDate?.month?.ar)))
+        onView(withId(R.id.tv_gregorian_day)).check(matches(withText(gregorianDate?.weekday?.en)))
+        onView(withId(R.id.tv_hijri_day)).check(matches(withText(hijriDate?.weekday?.en + " / " + hijriDate?.weekday?.ar)))
+    }
+
+    private fun createTodayData(it: PrayerResponse?, currentDate: String): Data? {
+        return it?.data?.find { obj -> obj.date.gregorian?.day == currentDate }
     }
 
     @Test
-    fun clickQuranQuote() {
-
-        val activityScenario = ActivityScenario.launch(MainActivity::class.java)
-        activityScenario.onActivity {
-            it.findNavController(R.id.navHostFragment).navigate(R.id.fragmentMain)
+    fun test_click_quran_quote() {
+        var testViewModel: FragmentMainViewModel? = null
+        launchFragmentInHiltContainer<MainFragment>(fragmentFactory = fragmentFactory) {
+            testViewModel = viewModel
         }
 
         onView(withId(R.id.tv_quran_ayah_quote_click)).check(matches(isDisplayed()))
         onView(withId(R.id.tv_quran_ayah_quote_click)).perform(click())
         Thread.sleep(2000)
+        onView(withId(R.id.tv_quran_ayah_quote)).check(matches(isDisplayed()))
 
         onView(withId(R.id.tv_quran_ayah_quote)).check(matches(isDisplayed()))
         onView(withId(R.id.tv_quran_ayah_quote)).perform(click())
         Thread.sleep(2000)
+        onView(withId(R.id.tv_quran_ayah_quote_click)).check(matches(isDisplayed()))
     }
 
     @Test
-    fun clickCbPrayer(){
-
-        val activityScenario = ActivityScenario.launch(MainActivity::class.java)
-        activityScenario.onActivity {
-            it.findNavController(R.id.navHostFragment).navigate(R.id.fragmentMain)
+    fun test_click_cb_prayer(){
+        var testViewModel: FragmentMainViewModel? = null
+        launchFragmentInHiltContainer<MainFragment>(fragmentFactory = fragmentFactory) {
+            testViewModel = viewModel
         }
 
         onView(withId(R.id.include_prayer_time))
@@ -176,13 +211,21 @@ class MainFragmentTest{
         onView(withId(R.id.cb_asr)).perform(click())
         onView(withId(R.id.cb_maghrib)).perform(click())
         onView(withId(R.id.cb_isha)).perform(click())
+
+        val prayers = testViewModel?.notifiedPrayer?.getOrAwaitValue()
+        prayers?.data?.forEach { prayer ->
+            if(prayer.prayerName == EnumConfigAndroidTesting.SUNRISE)
+                return@forEach
+
+            assertEquals(false, prayer.isNotified)
+        }
     }
 
     @Test
-    fun refreshQuote(){
-        val activityScenario = ActivityScenario.launch(MainActivity::class.java)
-        activityScenario.onActivity {
-            it.findNavController(R.id.navHostFragment).navigate(R.id.fragmentMain)
+    fun test_refresh_quote(){
+        var testViewModel: FragmentMainViewModel? = null
+        launchFragmentInHiltContainer<MainFragment>(fragmentFactory = fragmentFactory) {
+            testViewModel = viewModel
         }
 
         onView(withId(R.id.iv_refresh)).perform(click())

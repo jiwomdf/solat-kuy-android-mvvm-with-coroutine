@@ -7,22 +7,65 @@
 
     <fragment
         android:id="@+id/fragmentCompass"
-        android:name="com.programmergabut.solatkuy.ui.activitymain.fragmentcompass.CompassFragment"
+        android:name="com.programmergabut.solatkuy.ui.fragmentcompass.CompassFragment"
         android:label="fragment_compass"
         tools:layout="@layout/fragment_compass" />
     <fragment
         android:id="@+id/fragmentMain"
-        android:name="com.programmergabut.solatkuy.ui.activitymain.fragmentmain.MainFragment"
+        android:name="com.programmergabut.solatkuy.ui.fragmentmain.MainFragment"
         android:label="fragment_main"
-        tools:layout="@layout/fragment_main" />
+        tools:layout="@layout/fragment_main" >
+    </fragment>
     <fragment
         android:id="@+id/fragmentSetting"
-        android:name="com.programmergabut.solatkuy.ui.activitymain.fragmentsetting.SettingFragment"
+        android:name="com.programmergabut.solatkuy.ui.fragmentsetting.SettingFragment"
         android:label="fragment_setting"
         tools:layout="@layout/fragment_setting" />
     <fragment
         android:id="@+id/quranFragment"
-        android:name="com.programmergabut.solatkuy.ui.activitymain.fragmentquran.QuranFragment"
+        android:name="com.programmergabut.solatkuy.ui.fragmentquran.QuranFragment"
         android:label="fragment_quran"
-        tools:layout="@layout/fragment_quran" />
+        tools:layout="@layout/fragment_quran" >
+        <action
+            android:id="@+id/action_quranFragment_to_favAyahFragment"
+            app:destination="@id/favAyahFragment"
+            app:enterAnim="@anim/fragment_fade_enter"
+            app:exitAnim="@anim/fragment_fade_exit"
+            app:popEnterAnim="@anim/fragment_fade_enter"
+            app:popExitAnim="@anim/fragment_fade_exit"/>
+        <action
+            android:id="@+id/action_quranFragment_to_readSurahActivity"
+            app:destination="@id/readSurahActivity"
+            app:enterAnim="@anim/fragment_fade_enter"
+            app:exitAnim="@anim/fragment_fade_exit"
+            app:popEnterAnim="@anim/fragment_fade_enter"
+            app:popExitAnim="@anim/fragment_fade_exit"/>
+    </fragment>
+    <fragment
+        android:id="@+id/favAyahFragment"
+        android:name="com.programmergabut.solatkuy.ui.fragmentfavayah.FavAyahFragment"
+        android:label="fragment_fav_ayah"
+        tools:layout="@layout/fragment_fav_ayah" />
+    <fragment
+        android:id="@+id/readSurahActivity"
+        android:name="com.programmergabut.solatkuy.ui.fragmentreadsurah.ReadSurahFragment"
+        android:label="activity_read_surah"
+        tools:layout="@layout/fragment_read_surah" >
+        <argument
+            android:name="selectedSurahId"
+            android:defaultValue="-1"
+            app:argType="string" />
+        <argument
+            android:name="selectedSurahName"
+            android:defaultValue=""
+            app:argType="string" />
+        <argument
+            android:name="selectedTranslation"
+            android:defaultValue=""
+            app:argType="string" />
+        <argument
+            android:name="isAutoScroll"
+            android:defaultValue="false"
+            app:argType="boolean" />
+    </fragment>
 </navigation>

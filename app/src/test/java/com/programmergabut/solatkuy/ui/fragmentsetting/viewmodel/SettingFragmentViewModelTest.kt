@@ -4,7 +4,7 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.programmergabut.solatkuy.CoroutinesTestRule
 import com.programmergabut.solatkuy.DummyArgument
 import com.programmergabut.solatkuy.data.FakePrayerRepository
-import com.programmergabut.solatkuy.ui.activitymain.fragmentsetting.FragmentSettingViewModel
+import com.programmergabut.solatkuy.ui.fragmentsetting.FragmentSettingViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before
@@ -36,7 +36,7 @@ class SettingFragmentViewModelTest {
     @Before
     fun setUp() {
         viewModel = FragmentSettingViewModel(prayerRepository)
-        verify(prayerRepository).getMsApi1()
+        verify(prayerRepository).observeMsApi1()
     }
 
     @Test

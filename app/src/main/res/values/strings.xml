@@ -59,6 +59,7 @@
     <!--MESSAGE-->
     <string name="fetch_failed">fetching data failed</string>
     <string name="fetch_failed_na">N/A</string>
+    <string name="read_data_failed">read data failed</string>
     <string name="please_enable_your_location">please enable your location</string>
     <string name="text_error_title">Error Occurred</string>
     <string name="text_error_dsc">Sorry.. there is some error, please try again</string>

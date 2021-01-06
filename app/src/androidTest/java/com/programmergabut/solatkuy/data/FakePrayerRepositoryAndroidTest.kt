@@ -21,36 +21,65 @@ class FakePrayerRepositoryAndroidTest: PrayerRepository {
 
     private var msApi11 = DummyRetValueAndroidTest.getMsApi1()
     private val observableMsApi1 = MutableLiveData<MsApi1>()
+    private var msSetting = DummyRetValueAndroidTest.getMsSetting()
+    private val observableMsSetting = MutableLiveData<MsSetting>()
+    private var notifiedPrayer = DummyRetValueAndroidTest.getNotifiedPrayer()
+    private val observableNotifiedPrayer = MutableLiveData<List<NotifiedPrayer>>()
+
+
+    init {
+        observableMsApi1.postValue(msApi11)
+        observableMsSetting.postValue(msSetting)
+        observableNotifiedPrayer.postValue(notifiedPrayer)
+    }
+
     private fun refreshMsApi1(){
         observableMsApi1.postValue(msApi11)
     }
-
-    private var msSetting = DummyRetValueAndroidTest.getMsSetting()
-    private val observableMsSetting = MutableLiveData<MsSetting>()
     private fun refreshMsSetting(){
         observableMsSetting.postValue(msSetting)
     }
 
-
     /* Room */
     /* NotifiedPrayer */
-    override suspend fun updatePrayerIsNotified(prayerName: String, isNotified: Boolean){}
-    override fun updatePrayerTime(prayerName: String, prayerTime: String) {
+    override suspend fun updatePrayerIsNotified(prayerName: String, isNotified: Boolean){
+        val newList = notifiedPrayer
+        newList.map { data ->
+            if(data.prayerName == prayerName){
+                data.prayerName = prayerName
+                data.isNotified = isNotified
+            }
+        }
 
+        observableNotifiedPrayer.postValue(newList)
+    }
+    override fun updatePrayerTime(prayerName: String, prayerTime: String) {
+        val newList = notifiedPrayer
+        newList.map { data ->
+            if(data.prayerName == prayerName){
+                data.prayerName = prayerName
+                data.prayerTime = prayerTime
+            }
+        }
+
+        observableNotifiedPrayer.postValue(newList)
     }
 
     /* MsApi1 */
-    override fun getMsApi1(): LiveData<MsApi1> {
+    override fun observeMsApi1(): LiveData<MsApi1> {
         return observableMsApi1
     }
     override suspend fun updateMsApi1(msApi1: MsApi1){
         msApi11 = msApi1
         refreshMsApi1()
     }
+    override fun observeMsSetting(): LiveData<MsSetting> {
+        return observableMsSetting
+    }
 
     /* MsSetting */
-    override fun getMsSetting(): LiveData<MsSetting> {
-        return observableMsSetting
+    override suspend fun getMsSetting(): MsSetting {
+        return msSetting
     }
     override suspend fun updateIsUsingDBQuotes(isUsingDBQuotes: Boolean){
         msSetting = MsSetting(msSetting.no, msSetting.isHasOpenApp, isUsingDBQuotes)
@@ -70,21 +99,25 @@ class FakePrayerRepositoryAndroidTest: PrayerRepository {
      */
     override suspend fun fetchCompass(msApi1: MsApi1): Deferred<CompassResponse> {
         return CoroutineScope(IO).async {
-            DummyRetValueAndroidTest.fetchCompassApi<FakePrayerRepositoryAndroidTest>()
+            val data = DummyRetValueAndroidTest.fetchCompassApi<FakePrayerRepositoryAndroidTest>()
+            data.statusResponse = "1"
+            data.messageResponse = "testing"
+            data
         }
     }
     override suspend fun fetchPrayerApi(msApi1: MsApi1): Deferred<PrayerResponse> {
         return CoroutineScope(IO).async {
-            DummyRetValueAndroidTest.fetchPrayerApi<FakePrayerRepositoryAndroidTest>()
+            val data = DummyRetValueAndroidTest.fetchPrayerApi<FakePrayerRepositoryAndroidTest>()
+            data.statusResponse = "1"
+            data.messageResponse = "testing"
+            data
         }
     }
-
     override suspend fun syncNotifiedPrayerTesting(): List<NotifiedPrayer> {
         return DummyRetValueAndroidTest.getNotifiedPrayer()
     }
-
-    override fun getListNotifiedPrayerSync(): List<NotifiedPrayer> {
-        return DummyRetValueAndroidTest.getNotifiedPrayer()
+    override suspend fun getListNotifiedPrayer(): List<NotifiedPrayer> {
+        return observableNotifiedPrayer.value!!
     }
 }
 

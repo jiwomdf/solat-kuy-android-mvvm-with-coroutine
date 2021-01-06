@@ -2,6 +2,8 @@
 
 buildscript {
     ext.kotlin_version = '1.4.21'
+    ext.nav_version = "2.3.2"
+    ext.roomVersion = '2.2.6'
     repositories {
         google()
         jcenter()
@@ -15,6 +17,9 @@ buildscript {
 
         //Dagger Hilt
         classpath 'com.google.dagger:hilt-android-gradle-plugin:2.28.3-alpha'
+
+        //Navigation Component
+        classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$nav_version"
 
         //Material Design
         classpath 'com.android.tools:r8:2.1.75'

@@ -8,7 +8,7 @@ import com.programmergabut.solatkuy.CoroutineTestUtil.Companion.toDeferred
 import com.programmergabut.solatkuy.CoroutinesTestRule
 import com.programmergabut.solatkuy.DummyArgument
 import com.programmergabut.solatkuy.data.local.localentity.NotifiedPrayer
-import com.programmergabut.solatkuy.ui.activitymain.fragmentmain.FragmentMainViewModel
+import com.programmergabut.solatkuy.ui.fragmentmain.FragmentMainViewModel
 import com.programmergabut.solatkuy.util.Resource
 import com.programmergabut.solatkuy.DummyRetValueTest
 import com.programmergabut.solatkuy.data.FakePrayerRepository
@@ -54,7 +54,7 @@ class MainFragmentViewModelTest {
     fun before(){
         viewModel = FragmentMainViewModel(fakePrayerRepository, fakeQuranRepository)
 
-        verify(fakePrayerRepository).getMsApi1()
+        verify(fakePrayerRepository).observeMsApi1()
     }
 
     @Test
@@ -65,7 +65,7 @@ class MainFragmentViewModelTest {
         val dummyPrayerResponse = Resource.success(DummyRetValueTest.getNotifiedPrayer())
         dummyNotifiedPrayer.data?.statusResponse = "1"
         `when`(fakePrayerRepository.fetchPrayerApi(msApi1)).thenReturn(dummyNotifiedPrayer.data!!.toDeferred())
-        `when`(fakePrayerRepository.getListNotifiedPrayerSync()).thenReturn(dummyPrayerResponse.data)
+        `when`(fakePrayerRepository.getListNotifiedPrayer()).thenReturn(dummyPrayerResponse.data)
 
         //when
         viewModel.syncNotifiedPrayer(msApi1)

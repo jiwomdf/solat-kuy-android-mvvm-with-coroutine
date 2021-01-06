@@ -5,14 +5,11 @@ package com.programmergabut.solatkuy.data
 
 import android.util.Log
 import androidx.lifecycle.LiveData
-import androidx.lifecycle.MediatorLiveData
 import com.programmergabut.solatkuy.data.local.dao.*
 import com.programmergabut.solatkuy.data.local.localentity.*
 import com.programmergabut.solatkuy.data.remote.RemoteDataSourceAladhan
-import com.programmergabut.solatkuy.data.remote.RemoteDataSourceAladhanImpl
 import com.programmergabut.solatkuy.data.remote.remoteentity.compassJson.CompassResponse
 import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.PrayerResponse
-import com.programmergabut.solatkuy.util.Resource
 import com.programmergabut.solatkuy.util.EnumConfig
 import com.programmergabut.solatkuy.util.LogConfig
 import kotlinx.coroutines.CoroutineScope
@@ -20,8 +17,6 @@ import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.async
 import java.lang.Exception
-import java.text.SimpleDateFormat
-import java.util.*
 
 
 class FakePrayerRepository constructor(
@@ -35,15 +30,15 @@ class FakePrayerRepository constructor(
     /* NotifiedPrayer */
     override suspend fun updatePrayerIsNotified(prayerName: String, isNotified: Boolean) = notifiedPrayerDao.updatePrayerIsNotified(prayerName, isNotified)
     override fun updatePrayerTime(prayerName: String, prayerTime: String) = notifiedPrayerDao.updatePrayerTime(prayerName, prayerTime)
-    override fun getListNotifiedPrayerSync() = notifiedPrayerDao.getListNotifiedPrayerSync()
+    override suspend fun getListNotifiedPrayer() = notifiedPrayerDao.getListNotifiedPrayer()
 
     /* MsApi1 */
-    override fun getMsApi1(): LiveData<MsApi1> = msApi1Dao.getMsApi1()
+    override fun observeMsApi1(): LiveData<MsApi1> = msApi1Dao.observeMsApi1()
     override suspend fun updateMsApi1(msApi1: MsApi1) = msApi1Dao.updateMsApi1(msApi1.api1ID, msApi1.latitude,
         msApi1.longitude, msApi1.method, msApi1.month, msApi1.year)
 
     /* MsSetting */
-    override fun getMsSetting(): LiveData<MsSetting> = msSettingDao.getMsSetting()
+    override suspend fun getMsSetting(): LiveData<MsSetting> = msSettingDao.getMsSetting()
     override suspend fun updateIsUsingDBQuotes(isUsingDBQuotes: Boolean) = msSettingDao.updateIsUsingDBQuotes(isUsingDBQuotes)
     override suspend fun updateMsApi1MonthAndYear(api1ID: Int, month: String, year:String) = msApi1Dao.updateMsApi1MonthAndYear(api1ID, month, year)
     override suspend fun updateIsHasOpenApp(isHasOpen: Boolean) = msSettingDao.updateIsHasOpenApp(isHasOpen)

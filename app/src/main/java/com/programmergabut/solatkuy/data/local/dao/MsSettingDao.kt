@@ -11,7 +11,10 @@ import com.programmergabut.solatkuy.data.local.localentity.MsSetting
 interface MsSettingDao {
 
     @Query("select * from MsSetting")
-    fun getMsSetting(): LiveData<MsSetting>
+    fun observeMsSetting(): LiveData<MsSetting>
+
+    @Query("select * from MsSetting")
+    suspend fun getMsSetting(): MsSetting
 
     @Query("delete from MsSetting")
     suspend fun deleteAll()

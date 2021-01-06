@@ -1,40 +1,45 @@
 package com.programmergabut.solatkuy.ui.fragmentquran
 
-import androidx.navigation.findNavController
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.recyclerview.widget.RecyclerView
-import androidx.test.core.app.ActivityScenario
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingRegistry
-import androidx.test.espresso.action.ViewActions.click
-import androidx.test.espresso.action.ViewActions.swipeLeft
+import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
-import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.programmergabut.solatkuy.R
-import com.programmergabut.solatkuy.ui.RecyclerViewItemCountAssertion
-import com.programmergabut.solatkuy.ui.activitymain.MainActivity
-import com.programmergabut.solatkuy.util.EspressoIdlingResource
+import com.programmergabut.solatkuy.launchFragmentInHiltContainer
+import com.programmergabut.solatkuy.ui.SolatKuyFragmentFactoryAndroidTest
+import com.programmergabut.solatkuy.util.idlingresource.EspressoIdlingResource
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.junit.runner.RunWith
+import javax.inject.Inject
 
 
-@RunWith(AndroidJUnit4::class)
+@ExperimentalCoroutinesApi
 @HiltAndroidTest
 class QuranFragmentTest{
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
 
+    @get:Rule
+    val instantTaskExecutorRule = InstantTaskExecutorRule()
+
+    @Inject
+    lateinit var fragmentFactory: SolatKuyFragmentFactoryAndroidTest
+
     @Before
     fun setUp() {
+        hiltRule.inject()
         IdlingRegistry.getInstance().register(EspressoIdlingResource.espressoTestIdlingResource)
     }
 
@@ -45,37 +50,38 @@ class QuranFragmentTest{
 
     @Test
     fun test_visibility(){
-        val activityScenario = ActivityScenario.launch(MainActivity::class.java)
-        activityScenario.onActivity {
-            it.findNavController(R.id.navHostFragment).navigate(R.id.quranFragment)
+        var testViewModel: QuranFragmentViewModel? = null
+        launchFragmentInHiltContainer<QuranFragment>(fragmentFactory = fragmentFactory) {
+            testViewModel = viewModel
         }
 
         onView(withId(R.id.et_search)).check(matches(isDisplayed()))
         onView(withId(R.id.s_juzz)).check(matches(isDisplayed()))
         onView(withId(R.id.cv_fav_ayah)).check(matches(isDisplayed()))
+        onView(withId(R.id.cv_quran_content)).check(matches(isDisplayed()))
         //onView(withId(R.id.rv_stared_ayah)).check(matches(isDisplayed()))
     }
 
     @Test
     fun test_scroll_rv_quran(){
-        val activityScenario = ActivityScenario.launch(MainActivity::class.java)
-        activityScenario.onActivity {
-            it.findNavController(R.id.navHostFragment).navigate(R.id.quranFragment)
+        var testViewModel: QuranFragmentViewModel? = null
+        launchFragmentInHiltContainer<QuranFragment>(fragmentFactory = fragmentFactory) {
+            testViewModel = viewModel
         }
 
         onView(withId(R.id.rv_quran_surah)).perform(RecyclerViewActions
-            .scrollToPosition<RecyclerView.ViewHolder>(144)) //total Al Qur'an surah
+            .actionOnItemAtPosition<RecyclerView.ViewHolder>(113, scrollTo())) //total Al Qur'an surah from idx 0
     }
 
     @Test
     fun test_open_first_surah_then_click_favorite(){
-        val activityScenario = ActivityScenario.launch(MainActivity::class.java)
-        activityScenario.onActivity {
-            it.findNavController(R.id.navHostFragment).navigate(R.id.quranFragment)
+        var testViewModel: QuranFragmentViewModel? = null
+        launchFragmentInHiltContainer<QuranFragment>(fragmentFactory = fragmentFactory) {
+            testViewModel = viewModel
         }
 
         onView(withId(R.id.rv_quran_surah)).perform(RecyclerViewActions
-            .actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click())) //click first surah
+            .actionOnItemAtPosition<RecyclerView.ViewHolder>(113, click())) //click last surah
 
         onView(withId(R.id.ab_readQuran)).check(matches(isDisplayed()))
         onView(withId(R.id.tb_readSurah)).check(matches(isDisplayed()))
@@ -84,22 +90,22 @@ class QuranFragmentTest{
 
         Espresso.pressBack()
 
-        onView(withId(R.id.rv_stared_ayah)).check(RecyclerViewItemCountAssertion(0))
+        Thread.sleep(5000)
     }
 
     @Test
     fun test_change_juzz(){
-        val activityScenario = ActivityScenario.launch(MainActivity::class.java)
-        activityScenario.onActivity {
-            it.findNavController(R.id.navHostFragment).navigate(R.id.quranFragment)
+        var testViewModel: QuranFragmentViewModel? = null
+        launchFragmentInHiltContainer<QuranFragment>(fragmentFactory = fragmentFactory) {
+            testViewModel = viewModel
         }
     }
 
     @Test
     fun test_open_last_surah_than_swipe_left(){
-        val activityScenario = ActivityScenario.launch(MainActivity::class.java)
-        activityScenario.onActivity {
-            it.findNavController(R.id.navHostFragment).navigate(R.id.quranFragment)
+        var testViewModel: QuranFragmentViewModel? = null
+        launchFragmentInHiltContainer<QuranFragment>(fragmentFactory = fragmentFactory) {
+            testViewModel = viewModel
         }
 
         onView(withId(R.id.rv_quran_surah)).perform(RecyclerViewActions

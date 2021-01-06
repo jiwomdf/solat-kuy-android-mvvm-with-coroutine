@@ -1,6 +1,7 @@
 package com.programmergabut.solatkuy.base
 
 import android.Manifest
+import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -11,8 +12,8 @@ import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
 import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
-import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
+import androidx.lifecycle.*
+import androidx.navigation.fragment.findNavController
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.data.local.SolatKuyRoom
@@ -24,7 +25,7 @@ abstract class BaseFragment<DB: ViewDataBinding, VM: ViewModel>(
     private val layout: Int,
     private val viewModelClass: Class<VM>?,
     private val viewModelTest: VM?
-) : Fragment() {
+) : Fragment(), LifecycleObserver {
 
     @Inject
     lateinit var db: SolatKuyRoom
@@ -40,7 +41,7 @@ abstract class BaseFragment<DB: ViewDataBinding, VM: ViewModel>(
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
+        
         binding = DataBindingUtil.inflate(inflater, layout, container, false)
         binding.lifecycleOwner = this
 
@@ -75,7 +76,8 @@ abstract class BaseFragment<DB: ViewDataBinding, VM: ViewModel>(
             activity?.finish()
     }
 
-    protected fun showBottomSheet(title : String = resources.getString(R.string.text_error_title), description : String = "",
+    protected fun showBottomSheet(title : String = resources.getString(R.string.text_error_title),
+                                  description : String = resources.getString(R.string.text_error_dsc),
                                   isCancelable : Boolean = true, isFinish : Boolean = false) {
 
         val dialogBinding: LayoutErrorBottomsheetBinding = DataBindingUtil.inflate(
@@ -94,7 +96,7 @@ abstract class BaseFragment<DB: ViewDataBinding, VM: ViewModel>(
             dialog.hide()
 
             if(isFinish){
-                activity?.finish()
+                findNavController().popBackStack()
             }
         }
     }
@@ -109,7 +111,27 @@ abstract class BaseFragment<DB: ViewDataBinding, VM: ViewModel>(
         return sharedPrefUtil.getIsHasOpenAnimation()
     }
 
+    protected fun insertLastReadSharedPref(selectedSurahId: Int, numberInSurah: Int) {
+        sharedPrefUtil.insertLastReadSharedPref(selectedSurahId, numberInSurah)
+    }
+
+    protected fun getLastReadAyah(): Int {
+        return sharedPrefUtil.getLastReadAyah()
+    }
+
+    protected fun getIsNotHasOpenAnimation(): Boolean {
+        return sharedPrefUtil.getIsHasOpenAnimation()
+    }
+
     protected fun setIsHasOpenAnimation(value: Boolean){
         sharedPrefUtil.setIsHasOpenAnimation(value)
+    }
+
+    protected fun getIsBrightnessActive(): Boolean {
+        return sharedPrefUtil.getIsBrightnessActive()
+    }
+
+    protected fun setIsBrightnessActive(value: Boolean){
+        sharedPrefUtil.setIsBrightnessActive(value)
     }
 }

@@ -9,11 +9,10 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import com.programmergabut.solatkuy.data.local.localentity.NotifiedPrayer
-import com.programmergabut.solatkuy.ui.activityprayer.DuaActivity
+import com.programmergabut.solatkuy.ui.DuaActivity
 import com.programmergabut.solatkuy.util.EnumConfig
-import com.programmergabut.solatkuy.util.LogConfig.Companion.ERROR
 import com.programmergabut.solatkuy.util.helper.NotificationHelper
-import com.programmergabut.solatkuy.util.generator.DuaGenerator
+import com.programmergabut.solatkuy.util.hardcodedata.DuaData
 import java.util.*
 
 /*
@@ -222,7 +221,7 @@ class PrayerBroadcastReceiver: BroadcastReceiver() {
 
     private fun intentToDuaAfterAdhanGenerator(context: Context): Intent {
         val intent = Intent(context, DuaActivity::class.java)
-        val duaAfterAdhan = DuaGenerator.getListDua().find { x -> x.id == 1}
+        val duaAfterAdhan = DuaData.getListDua().find { x -> x.id == 1}
 
         intent.flags = Intent.FLAG_ACTIVITY_NEW_TASK or Intent.FLAG_ACTIVITY_CLEAR_TASK
         intent.putExtra(DuaActivity.DUA_TITLE, duaAfterAdhan?.title)

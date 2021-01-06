@@ -3,15 +3,16 @@ package com.programmergabut.solatkuy.data.local.dao
 import androidx.lifecycle.LiveData
 import androidx.room.*
 import com.programmergabut.solatkuy.data.local.localentity.MsFavAyah
+import kotlinx.coroutines.Deferred
 
 @Dao
 interface MsFavAyahDao {
 
     @Query("select * from MsFavAyah")
-    fun getListFavAyah(): LiveData<List<MsFavAyah>>
+    suspend fun getListFavAyah(): List<MsFavAyah>
 
     @Query("select * from MsFavAyah where surahID like :surahID")
-    fun getListFavAyahBySurahID(surahID: Int): LiveData<List<MsFavAyah>>
+    suspend fun getListFavAyahBySurahID(surahID: Int): List<MsFavAyah>
 
     @Query("select * from MsFavAyah where ayahID like :ayahID and surahID like :surahID")
     fun isFavAyah(ayahID: Int, surahID: Int): MsFavAyah

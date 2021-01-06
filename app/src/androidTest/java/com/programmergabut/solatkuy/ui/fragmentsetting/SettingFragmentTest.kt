@@ -9,8 +9,8 @@ import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import com.programmergabut.solatkuy.R
-import com.programmergabut.solatkuy.ui.activitymain.MainActivity
-import com.programmergabut.solatkuy.util.EspressoIdlingResource
+import com.programmergabut.solatkuy.ui.MainActivity
+import com.programmergabut.solatkuy.util.idlingresource.EspressoIdlingResource
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import org.junit.After

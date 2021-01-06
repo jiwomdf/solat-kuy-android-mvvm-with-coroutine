@@ -2,7 +2,6 @@ package com.programmergabut.solatkuy.data
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
-import com.programmergabut.solatkuy.CoroutineTestUtil.Companion.toDeferred
 import com.programmergabut.solatkuy.CoroutinesTestRule
 import com.programmergabut.solatkuy.DummyArgument
 import com.programmergabut.solatkuy.data.local.dao.*
@@ -12,7 +11,6 @@ import com.programmergabut.solatkuy.DummyRetValueTest
 import junit.framework.Assert.assertNotNull
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
-import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mockito
@@ -97,13 +95,13 @@ class PrayerRepositoryImplTest{
     /* Database */
     @Test
     fun getMsApi1(){
-        prayerRepository.getMsApi1()
+        prayerRepository.observeMsApi1()
 
         val dummyMsApi1 = DummyRetValueTest.getMsApi1()
         val msApi1 = MutableLiveData<MsApi1>()
         msApi1.value = dummyMsApi1
-        Mockito.`when`(msApi1Dao.getMsApi1()).thenReturn(msApi1)
-        Mockito.verify(msApi1Dao).getMsApi1()
+        Mockito.`when`(msApi1Dao.observeMsApi1()).thenReturn(msApi1)
+        Mockito.verify(msApi1Dao).observeMsApi1()
 
         assertNotNull(msApi1.value)
     }

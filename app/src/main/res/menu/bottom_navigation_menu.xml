@@ -2,7 +2,7 @@
 <menu
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".ui.activitymain.MainActivity">
+    tools:context=".ui.MainActivity">
 
     <item android:id="@+id/fragmentMain"
         android:icon="@drawable/ic_prayer_time_24dp"

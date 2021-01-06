@@ -31,11 +31,11 @@ class FakeQuranRepositoryAndroidTest: QuranRepository {
      *Room
      */
     /* MsFavAyah */
-    override fun getListFavAyah(): LiveData<List<MsFavAyah>> {
-        return observableMsFavAyahs
+    override suspend fun getListFavAyah(): List<MsFavAyah> {
+        return listMsFavAyah
     }
-    override fun getListFavAyahBySurahID(surahID: Int): LiveData<List<MsFavAyah>> {
-        return observableMsFavAyahs
+    override suspend fun getListFavAyahBySurahID(surahID: Int): List<MsFavAyah> {
+        return listMsFavAyah
     }
     override suspend fun insertFavAyah(msFavAyah: MsFavAyah){
         listMsFavAyah.add(msFavAyah)
@@ -47,11 +47,11 @@ class FakeQuranRepositoryAndroidTest: QuranRepository {
     }
 
     /* MsFavSurah */
-    override fun getListFavSurah(): LiveData<List<MsFavSurah>> {
+    override fun observeListFavSurah(): LiveData<List<MsFavSurah>> {
         return observableMsFavSurahs
     }
-    override fun getFavSurahBySurahID(surahID: Int): LiveData<MsFavSurah> {
-        return observableMsFavSurah
+    override suspend fun getFavSurahBySurahID(surahID: Int): MsFavSurah {
+        return listMsFavSurah.first{ data -> data.surahID == surahID}
     }
     override suspend fun insertFavSurah(msFavSurah: MsFavSurah){
         listMsFavSurah.add(msFavSurah)
@@ -67,17 +67,26 @@ class FakeQuranRepositoryAndroidTest: QuranRepository {
      */
     override suspend fun fetchReadSurahEn(surahID: Int): Deferred<ReadSurahEnResponse> {
         return CoroutineScope(IO).async {
-            DummyRetValueAndroidTest.surahEnID_1<FakeQuranRepositoryAndroidTest>()
+            val data = DummyRetValueAndroidTest.surahEnID_1<FakeQuranRepositoryAndroidTest>()
+            data.statusResponse = "1"
+            data.messageResponse = "testing"
+            data
         }
     }
     override suspend fun fetchAllSurah(): Deferred<AllSurahResponse> {
         return CoroutineScope(IO).async {
-            DummyRetValueAndroidTest.fetchAllSurah<FakeQuranRepositoryAndroidTest>()
+            val data = DummyRetValueAndroidTest.fetchAllSurah<FakeQuranRepositoryAndroidTest>()
+            data.statusResponse = "1"
+            data.messageResponse = "testing"
+            data
         }
     }
     override suspend fun fetchReadSurahAr(surahID: Int): Deferred<ReadSurahArResponse> {
         return CoroutineScope(IO).async {
-            DummyRetValueAndroidTest.surahArID_1<FakeQuranRepositoryAndroidTest>()
+            val data = DummyRetValueAndroidTest.surahArID_1<FakeQuranRepositoryAndroidTest>()
+            data.statusResponse = "1"
+            data.messageResponse = "testing"
+            data
         }
     }
 

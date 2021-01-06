@@ -4,7 +4,7 @@ package com.programmergabut.solatkuy.util
  * Created by Katili Jiwo Adi Wiyono on 25/03/20.
  */
 
-data class Resource<out T>(val status: EnumStatus, val data: T?, val message:String?) {
+data class Resource<out T>(var status: EnumStatus, val data: T?, val message:String?) {
 
     companion object{
 

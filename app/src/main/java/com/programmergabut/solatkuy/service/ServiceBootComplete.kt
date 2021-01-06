@@ -12,7 +12,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.lang.Exception
-import javax.inject.Inject
 
 /*
  * Created by Katili Jiwo Adi Wiyono on 18/04/20.
@@ -31,7 +30,7 @@ class ServiceBootComplete: Service() {
 
         CoroutineScope(Dispatchers.IO).launch {
             try{
-                val data = db.notifiedPrayerDao().getListNotifiedPrayerSync() as MutableList
+                val data = db.notifiedPrayerDao().getListNotifiedPrayer() as MutableList
 
                 PushNotificationHelper(this@ServiceBootComplete, data, "-")
             }
