@@ -16,10 +16,12 @@ import org.junit.Test
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 
 import androidx.test.filters.MediumTest
-import com.programmergabut.android_jetpack_testing.getOrAwaitValue
+import com.programmergabut.solatkuy.getOrAwaitValue
 import com.programmergabut.solatkuy.*
+import com.programmergabut.solatkuy.data.local.localentity.MsFavAyah
 import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.Data
 import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.PrayerResponse
+import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonEn.ReadSurahEnResponse
 import com.programmergabut.solatkuy.ui.EnumConfigAndroidTesting
 import com.programmergabut.solatkuy.ui.SolatKuyFragmentFactoryAndroidTest
 import com.programmergabut.solatkuy.ui.nestedScrollTo
@@ -68,10 +70,10 @@ class MainFragmentTest{
         onView(withId(R.id.tv_widget_prayer_countdown)).check(matches(isDisplayed()))
         onView(withId(R.id.tv_widget_prayer_name)).check(matches(isDisplayed()))
 
-        val data = DummyRetValueAndroidTest.getMsApi1()
+        val data = testViewModel?.msApi1?.getOrAwaitValue()
         onView(withId(R.id.tv_view_city)).check(matches(withText("Kota Surakarta")))
-        onView(withId(R.id.tv_view_latitude)).check(matches(withText("${data.latitude} °N")))
-        onView(withId(R.id.tv_view_longitude)).check(matches(withText("${data.longitude} °W")))
+        onView(withId(R.id.tv_view_latitude)).check(matches(withText("${data?.latitude} °N")))
+        onView(withId(R.id.tv_view_longitude)).check(matches(withText("${data?.longitude} °W")))
     }
 
     @Test
@@ -85,6 +87,7 @@ class MainFragmentTest{
         onView(withId(R.id.iv_quote_setting)).check(matches(isDisplayed()))
         onView(withId(R.id.iv_refresh)).check(matches(isDisplayed()))
     }
+
 
     @Test
     fun test_visibility_and_data_prayer(){

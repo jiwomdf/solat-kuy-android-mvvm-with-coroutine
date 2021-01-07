@@ -106,7 +106,7 @@ object DummyRetValueAndroidTest {
     }
 
     fun getListMsFavAyah(): MutableList<MsFavAyah> {
-        return mutableListOf(MsFavAyah(1, 2,"test","test","test"))
+        return mutableListOf(MsFavAyah(1, 1,"test","test","test"))
     }
 
     fun getListMsFavSurah(): MutableList<MsFavSurah> {

@@ -41,7 +41,7 @@ abstract class BaseFragment<DB: ViewDataBinding, VM: ViewModel>(
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        
+
         binding = DataBindingUtil.inflate(inflater, layout, container, false)
         binding.lifecycleOwner = this
 

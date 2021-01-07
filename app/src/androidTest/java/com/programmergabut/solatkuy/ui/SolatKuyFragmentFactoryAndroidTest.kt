@@ -14,6 +14,8 @@ import com.programmergabut.solatkuy.data.FakePrayerRepositoryAndroidTest
 import com.programmergabut.solatkuy.data.FakeQuranRepositoryAndroidTest
 import com.programmergabut.solatkuy.ui.fragmentfavayah.FavAyahFragment
 import com.programmergabut.solatkuy.ui.fragmentfavayah.FavAyahViewModel
+import com.programmergabut.solatkuy.ui.fragmentreadsurah.ReadSurahFragment
+import com.programmergabut.solatkuy.ui.fragmentreadsurah.ReadSurahViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import javax.inject.Inject
 
@@ -22,6 +24,9 @@ class SolatKuyFragmentFactoryAndroidTest @Inject constructor() : FragmentFactory
 
     override fun instantiate(classLoader: ClassLoader, className: String): Fragment {
         return when(className){
+            ReadSurahFragment::class.java.name -> ReadSurahFragment(
+                ReadSurahViewModel(FakeQuranRepositoryAndroidTest())
+            )
             FavAyahFragment::class.java.name -> FavAyahFragment(
                 FavAyahViewModel(FakeQuranRepositoryAndroidTest())
             )

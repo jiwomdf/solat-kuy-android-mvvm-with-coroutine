@@ -14,7 +14,7 @@
  * limitations under the License.
  */
 
-package com.programmergabut.android_jetpack_testing
+package com.programmergabut.solatkuy
 
 import androidx.annotation.VisibleForTesting
 import androidx.lifecycle.LiveData

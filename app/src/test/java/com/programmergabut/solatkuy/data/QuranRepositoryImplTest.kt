@@ -2,6 +2,7 @@ package com.programmergabut.solatkuy.data
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
+import com.nhaarman.mockitokotlin2.verify
 import com.programmergabut.solatkuy.CoroutineTestUtil.Companion.toDeferred
 import com.programmergabut.solatkuy.CoroutinesTestRule
 import com.programmergabut.solatkuy.DummyArgument
@@ -9,13 +10,19 @@ import com.programmergabut.solatkuy.DummyRetValueTest
 import com.programmergabut.solatkuy.data.local.dao.*
 import com.programmergabut.solatkuy.data.local.localentity.MsFavAyah
 import com.programmergabut.solatkuy.data.remote.FakeRemoteDataSourceAlQuran
+import com.programmergabut.solatkuy.data.remote.RemoteDataSourceApiAlquran
+import com.programmergabut.solatkuy.data.remote.api.AllSurahService
+import com.programmergabut.solatkuy.data.remote.api.ReadSurahArService
+import com.programmergabut.solatkuy.data.remote.api.ReadSurahEnService
 import junit.framework.Assert
+import junit.framework.Assert.assertNotNull
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mockito
+import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
 
 @ExperimentalCoroutinesApi
@@ -27,10 +34,10 @@ class QuranRepositoryImplTest {
     @get:Rule
     val coroutinesTestRule: CoroutinesTestRule = CoroutinesTestRule()
 
-    private val fakeRemoteDataSourceAlQuran = mock(FakeRemoteDataSourceAlQuran::class.java)
     private val msFavAyahDao = mock(MsFavAyahDao::class.java)
     private val msFavSurahDao = mock(MsFavSurahDao::class.java)
-    private val quranRepository = FakeQuranRepository(fakeRemoteDataSourceAlQuran, msFavAyahDao, msFavSurahDao)
+    private val remoteDataSourceApiAlquran = mock(FakeRemoteDataSourceAlQuran::class.java)
+    private val quranRepository = FakeQuranRepository(remoteDataSourceApiAlquran, msFavAyahDao, msFavSurahDao)
     private val surahID = DummyArgument.surahID
 
     @Before
@@ -41,61 +48,60 @@ class QuranRepositoryImplTest {
     /* Remote */
     @Test
     fun fetchReadSurahEn() = coroutinesTestRule.testDispatcher.runBlockingTest {
-        val dummyQuranSurah = DummyRetValueTest.surahEnID_1<QuranRepositoryImplTest>()
 
-        Mockito.`when`(fakeRemoteDataSourceAlQuran.fetchReadSurahEn(surahID)).thenReturn(dummyQuranSurah)
         quranRepository.fetchReadSurahEn(surahID).toDeferred()
-        Mockito.verify(fakeRemoteDataSourceAlQuran).fetchReadSurahEn(surahID)
 
-        Assert.assertNotNull(dummyQuranSurah)
+        val dummyQuranSurah = DummyRetValueTest.surahEnID_1<QuranRepositoryImplTest>()
+        `when`(remoteDataSourceApiAlquran.fetchReadSurahEn(surahID)).thenReturn(dummyQuranSurah)
+        verify(remoteDataSourceApiAlquran).fetchReadSurahEn(surahID)
+
+        assertNotNull(dummyQuranSurah)
     }
 
     @Test
     fun fetchReadSurahAr() = coroutinesTestRule.testDispatcher.runBlockingTest {
-        val dummyQuranSurah = DummyRetValueTest.surahArID_1<QuranRepositoryImplTest>()
 
-        Mockito.`when`(fakeRemoteDataSourceAlQuran.fetchReadSurahAr(surahID)).thenReturn(dummyQuranSurah)
         quranRepository.fetchReadSurahAr(surahID).toDeferred()
-        Mockito.verify(fakeRemoteDataSourceAlQuran).fetchReadSurahAr(surahID)
 
-        Assert.assertNotNull(dummyQuranSurah)
+        val dummyQuranSurah = DummyRetValueTest.surahArID_1<QuranRepositoryImplTest>()
+        `when`(remoteDataSourceApiAlquran.fetchReadSurahAr(surahID)).thenReturn(dummyQuranSurah)
+        verify(remoteDataSourceApiAlquran).fetchReadSurahAr(surahID)
+
+        assertNotNull(dummyQuranSurah)
     }
 
     @Test
     fun fetchAllSurah() = coroutinesTestRule.testDispatcher.runBlockingTest {
-        val dummyQuranSurah = DummyRetValueTest.fetchAllSurahAr<QuranRepositoryImplTest>()
 
-        Mockito.`when`(fakeRemoteDataSourceAlQuran.fetchAllSurah()).thenReturn(dummyQuranSurah)
         quranRepository.fetchAllSurah().toDeferred()
-        Mockito.verify(fakeRemoteDataSourceAlQuran).fetchAllSurah()
 
-        Assert.assertNotNull(dummyQuranSurah)
+        val dummyQuranSurah = DummyRetValueTest.fetchAllSurahAr<QuranRepositoryImplTest>()
+        `when`(remoteDataSourceApiAlquran.fetchAllSurah()).thenReturn(dummyQuranSurah)
+        verify(remoteDataSourceApiAlquran).fetchAllSurah()
+
+        assertNotNull(dummyQuranSurah)
     }
 
 
     /* Database */
     @Test
-    fun getListFavAyah() {
+    fun getListFavAyah() = coroutinesTestRule.testDispatcher.runBlockingTest{
 
-        val dummyMsFavAyah = DummyRetValueTest.getListMsFavAyah()
-        val listMsFavAyah = MutableLiveData<List<MsFavAyah>>()
-        listMsFavAyah.value = dummyMsFavAyah
-        Mockito.`when`(msFavAyahDao.getListFavAyah()).thenReturn(listMsFavAyah)
+        val listMsFavAyah = DummyRetValueTest.getListMsFavAyah()
+        `when`(msFavAyahDao.getListFavAyah()).thenReturn(listMsFavAyah)
         quranRepository.getListFavAyah()
-        Mockito.verify(msFavAyahDao).getListFavAyah()
+        verify(msFavAyahDao).getListFavAyah()
 
-        Assert.assertNotNull(listMsFavAyah.value)
+        assertNotNull(listMsFavAyah)
     }
 
     @Test
-    fun getListFavAyahBySurahID() {
-        val dummyMsFavAyah = DummyRetValueTest.getListMsFavAyah()
-        val listMsFavAyah = MutableLiveData<List<MsFavAyah>>()
-        listMsFavAyah.value = dummyMsFavAyah
-        Mockito.`when`(msFavAyahDao.getListFavAyahBySurahID(surahID)).thenReturn(listMsFavAyah)
+    fun getListFavAyahBySurahID() = coroutinesTestRule.testDispatcher.runBlockingTest{
+        val listMsFavAyah = DummyRetValueTest.getListMsFavAyah()
+        `when`(msFavAyahDao.getListFavAyahBySurahID(surahID)).thenReturn(listMsFavAyah)
         quranRepository.getListFavAyahBySurahID(surahID)
-        Mockito.verify(msFavAyahDao).getListFavAyahBySurahID(surahID)
+        verify(msFavAyahDao).getListFavAyahBySurahID(surahID)
 
-        Assert.assertNotNull(listMsFavAyah.value)
+        assertNotNull(listMsFavAyah)
     }
 }

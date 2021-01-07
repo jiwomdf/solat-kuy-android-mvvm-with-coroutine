@@ -37,8 +37,10 @@ class FakePrayerRepository constructor(
     override suspend fun updateMsApi1(msApi1: MsApi1) = msApi1Dao.updateMsApi1(msApi1.api1ID, msApi1.latitude,
         msApi1.longitude, msApi1.method, msApi1.month, msApi1.year)
 
+    override fun observeMsSetting(): LiveData<MsSetting> = msSettingDao.observeMsSetting()
+
     /* MsSetting */
-    override suspend fun getMsSetting(): LiveData<MsSetting> = msSettingDao.getMsSetting()
+    override suspend fun getMsSetting(): MsSetting = msSettingDao.getMsSetting()
     override suspend fun updateIsUsingDBQuotes(isUsingDBQuotes: Boolean) = msSettingDao.updateIsUsingDBQuotes(isUsingDBQuotes)
     override suspend fun updateMsApi1MonthAndYear(api1ID: Int, month: String, year:String) = msApi1Dao.updateMsApi1MonthAndYear(api1ID, month, year)
     override suspend fun updateIsHasOpenApp(isHasOpen: Boolean) = msSettingDao.updateIsHasOpenApp(isHasOpen)
@@ -54,6 +56,7 @@ class FakePrayerRepository constructor(
                 response.statusResponse = "1"
             }
             catch (ex: Exception){
+                response = CompassResponse()
                 response.statusResponse = "-1"
                 response.messageResponse = ex.message.toString()
             }
@@ -68,6 +71,7 @@ class FakePrayerRepository constructor(
                 response.statusResponse= "1"
             }
             catch (ex: Exception){
+                response = PrayerResponse()
                 response.statusResponse= "-1"
                 response.messageResponse = ex.message.toString()
             }

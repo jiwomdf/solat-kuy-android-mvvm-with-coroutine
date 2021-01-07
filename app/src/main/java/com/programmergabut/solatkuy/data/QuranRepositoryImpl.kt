@@ -33,7 +33,9 @@ class QuranRepositoryImpl @Inject constructor(
 
     /* MsFavSurah */
     override fun observeListFavSurah(): LiveData<List<MsFavSurah>> = msFavSurahDao.observeListFavSurah()
-    override suspend fun getFavSurahBySurahID(surahID: Int): MsFavSurah = msFavSurahDao.getFavSurahBySurahID(surahID)
+    override suspend fun getFavSurahBySurahID(surahID: Int): MsFavSurah? {
+        return msFavSurahDao.getFavSurahBySurahID(surahID)
+    }
     override suspend fun insertFavSurah(msFavSurah: MsFavSurah) = msFavSurahDao.insertMsSurah(msFavSurah)
     override suspend fun deleteFavSurah(msFavSurah: MsFavSurah) = msFavSurahDao.deleteMsFavSurah(msFavSurah)
 

@@ -105,12 +105,11 @@ class MainFragmentViewModelTest {
     fun getMsSetting() = coroutinesTestRule.testDispatcher.runBlockingTest {
 
         //given
-        val observer = mock<Observer<Resource<MsSetting>>>()
-        val dummyLiveData: MutableLiveData<MsSetting> = MutableLiveData()
-        dummyLiveData.value = DummyRetValueTest.getMsSetting()
+        val observer = mock<Observer<MsSetting>>()
+        val dummyData = DummyRetValueTest.getMsSetting()
 
         //scenario
-        `when`(fakePrayerRepository.getMsSetting()).thenReturn(dummyLiveData)
+        `when`(fakePrayerRepository.getMsSetting()).thenReturn(dummyData)
 
         //start observer
         viewModel.msSetting.observeForever(observer)
@@ -121,8 +120,8 @@ class MainFragmentViewModelTest {
 
         //--verify
         verify(fakePrayerRepository).getMsSetting()
-        assertEquals(dummyLiveData.value, result?.data)
-        verify(observer).onChanged(Resource.success(dummyLiveData.value))
+        assertEquals(dummyData, result)
+        verify(observer).onChanged(dummyData)
 
         //end observer
         viewModel.msSetting.removeObserver(observer)

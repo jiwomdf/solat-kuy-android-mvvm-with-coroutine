@@ -5,6 +5,7 @@ import com.programmergabut.solatkuy.CoroutinesTestRule
 import com.programmergabut.solatkuy.data.FakePrayerRepository
 import com.programmergabut.solatkuy.ui.MainActivityViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before
 
 import org.junit.Rule
@@ -36,7 +37,8 @@ class MainActivityViewModelTest {
     }
 
     @Test
-    fun getMsSetting(){
-        Mockito.verify(prayerRepository).getMsSetting()
+    fun getMsSetting() = coroutinesTestRule.testDispatcher.runBlockingTest {
+        viewModel.msSetting
+        Mockito.verify(prayerRepository).observeMsSetting()
     }
 }

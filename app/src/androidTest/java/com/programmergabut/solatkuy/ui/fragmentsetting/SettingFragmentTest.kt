@@ -13,13 +13,14 @@ import com.programmergabut.solatkuy.ui.MainActivity
 import com.programmergabut.solatkuy.util.idlingresource.EspressoIdlingResource
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
 import org.junit.runner.RunWith
 
-@RunWith(AndroidJUnit4::class)
+@ExperimentalCoroutinesApi
 @HiltAndroidTest
 class SettingFragmentTest{
     @get:Rule
@@ -27,6 +28,7 @@ class SettingFragmentTest{
 
     @Before
     fun setUp() {
+        hiltRule.inject()
         IdlingRegistry.getInstance().register(EspressoIdlingResource.espressoTestIdlingResource)
     }
 

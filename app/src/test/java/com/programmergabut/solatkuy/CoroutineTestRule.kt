@@ -27,14 +27,3 @@ class CoroutinesTestRule(
         testDispatcher.cleanupTestCoroutines()
     }
 }
-
-
-    /* override fun starting(description: Description?) {
-        super.starting(description)
-        Dispatchers.setMain(this.coroutineContext[ContinuationInterceptor] as CoroutineDispatcher)
-    }
-
-    override fun finished(description: Description?) {
-        super.finished(description)
-        Dispatchers.resetMain()
-    } */

@@ -100,8 +100,8 @@ class ReadSurahViewModel @ViewModelInject constructor(val quranRepository: Quran
         }
     }
 
-    private var _msFavSurah = MutableLiveData<MsFavSurah>()
-    val msFavSurah: LiveData<MsFavSurah>
+    private var _msFavSurah = MutableLiveData<MsFavSurah?>()
+    val msFavSurah: LiveData<MsFavSurah?>
         get() =  _msFavSurah
     fun getFavSurahBySurahID(ayahID: Int){
         viewModelScope.launch {

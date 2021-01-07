@@ -2,12 +2,14 @@ package com.programmergabut.solatkuy.data
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
+import com.programmergabut.solatkuy.CoroutineTestUtil.Companion.toDeferred
 import com.programmergabut.solatkuy.CoroutinesTestRule
 import com.programmergabut.solatkuy.DummyArgument
 import com.programmergabut.solatkuy.data.local.dao.*
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
 import com.programmergabut.solatkuy.data.remote.RemoteDataSourceAladhanImpl
 import com.programmergabut.solatkuy.DummyRetValueTest
+import com.programmergabut.solatkuy.data.remote.FakeRemoteDataSourceAladhan
 import junit.framework.Assert.assertNotNull
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
@@ -24,7 +26,7 @@ class PrayerRepositoryImplTest{
     @get:Rule
     val coroutinesTestRule: CoroutinesTestRule = CoroutinesTestRule()
 
-    private val remoteDataSourceAladhan = mock(RemoteDataSourceAladhanImpl::class.java)
+    private val remoteDataSourceAladhan = mock(FakeRemoteDataSourceAladhan::class.java)
 
     private val notifiedPrayerDao = mock(NotifiedPrayerDao::class.java)
     private val msApi1Dao = mock(MsApi1Dao::class.java)
@@ -39,9 +41,9 @@ class PrayerRepositoryImplTest{
     /* Remote */
     @Test
     fun fetchPrayerApi() = coroutinesTestRule.testDispatcher.runBlockingTest {
-        val dummyPrayerApi = DummyRetValueTest.fetchPrayerApi<PrayerRepositoryImplTest>()
+        prayerRepository.fetchPrayerApi(msApi1).toDeferred()
 
-        remoteDataSourceAladhan.fetchPrayerApi(msApi1)
+        val dummyPrayerApi = DummyRetValueTest.fetchPrayerApi<PrayerRepositoryImplTest>()
         Mockito.`when`(remoteDataSourceAladhan.fetchPrayerApi(msApi1)).thenReturn(dummyPrayerApi)
         Mockito.verify(remoteDataSourceAladhan).fetchPrayerApi(msApi1)
 
@@ -50,7 +52,7 @@ class PrayerRepositoryImplTest{
 
     @Test
     fun fetchCompass() = coroutinesTestRule.testDispatcher.runBlockingTest {
-        prayerRepository.fetchCompass(msApi1)
+        prayerRepository.fetchCompass(msApi1).toDeferred()
 
         val dummyCompassApi = DummyRetValueTest.fetchCompassApi<PrayerRepositoryImplTest>()
 

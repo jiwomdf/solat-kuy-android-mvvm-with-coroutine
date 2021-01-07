@@ -1,18 +1,26 @@
 package com.programmergabut.solatkuy.ui.fragmentquran
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
+import androidx.navigation.NavController
+import androidx.navigation.Navigation
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso
 import androidx.test.espresso.Espresso.onView
+import androidx.test.espresso.Espresso.openActionBarOverflowOrOptionsMenu
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.action.ViewActions.*
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.contrib.RecyclerViewActions
 import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
 import androidx.test.espresso.matcher.ViewMatchers.withId
+import androidx.test.platform.app.InstrumentationRegistry.getInstrumentation
 import com.programmergabut.solatkuy.R
+import com.programmergabut.solatkuy.getOrAwaitValue
 import com.programmergabut.solatkuy.launchFragmentInHiltContainer
 import com.programmergabut.solatkuy.ui.SolatKuyFragmentFactoryAndroidTest
+import com.programmergabut.solatkuy.ui.fragmentreadsurah.ReadSurahAdapter
+import com.programmergabut.solatkuy.ui.fragmentreadsurah.ReadSurahFragment
+import com.programmergabut.solatkuy.ui.fragmentreadsurah.ReadSurahViewModel
 import com.programmergabut.solatkuy.util.idlingresource.EspressoIdlingResource
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -21,8 +29,9 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.mockito.Mockito.mock
+import org.mockito.Mockito.verify
 import javax.inject.Inject
-
 
 @ExperimentalCoroutinesApi
 @HiltAndroidTest
@@ -69,28 +78,31 @@ class QuranFragmentTest{
             testViewModel = viewModel
         }
 
-        onView(withId(R.id.rv_quran_surah)).perform(RecyclerViewActions
-            .actionOnItemAtPosition<RecyclerView.ViewHolder>(113, scrollTo())) //total Al Qur'an surah from idx 0
+        onView(withId(R.id.rv_quran_surah)).perform(
+            RecyclerViewActions
+                .actionOnItemAtPosition<RecyclerView.ViewHolder>(113, scrollTo())
+        ) //total Al Qur'an surah from idx 0
     }
 
     @Test
-    fun test_open_first_surah_then_click_favorite(){
+    fun test_open_first_surah_then_navigate_to_ReadSurahFragment(){
+        val navController = mock(NavController::class.java)
         var testViewModel: QuranFragmentViewModel? = null
         launchFragmentInHiltContainer<QuranFragment>(fragmentFactory = fragmentFactory) {
+            Navigation.setViewNavController(requireView(), navController)
             testViewModel = viewModel
         }
 
-        onView(withId(R.id.rv_quran_surah)).perform(RecyclerViewActions
-            .actionOnItemAtPosition<RecyclerView.ViewHolder>(113, click())) //click last surah
+        onView(withId(R.id.rv_quran_surah)).perform(
+            RecyclerViewActions
+                .actionOnItemAtPosition<ReadSurahAdapter.ReadSurahViewHolder>(113, click())
+        ) //click last surah
 
-        onView(withId(R.id.ab_readQuran)).check(matches(isDisplayed()))
-        onView(withId(R.id.tb_readSurah)).check(matches(isDisplayed()))
-        //openActionBarOverflowOrOptionsMenu(getInstrumentation().targetContext)
-        onView(withId(R.id.i_star_surah)).perform(click())
+        val data = testViewModel?.allSurah?.getOrAwaitValue()?.data?.last()!!
 
-        Espresso.pressBack()
-
-        Thread.sleep(5000)
+        verify(navController).navigate(QuranFragmentDirections.actionQuranFragmentToReadSurahActivity(
+            data.number.toString(), data.englishName, data.englishNameTranslation, false
+        ))
     }
 
     @Test
@@ -101,21 +113,4 @@ class QuranFragmentTest{
         }
     }
 
-    @Test
-    fun test_open_last_surah_than_swipe_left(){
-        var testViewModel: QuranFragmentViewModel? = null
-        launchFragmentInHiltContainer<QuranFragment>(fragmentFactory = fragmentFactory) {
-            testViewModel = viewModel
-        }
-
-        onView(withId(R.id.rv_quran_surah)).perform(RecyclerViewActions
-            .actionOnItemAtPosition<RecyclerView.ViewHolder>(0, click())) //click last surah
-
-        onView(withId(R.id.rv_read_surah)).perform(RecyclerViewActions
-            .actionOnItemAtPosition<RecyclerView.ViewHolder>(0, swipeLeft())) //swipe first ayah
-
-        Espresso.pressBack()
-
-        onView(withId(R.id.iv_last_read_ayah)).perform(click())
-    }
 }

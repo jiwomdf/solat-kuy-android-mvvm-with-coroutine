@@ -51,8 +51,8 @@ class AllSurahAdapter(
                     data.englishNameTranslation
                 )
             }
-
         }
-
     }
+
+
 }

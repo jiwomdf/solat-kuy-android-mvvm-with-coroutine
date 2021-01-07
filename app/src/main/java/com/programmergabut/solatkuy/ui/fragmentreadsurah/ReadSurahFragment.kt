@@ -3,9 +3,9 @@ package com.programmergabut.solatkuy.ui.fragmentreadsurah
 import android.graphics.Canvas
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
-import android.util.Log
 import android.view.*
 import android.widget.Toast
+import androidx.appcompat.app.AppCompatActivity
 import androidx.core.content.ContextCompat
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.ItemTouchHelper
@@ -20,9 +20,7 @@ import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonAr.Aya
 import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonAr.Data
 import com.programmergabut.solatkuy.databinding.FragmentReadSurahBinding
 import com.programmergabut.solatkuy.databinding.ListReadSurahBinding
-import com.programmergabut.solatkuy.ui.MainActivity
 import com.programmergabut.solatkuy.util.EnumStatus
-import com.programmergabut.solatkuy.util.LogConfig.Companion.ERROR
 import dagger.hilt.android.AndroidEntryPoint
 import es.dmoral.toasty.Toasty
 
@@ -36,10 +34,6 @@ class ReadSurahFragment(viewModelTest: ReadSurahViewModel? = null) : BaseFragmen
 
     private val args: ReadSurahFragmentArgs by navArgs()
     private lateinit var readSurahAdapter: ReadSurahAdapter
-    private lateinit var selectedSurahId: String
-    private lateinit var selectedSurahName: String
-    private lateinit var selectedTranslation: String
-    private var isAutoScroll = false
     private var isFirstLoad = true
     private var menu: Menu? = null
 
@@ -48,37 +42,31 @@ class ReadSurahFragment(viewModelTest: ReadSurahViewModel? = null) : BaseFragmen
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        setIntentExtra()
         setHasOptionsMenu(true)
         return super.onCreateView(inflater, container, savedInstanceState)
-    }
-
-    private fun setIntentExtra() {
-        try{
-            selectedSurahId = args.selectedSurahId
-            selectedSurahName = args.selectedSurahName
-            selectedTranslation = args.selectedTranslation
-            isAutoScroll = args.isAutoScroll
-        }
-        catch (ex: Exception){
-            Log.d(ERROR, ex.message.toString())
-            showBottomSheet(resources.getString(R.string.text_error_title), "", isCancelable = false, isFinish = true)
-        }
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
 
         setFirstView()
-        viewModel.fetchReadSurahAr(selectedSurahId.toInt())
+        viewModel.fetchReadSurahAr(args.selectedSurahId.toInt())
     }
 
     private fun setFirstView() {
-        (activity as MainActivity).setSupportActionBar(binding.tbReadSurah)
-        (activity as MainActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
-
+        setupToolbar()
         initRVReadSurah()
         setTheme(getIsBrightnessActive())
+    }
+
+    private fun setupToolbar() {
+        (activity as AppCompatActivity).setSupportActionBar(binding.tbReadSurah)
+        (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
+
+        binding.tbReadSurah.setNavigationOnClickListener {
+            requireActivity().onBackPressed()
+        }
+
     }
 
     override fun setListener() {
@@ -96,17 +84,28 @@ class ReadSurahFragment(viewModelTest: ReadSurahViewModel? = null) : BaseFragmen
                     if (it.data?.data == null)
                         showBottomSheet(isCancelable = false, isFinish = true)
 
-                    if (!checkLastSurahAndAyah()){
-                        showBottomSheet(resources.getString(R.string.text_error_title),
-                            "Last surah and ayah not found", isCancelable = false, isFinish = true)
+                    if (!checkLastSurahAndAyah()) {
+                        showBottomSheet(
+                            resources.getString(R.string.text_error_title),
+                            "Last surah and ayah not found", isCancelable = false, isFinish = true
+                        )
                     }
 
                     setVisibility(it.status)
                     setToolBarText(it.data?.data!!)
-                    viewModel.getListFavAyahBySurahID(selectedSurahId.toInt(), selectedSurahId.toInt(), getLastReadSurah(), getLastReadAyah())
+                    viewModel.getListFavAyahBySurahID(
+                        args.selectedSurahId.toInt(),
+                        args.selectedSurahId.toInt(),
+                        getLastReadSurah(),
+                        getLastReadAyah()
+                    )
 
                     if (isFirstLoad) {
-                        Toast.makeText(requireContext(), "Swipe left to save your last read ayah", Toast.LENGTH_SHORT).show()
+                        Toast.makeText(
+                            requireContext(),
+                            "Swipe left to save your last read ayah",
+                            Toast.LENGTH_SHORT
+                        ).show()
                         isFirstLoad = false
                     }
                 }
@@ -132,7 +131,7 @@ class ReadSurahFragment(viewModelTest: ReadSurahViewModel? = null) : BaseFragmen
                         listAyah = viewModel.fetchedArSurah.data.ayahs
                         notifyDataSetChanged()
                     }
-                    if (isAutoScroll) {
+                    if (args.isAutoScroll) {
                         (binding.rvReadSurah.layoutManager as LinearLayoutManager)
                             .scrollToPositionWithOffset(getLastReadAyah() - 1, 0)
                     }
@@ -200,6 +199,12 @@ class ReadSurahFragment(viewModelTest: ReadSurahViewModel? = null) : BaseFragmen
                     R.color.white
                 )
             )
+            binding.clSurah.setBackgroundColor(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.white
+                )
+            )
         }
         else{
             binding.tbReadSurah.setTitleTextColor(
@@ -218,6 +223,12 @@ class ReadSurahFragment(viewModelTest: ReadSurahViewModel? = null) : BaseFragmen
                 ContextCompat.getColor(
                     requireContext(),
                     R.color.dark_700
+                )
+            )
+            binding.clSurah.setBackgroundColor(
+                ContextCompat.getColor(
+                    requireContext(),
+                    R.color.dark_200
                 )
             )
         }
@@ -254,7 +265,7 @@ class ReadSurahFragment(viewModelTest: ReadSurahViewModel? = null) : BaseFragmen
         this.menu = menu
         inflater.inflate(R.menu.read_surah_menu, menu)
 
-        viewModel.getFavSurahBySurahID(selectedSurahId.toInt())
+        viewModel.getFavSurahBySurahID(args.selectedSurahId.toInt())
         return super.onCreateOptionsMenu(menu, inflater)
     }
 
@@ -266,9 +277,9 @@ class ReadSurahFragment(viewModelTest: ReadSurahViewModel? = null) : BaseFragmen
             }
             R.id.i_star_surah -> {
                 val data = MsFavSurah(
-                    selectedSurahId.toInt(),
-                    selectedSurahName,
-                    selectedTranslation
+                    args.selectedSurahId.toInt(),
+                    args.selectedSurahName,
+                    args.selectedTranslation
                 )
 
                 if (menu?.findItem(R.id.i_star_surah)?.icon?.constantState ==
@@ -281,7 +292,7 @@ class ReadSurahFragment(viewModelTest: ReadSurahViewModel? = null) : BaseFragmen
                 else
                     viewModel.deleteFavSurah(data)
 
-                viewModel.getFavSurahBySurahID(selectedSurahId.toInt())
+                viewModel.getFavSurahBySurahID(args.selectedSurahId.toInt())
                 true
             }
             else -> super.onOptionsItemSelected(item)
@@ -306,9 +317,9 @@ class ReadSurahFragment(viewModelTest: ReadSurahViewModel? = null) : BaseFragmen
 
     private val onClickFavAyah = fun(data: Ayah, binding: ListReadSurahBinding){
         val msFavAyah = MsFavAyah(
-            selectedSurahId.toInt(),
+            args.selectedSurahId.toInt(),
             data.numberInSurah,
-            selectedSurahName,
+            args.selectedSurahName,
             data.text,
             data.textEn!!
         )
@@ -334,56 +345,57 @@ class ReadSurahFragment(viewModelTest: ReadSurahViewModel? = null) : BaseFragmen
                 )
             )
         }
-        viewModel.fetchReadSurahAr(selectedSurahId.toInt())
+        viewModel.fetchReadSurahAr(args.selectedSurahId.toInt())
     }
 
-    private val adapterTheme = fun(binding: ListReadSurahBinding){
+    private val adapterTheme = fun(vhBinding: ListReadSurahBinding){
         if(getIsBrightnessActive()){
-            binding.tvListFavAr.setTextColor(
+            vhBinding.tvListFavAr.setTextColor(
                 ContextCompat.getColor(
                     requireContext(),
                     R.color.black
                 )
             )
-            binding.tvListFavEn.setTextColor(
+            vhBinding.tvListFavEn.setTextColor(
                 ContextCompat.getColor(
                     requireContext(),
                     R.color.black
                 )
             )
-            binding.tvListFavNum.setTextColor(
+            vhBinding.tvListFavNum.setTextColor(
                 ContextCompat.getColor(
                     requireContext(),
                     R.color.black
                 )
             )
-            binding.clVhReadSurah.setBackgroundColor(
+            vhBinding.clVhReadSurah.setBackgroundColor(
                 ContextCompat.getColor(
                     requireContext(),
                     R.color.white
                 )
             )
+
         }
         else {
-            binding.tvListFavAr.setTextColor(
+            vhBinding.tvListFavAr.setTextColor(
                 ContextCompat.getColor(
                     requireContext(),
                     R.color.white
                 )
             )
-            binding.tvListFavEn.setTextColor(
+            vhBinding.tvListFavEn.setTextColor(
                 ContextCompat.getColor(
                     requireContext(),
                     R.color.white
                 )
             )
-            binding.tvListFavNum.setTextColor(
+            vhBinding.tvListFavNum.setTextColor(
                 ContextCompat.getColor(
                     requireContext(),
                     R.color.white
                 )
             )
-            binding.clVhReadSurah.setBackgroundColor(
+            vhBinding.clVhReadSurah.setBackgroundColor(
                 ContextCompat.getColor(
                     requireContext(),
                     R.color.dark_500
@@ -405,14 +417,14 @@ class ReadSurahFragment(viewModelTest: ReadSurahViewModel? = null) : BaseFragmen
             val pos = viewHolder.layoutPosition
             val item = readSurahAdapter.listAyah[pos]
 
-            insertLastReadSharedPref(selectedSurahId.toInt(), item.numberInSurah)
+            insertLastReadSharedPref(args.selectedSurahId.toInt(), item.numberInSurah)
             Toasty.success(
                 requireContext(),
-                "Surah $selectedSurahId ayah ${item.numberInSurah} is now your last read",
+                "Surah ${args.selectedSurahId} ayah ${item.numberInSurah} is now your last read",
                 Toasty.LENGTH_LONG
             ).show()
 
-            viewModel.fetchReadSurahAr(selectedSurahId.toInt())
+            viewModel.fetchReadSurahAr(args.selectedSurahId.toInt())
             readSurahAdapter.notifyDataSetChanged()
         }
 
