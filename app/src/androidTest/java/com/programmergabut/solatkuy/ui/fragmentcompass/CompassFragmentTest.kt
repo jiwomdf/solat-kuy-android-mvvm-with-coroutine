@@ -2,6 +2,9 @@ package com.programmergabut.solatkuy.ui.fragmentcompass
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.espresso.IdlingRegistry
+import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.filters.MediumTest
+import com.programmergabut.solatkuy.TaskExecutorWithIdlingResourceRule
 import com.programmergabut.solatkuy.launchFragmentInHiltContainer
 import com.programmergabut.solatkuy.ui.SolatKuyFragmentFactoryAndroidTest
 import com.programmergabut.solatkuy.util.idlingresource.EspressoIdlingResource
@@ -12,18 +15,20 @@ import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
+import org.junit.runner.RunWith
 import javax.inject.Inject
 
-
+@MediumTest
 @HiltAndroidTest
 @ExperimentalCoroutinesApi
+@RunWith(AndroidJUnit4::class)
 class CompassFragmentTest {
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
 
     @get:Rule
-    val instantTaskExecutorRule = InstantTaskExecutorRule()
+    val instantTaskExecutorRule = TaskExecutorWithIdlingResourceRule()
 
     @Inject
     lateinit var fragmentFactory: SolatKuyFragmentFactoryAndroidTest
@@ -31,16 +36,10 @@ class CompassFragmentTest {
     @Before
     fun setUp() {
         hiltRule.inject()
-        IdlingRegistry.getInstance().register(EspressoIdlingResource.espressoTestIdlingResource)
-    }
-
-    @After
-    fun tearDown() {
-        IdlingRegistry.getInstance().unregister(EspressoIdlingResource.espressoTestIdlingResource)
     }
 
     @Test
-    fun test_visibility_fragmentCompass(){
+    fun testVisibilityFragmentCompass(){
 
         var testViewModel: FragmentCompassViewModel? = null
         launchFragmentInHiltContainer<CompassFragment>(fragmentFactory = fragmentFactory) {

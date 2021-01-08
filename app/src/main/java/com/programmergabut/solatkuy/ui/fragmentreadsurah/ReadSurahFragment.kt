@@ -51,6 +51,7 @@ class ReadSurahFragment(viewModelTest: ReadSurahViewModel? = null) : BaseFragmen
 
         setFirstView()
         viewModel.fetchReadSurahAr(args.selectedSurahId.toInt())
+        viewModel.getFavSurahBySurahID(args.selectedSurahId.toInt())
     }
 
     private fun setFirstView() {
@@ -265,7 +266,6 @@ class ReadSurahFragment(viewModelTest: ReadSurahViewModel? = null) : BaseFragmen
         this.menu = menu
         inflater.inflate(R.menu.read_surah_menu, menu)
 
-        viewModel.getFavSurahBySurahID(args.selectedSurahId.toInt())
         return super.onCreateOptionsMenu(menu, inflater)
     }
 

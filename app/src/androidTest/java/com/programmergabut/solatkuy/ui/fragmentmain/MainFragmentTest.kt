@@ -1,32 +1,28 @@
 package com.programmergabut.solatkuy.ui.fragmentmain
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.IdlingRegistry
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
+import androidx.test.ext.junit.runners.AndroidJUnit4
+import androidx.test.filters.MediumTest
+import com.programmergabut.solatkuy.*
+import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.Data
+import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.PrayerResponse
+import com.programmergabut.solatkuy.ui.EnumConfigAndroidTesting
+import com.programmergabut.solatkuy.ui.SolatKuyFragmentFactoryAndroidTest
+import com.programmergabut.solatkuy.ui.nestedScrollTo
 import com.programmergabut.solatkuy.util.idlingresource.EspressoIdlingResource
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
+import junit.framework.Assert.assertEquals
+import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import androidx.test.espresso.matcher.ViewMatchers.isDisplayed
-
-import androidx.test.filters.MediumTest
-import com.programmergabut.solatkuy.getOrAwaitValue
-import com.programmergabut.solatkuy.*
-import com.programmergabut.solatkuy.data.local.localentity.MsFavAyah
-import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.Data
-import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.PrayerResponse
-import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonEn.ReadSurahEnResponse
-import com.programmergabut.solatkuy.ui.EnumConfigAndroidTesting
-import com.programmergabut.solatkuy.ui.SolatKuyFragmentFactoryAndroidTest
-import com.programmergabut.solatkuy.ui.nestedScrollTo
-import junit.framework.Assert.assertEquals
-import kotlinx.coroutines.ExperimentalCoroutinesApi
+import org.junit.runner.RunWith
 import java.text.SimpleDateFormat
 import java.util.*
 import javax.inject.Inject
@@ -35,30 +31,25 @@ import javax.inject.Inject
 @MediumTest
 @HiltAndroidTest
 @ExperimentalCoroutinesApi
+@RunWith(AndroidJUnit4::class)
 class MainFragmentTest{
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
 
     @get:Rule
-    val instantTaskExecutorRule = InstantTaskExecutorRule()
+    val instantTaskExecutorRule = TaskExecutorWithIdlingResourceRule()
 
     @Inject
     lateinit var fragmentFactory: SolatKuyFragmentFactoryAndroidTest
 
     @Before
-    fun test_setUp() {
+    fun testSetUp() {
         hiltRule.inject()
-        IdlingRegistry.getInstance().register(EspressoIdlingResource.espressoTestIdlingResource)
-    }
-
-    @After
-    fun test_tearDown() {
-        IdlingRegistry.getInstance().unregister(EspressoIdlingResource.espressoTestIdlingResource)
     }
 
     @Test
-    fun test_widget_visibility_and_data(){
+    fun testWidgetVisibilityAndData(){
         var testViewModel: FragmentMainViewModel? = null
         launchFragmentInHiltContainer<MainFragment>(fragmentFactory = fragmentFactory) {
             testViewModel = viewModel
@@ -70,14 +61,14 @@ class MainFragmentTest{
         onView(withId(R.id.tv_widget_prayer_countdown)).check(matches(isDisplayed()))
         onView(withId(R.id.tv_widget_prayer_name)).check(matches(isDisplayed()))
 
-        val data = testViewModel?.msApi1?.getOrAwaitValue()
+        val data = testViewModel?.msApi1?.value
         onView(withId(R.id.tv_view_city)).check(matches(withText("Kota Surakarta")))
         onView(withId(R.id.tv_view_latitude)).check(matches(withText("${data?.latitude} °N")))
         onView(withId(R.id.tv_view_longitude)).check(matches(withText("${data?.longitude} °W")))
     }
 
     @Test
-    fun test_visibility_quote(){
+    fun testVisibilityQuote(){
         var testViewModel: FragmentMainViewModel? = null
         launchFragmentInHiltContainer<MainFragment>(fragmentFactory = fragmentFactory) {
             testViewModel = viewModel
@@ -90,7 +81,7 @@ class MainFragmentTest{
 
 
     @Test
-    fun test_visibility_and_data_prayer(){
+    fun testVisibilityAndDataPrayer(){
         var testViewModel: FragmentMainViewModel? = null
         launchFragmentInHiltContainer<MainFragment>(fragmentFactory = fragmentFactory) {
             testViewModel = viewModel
@@ -105,7 +96,7 @@ class MainFragmentTest{
         onView(withId(R.id.cb_maghrib)).check(matches(isDisplayed()))
         onView(withId(R.id.cb_isha)).check(matches(isDisplayed()))
 
-        val prayers = testViewModel?.notifiedPrayer?.getOrAwaitValue()
+        val prayers = testViewModel?.notifiedPrayer?.value
         prayers?.data?.forEach { prayer ->
             when(prayer.prayerName){
                 EnumConfigAndroidTesting.FAJR -> {
@@ -129,7 +120,7 @@ class MainFragmentTest{
     }
 
     @Test
-    fun test_visibility_and_data_info(){
+    fun testVisibilityAndDataInfo(){
         var testViewModel: FragmentMainViewModel? = null
         launchFragmentInHiltContainer<MainFragment>(fragmentFactory = fragmentFactory) {
             testViewModel = viewModel
@@ -154,7 +145,7 @@ class MainFragmentTest{
 
         val sdf = SimpleDateFormat("dd", Locale.getDefault())
         val currentDate = sdf.format(Date())
-        val response = testViewModel?.prayer?.getOrAwaitValue()
+        val response = testViewModel?.prayer?.value
         val data = createTodayData(response?.data, currentDate)
         val date = data?.date
         val hijriDate = date?.hijri
@@ -176,7 +167,7 @@ class MainFragmentTest{
     }
 
     @Test
-    fun test_click_quran_quote() {
+    fun testClickQuranQuote() {
         var testViewModel: FragmentMainViewModel? = null
         launchFragmentInHiltContainer<MainFragment>(fragmentFactory = fragmentFactory) {
             testViewModel = viewModel
@@ -184,17 +175,15 @@ class MainFragmentTest{
 
         onView(withId(R.id.tv_quran_ayah_quote_click)).check(matches(isDisplayed()))
         onView(withId(R.id.tv_quran_ayah_quote_click)).perform(click())
-        Thread.sleep(2000)
         onView(withId(R.id.tv_quran_ayah_quote)).check(matches(isDisplayed()))
 
         onView(withId(R.id.tv_quran_ayah_quote)).check(matches(isDisplayed()))
         onView(withId(R.id.tv_quran_ayah_quote)).perform(click())
-        Thread.sleep(2000)
         onView(withId(R.id.tv_quran_ayah_quote_click)).check(matches(isDisplayed()))
     }
 
     @Test
-    fun test_click_cb_prayer(){
+    fun testClickCbPrayer(){
         var testViewModel: FragmentMainViewModel? = null
         launchFragmentInHiltContainer<MainFragment>(fragmentFactory = fragmentFactory) {
             testViewModel = viewModel
@@ -215,7 +204,7 @@ class MainFragmentTest{
         onView(withId(R.id.cb_maghrib)).perform(click())
         onView(withId(R.id.cb_isha)).perform(click())
 
-        val prayers = testViewModel?.notifiedPrayer?.getOrAwaitValue()
+        val prayers = testViewModel?.notifiedPrayer?.value
         prayers?.data?.forEach { prayer ->
             if(prayer.prayerName == EnumConfigAndroidTesting.SUNRISE)
                 return@forEach
@@ -225,7 +214,7 @@ class MainFragmentTest{
     }
 
     @Test
-    fun test_refresh_quote(){
+    fun testRefreshQuote(){
         var testViewModel: FragmentMainViewModel? = null
         launchFragmentInHiltContainer<MainFragment>(fragmentFactory = fragmentFactory) {
             testViewModel = viewModel

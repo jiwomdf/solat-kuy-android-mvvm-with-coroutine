@@ -84,6 +84,8 @@ class QuranFragment(viewModelTest: QuranFragmentViewModel? = null) : BaseFragmen
                 allSurahAdapter.listData = newData ?: emptyList()
                 allSurahAdapter.notifyDataSetChanged()
                 binding.sJuzz.setSelection(0)
+
+                setVisibility(EnumStatus.SUCCESS, newData)
             }
             override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
             override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {}
@@ -104,10 +106,10 @@ class QuranFragment(viewModelTest: QuranFragmentViewModel? = null) : BaseFragmen
                         listData = it.data
                         notifyDataSetChanged()
                     }
-                    setVisibility(it.status)
+                    setVisibility(it.status, it.data)
                 }
-                EnumStatus.LOADING -> setVisibility(it.status)
-                EnumStatus.ERROR -> setVisibility(it.status)
+                EnumStatus.LOADING -> setVisibility(it.status, null)
+                EnumStatus.ERROR -> setVisibility(it.status, null)
             }
         })
 
@@ -119,15 +121,21 @@ class QuranFragment(viewModelTest: QuranFragmentViewModel? = null) : BaseFragmen
         viewModel.fetchAllSurah()
     }
 
-    private fun setVisibility(status: EnumStatus){
+    private fun setVisibility(status: EnumStatus, newData: List<Data>?){
         when(status){
             EnumStatus.SUCCESS -> {
-                binding.tvLoadingAllSurah.text = getString(R.string.loading)
-                binding.tvLoadingAllSurah.visibility = View.GONE
-                binding.rvQuranSurah.visibility = View.VISIBLE
-                binding.slQuran.isRefreshing = false
+                if(newData == null || newData.isEmpty()){
+                    binding.tvLoadingAllSurah.visibility = View.VISIBLE
+                    binding.tvLoadingAllSurah.text = getString(R.string.text_there_is_no_data)
+                }
+                else{
+                    binding.tvLoadingAllSurah.visibility = View.GONE
+                    binding.rvQuranSurah.visibility = View.VISIBLE
+                    binding.slQuran.isRefreshing = false
+                }
             }
             EnumStatus.LOADING -> {
+                binding.tvLoadingAllSurah.text = getString(R.string.loading)
                 binding.rvQuranSurah.visibility = View.INVISIBLE
                 binding.tvLoadingAllSurah.visibility = View.VISIBLE
             }

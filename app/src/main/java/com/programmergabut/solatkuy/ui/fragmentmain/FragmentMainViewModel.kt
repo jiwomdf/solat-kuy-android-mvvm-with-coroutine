@@ -13,8 +13,6 @@ import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.Timings
 import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonEn.ReadSurahEnResponse
 import com.programmergabut.solatkuy.util.EnumConfig
 import com.programmergabut.solatkuy.util.Resource
-import com.programmergabut.solatkuy.util.idlingresource.RunIdlingResourceHelper.Companion.runIdlingResourceDecrement
-import com.programmergabut.solatkuy.util.idlingresource.RunIdlingResourceHelper.Companion.runIdlingResourceIncrement
 import kotlinx.coroutines.launch
 import java.lang.Exception
 import java.text.SimpleDateFormat
@@ -47,7 +45,6 @@ class FragmentMainViewModel @ViewModelInject constructor(
     fun syncNotifiedPrayer(msApi1: MsApi1) = viewModelScope.launch {
         _notifiedPrayer.postValue(Resource.loading(null))
         try {
-            runIdlingResourceIncrement()
 
             /* if you want to change the prayer time manually for testing,
              * uncomment it and comment the code below
@@ -68,23 +65,19 @@ class FragmentMainViewModel @ViewModelInject constructor(
                     val prayers = createPrayerTime(timings)
                     prayers.forEach { prayer -> prayerRepository.updatePrayerTime(prayer.key, prayer.value) }
                     _notifiedPrayer.postValue(Resource.success(result))
-                    runIdlingResourceDecrement()
                 }
                 else{
                     _notifiedPrayer.postValue(Resource.error("Today prayer data is not found", result))
-                    runIdlingResourceDecrement()
                     return@launch
                 }
             }
             else{
                 _notifiedPrayer.postValue(Resource.error("Application Offline", result))
-                runIdlingResourceDecrement()
                 return@launch
             }
         }
         catch (ex: Exception){
             _notifiedPrayer.postValue(Resource.error(ex.message.toString(), null))
-            runIdlingResourceDecrement()
         }
     }
 
@@ -106,7 +99,6 @@ class FragmentMainViewModel @ViewModelInject constructor(
 
         _readSurahEn.postValue(Resource.loading(null))
         try {
-            runIdlingResourceIncrement()
             val response = quranRepository.fetchReadSurahEn(nInSurah).await()
             if(response.statusResponse == "1"){
                 _readSurahEn.postValue(Resource.success(response))
@@ -114,11 +106,9 @@ class FragmentMainViewModel @ViewModelInject constructor(
             else{
                 _readSurahEn.postValue(Resource.error(response.messageResponse, null))
             }
-            runIdlingResourceDecrement()
         }
         catch (e: Exception){
             _readSurahEn.postValue(Resource.error(e.message.toString(), null))
-            runIdlingResourceDecrement()
         }
 
     }
@@ -131,20 +121,16 @@ class FragmentMainViewModel @ViewModelInject constructor(
 
             _prayer.postValue(Resource.loading(null))
             try{
-                runIdlingResourceIncrement()
                 val response  = prayerRepository.fetchPrayerApi(msApi1).await()
                 if(response.statusResponse == "1"){
                     _prayer.postValue(Resource.success(response))
-                    runIdlingResourceDecrement()
                 }
                 else{
                     _prayer.postValue(Resource.error(response.messageResponse, null))
-                    runIdlingResourceDecrement()
                 }
             }
             catch (ex: Exception){
                 _prayer.postValue(Resource.error(ex.message.toString(), null))
-                runIdlingResourceDecrement()
             }
 
         }

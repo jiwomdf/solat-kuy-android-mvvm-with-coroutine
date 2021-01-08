@@ -106,19 +106,15 @@ object DummyRetValueAndroidTest {
     }
 
     fun getListMsFavAyah(): MutableList<MsFavAyah> {
-        return mutableListOf(MsFavAyah(1, 1,"test","test","test"))
+        return mutableListOf()
     }
 
     fun getListMsFavSurah(): MutableList<MsFavSurah> {
-        return mutableListOf(
-            MsFavSurah(1, "test","test")
-        )
+        return mutableListOf()
     }
 
     fun getFavSurahBySurahID(surahid: Int): MutableList<MsFavSurah> {
-        return mutableListOf(
-            MsFavSurah(1, "test","test")
-        )
+        return mutableListOf()
     }
 
     fun getMsSetting(): MsSetting {
