@@ -17,7 +17,8 @@ created with:
 - Testing with Mockito, espresso, & Junit4
 - minifyEnabled
 
-To try the UI testing please change the IS_IDLING_RESOURCE_ACTIVE = true in com.programmergabut.solatkuy.util.EnumConfig, than rebuild the project<br>
+<b>Note:</b> Some of the instrumental testing need a manual idling resource management like the "ReadSurahFragmentTest" file inorder to run the test. <br>
+To try the manual idling resouce please change the <b>IS_IDLING_RESOURCE_ACTIVE</b> to <b>true</b> in com.programmergabut.solatkuy.util.EnumConfig, than <b>rebuild</b> the project<br>
 also turn off the window scale, transition scale, and animator duration scale
 
 Feel free to see and contribute
