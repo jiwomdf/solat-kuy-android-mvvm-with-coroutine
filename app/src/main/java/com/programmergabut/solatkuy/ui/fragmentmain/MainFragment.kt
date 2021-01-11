@@ -243,8 +243,11 @@ class MainFragment(viewModelTestFragment: FragmentMainViewModel? = null) : BaseF
         })
 
         viewModel.msSetting.observe(viewLifecycleOwner, { setting ->
-            if(setting == null)
+            if(setting == null){
+                dialogBinding.rbgQuotesDataSource.check(R.id.rb_fromApi)
+                viewModel.fetchReadSurahEn((STARTED_SURAH..ENDED_SURAH).random())
                 return@observe
+            }
 
             if(setting.isUsingDBQuotes){
                 dialogBinding.rbgQuotesDataSource.check(R.id.rb_fromFavQuote)
