@@ -17,8 +17,7 @@ created with:
 - Testing with Mockito, espresso, & Junit4
 - minifyEnabled
 
-To try the UI testing please change the IS_IDLING_RESOURCE_ACTIVE = true in com.programmergabut.solatkuy.util.EnumConfig, than rebuild the project<br>
-also turn off the window scale, transition scale, and animator duration scale
+<b>Note</b>: turn off the window scale, transition scale, and animator duration scale when testing
 
 Feel free to see and contribute
 

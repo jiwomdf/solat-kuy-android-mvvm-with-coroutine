@@ -39,11 +39,6 @@ import javax.inject.Inject
 @ExperimentalCoroutinesApi
 class ReadSurahFragmentTest {
 
-    /* Note: this instrumental test is using manual idling resource, please set the
-       IS_IDLING_RESOURCE_ACTIVE to true in "com.programmergabut.solatkuy.util.EnumConfig.kt" class,
-       then please rebuild the project after changing the IS_IDLING_RESOURCE_ACTIVE value
-     */
-
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
 

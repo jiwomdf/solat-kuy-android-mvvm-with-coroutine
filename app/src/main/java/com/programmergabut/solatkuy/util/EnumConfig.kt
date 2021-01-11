@@ -8,11 +8,6 @@ package com.programmergabut.solatkuy.util
 class EnumConfig {
     companion object{
 
-        /*IS IDLING RESOURCE ACTIVE
-         * if you change IS_IDLING_RESOURCE_ACTIVE, please rebuild the project
-         */
-        const val IS_IDLING_RESOURCE_ACTIVE = false
-
         /* DATABASES */
         const val DATABASE_NAME = "solatkuydb"
 
