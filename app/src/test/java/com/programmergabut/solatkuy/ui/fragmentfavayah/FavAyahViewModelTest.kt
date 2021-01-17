@@ -39,7 +39,7 @@ class FavAyahViewModelTest {
 
     @Test
     fun getFavAyah() = coroutinesTestRule.testDispatcher.runBlockingTest {
-        viewModel.getMsFavAyah()
+        viewModel.favAyah
         verify(quranRepository).getListFavAyah()
     }
 

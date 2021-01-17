@@ -49,7 +49,7 @@ class QuranFragmentViewModelTest {
     fun fetchAllSurah() = coroutinesTestRule.testDispatcher.runBlockingTest{
 
         //given
-        val observer = mock<Observer<Resource<List<Data>>>>()
+        val observer = mock<Observer<Resource<List<Data>?>>>()
         val dummySelectedSurahAr = Resource.success(DummyRetValueTest.fetchAllSurahAr<QuranRepositoryImplTest>())
         dummySelectedSurahAr.data?.statusResponse = "1"
         val dummySelectedSurahData = Resource.success(DummyRetValueTest.fetchAllSurahWithLowerCase<QuranFragmentViewModelTest>())

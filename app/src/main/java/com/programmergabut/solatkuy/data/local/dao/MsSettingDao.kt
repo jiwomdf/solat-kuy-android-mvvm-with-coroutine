@@ -13,9 +13,6 @@ interface MsSettingDao {
     @Query("select * from MsSetting")
     fun observeMsSetting(): LiveData<MsSetting>
 
-    @Query("select * from MsSetting")
-    suspend fun getMsSetting(): MsSetting
-
     @Query("delete from MsSetting")
     suspend fun deleteAll()
 

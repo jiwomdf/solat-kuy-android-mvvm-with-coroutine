@@ -29,21 +29,21 @@ class PrayerRepositoryImpl @Inject constructor(
 
     /* Room */
     /* NotifiedPrayer */
-    override suspend fun updatePrayerIsNotified(prayerName: String, isNotified: Boolean) = notifiedPrayerDao.updatePrayerIsNotified(prayerName, isNotified)
+    override suspend fun updatePrayerIsNotified(prayerName: String, isNotified: Boolean) =
+        notifiedPrayerDao.updatePrayerIsNotified(prayerName, isNotified)
     override fun updatePrayerTime(prayerName: String, prayerTime: String) = notifiedPrayerDao.updatePrayerTime(prayerName, prayerTime)
     override suspend fun getListNotifiedPrayer() = notifiedPrayerDao.getListNotifiedPrayer()
 
     /* MsApi1 */
     override fun observeMsApi1(): LiveData<MsApi1> = msApi1Dao.observeMsApi1()
-    override suspend fun updateMsApi1(msApi1: MsApi1) = msApi1Dao.updateMsApi1(msApi1.api1ID, msApi1.latitude,
-        msApi1.longitude, msApi1.method, msApi1.month, msApi1.year)
-
-    override fun observeMsSetting(): LiveData<MsSetting> = msSettingDao.observeMsSetting()
+    override suspend fun updateMsApi1(msApi1: MsApi1) =
+        msApi1Dao.updateMsApi1(msApi1.api1ID, msApi1.latitude, msApi1.longitude, msApi1.method, msApi1.month, msApi1.year)
 
     /* MsSetting */
-    override suspend fun getMsSetting(): MsSetting = msSettingDao.getMsSetting()
+    override fun observeMsSetting(): LiveData<MsSetting> = msSettingDao.observeMsSetting()
     override suspend fun updateIsUsingDBQuotes(isUsingDBQuotes: Boolean) = msSettingDao.updateIsUsingDBQuotes(isUsingDBQuotes)
-    override suspend fun updateMsApi1MonthAndYear(api1ID: Int, month: String, year:String) = msApi1Dao.updateMsApi1MonthAndYear(api1ID, month, year)
+    override suspend fun updateMsApi1MonthAndYear(api1ID: Int, month: String, year:String) =
+        msApi1Dao.updateMsApi1MonthAndYear(api1ID, month, year)
     override suspend fun updateIsHasOpenApp(isHasOpen: Boolean) = msSettingDao.updateIsHasOpenApp(isHasOpen)
 
     /*
@@ -81,9 +81,7 @@ class PrayerRepositoryImpl @Inject constructor(
     }
 
     override suspend fun syncNotifiedPrayerTesting(): List<NotifiedPrayer> {
-
         val listData = mutableListOf<NotifiedPrayer>()
-
         try {
             val map = mutableMapOf<String, String>()
             map[EnumConfig.FAJR] = EnumConfig.FAJR_TIME
@@ -92,19 +90,16 @@ class PrayerRepositoryImpl @Inject constructor(
             map[EnumConfig.MAGHRIB] = EnumConfig.MAGHRIB_TIME
             map[EnumConfig.ISHA] = EnumConfig.ISHA_TIME
             map[EnumConfig.SUNRISE] = EnumConfig.SUNRISE_TIME
-
             var prayerID = 1
             map.forEach { p ->
                 listData.add(NotifiedPrayer(prayerID, p.key, true, p.value))
                 prayerID++
             }
-
         }
         catch (ex :Exception){
             Log.d(ERROR,"PrayerRepository, not connected to internet and using the offline data")
             return emptyList()
         }
-
         return listData
     }
 }

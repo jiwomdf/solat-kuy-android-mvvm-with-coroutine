@@ -41,16 +41,12 @@ abstract class BaseFragment<DB: ViewDataBinding, VM: ViewModel>(
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-
         binding = DataBindingUtil.inflate(inflater, layout, container, false)
         binding.lifecycleOwner = this
-
         viewModelClass?.let {
             viewModel = viewModelTest ?: ViewModelProvider(requireActivity()).get(it)
         }
-
         setListener()
-
         return binding.root
     }
 
@@ -76,28 +72,32 @@ abstract class BaseFragment<DB: ViewDataBinding, VM: ViewModel>(
             activity?.finish()
     }
 
-    protected fun showBottomSheet(title : String = resources.getString(R.string.text_error_title),
-                                  description : String = resources.getString(R.string.text_error_dsc),
-                                  isCancelable : Boolean = true, isFinish : Boolean = false) {
+    protected fun showBottomSheet(
+        title : String = resources.getString(R.string.text_error_title),
+        description : String = resources.getString(R.string.text_error_dsc),
+        isCancelable : Boolean = true,
+        isFinish : Boolean = false,
+        callback: (() -> Unit)? = null) {
 
+        val dialog =  BottomSheetDialog(requireContext())
         val dialogBinding: LayoutErrorBottomsheetBinding = DataBindingUtil.inflate(
             layoutInflater, R.layout.layout_error_bottomsheet, null, true
         )
-
-        val dialog =  BottomSheetDialog(requireContext())
-        dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-        dialog.setCancelable(isCancelable)
-        dialog.setContentView(dialogBinding.root)
-        dialogBinding.tvTitle.text = title
-        dialogBinding.tvDesc.text = description
+        dialog.apply{
+            window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+            setCancelable(isCancelable)
+            setContentView(dialogBinding.root)
+        }
+        dialogBinding.apply {
+            tvTitle.text = title
+            tvDesc.text = description
+        }
         dialog.show()
-
         dialogBinding.btnOk.setOnClickListener {
             dialog.hide()
-
-            if(isFinish){
+            callback?.invoke()
+            if(isFinish)
                 findNavController().popBackStack()
-            }
         }
     }
 

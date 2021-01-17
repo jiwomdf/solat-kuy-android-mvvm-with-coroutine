@@ -10,11 +10,15 @@ import kotlinx.coroutines.launch
 import java.lang.Exception
 import java.util.*
 
+const val SAVED_ALL_SURAH_NULL = "Saved all surah null"
 class QuranFragmentViewModel @ViewModelInject constructor(private val quranRepository: QuranRepository): ViewModel() {
 
-    private lateinit var allSurahSync: List<Data>
-    private var _allSurah = SingleLiveEvent<Resource<List<Data>>>()
-    val allSurah: LiveData<Resource<List<Data>>>
+    val staredSurah = quranRepository.observeListFavSurah()
+
+    private var isFetchingAllSurahFinish = false
+    var savedAllSurah: List<Data>? = null
+    private var _allSurah = SingleLiveEvent<Resource<List<Data>?>>()
+    val allSurah: LiveData<Resource<List<Data>?>>
         get() = _allSurah
     fun fetchAllSurah(){
         viewModelScope.launch {
@@ -33,8 +37,11 @@ class QuranFragmentViewModel @ViewModelInject constructor(private val quranRepos
                             surah.revelationType
                         )
                     }
-                    allSurahSync = response.data
+                    if(savedAllSurah == null){
+                        savedAllSurah = mappedResponse
+                    }
                     _allSurah.postValue(Resource.success(mappedResponse))
+                    isFetchingAllSurahFinish = true
                 }
                 else{
                     _allSurah.postValue(Resource.error(response.messageResponse, null))
@@ -46,12 +53,30 @@ class QuranFragmentViewModel @ViewModelInject constructor(private val quranRepos
         }
     }
 
-    fun getSurahByJuzz(juzz: Int): List<Data>{
-        if(allSurahSync == null)
-            return listOf()
+    fun getSurahBySeach(stringName: String){
+        if(!isFetchingAllSurahFinish){
+            return
+        }
+        if(savedAllSurah == null){
+            _allSurah.postValue(Resource.error(SAVED_ALL_SURAH_NULL, null))
+            return
+        }
+        val newData = savedAllSurah?.filter { surah -> surah.englishNameLowerCase!!.contains(stringName) }
+        _allSurah.postValue(Resource.success(newData ?: emptyList()))
+    }
 
-        val allSurahDatas = allSurahSync
-        return when(juzz){
+    fun getSurahByJuzz(juzz: Int){
+        if(!isFetchingAllSurahFinish){
+            return
+        }
+        if(savedAllSurah == null){
+            _allSurah.postValue(Resource.error(SAVED_ALL_SURAH_NULL, null))
+            return
+        }
+        val allSurahDatas = savedAllSurah!!
+        val rangedSurahByJuzz: List<Data>?
+        rangedSurahByJuzz = when(juzz){
+            0 -> allSurahDatas
             1 -> allSurahDatas.filter { x -> x.number in 1..2 }
             2 -> allSurahDatas.filter { x -> x.number == 2 }
             3 -> allSurahDatas.filter { x -> x.number in 2..3 }
@@ -84,8 +109,7 @@ class QuranFragmentViewModel @ViewModelInject constructor(private val quranRepos
             30 -> allSurahDatas.filter { x -> x.number in 78..144 }
             else -> allSurahDatas
         }
+        _allSurah.postValue(Resource.success(rangedSurahByJuzz))
     }
-
-    val staredSurah = quranRepository.observeListFavSurah()
 
 }

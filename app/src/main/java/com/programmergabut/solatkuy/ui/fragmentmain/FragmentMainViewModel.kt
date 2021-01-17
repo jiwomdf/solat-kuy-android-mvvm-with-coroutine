@@ -8,9 +8,11 @@ import com.programmergabut.solatkuy.data.local.localentity.MsApi1
 import com.programmergabut.solatkuy.data.local.localentity.MsFavAyah
 import com.programmergabut.solatkuy.data.local.localentity.MsSetting
 import com.programmergabut.solatkuy.data.local.localentity.NotifiedPrayer
+import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.Data
 import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.PrayerResponse
 import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.Timings
 import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonEn.ReadSurahEnResponse
+import com.programmergabut.solatkuy.util.livedata.AbsentLiveData
 import com.programmergabut.solatkuy.util.EnumConfig
 import com.programmergabut.solatkuy.util.Resource
 import kotlinx.coroutines.launch
@@ -22,6 +24,8 @@ import java.util.*
  * Created by Katili Jiwo Adi Wiyono on 25/03/20.
  */
 
+const val TODAY_PRAYER_DATA_IS_NOT_FOUND = "Today prayer data is not found"
+const val APPLICATION_OFFLINE = "Application Offline"
 class FragmentMainViewModel @ViewModelInject constructor(
     private val prayerRepository: PrayerRepository,
     private val quranRepository: QuranRepository
@@ -29,14 +33,16 @@ class FragmentMainViewModel @ViewModelInject constructor(
 
     val msApi1 = prayerRepository.observeMsApi1()
 
-    private var _favAyah = MutableLiveData<List<MsFavAyah>>()
-    val favAyah: LiveData<List<MsFavAyah>>
-        get() = _favAyah
-    fun getMsFavAyah() {
-        viewModelScope.launch {
-            val result = quranRepository.getListFavAyah()
-            _favAyah.postValue(result)
+    private var isFavAyahCalled = MutableLiveData(false)
+    val favAyah: LiveData<List<MsFavAyah>> = Transformations.switchMap(isFavAyahCalled) { isFirstLoad ->
+        if (!isFirstLoad) {
+            AbsentLiveData.create()
+        } else {
+            quranRepository.getListFavAyah()
         }
+    }
+    fun getMsFavAyah(value: Boolean = true) {
+        this.isFavAyahCalled.value = value
     }
 
     private var _notifiedPrayer = MutableLiveData<Resource<List<NotifiedPrayer>>>()
@@ -45,40 +51,40 @@ class FragmentMainViewModel @ViewModelInject constructor(
     fun syncNotifiedPrayer(msApi1: MsApi1) = viewModelScope.launch {
         _notifiedPrayer.postValue(Resource.loading(null))
         try {
-
             /* if you want to change the prayer time manually for testing,
              * uncomment it and comment the code below
              *
                 prayerRepository.syncNotifiedPrayerTesting().let {
                 _notifiedPrayer.postValue(Resource.success(it))
-                runIdlingResourceDecrement()
             } */
 
             val response = prayerRepository.fetchPrayerApi(msApi1).await()
             val result = prayerRepository.getListNotifiedPrayer()
-
-            if(response.statusResponse == "1"){
-                val currentDate = SimpleDateFormat("dd", Locale.getDefault()).format(Date())
-                val timings = response.data.find { obj -> obj.date.gregorian?.day == currentDate.toString() }?.timings
-
+            if(response.statusResponse == "1" && response.data.isNotEmpty()){
+                val timings = getTodayTimings(response.data)
                 if(timings != null){
                     val prayers = createPrayerTime(timings)
                     prayers.forEach { prayer -> prayerRepository.updatePrayerTime(prayer.key, prayer.value) }
                     _notifiedPrayer.postValue(Resource.success(result))
                 }
                 else{
-                    _notifiedPrayer.postValue(Resource.error("Today prayer data is not found", result))
+                    _notifiedPrayer.postValue(Resource.error(TODAY_PRAYER_DATA_IS_NOT_FOUND, result))
                     return@launch
                 }
             }
             else{
-                _notifiedPrayer.postValue(Resource.error("Application Offline", result))
+                _notifiedPrayer.postValue(Resource.error(APPLICATION_OFFLINE, result))
                 return@launch
             }
         }
         catch (ex: Exception){
             _notifiedPrayer.postValue(Resource.error(ex.message.toString(), null))
         }
+    }
+
+    private fun getTodayTimings(data: List<Data>): Timings? {
+        val currentDate = SimpleDateFormat("dd", Locale.getDefault()).format(Date())
+        return data.find { obj -> obj.date.gregorian?.day == currentDate.toString() }?.timings
     }
 
     private fun createPrayerTime(timings: Timings): MutableMap<String, String> {
@@ -96,21 +102,18 @@ class FragmentMainViewModel @ViewModelInject constructor(
     val readSurahEn: LiveData<Resource<ReadSurahEnResponse>>
         get() = _readSurahEn
     fun fetchReadSurahEn(nInSurah: Int) = viewModelScope.launch{
-
         _readSurahEn.postValue(Resource.loading(null))
         try {
             val response = quranRepository.fetchReadSurahEn(nInSurah).await()
             if(response.statusResponse == "1"){
                 _readSurahEn.postValue(Resource.success(response))
-            }
-            else{
+            } else {
                 _readSurahEn.postValue(Resource.error(response.messageResponse, null))
             }
         }
         catch (e: Exception){
             _readSurahEn.postValue(Resource.error(e.message.toString(), null))
         }
-
     }
 
     private var _prayer = MutableLiveData<Resource<PrayerResponse>>()
@@ -118,7 +121,6 @@ class FragmentMainViewModel @ViewModelInject constructor(
         get() = _prayer
     fun fetchPrayerApi(msApi1: MsApi1){
         viewModelScope.launch {
-
             _prayer.postValue(Resource.loading(null))
             try{
                 val response  = prayerRepository.fetchPrayerApi(msApi1).await()
@@ -132,38 +134,31 @@ class FragmentMainViewModel @ViewModelInject constructor(
             catch (ex: Exception){
                 _prayer.postValue(Resource.error(ex.message.toString(), null))
             }
-
         }
     }
 
-    private var _setting = MutableLiveData<MsSetting>()
-    val msSetting: LiveData<MsSetting>
-        get() = _setting
-    fun getMsSetting(){
-        viewModelScope.launch {
-            val msSetting = prayerRepository.getMsSetting()
-            _setting.postValue(msSetting)
+    private var isSettingCalled = MutableLiveData(false)
+    val msSetting: LiveData<MsSetting> = Transformations.switchMap(isSettingCalled) { isFirstLoad ->
+        if (!isFirstLoad) {
+            AbsentLiveData.create()
+        } else {
+            prayerRepository.observeMsSetting()
         }
     }
-
-    /*fun updateNotifiedPrayer(NotifiedPrayer: NotifiedPrayer){
-        repository.updateNotifiedPrayer(NotifiedPrayer)
-    }*/
+    fun getMsSetting(value: Boolean = true){
+        this.isSettingCalled.value = value
+    }
 
     fun updateMsApi1(msApi1: MsApi1) = viewModelScope.launch {
         prayerRepository.updateMsApi1(msApi1)
     }
-
     fun updatePrayerIsNotified(prayerName: String, isNotified: Boolean) = viewModelScope.launch {
         prayerRepository.updatePrayerIsNotified(prayerName, isNotified)
     }
-
     fun updateIsUsingDBQuotes(isUsingDBQuotes: Boolean) = viewModelScope.launch {
         prayerRepository.updateIsUsingDBQuotes(isUsingDBQuotes)
     }
-
     fun updateMsApi1MonthAndYear(api1ID: Int, month: String, year:String) = viewModelScope.launch{
         prayerRepository.updateMsApi1MonthAndYear(api1ID, month, year)
     }
-
 }

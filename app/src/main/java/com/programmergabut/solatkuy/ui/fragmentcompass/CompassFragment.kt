@@ -27,7 +27,9 @@ import dagger.hilt.android.AndroidEntryPoint
  */
 
 @AndroidEntryPoint
-class CompassFragment constructor(viewModelTest: FragmentCompassViewModel? = null) : BaseFragment<FragmentCompassBinding, FragmentCompassViewModel>(
+class CompassFragment constructor(
+    viewModelTest: FragmentCompassViewModel? = null
+) : BaseFragment<FragmentCompassBinding, FragmentCompassViewModel>(
     R.layout.fragment_compass,
     FragmentCompassViewModel::class.java,
     viewModelTest
@@ -38,12 +40,10 @@ class CompassFragment constructor(viewModelTest: FragmentCompassViewModel? = nul
     private var mGravity = FloatArray(3)
     private var mGeomagnetic = FloatArray(3)
     private lateinit var mSensorManager: SensorManager
-    private lateinit var mMsApi1: MsApi1
 
     /* Compass */
     override fun onResume() {
         super.onResume()
-
         mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD),
             SensorManager.SENSOR_DELAY_GAME)
         mSensorManager.registerListener(this, mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
@@ -57,7 +57,6 @@ class CompassFragment constructor(viewModelTest: FragmentCompassViewModel? = nul
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         mSensorManager = activity?.getSystemService(SENSOR_SERVICE) as SensorManager
         openLottieAnimation()
     }
@@ -75,106 +74,94 @@ class CompassFragment constructor(viewModelTest: FragmentCompassViewModel? = nul
             createLottieAnimation()
     }
 
-    private fun saveSharedPreferences() {
-        setIsHasOpenAnimation(true)
-    }
-
     /* Subscribe live data */
     private fun subscribeObserversAPI() {
         viewModel.compass.observe(viewLifecycleOwner, { retVal ->
             when(retVal.status){
                 EnumStatus.SUCCESS -> {
-                    retVal.data?.data.let {
-                        binding.tvQiblaDir.text = if(it?.direction.toString().length > 6)
-                            it?.direction.toString().substring(0,6).trim() + "°"
-                        else
-                            it?.direction.toString()
+                    if(retVal.data == null){
+                        showBottomSheet()
+                        return@observe
                     }
+                    val data = retVal.data.data
+                    binding.tvQiblaDir.text =
+                        if(data.direction.toString().length > 6)
+                            data.direction.toString().substring(0,6).trim() + "°"
+                        else
+                            data.direction.toString()
                 }
-                EnumStatus.LOADING -> {
-                    binding.tvQiblaDir.text = getString(R.string.loading)
-                }
-                EnumStatus.ERROR -> {
-                    binding.tvQiblaDir.text = getString(R.string.fetch_failed)
-                }
+                EnumStatus.LOADING -> binding.tvQiblaDir.text = getString(R.string.loading)
+                EnumStatus.ERROR -> binding.tvQiblaDir.text = getString(R.string.fetch_failed)
             }
         })
     }
 
     private fun subscribeObserversDB() {
         viewModel.msApi1.observe(viewLifecycleOwner, {
-            if(it == null)
+            if(it == null){
                 showBottomSheet(isCancelable = false, isFinish = true)
-
-            mMsApi1 = it
+                return@observe
+            }
             viewModel.fetchCompassApi(it)
         })
     }
 
     override fun onSensorChanged(event: SensorEvent?) {
-
         val alpha = 0.97f
         synchronized(this){
-
             if(event?.sensor?.type == Sensor.TYPE_ACCELEROMETER){
                 mGravity[0] = alpha * mGravity[0] + (1 - alpha) * event.values[0]
                 mGravity[1] = alpha * mGravity[1] + (1 - alpha) * event.values[1]
                 mGravity[2] = alpha * mGravity[2] + (1 - alpha) * event.values[2]
             }
-
             if(event?.sensor?.type == Sensor.TYPE_MAGNETIC_FIELD){
                 mGeomagnetic[0] = alpha * mGeomagnetic[0] + (1 - alpha) * event.values[0]
                 mGeomagnetic[1] = alpha * mGeomagnetic[1] + (1 - alpha) * event.values[1]
                 mGeomagnetic[2] = alpha * mGeomagnetic[2] + (1 - alpha) * event.values[2]
             }
-
             val R = FloatArray(9)
             val I = FloatArray(9)
             val isSuccess = SensorManager.getRotationMatrix(R, I, mGravity, mGeomagnetic)
-
             if(isSuccess){
                 val orientation = FloatArray(3)
                 SensorManager.getOrientation(R, orientation)
                 azimuth = Math.toDegrees(orientation[0].toDouble()).toFloat()
                 azimuth = (azimuth + 360) % 360
-
                 val anim = RotateAnimation(-currentAzimuth, -azimuth, Animation.RELATIVE_TO_SELF, 0.5f,
                     Animation.RELATIVE_TO_SELF, 0.5F)
-
                 currentAzimuth = azimuth
-
                 anim.duration = 500
                 anim.repeatCount = 0
                 anim.fillAfter = true
-
                 binding.ivCompass.startAnimation(anim)
             }
-
         }
-
     }
 
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {/*NO-OP*/}
 
     override fun onRefresh() {
-        viewModel.fetchCompassApi(mMsApi1)
+        if(viewModel.msApi1.value == null)
+            return
+        viewModel.fetchCompassApi(viewModel.msApi1.value!!)
         binding.slCompass.isRefreshing = false
     }
 
     /* Lottie Animation */
     private fun createLottieAnimation() {
+        val dialog =  Dialog(requireContext())
         val dialogBinding: LayoutPhoneTiltBinding = DataBindingUtil.inflate(
             LayoutInflater.from(requireContext()),
             R.layout.layout_phone_tilt, null, true
         )
-        val dialog =  Dialog(requireContext())
-        dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-        dialog.setCancelable(false)
-        dialog.setContentView(dialogBinding.root)
-        dialog.show()
-
+        dialog.apply {
+            window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+            setCancelable(false)
+            setContentView(dialogBinding.root)
+            show()
+        }
         dialogBinding.btnHideAnimation.setOnClickListener {
-            saveSharedPreferences()
+            setIsHasOpenAnimation(true)
             dialog.hide()
         }
     }

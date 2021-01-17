@@ -3,7 +3,7 @@ package com.programmergabut.solatkuy.ui.activitymain
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.programmergabut.solatkuy.CoroutinesTestRule
 import com.programmergabut.solatkuy.data.FakePrayerRepository
-import com.programmergabut.solatkuy.ui.MainActivityViewModel
+import com.programmergabut.solatkuy.ui.mainactivity.MainActivityViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before

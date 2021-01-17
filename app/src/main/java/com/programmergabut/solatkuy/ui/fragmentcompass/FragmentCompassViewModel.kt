@@ -19,7 +19,6 @@ class FragmentCompassViewModel @ViewModelInject constructor(val prayerRepository
     private var _compass = MutableLiveData<Resource<CompassResponse>>()
     val compass: LiveData<Resource<CompassResponse>>
         get() = _compass
-
     fun fetchCompassApi(msApi1: MsApi1){
         viewModelScope.launch {
             _compass.postValue(Resource.loading(null))

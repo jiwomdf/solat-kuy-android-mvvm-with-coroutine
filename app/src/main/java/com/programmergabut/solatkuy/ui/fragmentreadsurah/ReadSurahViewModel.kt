@@ -16,11 +16,9 @@ import java.lang.Exception
 
 class ReadSurahViewModel @ViewModelInject constructor(val quranRepository: QuranRepository): ViewModel() {
 
-    lateinit var fetchedArSurah: ReadSurahArResponse
     private var _selectedSurahAr = SingleLiveEvent<Resource<ReadSurahArResponse>>()
     val selectedSurahAr: LiveData<Resource<ReadSurahArResponse>>
         get() = _selectedSurahAr
-
     fun fetchReadSurahAr(surahID: Int){
         viewModelScope.launch {
             _selectedSurahAr.postValue(Resource.loading(null))
@@ -28,12 +26,12 @@ class ReadSurahViewModel @ViewModelInject constructor(val quranRepository: Quran
                 runIdlingResourceIncrement()
                 val readSurahAr = quranRepository.fetchReadSurahAr(surahID).await()
                 val readSurahEn = quranRepository.fetchReadSurahEn(surahID).await()
-                if(readSurahAr.statusResponse == "1" && readSurahEn.statusResponse == "1" &&
-                    readSurahAr.data != null && readSurahEn.data != null){
-                    fetchedArSurah = readSurahAr
-
-                    val listAyah: MutableList<Ayah>
-                    listAyah = readSurahAr.data.ayahs.map { x -> Ayah(
+                if(readSurahAr.statusResponse == "1" &&
+                    readSurahEn.statusResponse == "1" &&
+                    readSurahAr.data != null &&
+                    readSurahEn.data != null
+                ){
+                    val listAyah = readSurahAr.data.ayahs.map { x -> Ayah(
                         x.hizbQuarter,
                         x.juz,
                         x.manzil,
@@ -45,17 +43,12 @@ class ReadSurahViewModel @ViewModelInject constructor(val quranRepository: Quran
                         "",
                         isFav = false,
                         isLastRead = false
-                    )} as MutableList<Ayah>
-
+                    )}
                     readSurahEn.data.ayahs.forEachIndexed { index, x ->
                         listAyah[index].textEn = x.text
                     }
-
                     readSurahAr.data.ayahs = listAyah
                     _selectedSurahAr.postValue(Resource.success(readSurahAr))
-                }
-                else if(readSurahEn.statusResponse != "1"){
-                    _selectedSurahAr.postValue(Resource.error(readSurahEn.messageResponse, null))
                 }
                 else{
                     _selectedSurahAr.postValue(Resource.error(readSurahAr.messageResponse, null))
@@ -70,49 +63,71 @@ class ReadSurahViewModel @ViewModelInject constructor(val quranRepository: Quran
         }
     }
 
-    private var _msFavAyahBySurahID = SingleLiveEvent<Resource<List<MsFavAyah>>>()
-    val msFavAyahBySurahID: LiveData<Resource<List<MsFavAyah>>>
-        get() = _msFavAyahBySurahID
-    fun getListFavAyahBySurahID(surahID: Int, selectedSurahId: Int, lastSurah: Int, lastAyah: Int){
-        viewModelScope.launch {
-            val local = quranRepository.getListFavAyahBySurahID(surahID)
-
-            if(fetchedArSurah == null)
-                return@launch
-
-            local.forEach { ayah ->
-                fetchedArSurah.data.ayahs.forEach out@{ remoteAyah ->
-                    if (remoteAyah.numberInSurah == ayah.ayahID && selectedSurahId == ayah.surahID) {
-                        remoteAyah.isFav = true
-                        return@out
-                    }
-                }
+    fun getFavAyah(){
+        if(selectedSurahAr.value?.data?.data?.ayahs == null){
+            _selectedSurahAr.postValue(selectedSurahAr.value)
+        }
+        else{
+            selectedSurahAr.value?.data?.data?.ayahs?.forEach { ayah ->
+                if(ayah.isFav)
+                    ayah.isFav = false
             }
-
-            fetchedArSurah.data.ayahs.forEach out@{ ayah ->
-                if (lastSurah == selectedSurahId && lastAyah == ayah.numberInSurah) {
-                    ayah.isLastRead = true
-                    return@out
-                }
-            }
-
-            _msFavAyahBySurahID.postValue(Resource.success(local))
+            _selectedSurahAr.postValue(selectedSurahAr.value)
         }
     }
 
-    private var _msFavSurah = MutableLiveData<MsFavSurah?>()
-    val msFavSurah: LiveData<MsFavSurah?>
-        get() =  _msFavSurah
-    fun getFavSurahBySurahID(ayahID: Int){
-        viewModelScope.launch {
-            val result = quranRepository.getFavSurahBySurahID(ayahID)
-            _msFavSurah.postValue(result)
+    fun getLastReadAyah(){
+        if(selectedSurahAr.value?.data?.data?.ayahs == null){
+            _selectedSurahAr.postValue(selectedSurahAr.value)
         }
+        else{
+            selectedSurahAr.value?.data?.data?.ayahs?.forEach { ayah ->
+                if(ayah.isLastRead)
+                    ayah.isLastRead = false
+            }
+            _selectedSurahAr.postValue(selectedSurahAr.value)
+        }
+    }
+
+    private var _msFavAyahBySurahID = SingleLiveEvent<Resource<List<MsFavAyah>>>()
+    val msFavAyahBySurahID: LiveData<Resource<List<MsFavAyah>>> = _msFavAyahBySurahID
+    fun getListFavAyahBySurahID(surahID: Int, selectedSurahId: Int, lastSurah: Int, lastAyah: Int){
+        viewModelScope.launch {
+            val local = quranRepository.getListFavAyahBySurahID(surahID)
+            if(selectedSurahAr.value?.data?.data?.ayahs == null){
+                _msFavAyahBySurahID.postValue(Resource.success(local))
+            }
+            else{
+                val fetchedArSurah = selectedSurahAr.value?.data?.data?.ayahs!!
+                local.forEach { ayah ->
+                    fetchedArSurah.forEach out@{ remoteAyah ->
+                        if (remoteAyah.numberInSurah == ayah.ayahID && selectedSurahId == ayah.surahID) {
+                            remoteAyah.isFav = true
+                            return@out
+                        }
+                    }
+                }
+                fetchedArSurah.forEach out@{ ayah ->
+                    if (lastSurah == selectedSurahId && lastAyah == ayah.numberInSurah) {
+                        ayah.isLastRead = true
+                        return@out
+                    }
+                }
+                _msFavAyahBySurahID.postValue(Resource.success(local))
+            }
+        }
+    }
+
+    private var ayahID = MutableLiveData<Int>()
+    val msFavSurah: LiveData<MsFavSurah?> = Transformations.switchMap(ayahID) { ayahID ->
+        quranRepository.getFavSurahBySurahID(ayahID)
+    }
+    fun getFavSurahBySurahID(ayahID: Int){
+        this.ayahID.value = ayahID
     }
 
     fun insertFavAyah(msFavAyah: MsFavAyah) = viewModelScope.launch { quranRepository.insertFavAyah(msFavAyah) }
     fun deleteFavAyah(msFavAyah: MsFavAyah) = viewModelScope.launch { quranRepository.deleteFavAyah(msFavAyah) }
-
     fun insertFavSurah(msFavSurah: MsFavSurah) = viewModelScope.launch { quranRepository.insertFavSurah(msFavSurah) }
     fun deleteFavSurah(msFavSurah: MsFavSurah) = viewModelScope.launch { quranRepository.deleteFavSurah(msFavSurah) }
 }

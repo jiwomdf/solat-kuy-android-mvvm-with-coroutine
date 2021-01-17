@@ -8,10 +8,7 @@ import com.programmergabut.solatkuy.CoroutinesTestRule
 import com.programmergabut.solatkuy.DummyArgument
 import com.programmergabut.solatkuy.DummyRetValueTest
 import com.programmergabut.solatkuy.data.local.dao.*
-import com.programmergabut.solatkuy.data.local.localentity.MsFavAyah
 import com.programmergabut.solatkuy.data.remote.FakeRemoteDataSourceAlQuran
-import com.programmergabut.solatkuy.data.remote.RemoteDataSourceApiAlquran
-import com.programmergabut.solatkuy.data.remote.api.AllSurahService
 import com.programmergabut.solatkuy.data.remote.api.ReadSurahArService
 import com.programmergabut.solatkuy.data.remote.api.ReadSurahEnService
 import junit.framework.Assert
@@ -87,7 +84,7 @@ class QuranRepositoryImplTest {
     @Test
     fun getListFavAyah() = coroutinesTestRule.testDispatcher.runBlockingTest{
 
-        val listMsFavAyah = DummyRetValueTest.getListMsFavAyah()
+        val listMsFavAyah = MutableLiveData(DummyRetValueTest.getListMsFavAyah())
         `when`(msFavAyahDao.getListFavAyah()).thenReturn(listMsFavAyah)
         quranRepository.getListFavAyah()
         verify(msFavAyahDao).getListFavAyah()

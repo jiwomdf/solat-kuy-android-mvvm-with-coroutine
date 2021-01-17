@@ -19,6 +19,9 @@
     <string name="info">Info</string>
     <string name="next_prayer_is_dhuhr">Next prayer is Dhuhr</string>
 
+    <!--Toolbar-->
+    <string name="ayahs_you_have_been_like">Ayahs you have been liked</string>
+
     <!--LOCATION-->
     <string name="changelocation">Change Location</string>
     <string name="by_latitude_amp_longitude"><![CDATA[By Latitude & Longitude]]></string>
@@ -66,10 +69,15 @@
     <string name="last_read_ayah_not_found_title">Last read ayah not found</string>
     <string name="last_read_ayah_not_found_dsc">You can save the last read ayah by swipe left the ayah when reading a surah</string>
     <string name="text_there_is_no_data">There is no data</string>
+    <string name="last_surah_and_ayah_not_found_dsc">Last surah and ayah not found</string>
 
     <!--PERMISSION-->
     <string name="location_needed">Location Permission Needed</string>
     <string name="permission_is_needed_to_run_the_gps">Permission is needed to run the Gps</string>
+
+    <string name="swipe_left_to_save_your_last_read_ayah">Swipe left to save your last read ayah</string>
+    <string name="saving_ayah">Saving Ayah</string>
+    <string name="unsaving_ayah">Unsaving Ayah</string>
 
     <string name="open_setting">Open Setting</string>
     <string name="proceed">Proceed</string>

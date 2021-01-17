@@ -24,7 +24,6 @@ import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.Data
 import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.PrayerResponse
 import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonEn.ReadSurahEnResponse
 import com.programmergabut.solatkuy.databinding.*
-import com.programmergabut.solatkuy.ui.fragmentmain.adapter.DuaCollectionAdapter
 import com.programmergabut.solatkuy.util.EnumStatus
 import com.programmergabut.solatkuy.util.EnumConfig
 import com.programmergabut.solatkuy.util.EnumConfig.Companion.ENDED_SURAH
@@ -50,13 +49,15 @@ import kotlin.math.abs
  */
 
 @AndroidEntryPoint
-class MainFragment(viewModelTestFragment: FragmentMainViewModel? = null) : BaseFragment<FragmentMainBinding, FragmentMainViewModel>(
-    R.layout.fragment_main, FragmentMainViewModel::class.java, viewModelTestFragment
+class MainFragment(
+    viewModelTestFragment: FragmentMainViewModel? = null
+) : BaseFragment<FragmentMainBinding, FragmentMainViewModel>(
+    R.layout.fragment_main,
+    FragmentMainViewModel::class.java, viewModelTestFragment
 ), View.OnClickListener{
 
     private var isTimerHasBanded = false
     private var coroutineTimerJob: Job? = null
-    private var tempApi1: MsApi1? = null
     private var mCityName: String? = null
     private lateinit var duaCollectionAdapter: DuaCollectionAdapter
     private lateinit var dialogBinding: LayoutPopupChooseQuoteSettingBinding
@@ -85,14 +86,11 @@ class MainFragment(viewModelTestFragment: FragmentMainViewModel? = null) : BaseF
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         initRvDuaCollection()
-        viewModel.getMsSetting()
     }
 
     override fun setListener() {
         super.setListener()
-
         inflateBinding()
         cbClickListener()
         binding.includeQuranQuote.tvQuranAyahQuoteClick.setOnClickListener(this)
@@ -105,8 +103,10 @@ class MainFragment(viewModelTestFragment: FragmentMainViewModel? = null) : BaseF
 
     private fun inflateBinding() {
         dialogBinding = DataBindingUtil.inflate(
-            layoutInflater, R.layout.layout_popup_choose_quote_setting,
-            null, false
+            layoutInflater,
+            R.layout.layout_popup_choose_quote_setting,
+            null,
+            false
         )
         dialog = Dialog(requireContext())
     }
@@ -125,14 +125,14 @@ class MainFragment(viewModelTestFragment: FragmentMainViewModel? = null) : BaseF
                 viewModel.getMsSetting()
             }
             R.id.iv_quote_setting -> {
-                dialog.setContentView(dialogBinding.root)
-                dialog.show()
-
+                dialog.apply {
+                    setContentView(dialogBinding.root)
+                    show()
+                }
                 dialogBinding.rbFromApi.setOnClickListener {
                     viewModel.updateIsUsingDBQuotes(false)
                     dismissDialog()
                 }
-
                 dialogBinding.rbFromFavQuote.setOnClickListener {
                     viewModel.updateIsUsingDBQuotes(true)
                     dismissDialog()
@@ -155,11 +155,13 @@ class MainFragment(viewModelTestFragment: FragmentMainViewModel? = null) : BaseF
         viewModel.notifiedPrayer.observe(viewLifecycleOwner, { retVal ->
             when(retVal.status){
                 EnumStatus.SUCCESS -> {
-                    if(retVal.data == null)
+                    if(retVal.data == null){
                         showBottomSheet(isCancelable = false, isFinish = true)
-                    if(retVal.data?.isEmpty()!!)
                         return@observe
-
+                    }
+                    if(retVal.data.isEmpty()){
+                        return@observe
+                    }
                     bindCheckBox(retVal.data)
                     updateAlarmManager(retVal.data)
                     bindWidget(createWidgetData(retVal.data))
@@ -170,11 +172,13 @@ class MainFragment(viewModelTestFragment: FragmentMainViewModel? = null) : BaseF
                 }
                 EnumStatus.ERROR -> {
                     Log.d(ERROR, retVal.message.toString())
-                    if(retVal.data == null)
+                    if(retVal.data == null){
                         showBottomSheet(isCancelable = false, isFinish = true)
-                    if(retVal.data?.isEmpty()!!)
                         return@observe
-
+                    }
+                    if(retVal.data.isEmpty()){
+                        return@observe
+                    }
                     bindCheckBox(retVal.data)
                     updateAlarmManager(retVal.data)
                     bindWidget(createWidgetData(retVal.data))
@@ -231,7 +235,6 @@ class MainFragment(viewModelTestFragment: FragmentMainViewModel? = null) : BaseF
                 return@observe
 
             /* save temp data */
-            tempApi1 = api1
             bindWidgetLocation(api1)
             updateMonthAndYearMsApi1(api1)
             viewModel.syncNotifiedPrayer(api1)
@@ -248,7 +251,6 @@ class MainFragment(viewModelTestFragment: FragmentMainViewModel? = null) : BaseF
                 viewModel.fetchReadSurahEn((STARTED_SURAH..ENDED_SURAH).random())
                 return@observe
             }
-
             if(setting.isUsingDBQuotes){
                 dialogBinding.rbgQuotesDataSource.check(R.id.rb_fromFavQuote)
                 viewModel.getMsFavAyah()
@@ -264,14 +266,13 @@ class MainFragment(viewModelTestFragment: FragmentMainViewModel? = null) : BaseF
         viewModel.favAyah.observe(viewLifecycleOwner, { localQuotes ->
             if(localQuotes == null)
                 return@observe
-
             bindQuranSurahDB(localQuotes)
         })
     }
 
     private fun setState(status: EnumStatus){
         when(status){
-            EnumStatus.SUCCESS -> { }
+            EnumStatus.SUCCESS -> {/*NO-OP*/}
             EnumStatus.LOADING -> {
                 binding.includeInfo.tvImsakDate.text = getString(R.string.loading)
                 binding.includeInfo.tvImsakTime.text = getString(R.string.loading)
@@ -295,15 +296,13 @@ class MainFragment(viewModelTestFragment: FragmentMainViewModel? = null) : BaseF
         }
     }
 
-    private fun createTodayData(it: PrayerResponse?, currentDate: String): Data? {
-        return it?.data?.find { obj -> obj.date.gregorian?.day == currentDate }
-    }
+    private fun createTodayData(it: PrayerResponse?, currentDate: String): Data? =
+        it?.data?.find { obj -> obj.date.gregorian?.day == currentDate }
 
     private fun updateMonthAndYearMsApi1(data: MsApi1) {
         val arrDate = LocalDate.now().toString("dd/M/yyyy").split("/")
         val year = arrDate[2]
         val month = arrDate[1]
-
         val dbYear = data.year.toInt()
         val dbMoth = data.month.toInt()
 
@@ -346,28 +345,24 @@ class MainFragment(viewModelTestFragment: FragmentMainViewModel? = null) : BaseF
             else
                 updatePrayerIsNotified(getString(R.string.fajr), false)
         }
-
         binding.includePrayerTime.cbDhuhr.setOnClickListener {
             if(binding.includePrayerTime.cbDhuhr.isChecked)
                 updatePrayerIsNotified(getString(R.string.dhuhr), true)
             else
                 updatePrayerIsNotified(getString(R.string.dhuhr), false)
         }
-
         binding.includePrayerTime.cbAsr.setOnClickListener {
             if(binding.includePrayerTime.cbAsr.isChecked)
                 updatePrayerIsNotified(getString(R.string.asr), true)
             else
                 updatePrayerIsNotified(getString(R.string.asr), false)
         }
-
         binding.includePrayerTime.cbMaghrib.setOnClickListener {
             if(binding.includePrayerTime.cbMaghrib.isChecked)
                 updatePrayerIsNotified(getString(R.string.maghrib), true)
             else
                 updatePrayerIsNotified(getString(R.string.maghrib), false)
         }
-
         binding.includePrayerTime.cbIsha.setOnClickListener {
             if(binding.includePrayerTime.cbIsha.isChecked)
                 updatePrayerIsNotified(getString(R.string.isha), true)
@@ -491,7 +486,6 @@ class MainFragment(viewModelTestFragment: FragmentMainViewModel? = null) : BaseF
         val returnValue = retVal.data
         val randAyah = (returnValue.ayahs.indices).random()
         val ayah = returnValue.ayahs[randAyah].text + " - QS " + returnValue.englishName + " Ayah " + returnValue.numberOfAyahs
-
         binding.includeQuranQuote.tvQuranAyahQuote.text = if(ayah.length > 100) ayah.substring(0, 100) + "..." else ayah
         binding.includeQuranQuote.tvQuranAyahQuoteClick.text = ayah
     }
@@ -501,7 +495,6 @@ class MainFragment(viewModelTestFragment: FragmentMainViewModel? = null) : BaseF
             val randAyah = (listAyah.indices).random()
             val data = listAyah[randAyah]
             val ayah = data.ayahEn + " - QS " + data.surahName + " Ayah " + data.ayahID
-
             binding.includeQuranQuote.tvQuranAyahQuote.text = if(ayah.length > 100) ayah.substring(0, 100) + "..." else ayah
             binding.includeQuranQuote.tvQuranAyahQuoteClick.text = ayah
         }
@@ -566,7 +559,7 @@ class MainFragment(viewModelTestFragment: FragmentMainViewModel? = null) : BaseF
             /* fetching Prayer API */
             if(tempHour == 0 && tempMinute == 0 && tempSecond == 1){
                 withContext(Dispatchers.Main){
-                    tempApi1?.let {
+                    viewModel.msApi1.value?.let {
                         viewModel.syncNotifiedPrayer(it)
                         isTimerHasBanded = false
                         Log.d(COROUTINE_TIMER, "Fetching.. $scope $tempSecond ${Thread.currentThread().id}")
@@ -580,7 +573,6 @@ class MainFragment(viewModelTestFragment: FragmentMainViewModel? = null) : BaseF
     private fun updateAlarmManager(listNotifiedPrayer: List<NotifiedPrayer>){
         if(mCityName == null)
             mCityName = "-"
-
         PushNotificationHelper(
             requireContext(),
             listNotifiedPrayer as MutableList<NotifiedPrayer>, mCityName!!

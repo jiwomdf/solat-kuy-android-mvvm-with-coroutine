@@ -31,8 +31,8 @@ class FakeQuranRepositoryAndroidTest: QuranRepository {
      *Room
      */
     /* MsFavAyah */
-    override suspend fun getListFavAyah(): List<MsFavAyah> {
-        return listMsFavAyah
+    override fun getListFavAyah(): LiveData<List<MsFavAyah>> {
+        return observableMsFavAyahs
     }
     override suspend fun getListFavAyahBySurahID(surahID: Int): List<MsFavAyah> {
         return listMsFavAyah
@@ -50,8 +50,8 @@ class FakeQuranRepositoryAndroidTest: QuranRepository {
     override fun observeListFavSurah(): LiveData<List<MsFavSurah>> {
         return observableMsFavSurahs
     }
-    override suspend fun getFavSurahBySurahID(surahID: Int): MsFavSurah? {
-        return listMsFavSurah.firstOrNull(){ data -> data.surahID == surahID}
+    override fun getFavSurahBySurahID(surahID: Int): LiveData<MsFavSurah?> {
+        return observableMsFavSurah
     }
     override suspend fun insertFavSurah(msFavSurah: MsFavSurah){
         listMsFavSurah.add(msFavSurah)

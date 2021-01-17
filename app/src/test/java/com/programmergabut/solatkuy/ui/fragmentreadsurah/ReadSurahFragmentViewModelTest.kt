@@ -63,8 +63,6 @@ class ReadSurahFragmentViewModelTest{
         dummyDataEn.statusResponse = "1"
         val dummySelectedSurahEn = Resource.success(dummyDataEn)
 
-        viewModel.fetchedArSurah = DummyRetValueTest.surahArID_1<ReadSurahFragmentViewModelTest>()
-
         //scenario
         Mockito.`when`(fakeQuranRepository.fetchReadSurahAr(surahID)).thenReturn(dummySelectedSurahAr.data!!.toDeferred())
         Mockito.`when`(fakeQuranRepository.fetchReadSurahEn(surahID)).thenReturn(dummySelectedSurahEn.data!!.toDeferred())
@@ -89,7 +87,7 @@ class ReadSurahFragmentViewModelTest{
 
         //given
         val observer = mock<Observer<MsFavSurah?>>()
-        val dummyData = DummyRetValueTest.getFavSurahBySurahID(surahID)[0]
+        val dummyData = MutableLiveData(DummyRetValueTest.getFavSurahBySurahID(surahID)[0])
 
         //scenario
         Mockito.`when`(fakeQuranRepository.getFavSurahBySurahID(surahID)).thenReturn(dummyData)
@@ -103,8 +101,8 @@ class ReadSurahFragmentViewModelTest{
 
         //--verify
         Mockito.verify(fakeQuranRepository).getFavSurahBySurahID(surahID)
-        Assert.assertEquals(dummyData, result)
-        Mockito.verify(observer).onChanged(dummyData)
+        Assert.assertEquals(dummyData.value, result)
+        Mockito.verify(observer).onChanged(dummyData.value)
 
         //end observer
         viewModel.msFavSurah.removeObserver(observer)
@@ -116,7 +114,7 @@ class ReadSurahFragmentViewModelTest{
         //given
         val observer = mock<Observer<Resource<List<MsFavAyah>>>>()
         val dummyData = DummyRetValueTest.getListMsFavAyah()
-        viewModel.fetchedArSurah = DummyRetValueTest.surahArID_1<ReadSurahFragmentViewModelTest>()
+        //viewModel.fetchedArSurah = DummyRetValueTest.surahArID_1<ReadSurahFragmentViewModelTest>()
 
         //scenario
         Mockito.`when`(fakeQuranRepository.getListFavAyahBySurahID(surahID)).thenReturn(dummyData)

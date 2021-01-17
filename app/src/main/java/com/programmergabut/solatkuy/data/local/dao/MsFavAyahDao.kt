@@ -9,7 +9,7 @@ import kotlinx.coroutines.Deferred
 interface MsFavAyahDao {
 
     @Query("select * from MsFavAyah")
-    suspend fun getListFavAyah(): List<MsFavAyah>
+    fun getListFavAyah(): LiveData<List<MsFavAyah>>
 
     @Query("select * from MsFavAyah where surahID like :surahID")
     suspend fun getListFavAyahBySurahID(surahID: Int): List<MsFavAyah>

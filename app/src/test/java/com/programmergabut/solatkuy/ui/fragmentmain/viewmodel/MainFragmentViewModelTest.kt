@@ -106,10 +106,10 @@ class MainFragmentViewModelTest {
 
         //given
         val observer = mock<Observer<MsSetting>>()
-        val dummyData = DummyRetValueTest.getMsSetting()
+        val dummyData = MutableLiveData(DummyRetValueTest.getMsSetting())
 
         //scenario
-        `when`(fakePrayerRepository.getMsSetting()).thenReturn(dummyData)
+        `when`(fakePrayerRepository.observeMsSetting()).thenReturn(dummyData)
 
         //start observer
         viewModel.msSetting.observeForever(observer)
@@ -119,9 +119,9 @@ class MainFragmentViewModelTest {
         val result = viewModel.msSetting.value
 
         //--verify
-        verify(fakePrayerRepository).getMsSetting()
-        assertEquals(dummyData, result)
-        verify(observer).onChanged(dummyData)
+        verify(fakePrayerRepository).observeMsSetting()
+        assertEquals(dummyData.value, result)
+        verify(observer).onChanged(dummyData.value)
 
         //end observer
         viewModel.msSetting.removeObserver(observer)

@@ -42,13 +42,10 @@ abstract class BaseActivity<DB: ViewDataBinding, VM: ViewModel>(
         super.onCreate(savedInstanceState)
         binding = DataBindingUtil.setContentView(this, layout)
         binding.lifecycleOwner = this
-
         root = findViewById(android.R.id.content)
-
         viewModelClass?.let {
             viewModel = ViewModelProvider(this).get(it)
         }
-
         setListener()
     }
 
@@ -81,27 +78,31 @@ abstract class BaseActivity<DB: ViewDataBinding, VM: ViewModel>(
     }
 
     protected fun showBottomSheet(
-        title : String = resources.getString(R.string.text_error_title), description: String = resources.getString(R.string.text_error_dsc),
-        isCancelable: Boolean = true, isFinish: Boolean = false) {
+        title : String = resources.getString(R.string.text_error_title),
+        description: String = resources.getString(R.string.text_error_dsc),
+        isCancelable: Boolean = true,
+        isFinish: Boolean = false,
+        callback: (() -> Unit)? = null) {
 
+        val dialog = BottomSheetDialog(this)
         val dialogBinding = DataBindingUtil.inflate<LayoutErrorBottomsheetBinding>(
             layoutInflater, R.layout.layout_error_bottomsheet, null, true
         )
-        val dialog = BottomSheetDialog(this)
-        dialog.window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
-        dialog.setCancelable(isCancelable)
-        dialog.setContentView(dialogBinding.root)
-        dialogBinding.tvTitle.text = title
-        dialogBinding.tvDesc.text = description
+        dialog.apply{
+            window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+            setCancelable(isCancelable)
+            setContentView(dialogBinding.root)
+        }
+        dialogBinding.apply{
+            tvTitle.text = title
+            tvDesc.text = description
+        }
         dialog.show()
-
         dialogBinding.btnOk.setOnClickListener {
-
-            if(isFinish){
-                finish()
-            }
-
             dialog.hide()
+            callback?.invoke()
+            if(isFinish)
+                finish()
         }
     }
 

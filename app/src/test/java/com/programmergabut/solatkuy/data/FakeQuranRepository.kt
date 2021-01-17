@@ -24,14 +24,14 @@ class FakeQuranRepository constructor(
      *Room
      */
     /* MsFavAyah */
-    override suspend fun getListFavAyah(): List<MsFavAyah> = msFavAyahDao.getListFavAyah()
+    override fun getListFavAyah(): LiveData<List<MsFavAyah>> = msFavAyahDao.getListFavAyah()
     override suspend fun getListFavAyahBySurahID(surahID: Int): List<MsFavAyah> = msFavAyahDao.getListFavAyahBySurahID(surahID)
     override suspend fun insertFavAyah(msFavAyah: MsFavAyah) = msFavAyahDao.insertMsAyah(msFavAyah)
     override suspend fun deleteFavAyah(msFavAyah: MsFavAyah) = msFavAyahDao.deleteMsFavAyah(msFavAyah)
 
     /* MsFavSurah */
     override fun observeListFavSurah(): LiveData<List<MsFavSurah>> = msFavSurahDao.observeListFavSurah()
-    override suspend fun getFavSurahBySurahID(surahID: Int): MsFavSurah? {
+    override fun getFavSurahBySurahID(surahID: Int): LiveData<MsFavSurah?> {
         return msFavSurahDao.getFavSurahBySurahID(surahID)
     }
     override suspend fun insertFavSurah(msFavSurah: MsFavSurah) = msFavSurahDao.insertMsSurah(msFavSurah)

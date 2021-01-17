@@ -9,12 +9,12 @@ import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonEn.Rea
 import kotlinx.coroutines.Deferred
 
 interface QuranRepository {
-    suspend fun getListFavAyah(): List<MsFavAyah>
+    fun getListFavAyah(): LiveData<List<MsFavAyah>>
     suspend fun getListFavAyahBySurahID(surahID: Int): List<MsFavAyah>
     suspend fun insertFavAyah(msFavAyah: MsFavAyah)
     suspend fun deleteFavAyah(msFavAyah: MsFavAyah)
     fun observeListFavSurah(): LiveData<List<MsFavSurah>>
-    suspend fun getFavSurahBySurahID(surahID: Int): MsFavSurah?
+    fun getFavSurahBySurahID(surahID: Int): LiveData<MsFavSurah?>
     suspend fun insertFavSurah(msFavSurah: MsFavSurah)
     suspend fun deleteFavSurah(msFavSurah: MsFavSurah)
     suspend fun fetchReadSurahEn(surahID: Int): Deferred<ReadSurahEnResponse>

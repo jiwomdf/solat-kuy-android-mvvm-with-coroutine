@@ -16,7 +16,6 @@ class FavAyahAdapter(
 
     private val diffCallback = object: DiffUtil.ItemCallback<MsFavAyah>(){
         override fun areItemsTheSame(oldItem: MsFavAyah, newItem: MsFavAyah) = oldItem == newItem
-
         override fun areContentsTheSame(oldItem: MsFavAyah, newItem: MsFavAyah) = oldItem == newItem
     }
 
@@ -37,7 +36,6 @@ class FavAyahAdapter(
 
     override fun onBindViewHolder(holder: FavAyahAdapterViewHolder, position: Int) = holder.bind(listAyah[position])
 
-
     inner class FavAyahAdapterViewHolder(private val binding: ListFavAyahBinding): RecyclerView.ViewHolder(binding.root) {
         fun bind(data: MsFavAyah){
             binding.tvListFavAr.text = data.ayahAr
@@ -49,6 +47,5 @@ class FavAyahAdapter(
             }
         }
     }
-
 
 }

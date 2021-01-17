@@ -78,9 +78,6 @@ class FakePrayerRepositoryAndroidTest: PrayerRepository {
     }
 
     /* MsSetting */
-    override suspend fun getMsSetting(): MsSetting {
-        return msSetting
-    }
     override suspend fun updateIsUsingDBQuotes(isUsingDBQuotes: Boolean){
         msSetting = MsSetting(msSetting.no, msSetting.isHasOpenApp, isUsingDBQuotes)
         refreshMsSetting()

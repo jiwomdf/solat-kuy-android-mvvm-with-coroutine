@@ -9,7 +9,7 @@ import android.os.Build
 import android.os.Bundle
 import android.util.Log
 import com.programmergabut.solatkuy.data.local.localentity.NotifiedPrayer
-import com.programmergabut.solatkuy.ui.DuaActivity
+import com.programmergabut.solatkuy.ui.dua.DuaActivity
 import com.programmergabut.solatkuy.util.EnumConfig
 import com.programmergabut.solatkuy.util.helper.NotificationHelper
 import com.programmergabut.solatkuy.util.hardcodedata.DuaData

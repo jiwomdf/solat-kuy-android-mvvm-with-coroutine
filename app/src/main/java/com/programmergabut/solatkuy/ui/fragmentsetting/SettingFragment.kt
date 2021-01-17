@@ -54,14 +54,12 @@ class SettingFragment(viewModelTest: FragmentSettingViewModel? = null) : BaseFra
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-
         aboutAuthorDialog = Dialog(requireContext())
         bottomSheetDialog = BottomSheetDialog(requireContext())
     }
 
     override fun setListener() {
         super.setListener()
-
         inflateBinding()
         binding.btnByLatitudeLongitude.setOnClickListener(this)
         binding.btnByGps.setOnClickListener(this)
@@ -103,15 +101,12 @@ class SettingFragment(viewModelTest: FragmentSettingViewModel? = null) : BaseFra
             val errMsg = viewModel.getErrUpdateMsApi1()
             if(errMsg.isEmpty())
                 return@observe
-
             when(it){
                 EnumStatus.SUCCESS -> {
                     Toasty.success(requireContext(),errMsg , Toasty.LENGTH_SHORT).show()
                     bottomSheetDialog.dismiss()
                 }
-                EnumStatus.ERROR -> {
-                    Toasty.error(requireContext(), errMsg, Toasty.LENGTH_SHORT).show()
-                }
+                EnumStatus.ERROR -> Toasty.error(requireContext(), errMsg, Toasty.LENGTH_SHORT).show()
                 else -> {/*NO-OP*/}
             }
         })
@@ -214,7 +209,6 @@ class SettingFragment(viewModelTest: FragmentSettingViewModel? = null) : BaseFra
         val lm: LocationManager = requireContext().getSystemService(Context.LOCATION_SERVICE) as LocationManager
         var gpsEnabled = false
         var networkEnabled = false
-
         try {
             gpsEnabled = lm.isProviderEnabled(LocationManager.GPS_PROVIDER)
         } catch (ex: java.lang.Exception) { }
@@ -235,12 +229,10 @@ class SettingFragment(viewModelTest: FragmentSettingViewModel? = null) : BaseFra
         mLocationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
         mLocationRequest.interval = 60 * 1000 /* 1 minute */
         mLocationRequest.fastestInterval = 1 * 1000 /* 1 second */
-
         if (!isLocationPermissionGranted()) {
             showPermissionDialog()
             return
         }
-
         getFusedLocationProviderClient(requireContext()).requestLocationUpdates(mLocationRequest, object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult) {
                 val location = locationResult.lastLocation ?: return
@@ -260,7 +252,6 @@ class SettingFragment(viewModelTest: FragmentSettingViewModel? = null) : BaseFra
                 dialogGpsBinding.tvGpsDialogLatitude.visibility = View.VISIBLE
                 dialogGpsBinding.ivWarning.visibility = View.INVISIBLE
                 dialogGpsBinding.tvWarning.visibility = View.INVISIBLE
-
                 dialogGpsBinding.btnProceedByGps.visibility = View.VISIBLE
                 dialogGpsBinding.btnProceedByGps.text = getString(R.string.proceed)
             }
@@ -272,7 +263,6 @@ class SettingFragment(viewModelTest: FragmentSettingViewModel? = null) : BaseFra
                 dialogGpsBinding.tvViewLongitude.visibility = View.INVISIBLE
                 dialogGpsBinding.tvGpsDialogLongitude.visibility = View.INVISIBLE
                 dialogGpsBinding.tvGpsDialogLatitude.visibility = View.INVISIBLE
-
                 dialogGpsBinding.btnProceedByGps.visibility = View.INVISIBLE
             }
             EnumStatus.ERROR -> {
@@ -283,7 +273,6 @@ class SettingFragment(viewModelTest: FragmentSettingViewModel? = null) : BaseFra
                 dialogGpsBinding.tvGpsDialogLatitude.visibility = View.INVISIBLE
                 dialogGpsBinding.tvViewLatitude.visibility = View.INVISIBLE
                 dialogGpsBinding.tvViewLongitude.visibility = View.INVISIBLE
-
                 dialogGpsBinding.btnProceedByGps.visibility = View.VISIBLE
                 dialogGpsBinding.btnProceedByGps.text = getString(R.string.open_setting)
             }

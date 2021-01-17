@@ -25,17 +25,14 @@ abstract class SolatKuyRoom: RoomDatabase() {
     abstract fun msFavSurahDao(): MsFavSurahDao
 
     companion object{
-
         @Volatile
         private var INSTANCE: SolatKuyRoom? = null
         private const val dbName = EnumConfig.DATABASE_NAME
 
         fun getDataBase(context: Context): SolatKuyRoom {
             val tempInstance = INSTANCE
-
             if(tempInstance != null)
                 return tempInstance
-
             synchronized(this) {
                 val instance = Room.databaseBuilder(context.applicationContext, SolatKuyRoom::class.java, dbName)
                     .allowMainThreadQueries()
@@ -56,7 +53,6 @@ abstract class SolatKuyRoom: RoomDatabase() {
 
         private suspend fun populateMsSetting(msSettingDao: MsSettingDao){
             msSettingDao.deleteAll()
-
             msSettingDao.insertMsSetting(
                 MsSetting(
                     1,
@@ -68,7 +64,6 @@ abstract class SolatKuyRoom: RoomDatabase() {
 
         private suspend fun populateMsApi1(msApi1Dao: MsApi1Dao) {
             msApi1Dao.deleteAll()
-
             msApi1Dao.insertMsApi1(
                 MsApi1(
                     1,
@@ -83,7 +78,6 @@ abstract class SolatKuyRoom: RoomDatabase() {
 
         private suspend fun populateNotifiedPrayer(notifiedPrayerDao: NotifiedPrayerDao){
             notifiedPrayerDao.deleteAll()
-
             notifiedPrayerDao.insertNotifiedPrayer(
                 NotifiedPrayer(
                     EnumConfig.FAJR,

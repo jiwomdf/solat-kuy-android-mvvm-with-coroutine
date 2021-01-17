@@ -21,7 +21,6 @@ class ReadSurahAdapter(
 
     private val diffCallback = object: DiffUtil.ItemCallback<Ayah>(){
         override fun areItemsTheSame(oldItem: Ayah, newItem: Ayah) = oldItem == newItem
-
         override fun areContentsTheSame(oldItem: Ayah, newItem: Ayah) = oldItem == newItem
     }
 
@@ -36,7 +35,6 @@ class ReadSurahAdapter(
             LayoutInflater.from(parent.context),
             R.layout.list_read_surah, parent, false
         )
-
         return ReadSurahViewHolder(binding)
     }
 
@@ -45,35 +43,23 @@ class ReadSurahAdapter(
     override fun onBindViewHolder(holder: ReadSurahViewHolder, position: Int) = holder.bind(listAyah[position])
 
     inner class ReadSurahViewHolder(private val binding: ListReadSurahBinding): RecyclerView.ViewHolder(binding.root) {
-
         fun bind(data: Ayah){
-
             binding.tvListFavAr.text = data.text
             binding.tvListFavEn.text = data.textEn
             binding.tvListFavNum.text = data.numberInSurah.toString()
-
             setTheme(binding)
-
-            if(data.isFav)
+            if(data.isFav){
                 binding.ivListFavFav.setImageDrawable(isFav)
-            else
+            } else {
                 binding.ivListFavFav.setImageDrawable(isNotFav)
-
+            }
             if(data.isLastRead){
                 binding.clVhReadSurah.setBackgroundColor(accentColor)
-                /* binding.tv_listFav_ar.setTextColor(whiteColor)
-                binding.tv_listFav_en.setTextColor(whiteColor)
-                binding.tv_listFav_num.setTextColor(whiteColor) */
             }
-
             binding.ivListFavFav.setOnClickListener {
                 onClickFavAyah(data, binding)
             }
-
         }
     }
-
-
-
 
 }

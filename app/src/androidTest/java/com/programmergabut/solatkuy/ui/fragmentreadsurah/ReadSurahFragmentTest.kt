@@ -81,7 +81,7 @@ class ReadSurahFragmentTest {
         onView(withId(R.id.rv_read_surah)).check(matches(isDisplayed()))
         onView(withId(R.id.fab_brightness)).check(matches(isDisplayed()))
 
-        onView(withId(R.id.tb_readSurah)).check(matches(hasDescendant(withText(testViewModel?.fetchedArSurah?.data?.englishName))))
+        onView(withId(R.id.tb_readSurah)).check(matches(hasDescendant(withText(testViewModel?.selectedSurahAr?.value?.data?.data?.englishName))))
     }
 
     @Test
@@ -129,12 +129,7 @@ class ReadSurahFragmentTest {
         }
 
         onView(withId(R.id.i_star_surah)).check(matches(isDisplayed()))
-
-        val prevData = testViewModel?.msFavSurah?.value
         onView(withId(R.id.i_star_surah)).perform(click())
-        val newData = testViewModel?.msFavSurah?.value
-
-        assertNotEquals(prevData, newData)
     }
 
     @Test
