@@ -37,7 +37,6 @@ class QuranFragment(
         super.onViewCreated(view, savedInstanceState)
         initRvAllSurah()
         initRvStaredSurah()
-        initSearchSurah()
         initJuzzSpinner()
         viewModel.fetchAllSurah()
     }
@@ -47,12 +46,14 @@ class QuranFragment(
         binding.slQuran.setOnRefreshListener(this)
         binding.cvFavAyah.setOnClickListener(this)
         binding.cvLastReadAyah.setOnClickListener(this)
+        binding.etSearch.addTextChangedListener(etSearchListener)
         observeApi()
     }
 
     override fun onClick(v: View?) {
         when(v?.id){
             R.id.cv_fav_ayah -> {
+                resetSpinnerAndSearchBarValue()
                 findNavController().navigate(QuranFragmentDirections.actionQuranFragmentToFavAyahFragment())
             }
             R.id.cv_last_read_ayah -> {
@@ -61,6 +62,7 @@ class QuranFragment(
                     showBottomSheet(getString(R.string.last_read_ayah_not_found_title), getString(R.string.last_read_ayah_not_found_dsc))
                     return
                 }
+                resetSpinnerAndSearchBarValue()
                 findNavController().navigate(
                     QuranFragmentDirections.actionQuranFragmentToReadSurahActivity(
                         selectedSurah.number.toString(),
@@ -73,17 +75,15 @@ class QuranFragment(
         }
     }
 
-    private fun initSearchSurah() {
-        binding.etSearch.addTextChangedListener(object: TextWatcher{
-            override fun afterTextChanged(s: Editable?) {}
-            override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
-            override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-                if(s.isNullOrEmpty() && binding.sJuzz.selectedItemPosition != 0)
-                    return
-                viewModel.getSurahBySeach(s.toString())
-                binding.sJuzz.setSelection(0, true)
-            }
-        })
+    private val etSearchListener = object: TextWatcher{
+        override fun afterTextChanged(s: Editable?) {}
+        override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
+        override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
+            if(s.isNullOrEmpty() && binding.sJuzz.selectedItemPosition != 0)
+                return
+            viewModel.getSurahBySeach(s.toString())
+            binding.sJuzz.setSelection(0, true)
+        }
     }
 
     private fun observeApi(){
@@ -143,19 +143,22 @@ class QuranFragment(
             arrJuzz.add(i.toString())
         }
         binding.sJuzz.adapter = ArrayAdapter(requireContext(), R.layout.spinner_item, arrJuzz)
-        binding.sJuzz.onItemSelectedListener = object : AdapterView.OnItemSelectedListener{
-            override fun onNothingSelected(parent: AdapterView<*>?) {}
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                if(position == 0 && binding.etSearch.text.toString() != "")
-                    return
-                juzzSurahFilter(binding.sJuzz.selectedItem.toString())
-                binding.etSearch.setText("")
-            }
+        binding.sJuzz.onItemSelectedListener = spinnerListener
+    }
+
+    private val spinnerListener = object : AdapterView.OnItemSelectedListener{
+        override fun onNothingSelected(parent: AdapterView<*>?) {}
+        override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+            if(position == 0 && binding.etSearch.text.toString() != "")
+                return
+            juzzSurahFilter(binding.sJuzz.selectedItem.toString())
+            binding.etSearch.setText("")
         }
     }
 
     private fun initRvAllSurah() {
         allSurahAdapter = AllSurahAdapter { number, englishName, englishNameTranslation ->
+            resetSpinnerAndSearchBarValue()
             findNavController().navigate(
                 QuranFragmentDirections.actionQuranFragmentToReadSurahActivity(
                     number,
@@ -173,6 +176,7 @@ class QuranFragment(
 
     private fun initRvStaredSurah() {
         staredSurahAdapter = StaredSurahAdapter{ surahID, surahName, surahTranslation ->
+            resetSpinnerAndSearchBarValue()
             findNavController().navigate(QuranFragmentDirections.actionQuranFragmentToReadSurahActivity(
                 surahID,
                 surahName,
@@ -191,6 +195,13 @@ class QuranFragment(
             viewModel.getSurahByJuzz(0)
         else
             viewModel.getSurahByJuzz(juzz.toInt())
+    }
+
+    private fun resetSpinnerAndSearchBarValue(){
+        binding.sJuzz.onItemSelectedListener = null
+        binding.etSearch.removeTextChangedListener(etSearchListener)
+        binding.etSearch.setText("")
+        binding.sJuzz.setSelection(0)
     }
 
     override fun onRefresh() {
