@@ -21,16 +21,12 @@ import org.mockito.junit.MockitoJUnitRunner
 class FavAyahViewModelTest {
 
     private lateinit var viewModel: FavAyahViewModel
-
     @get:Rule
     val instantExecutor = InstantTaskExecutorRule()
-
     @get:Rule
     val coroutinesTestRule: CoroutinesTestRule = CoroutinesTestRule()
-
     @Mock
     private lateinit var quranRepository: FakeQuranRepository
-
     private val msFavAyah = DummyRetValueTest.msFavAyah
 
     @Before

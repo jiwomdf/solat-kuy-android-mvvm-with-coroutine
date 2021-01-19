@@ -30,16 +30,12 @@ import org.mockito.junit.MockitoJUnitRunner
 class ReadSurahFragmentViewModelTest{
 
     private lateinit var viewModel: ReadSurahViewModel
-
     @get:Rule
     val instantExecutor = InstantTaskExecutorRule()
-
     @get:Rule
     val coroutinesTestRule: CoroutinesTestRule = CoroutinesTestRule()
-
     @Mock
     private lateinit var fakeQuranRepository: FakeQuranRepository
-
     private val surahID = DummyRetValueTest.surahID
     private val msFavAyah = DummyRetValueTest.msFavAyah
     private val msFavSurah = DummyRetValueTest.msFavSurah
@@ -51,7 +47,6 @@ class ReadSurahFragmentViewModelTest{
 
     @Test
     fun fetchQuranSurah() = coroutinesTestRule.testDispatcher.runBlockingTest{
-
         //given
         val observer = mock<Observer<Resource<ReadSurahArResponse>>>()
 
@@ -84,7 +79,6 @@ class ReadSurahFragmentViewModelTest{
 
     @Test
     fun getFavSurahBySurahID() = coroutinesTestRule.testDispatcher.runBlockingTest{
-
         //given
         val observer = mock<Observer<MsFavSurah?>>()
         val dummyData = MutableLiveData(DummyRetValueTest.msFavSurah)
@@ -110,7 +104,6 @@ class ReadSurahFragmentViewModelTest{
 
     @Test
     fun getListFavAyahBySurahID() = coroutinesTestRule.testDispatcher.runBlockingTest{
-
         //given
         val observer = mock<Observer<Resource<List<MsFavAyah>>>>()
         val dummyData = DummyRetValueTest.getListMsFavAyah()

@@ -28,10 +28,8 @@ class SettingFragmentTest{
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
-
     @get:Rule
     val instantTaskExecutorRule = TaskExecutorWithIdlingResourceRule()
-
     @Inject
     lateinit var fragmentFactory: SolatKuyFragmentFactoryAndroidTest
 

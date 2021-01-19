@@ -35,10 +35,8 @@ class HomeFragmentTest{
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
-
     @get:Rule
     val instantTaskExecutorRule = TaskExecutorWithIdlingResourceRule()
-
     @Inject
     lateinit var fragmentFactory: SolatKuyFragmentFactoryAndroidTest
 
@@ -72,7 +70,6 @@ class HomeFragmentTest{
         launchFragmentInHiltContainer<HomeFragment>(fragmentFactory = fragmentFactory) {
             testViewModel = viewModel
         }
-
         onView(withId(R.id.tv_quran_ayah_quote_click)).check(matches(isDisplayed()))
         onView(withId(R.id.iv_quote_setting)).check(matches(isDisplayed()))
         onView(withId(R.id.iv_refresh)).check(matches(isDisplayed()))
@@ -94,7 +91,6 @@ class HomeFragmentTest{
         onView(withId(R.id.cb_asr)).check(matches(isDisplayed()))
         onView(withId(R.id.cb_maghrib)).check(matches(isDisplayed()))
         onView(withId(R.id.cb_isha)).check(matches(isDisplayed()))
-
         val prayers = testViewModel?.notifiedPrayer?.value
         prayers?.data?.forEach { prayer ->
             when(prayer.prayerName){
@@ -132,14 +128,12 @@ class HomeFragmentTest{
         onView(withId(R.id.tv_imsak_date)).check(matches(isDisplayed()))
         onView(withId(R.id.tv_city)).check(matches(isDisplayed()))
         onView(withId(R.id.tv_imsak_time)).check(matches(isDisplayed()))
-
         onView(withId(R.id.tv_gregorian_date)).check(matches(isDisplayed()))
         onView(withId(R.id.tv_hijri_date)).check(matches(isDisplayed()))
         onView(withId(R.id.tv_gregorian_month)).check(matches(isDisplayed()))
         onView(withId(R.id.tv_hijri_month)).check(matches(isDisplayed()))
         onView(withId(R.id.tv_gregorian_day)).check(matches(isDisplayed()))
         onView(withId(R.id.tv_hijri_day)).check(matches(isDisplayed()))
-
         onView(withId(R.id.rvDuaCollection)).check(matches(isDisplayed()))
 
         val sdf = SimpleDateFormat("dd", Locale.getDefault())
@@ -152,7 +146,6 @@ class HomeFragmentTest{
 
         onView(withId(R.id.tv_imsak_info_title)).check(matches(withText("Imsak Info")))
         onView(withId(R.id.tv_imsak_time)).check(matches(withText(data?.timings?.imsak)))
-
         onView(withId(R.id.tv_gregorian_date)).check(matches(withText(gregorianDate?.date)))
         onView(withId(R.id.tv_hijri_date)).check(matches(withText(hijriDate?.date)))
         onView(withId(R.id.tv_gregorian_month)).check(matches(withText(gregorianDate?.month?.en)))
@@ -175,7 +168,6 @@ class HomeFragmentTest{
         onView(withId(R.id.tv_quran_ayah_quote_click)).check(matches(isDisplayed()))
         onView(withId(R.id.tv_quran_ayah_quote_click)).perform(click())
         onView(withId(R.id.tv_quran_ayah_quote)).check(matches(isDisplayed()))
-
         onView(withId(R.id.tv_quran_ayah_quote)).check(matches(isDisplayed()))
         onView(withId(R.id.tv_quran_ayah_quote)).perform(click())
         onView(withId(R.id.tv_quran_ayah_quote_click)).check(matches(isDisplayed()))
@@ -196,7 +188,6 @@ class HomeFragmentTest{
         onView(withId(R.id.cb_asr)).check(matches(isCompletelyDisplayed()))
         onView(withId(R.id.cb_maghrib)).check(matches(isCompletelyDisplayed()))
         onView(withId(R.id.cb_isha)).check(matches(isCompletelyDisplayed()))
-
         onView(withId(R.id.cb_fajr)).perform(click())
         onView(withId(R.id.cb_dhuhr)).perform(click())
         onView(withId(R.id.cb_asr)).perform(click())
@@ -207,7 +198,6 @@ class HomeFragmentTest{
         prayers?.data?.forEach { prayer ->
             if(prayer.prayerName == EnumConfigAndroidTesting.SUNRISE)
                 return@forEach
-
             assertEquals(false, prayer.isNotified)
         }
     }
@@ -218,7 +208,6 @@ class HomeFragmentTest{
         launchFragmentInHiltContainer<HomeFragment>(fragmentFactory = fragmentFactory) {
             testViewModel = viewModel
         }
-
         onView(withId(R.id.iv_refresh)).perform(click())
     }
 

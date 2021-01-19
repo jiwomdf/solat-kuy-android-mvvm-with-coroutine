@@ -154,14 +154,15 @@ class HomeFragment(
     private fun subscribeObserversAPI() {
         viewModel.notifiedPrayer.observe(viewLifecycleOwner, { retVal ->
             when(retVal.status){
-                EnumStatus.SUCCESS -> {
+                EnumStatus.SUCCESS, EnumStatus.ERROR -> {
+                    Log.d(ERROR, retVal.message.toString())
                     if(retVal.data == null){
                         showBottomSheet(isCancelable = false, isFinish = true)
                         return@observe
                     }
-                    if(retVal.data.isEmpty()){
+                    if(retVal.data.isEmpty())
                         return@observe
-                    }
+
                     bindCheckBox(retVal.data)
                     updateAlarmManager(retVal.data)
                     bindWidget(createWidgetData(retVal.data))
@@ -169,19 +170,6 @@ class HomeFragment(
                 EnumStatus.LOADING -> {
                     Toast.makeText(requireContext(), getString(R.string.syncdata), Toast.LENGTH_SHORT).show()
                     bindPrayerText(null)
-                }
-                EnumStatus.ERROR -> {
-                    Log.d(ERROR, retVal.message.toString())
-                    if(retVal.data == null){
-                        showBottomSheet(isCancelable = false, isFinish = true)
-                        return@observe
-                    }
-                    if(retVal.data.isEmpty()){
-                        return@observe
-                    }
-                    bindCheckBox(retVal.data)
-                    updateAlarmManager(retVal.data)
-                    bindWidget(createWidgetData(retVal.data))
                 }
             }
         })
@@ -215,6 +203,7 @@ class HomeFragment(
                 EnumStatus.SUCCESS -> {
                     if(apiQuotes.data == null)
                         return@observe
+
                     bindQuranQuoteApiOnline(apiQuotes.data)
                 }
                 EnumStatus.LOADING -> {
@@ -255,8 +244,7 @@ class HomeFragment(
                 dialogBinding.rbgQuotesDataSource.check(R.id.rb_fromFavQuote)
                 viewModel.getMsFavAyah()
                 viewModel.readSurahEn.removeObservers(this)
-            }
-            else{
+            } else{
                 dialogBinding.rbgQuotesDataSource.check(R.id.rb_fromApi)
                 viewModel.fetchReadSurahEn((STARTED_SURAH..ENDED_SURAH).random())
                 viewModel.favAyah.removeObservers(this)
@@ -266,6 +254,7 @@ class HomeFragment(
         viewModel.favAyah.observe(viewLifecycleOwner, { localQuotes ->
             if(localQuotes == null)
                 return@observe
+
             bindQuranSurahDB(localQuotes)
         })
     }
@@ -313,19 +302,9 @@ class HomeFragment(
 
     private fun createWidgetData(prayer: List<NotifiedPrayer>): MsTimings {
         val arrDate = LocalDate.now().toString("dd/MMM/yyyy").split("/")
-        return MsTimings(
-            prayer[0].prayerTime,
-            prayer[1].prayerTime,
-            prayer[2].prayerTime,
-            prayer[3].prayerTime,
-            prayer[4].prayerTime,
-            prayer[5].prayerTime,
-        "",
-        "",
-        "",
-            arrDate[0],
-            arrDate[1]
-        )
+        return MsTimings(prayer[0].prayerTime, prayer[1].prayerTime, prayer[2].prayerTime,
+            prayer[3].prayerTime, prayer[4].prayerTime, prayer[5].prayerTime, "",
+            "", "", arrDate[0],arrDate[1])
     }
 
     private fun updatePrayerIsNotified(prayer:String, isNotified:Boolean){
@@ -386,8 +365,8 @@ class HomeFragment(
     private fun bindWidget(data: MsTimings?) {
         if(data == null)
             return
-        val selectedPrayer = SelectPrayerHelper.selectNextPrayerToInt(data)
 
+        val selectedPrayer = SelectPrayerHelper.selectNextPrayerToInt(data)
         bindPrayerText(data)
         selectWidgetTitle(selectedPrayer)
         selectWidgetPic(selectedPrayer)
@@ -505,12 +484,7 @@ class HomeFragment(
     }
 
     /* Coroutine Timer */
-    private suspend fun coroutineTimer(
-        scope: CoroutineScope,
-        hour: Int,
-        minute: Int,
-        second: Int
-    ){
+    private suspend fun coroutineTimer(scope: CoroutineScope, hour: Int, minute: Int, second: Int){
         var tempHour = abs(hour)
         var tempMinute = abs(minute)
         var tempSecond = abs(second)
@@ -519,8 +493,7 @@ class HomeFragment(
         while(true){
             if(scope.isActive){
                 Log.d(COROUTINE_TIMER, "Running.. $scope $tempSecond ${Thread.currentThread().id}")
-            }
-            else{
+            } else {
                 Log.d(COROUTINE_TIMER, "Stopping.. $scope $tempSecond ${Thread.currentThread().id}")
                 coroutineTimerJob?.cancel()
                 break
@@ -571,12 +544,9 @@ class HomeFragment(
     }
 
     private fun updateAlarmManager(listNotifiedPrayer: List<NotifiedPrayer>){
-        if(mCityName == null)
+        if(mCityName.isNullOrEmpty())
             mCityName = "-"
-        PushNotificationHelper(
-            requireContext(),
-            listNotifiedPrayer as MutableList<NotifiedPrayer>, mCityName!!
-        )
+        PushNotificationHelper(requireContext(), listNotifiedPrayer, mCityName!!)
     }
 
     private fun dismissDialog(){

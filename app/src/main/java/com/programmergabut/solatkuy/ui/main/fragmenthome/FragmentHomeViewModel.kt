@@ -26,6 +26,7 @@ import java.util.*
 
 const val TODAY_PRAYER_DATA_IS_NOT_FOUND = "Today prayer data is not found"
 const val APPLICATION_OFFLINE = "Application Offline"
+const val APPLICATION_ONLINE = "Application Online"
 class FragmentMainViewModel @ViewModelInject constructor(
     private val prayerRepository: PrayerRepository,
     private val quranRepository: QuranRepository
@@ -58,7 +59,7 @@ class FragmentMainViewModel @ViewModelInject constructor(
                 if(timings != null){
                     val prayers = createPrayerTime(timings)
                     prayers.forEach { prayer -> prayerRepository.updatePrayerTime(prayer.key, prayer.value) }
-                    _notifiedPrayer.postValue(Resource.success(result))
+                    _notifiedPrayer.postValue(Resource.success(result, APPLICATION_ONLINE))
                 }
                 else{
                     _notifiedPrayer.postValue(Resource.error(result, TODAY_PRAYER_DATA_IS_NOT_FOUND))

@@ -24,12 +24,10 @@ class FakeQuranRepositoryAndroidTest: QuranRepository {
     private val observableMsFavSurah = MutableLiveData<MsFavSurah>()
     private fun refreshMsFavSurah(){
         observableMsFavSurahs.postValue(listMsFavSurah)
+        observableMsFavSurah.value = listMsFavSurah[0]
     }
 
-
-    /*
-     *Room
-     */
+    /* Room */
     /* MsFavAyah */
     override fun getListFavAyah(): LiveData<List<MsFavAyah>> {
         return observableMsFavAyahs
@@ -62,9 +60,7 @@ class FakeQuranRepositoryAndroidTest: QuranRepository {
         refreshMsFavSurah()
     }
 
-    /*
-     * Retrofit
-     */
+    /* Retrofit */
     override suspend fun fetchReadSurahEn(surahID: Int): Deferred<ReadSurahEnResponse> {
         return CoroutineScope(IO).async {
             val data = DummyRetValueAndroidTest.surahEnID_1<FakeQuranRepositoryAndroidTest>()

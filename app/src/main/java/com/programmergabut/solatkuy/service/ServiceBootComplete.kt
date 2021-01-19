@@ -19,28 +19,22 @@ import java.lang.Exception
 
 class ServiceBootComplete: Service() {
 
-    lateinit var db: SolatKuyRoom
-
-    override fun onBind(intent: Intent?): IBinder? = null
-
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
-
-        db = SolatKuyRoom.getDataBase(this)
-
+        val db = SolatKuyRoom.getDataBase(this)
         CoroutineScope(Dispatchers.IO).launch {
             try{
-                val data = db.notifiedPrayerDao().getListNotifiedPrayer() as MutableList
-
-                PushNotificationHelper(this@ServiceBootComplete, data, "-")
+                val data = db.notifiedPrayerDao().getListNotifiedPrayer()
+                PushNotificationHelper(this@ServiceBootComplete, data.toMutableList(), "-")
             }
             catch(ex: Exception){
-                Log.d(ERROR,"ServiceBootComplete, onStartCommand")
+                Log.d(ERROR, ex.message.toString())
             }
         }
-
         return START_REDELIVER_INTENT
     }
+
+    override fun onBind(intent: Intent?): IBinder? = null
 
     override fun onDestroy() {
         super.onDestroy()

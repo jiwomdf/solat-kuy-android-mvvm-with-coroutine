@@ -26,8 +26,7 @@ class FragmentCompassViewModel @ViewModelInject constructor(val prayerRepository
                 val response = prayerRepository.fetchCompass(msApi1).await()
                 if(response.statusResponse == "1"){
                     _compass.postValue(Resource.success(response))
-                }
-                else{
+                } else{
                     _compass.postValue(Resource.error(null, response.messageResponse))
                 }
             }

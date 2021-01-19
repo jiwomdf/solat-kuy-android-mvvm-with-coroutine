@@ -32,19 +32,14 @@ import org.mockito.junit.MockitoJUnitRunner
 class HomeFragmentViewModelTest {
 
     private lateinit var viewModel: FragmentMainViewModel
-
     @get:Rule
     val instantExecutor = InstantTaskExecutorRule()
-
     @get:Rule
     val coroutinesTestRule: CoroutinesTestRule = CoroutinesTestRule()
-
     @Mock
     private lateinit var fakePrayerRepository: FakePrayerRepository
-
     @Mock
     private lateinit var fakeQuranRepository: FakeQuranRepository
-
     private val msApi1 = DummyRetValueTest.msApi1
     private val surahID = DummyRetValueTest.surahID
     private val mapPrayer = DummyRetValueTest.getMapPrayer()
@@ -101,7 +96,6 @@ class HomeFragmentViewModelTest {
 
     @Test
     fun getMsSetting() = coroutinesTestRule.testDispatcher.runBlockingTest {
-
         //given
         val observer = mock<Observer<MsSetting>>()
         val dummyData = MutableLiveData(DummyRetValueTest.msSetting)
@@ -134,7 +128,6 @@ class HomeFragmentViewModelTest {
 
     @Test
     fun updatePrayerIsNotified() = coroutinesTestRule.testDispatcher.runBlockingTest {
-
         viewModel.updatePrayerIsNotified(mapPrayer.keys.elementAt(0), true)
         com.nhaarman.mockitokotlin2.verify(fakePrayerRepository).updatePrayerIsNotified(mapPrayer.keys.elementAt(0), true)
     }

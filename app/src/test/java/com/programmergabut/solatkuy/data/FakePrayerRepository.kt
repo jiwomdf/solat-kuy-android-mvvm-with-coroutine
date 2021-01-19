@@ -30,8 +30,10 @@ class FakePrayerRepository constructor(
     /* NotifiedPrayer */
     override suspend fun updatePrayerIsNotified(prayerName: String, isNotified: Boolean) =
         notifiedPrayerDao.updatePrayerIsNotified(prayerName, isNotified)
-    override fun updatePrayerTime(prayerName: String, prayerTime: String) = notifiedPrayerDao.updatePrayerTime(prayerName, prayerTime)
-    override suspend fun getListNotifiedPrayer() = notifiedPrayerDao.getListNotifiedPrayer()
+    override fun updatePrayerTime(prayerName: String, prayerTime: String) =
+        notifiedPrayerDao.updatePrayerTime(prayerName, prayerTime)
+    override suspend fun getListNotifiedPrayer() =
+        notifiedPrayerDao.getListNotifiedPrayer()
 
     /* MsApi1 */
     override fun observeMsApi1(): LiveData<MsApi1> = msApi1Dao.observeMsApi1()
@@ -40,10 +42,12 @@ class FakePrayerRepository constructor(
 
     /* MsSetting */
     override fun observeMsSetting(): LiveData<MsSetting> = msSettingDao.observeMsSetting()
-    override suspend fun updateIsUsingDBQuotes(isUsingDBQuotes: Boolean) = msSettingDao.updateIsUsingDBQuotes(isUsingDBQuotes)
+    override suspend fun updateIsUsingDBQuotes(isUsingDBQuotes: Boolean) =
+        msSettingDao.updateIsUsingDBQuotes(isUsingDBQuotes)
     override suspend fun updateMsApi1MonthAndYear(api1ID: Int, month: String, year:String) =
         msApi1Dao.updateMsApi1MonthAndYear(api1ID, month, year)
-    override suspend fun updateIsHasOpenApp(isHasOpen: Boolean) = msSettingDao.updateIsHasOpenApp(isHasOpen)
+    override suspend fun updateIsHasOpenApp(isHasOpen: Boolean) =
+        msSettingDao.updateIsHasOpenApp(isHasOpen)
 
     /*
      * Retrofit
@@ -80,9 +84,7 @@ class FakePrayerRepository constructor(
     }
 
     override suspend fun syncNotifiedPrayerTesting(): List<NotifiedPrayer> {
-
         val listData = mutableListOf<NotifiedPrayer>()
-
         try {
             val map = mutableMapOf<String, String>()
             map[EnumConfig.FAJR] = EnumConfig.FAJR_TIME
@@ -91,17 +93,14 @@ class FakePrayerRepository constructor(
             map[EnumConfig.MAGHRIB] = EnumConfig.MAGHRIB_TIME
             map[EnumConfig.ISHA] = EnumConfig.ISHA_TIME
             map[EnumConfig.SUNRISE] = EnumConfig.SUNRISE_TIME
-
             map.forEach { p ->
                 listData.add(NotifiedPrayer(p.key, true, p.value))
             }
-
         }
         catch (ex :Exception){
             Log.d(LogConfig.ERROR,"PrayerRepository, not connected to internet and using the offline data")
             return emptyList()
         }
-
         return listData
     }
 }

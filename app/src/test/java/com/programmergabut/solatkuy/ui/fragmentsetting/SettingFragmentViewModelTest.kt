@@ -21,16 +21,12 @@ import org.mockito.junit.MockitoJUnitRunner
 class SettingFragmentViewModelTest {
 
     private lateinit var viewModel: FragmentSettingViewModel
-
     @get:Rule
     val instantExecutor = InstantTaskExecutorRule()
-
     @get:Rule
     val coroutinesTestRule: CoroutinesTestRule = CoroutinesTestRule()
-
     @Mock
     private lateinit var prayerRepository: FakePrayerRepository
-
     private val msApi1 = DummyRetValueTest.msApi1
 
     @Before

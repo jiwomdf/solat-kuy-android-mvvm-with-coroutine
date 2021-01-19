@@ -41,7 +41,6 @@ class CompassFragment constructor(
     private var mGeomagnetic = FloatArray(3)
     private lateinit var mSensorManager: SensorManager
 
-    /* Compass */
     override fun onResume() {
         super.onResume()
         mSensorManager.registerListener(
@@ -78,7 +77,6 @@ class CompassFragment constructor(
             createLottieAnimation()
     }
 
-    /* Subscribe live data */
     private fun subscribeObserversAPI() {
         viewModel.compass.observe(viewLifecycleOwner, { retVal ->
             when (retVal.status) {
@@ -172,7 +170,6 @@ class CompassFragment constructor(
         binding.slCompass.isRefreshing = false
     }
 
-    /* Lottie Animation */
     private fun createLottieAnimation() {
         val dialog =  Dialog(requireContext())
         val dialogBinding: LayoutPhoneTiltBinding = DataBindingUtil.inflate(

@@ -33,7 +33,6 @@ abstract class BaseFragment<DB: ViewDataBinding, VM: ViewModel>(
     lateinit var sharedPrefUtil: SharedPrefUtil
     lateinit var viewModel: VM
     protected lateinit var binding : DB
-
     protected val LOCATION_PERMISSIONS = 101
 
     override fun onCreateView(

@@ -13,36 +13,22 @@ import com.programmergabut.solatkuy.util.LogConfig.Companion.ERROR
  */
 
 class BootCompleteReceiver: BroadcastReceiver() {
-
     override fun onReceive(context: Context?, intent: Intent?) {
-
         if(intent?.action == Intent.ACTION_BOOT_COMPLETED) {
-
             if(context != null) {
-               val i = Intent(context, ServiceBootComplete::class.java)
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-                    context.startForegroundService(i)
-                else
-                    context.startService(i)
-
-                /* CoroutineScope(Dispatchers.IO).launch {
-                    val db = SolatKuyRoom.getDataBase(context)
-                    val data = db.notifiedPrayerDao().getNotifiedPrayerSync() as MutableList
-
-                    PushNotificationHelper(
-                        context,
-                        data,
-                        "-"
-                    )
-                }*/
+               val serviceIntent = Intent(context, ServiceBootComplete::class.java)
+                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+                    context.startForegroundService(serviceIntent)
+                }
+                else{
+                    context.startService(serviceIntent)
+                }
             }
             else{
-                Log.d(ERROR,"BootCompleteReceiver, context == null")
-                throw Exception("Context Null")
+                val errMsg = "context == null"
+                Log.d(ERROR,errMsg)
+                throw Exception("BootCompleteReceiver $errMsg")
             }
-
         }
-
     }
-
 }

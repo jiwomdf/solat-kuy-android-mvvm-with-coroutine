@@ -20,42 +20,33 @@ import org.mockito.Mockito.mock
 class PrayerRepositoryImplTest{
     @get:Rule
     var instantTaskExecutorRule = InstantTaskExecutorRule()
-
     @get:Rule
     val coroutinesTestRule: CoroutinesTestRule = CoroutinesTestRule()
-
     private val remoteDataSourceAladhan = mock(RemoteDataSourceAladhan::class.java)
-
     private val notifiedPrayerDao = mock(NotifiedPrayerDao::class.java)
     private val msApi1Dao = mock(MsApi1Dao::class.java)
     private val msSettingDao = mock(MsSettingDao::class.java)
     private val msFavSurahDao = mock(MsFavSurahDao::class.java)
-
     private val prayerRepository = FakePrayerRepository(remoteDataSourceAladhan, notifiedPrayerDao, msApi1Dao, msSettingDao)
-
     private val msApi1 = DummyRetValueTest.msApi1
     private val msFavSurah = DummyRetValueTest.msfavSurah
 
     /* Remote */
     @Test
     fun fetchPrayerApi() = runBlocking {
-
         val dummyPrayerApi = DummyRetValueTest.fetchPrayerApi<PrayerRepositoryImplTest>()
         Mockito.`when`(remoteDataSourceAladhan.fetchPrayerApi(msApi1)).thenReturn(dummyPrayerApi)
         prayerRepository.fetchPrayerApi(msApi1).await()
         Mockito.verify(remoteDataSourceAladhan).fetchPrayerApi(msApi1)
-
         assertNotNull(dummyPrayerApi)
     }
 
     @Test
     fun fetchCompass() = runBlocking {
-
         val dummyCompassApi = DummyRetValueTest.fetchCompassApi<PrayerRepositoryImplTest>()
         Mockito.`when`(remoteDataSourceAladhan.fetchCompassApi(msApi1)).thenReturn(dummyCompassApi)
         prayerRepository.fetchCompass(msApi1).await()
         Mockito.verify(remoteDataSourceAladhan).fetchCompassApi(msApi1)
-
         assertNotNull(dummyCompassApi)
     }
 
@@ -63,13 +54,11 @@ class PrayerRepositoryImplTest{
     @Test
     fun getMsApi1(){
         prayerRepository.observeMsApi1()
-
         val dummyMsApi1 = DummyRetValueTest.msApi1
         val msApi1 = MutableLiveData<MsApi1>()
         msApi1.value = dummyMsApi1
         Mockito.`when`(msApi1Dao.observeMsApi1()).thenReturn(msApi1)
         Mockito.verify(msApi1Dao).observeMsApi1()
-
         assertNotNull(msApi1.value)
     }
 

@@ -28,22 +28,17 @@ import org.mockito.junit.MockitoJUnitRunner
 class CompassFragmentViewModelTest {
 
     private lateinit var viewModel: FragmentCompassViewModel
-
     @get:Rule
     val instantExecutor = InstantTaskExecutorRule()
-
     @get:Rule
     val coroutinesTestRule: CoroutinesTestRule = CoroutinesTestRule()
-
     @Mock
     private lateinit var prayerRepository: FakePrayerRepository
-
     private val msApi1 = DummyRetValueTest.msApi1
 
     @Before
     fun before(){
         viewModel = FragmentCompassViewModel(prayerRepository)
-
         Mockito.verify(prayerRepository).observeMsApi1()
     }
 

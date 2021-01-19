@@ -28,27 +28,21 @@ import org.mockito.junit.MockitoJUnitRunner
 class QuranFragmentViewModelTest {
 
     private lateinit var viewModel: QuranFragmentViewModel
-
     @get:Rule
     val instantExecutor = InstantTaskExecutorRule()
-
     @get:Rule
     val coroutinesTestRule: CoroutinesTestRule = CoroutinesTestRule()
-
     @Mock
     private lateinit var fakeQuranRepository: FakeQuranRepository
-
     @Before
     fun setUp(){
         viewModel = QuranFragmentViewModel(fakeQuranRepository)
-
         verify(fakeQuranRepository).observeListFavSurah()
     }
 
 
     @Test
     fun fetchAllSurah() = coroutinesTestRule.testDispatcher.runBlockingTest{
-
         //given
         val observer = mock<Observer<Resource<List<Data>?>>>()
         val dummySelectedSurahAr = Resource.success(DummyRetValueTest.fetchAllSurahAr<QuranRepositoryImplTest>())

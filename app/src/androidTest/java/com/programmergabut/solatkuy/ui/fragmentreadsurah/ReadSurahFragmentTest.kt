@@ -39,10 +39,8 @@ class ReadSurahFragmentTest {
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
-
     @get:Rule
     val instantTaskExecutorRule = InstantTaskExecutorRule()
-
     @Inject
     lateinit var fragmentFactory: SolatKuyFragmentFactoryAndroidTest
 
@@ -78,7 +76,6 @@ class ReadSurahFragmentTest {
         onView(withId(R.id.i_star_surah)).check(matches(isDisplayed()))
         onView(withId(R.id.rv_read_surah)).check(matches(isDisplayed()))
         onView(withId(R.id.fab_brightness)).check(matches(isDisplayed()))
-
         onView(withId(R.id.tb_readSurah)).check(matches(hasDescendant(withText(testViewModel?.selectedSurahAr?.value?.data?.data?.englishName))))
     }
 
@@ -91,7 +88,6 @@ class ReadSurahFragmentTest {
         arg.putString("selectedSurahName", initData.englishName)
         arg.putString("selectedTranslation", initData.englishNameTranslation)
         arg.putBoolean("isAutoScroll", false)
-
         launchFragmentInHiltContainer<ReadSurahFragment>(
             fragmentArgs = arg,
             fragmentFactory = fragmentFactory
@@ -103,7 +99,6 @@ class ReadSurahFragmentTest {
 
         val selectedSurahAr = testViewModel!!.selectedSurahAr.value
         val totalAyah = selectedSurahAr?.data!!.data.ayahs.size - 1
-
         onView(withId(R.id.rv_read_surah)).perform(
             RecyclerViewActions
                 .actionOnItemAtPosition<RecyclerView.ViewHolder>(totalAyah, ViewActions.scrollTo())
@@ -150,7 +145,7 @@ class ReadSurahFragmentTest {
         onView(withId(R.id.rv_read_surah)).perform(
             RecyclerViewActions
                 .actionOnItemAtPosition<RecyclerView.ViewHolder>(0, swipeLeft())
-        ) //swipe first ayah
+        )
     }
 
     @Test
@@ -170,7 +165,6 @@ class ReadSurahFragmentTest {
         }
 
         onView(withId(R.id.rv_read_surah)).check(matches(isDisplayed()))
-
         for (i in testViewModel!!.selectedSurahAr.value!!.data!!.data.ayahs.indices){
             onView(withId(R.id.rv_read_surah)).perform(
                 RecyclerViewActions.actionOnItemAtPosition<StaredSurahAdapter.StaredSurahViewHolder>(
@@ -179,11 +173,9 @@ class ReadSurahFragmentTest {
                 )
             )
         }
-
         testViewModel?.msFavAyahBySurahID?.value?.data?.forEachIndexed { index, data ->
             assertEquals(data.ayahID, (index + 1))
         }
-
     }
 
 }

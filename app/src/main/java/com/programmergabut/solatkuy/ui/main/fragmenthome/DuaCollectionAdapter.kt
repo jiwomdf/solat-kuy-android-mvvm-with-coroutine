@@ -34,20 +34,21 @@ class DuaCollectionAdapter(private val context: Context): RecyclerView.Adapter<D
     inner class DuaCollectionViewHolder(private val binding: ListDuaBinding): RecyclerView.ViewHolder(binding.root){
         fun bind(data: Dua){
             binding.btnDuaBtn.text = data.title
-            openDua(data)
+            openDuaAfterAdhan(data)
         }
 
-        /* Dua After Adhan */
-        private fun openDua(data: Dua) {
-            val i = Intent(context, DuaActivity::class.java)
+        private fun openDuaAfterAdhan(data: Dua) {
+            val intent = Intent(context, DuaActivity::class.java)
             binding.btnDuaBtn.setOnClickListener {
-                i.putExtra(DuaActivity.DUA_TITLE, data.title)
-                i.putExtra(DuaActivity.DUA_AR, data.arab)
-                i.putExtra(DuaActivity.DUA_LT, data.latin)
-                i.putExtra(DuaActivity.DUA_EN, data.english)
-                i.putExtra(DuaActivity.DUA_IN, data.indonesia)
-                i.putExtra(DuaActivity.DUA_REF, data.reference)
-                context.startActivity(i)
+                intent.apply {
+                    putExtra(DuaActivity.DUA_TITLE, data.title)
+                    putExtra(DuaActivity.DUA_AR, data.arab)
+                    putExtra(DuaActivity.DUA_LT, data.latin)
+                    putExtra(DuaActivity.DUA_EN, data.english)
+                    putExtra(DuaActivity.DUA_IN, data.indonesia)
+                    putExtra(DuaActivity.DUA_REF, data.reference)
+                }
+                context.startActivity(intent)
             }
         }
     }

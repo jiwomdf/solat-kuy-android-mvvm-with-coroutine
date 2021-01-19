@@ -164,10 +164,9 @@ class SettingFragment(viewModelTest: FragmentSettingViewModel? = null) : BaseFra
         viewModel.updateMsApi1(data)
     }
 
-    /* permission */
+
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
-
         if(requestCode == LOCATION_PERMISSIONS){
             if(grantResults.isNotEmpty() && grantResults[0] == PackageManager.PERMISSION_GRANTED){
                 onUpdateLocationListener()

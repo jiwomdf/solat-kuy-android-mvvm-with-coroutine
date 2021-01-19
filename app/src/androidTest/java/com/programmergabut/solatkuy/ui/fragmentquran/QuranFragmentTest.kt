@@ -19,6 +19,7 @@ import com.programmergabut.solatkuy.ui.main.fragmentreadsurah.ReadSurahAdapter
 import com.programmergabut.solatkuy.ui.main.fragmentquran.QuranFragment
 import com.programmergabut.solatkuy.ui.main.fragmentquran.QuranFragmentDirections
 import com.programmergabut.solatkuy.ui.main.fragmentquran.QuranFragmentViewModel
+import com.programmergabut.solatkuy.data.remote.remoteentity.quranallsurahJson.Data
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -39,10 +40,8 @@ class QuranFragmentTest{
 
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
-
     @get:Rule
     val instantTaskExecutorRule = TaskExecutorWithIdlingResourceRule()
-
     @Inject
     lateinit var fragmentFactory: SolatKuyFragmentFactoryAndroidTest
 
@@ -62,7 +61,6 @@ class QuranFragmentTest{
         onView(withId(R.id.s_juzz)).check(matches(isDisplayed()))
         onView(withId(R.id.cv_fav_ayah)).check(matches(isDisplayed()))
         onView(withId(R.id.cv_quran_content)).check(matches(isDisplayed()))
-        //onView(withId(R.id.rv_stared_ayah)).check(matches(isDisplayed()))
     }
 
     @Test
@@ -71,11 +69,10 @@ class QuranFragmentTest{
         launchFragmentInHiltContainer<QuranFragment>(fragmentFactory = fragmentFactory) {
             testViewModel = viewModel
         }
-
         onView(withId(R.id.rv_quran_surah)).perform(
             RecyclerViewActions
                 .actionOnItemAtPosition<RecyclerView.ViewHolder>(113, scrollTo())
-        ) //total Al Qur'an surah from idx 0
+        )
     }
 
     @Test
@@ -86,14 +83,12 @@ class QuranFragmentTest{
             Navigation.setViewNavController(requireView(), navController)
             testViewModel = viewModel
         }
-
         onView(withId(R.id.rv_quran_surah)).perform(
             RecyclerViewActions
                 .actionOnItemAtPosition<ReadSurahAdapter.ReadSurahViewHolder>(113, click())
-        ) //click last surah
+        )
 
         val data = testViewModel?.allSurah?.value?.data?.last()!!
-
         verify(navController).navigate(
             QuranFragmentDirections.actionQuranFragmentToReadSurahActivity(
             data.number.toString(), data.englishName, data.englishNameTranslation, false
@@ -117,7 +112,6 @@ class QuranFragmentTest{
         onData(anything()).atPosition(30).perform(click())
     }
 
-
     @Test
     fun testSearchSurah(){
         var testViewModel: QuranFragmentViewModel? = null
@@ -127,12 +121,23 @@ class QuranFragmentTest{
 
         onView(withId(R.id.et_search)).perform(replaceText("Al Faathia"))
         onView(withId(R.id.et_search)).check(matches(withText("Al Faathia")))
+        testViewModel?.allSurah?.value?.data?.contains(
+            Data("Al-Faatiha","al-faatiha", "The Opening",
+                "سُورَةُ ٱلْفَاتِحَة", 1, 7, "Meccan")
+        )
 
         onView(withId(R.id.et_search)).perform(replaceText("Al Baq"))
         onView(withId(R.id.et_search)).check(matches(withText("Al Baq")))
+        testViewModel?.allSurah?.value?.data?.contains(
+            Data("Al-Baqara","al-baqara", "The Cow",
+                "سورة البقرة", 2, 286, "Medinan")
+        )
 
         onView(withId(R.id.et_search)).perform(replaceText("An Nas"))
         onView(withId(R.id.et_search)).check(matches(withText("An Nas")))
+        testViewModel?.allSurah?.value?.data?.contains(
+            Data("An-Naas","an-naas", "The Cow",
+                "سورة الناس", 114, 6, "Meccan")
+        )
     }
-
 }

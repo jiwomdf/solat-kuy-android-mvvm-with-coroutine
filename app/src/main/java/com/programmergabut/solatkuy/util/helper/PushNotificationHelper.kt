@@ -16,7 +16,7 @@ import java.util.*
  * Created by Katili Jiwo Adi Wiyono on 02/04/20.
  */
 
-class PushNotificationHelper(context: Context, selectedList: MutableList<NotifiedPrayer>, cityName: String): ContextWrapper(context) {
+class PushNotificationHelper(context: Context, selectedList: List<NotifiedPrayer>, cityName: String): ContextWrapper(context) {
 
     private var mCityName: String? = null
 
@@ -104,7 +104,7 @@ class PushNotificationHelper(context: Context, selectedList: MutableList<Notifie
         } */
     }
 
-   private fun bundleCreator(selectedList: MutableList<NotifiedPrayer>): Bundle {
+   private fun bundleCreator(selectedList: List<NotifiedPrayer>): Bundle {
 
         val listPrayerID = arrayListOf<Int>()
         val listPrayerName = arrayListOf<String>()

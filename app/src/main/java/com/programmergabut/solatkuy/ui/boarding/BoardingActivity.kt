@@ -136,7 +136,6 @@ class BoardingActivity : BaseActivity<ActivityBoardingBinding, BoardingViewModel
         viewModel.updateIsHasOpenApp(true)
     }
 
-    /* Database Transaction */
     private fun insertLocationSettingToDb(latitude: String, longitude: String) {
         val currDate = LocalDate()
         val data = MsApi1(1,
@@ -148,7 +147,6 @@ class BoardingActivity : BaseActivity<ActivityBoardingBinding, BoardingViewModel
         viewModel.updateMsApi1(data)
     }
 
-    /* permission */
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if(requestCode == LOCATION_PERMISSIONS){
@@ -177,7 +175,6 @@ class BoardingActivity : BaseActivity<ActivityBoardingBinding, BoardingViewModel
             .show()
     }
 
-    /* supporting function */
     private fun getGPSLocation(){
         if (isLocationPermissionGranted()) {
             setGpsBottomSheetState()

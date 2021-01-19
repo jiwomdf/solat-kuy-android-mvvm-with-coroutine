@@ -26,7 +26,6 @@ class FakePrayerRepositoryAndroidTest: PrayerRepository {
     private var notifiedPrayer = DummyRetValueAndroidTest.getNotifiedPrayer()
     private val observableNotifiedPrayer = MutableLiveData<List<NotifiedPrayer>>()
 
-
     init {
         observableMsApi1.postValue(msApi11)
         observableMsSetting.postValue(msSetting)
@@ -91,9 +90,7 @@ class FakePrayerRepositoryAndroidTest: PrayerRepository {
         refreshMsSetting()
     }
 
-    /*
-     * Retrofit
-     */
+    /* Retrofit */
     override suspend fun fetchCompass(msApi1: MsApi1): Deferred<CompassResponse> {
         return CoroutineScope(IO).async {
             val data = DummyRetValueAndroidTest.fetchCompassApi<FakePrayerRepositoryAndroidTest>()
