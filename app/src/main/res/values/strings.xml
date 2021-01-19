@@ -2,7 +2,14 @@
     <item name="item_click_support" type="id" />
 
     <string name="app_name">Solat Kuy</string>
-    <string name="welcome_dialog">Welcome to Solat Kuy! \n Solat Kuy is a reminder prayer time application \n\n in order to start this app \nplease select your location</string>
+    <string name="welcome_dialog">Welcome to Solat Kuy!
+        \n
+        Solat Kuy is a open source reminder prayer time application
+        \n
+        \n
+        in order to start this app\n
+        please select your location
+    </string>
 
     <!--PRAYER NAME-->
     <string name="fajr">Fajr</string>
@@ -33,9 +40,14 @@
 
     <!--QIBLA COMPASS-->
     <string name="compass_art">Compass Art:</string>
-    <string name="qibla">Qibla degrees in \n your location</string>
-    <string name="please_tilt_your_phone_until_the_image_is_balanced">Please calibrate your phone compass before using this feature</string>
+    <string name="qibla_degree">Qibla degrees:</string>
+    <string name="compass_accuracy">Compass accuracy:</string>
+    <string name="please_tilt_your_phone_until_the_image_is_balanced">Please calibrate your phone compass util the compass accuracy is high</string>
     <string name="please_do_this_move_before_using_the_compass_to_calibrate_the_compass">Please do this move before using the compass, in order to calibrate the compass</string>
+    <string name="unreliable">Unreliable</string>
+    <string name="lowAccuracy">Low Accuracy</string>
+    <string name="mediumAccuracy">Medium Accuracy</string>
+    <string name="highAccuracy">High Accuracy</string>
 
     <!--ABOUT-->
     <string name="see_author_and_credit">see author and credit</string>
@@ -112,4 +124,5 @@
     <string name="api_alquran_cloud">https://api.alquran.cloud</string>
     <string name="solat_kuy">Solat Kuy</string>
     <string name="oke">Oke</string>
+
 </resources>

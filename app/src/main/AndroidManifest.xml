@@ -22,15 +22,18 @@
         android:theme="@style/AppTheme"
         tools:targetApi="n">
         <activity android:name=".ui.dua.DuaActivity" />
-        <activity
-            android:name=".ui.mainactivity.MainActivity"
+        <activity android:name=".ui.boarding.BoardingActivity"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
-
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
+        </activity>
+        <activity
+            android:name=".ui.main.MainActivity"
+            android:screenOrientation="portrait"
+            tools:ignore="LockedOrientationActivity">
         </activity>
 
         <service android:name=".service.ServiceBootComplete" />

@@ -9,6 +9,8 @@ import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.TaskExecutorWithIdlingResourceRule
 import com.programmergabut.solatkuy.launchFragmentInHiltContainer
 import com.programmergabut.solatkuy.ui.SolatKuyFragmentFactoryAndroidTest
+import com.programmergabut.solatkuy.ui.main.fragmentsetting.FragmentSettingViewModel
+import com.programmergabut.solatkuy.ui.main.fragmentsetting.SettingFragment
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi

@@ -1,7 +1,6 @@
 package com.programmergabut.solatkuy.ui.fragmentreadsurah
 
 import android.os.Bundle
-import android.widget.TextView
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.recyclerview.widget.RecyclerView
 import androidx.test.espresso.Espresso.onView
@@ -18,16 +17,15 @@ import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.launchFragmentInHiltContainer
 import com.programmergabut.solatkuy.ui.MyViewAction
 import com.programmergabut.solatkuy.ui.SolatKuyFragmentFactoryAndroidTest
-import com.programmergabut.solatkuy.ui.fragmentquran.StaredSurahAdapter
+import com.programmergabut.solatkuy.ui.main.fragmentquran.StaredSurahAdapter
+import com.programmergabut.solatkuy.ui.main.fragmentreadsurah.ReadSurahFragment
+import com.programmergabut.solatkuy.ui.main.fragmentreadsurah.ReadSurahViewModel
 import com.programmergabut.solatkuy.util.idlingresource.EspressoIdlingResource
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import org.hamcrest.Matchers.allOf
-import org.hamcrest.Matchers.instanceOf
 import org.junit.After
 import org.junit.Assert.assertEquals
-import org.junit.Assert.assertNotEquals
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test

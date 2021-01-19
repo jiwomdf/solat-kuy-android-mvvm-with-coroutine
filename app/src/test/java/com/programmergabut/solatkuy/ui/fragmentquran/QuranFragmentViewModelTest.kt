@@ -9,6 +9,7 @@ import com.programmergabut.solatkuy.DummyRetValueTest
 import com.programmergabut.solatkuy.data.FakeQuranRepository
 import com.programmergabut.solatkuy.data.QuranRepositoryImplTest
 import com.programmergabut.solatkuy.data.remote.remoteentity.quranallsurahJson.Data
+import com.programmergabut.solatkuy.ui.main.fragmentquran.QuranFragmentViewModel
 import com.programmergabut.solatkuy.util.Resource
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest

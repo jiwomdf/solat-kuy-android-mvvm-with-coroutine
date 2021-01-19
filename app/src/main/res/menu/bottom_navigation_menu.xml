@@ -2,15 +2,15 @@
 <menu
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".ui.mainactivity.MainActivity">
+    tools:context=".ui.main.MainActivity">
 
-    <item android:id="@+id/fragmentMain"
+    <item android:id="@+id/fragmentHome"
         android:icon="@drawable/ic_prayer_time_24dp"
         android:title="@string/prayer_time"/>
     <item android:id="@+id/fragmentCompass"
         android:icon="@drawable/ic_navigation_24dp"
         android:title="@string/compass"/>
-    <item android:id="@+id/quranFragment"
+    <item android:id="@+id/fragmentQuran"
         android:icon="@drawable/ic_holy_quran_24"
         android:title="@string/holy_quran"/>
     <item android:id="@+id/fragmentSetting"

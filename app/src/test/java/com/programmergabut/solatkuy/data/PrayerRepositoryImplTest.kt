@@ -9,9 +9,11 @@ import com.programmergabut.solatkuy.data.local.dao.*
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
 import com.programmergabut.solatkuy.data.remote.RemoteDataSourceAladhanImpl
 import com.programmergabut.solatkuy.DummyRetValueTest
-import com.programmergabut.solatkuy.data.remote.FakeRemoteDataSourceAladhan
+import com.programmergabut.solatkuy.data.remote.RemoteDataSourceAladhan
 import junit.framework.Assert.assertNotNull
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.delay
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Rule
 import org.junit.Test
@@ -26,7 +28,7 @@ class PrayerRepositoryImplTest{
     @get:Rule
     val coroutinesTestRule: CoroutinesTestRule = CoroutinesTestRule()
 
-    private val remoteDataSourceAladhan = mock(FakeRemoteDataSourceAladhan::class.java)
+    private val remoteDataSourceAladhan = mock(RemoteDataSourceAladhan::class.java)
 
     private val notifiedPrayerDao = mock(NotifiedPrayerDao::class.java)
     private val msApi1Dao = mock(MsApi1Dao::class.java)
@@ -40,59 +42,26 @@ class PrayerRepositoryImplTest{
 
     /* Remote */
     @Test
-    fun fetchPrayerApi() = coroutinesTestRule.testDispatcher.runBlockingTest {
-        prayerRepository.fetchPrayerApi(msApi1).toDeferred()
+    fun fetchPrayerApi() = runBlocking {
 
         val dummyPrayerApi = DummyRetValueTest.fetchPrayerApi<PrayerRepositoryImplTest>()
         Mockito.`when`(remoteDataSourceAladhan.fetchPrayerApi(msApi1)).thenReturn(dummyPrayerApi)
+        prayerRepository.fetchPrayerApi(msApi1).await()
         Mockito.verify(remoteDataSourceAladhan).fetchPrayerApi(msApi1)
 
         assertNotNull(dummyPrayerApi)
     }
 
     @Test
-    fun fetchCompass() = coroutinesTestRule.testDispatcher.runBlockingTest {
-        prayerRepository.fetchCompass(msApi1).toDeferred()
+    fun fetchCompass() = runBlocking {
 
         val dummyCompassApi = DummyRetValueTest.fetchCompassApi<PrayerRepositoryImplTest>()
-
         Mockito.`when`(remoteDataSourceAladhan.fetchCompassApi(msApi1)).thenReturn(dummyCompassApi)
+        prayerRepository.fetchCompass(msApi1).await()
         Mockito.verify(remoteDataSourceAladhan).fetchCompassApi(msApi1)
 
         assertNotNull(dummyCompassApi)
     }
-
-    /* @Test
-    fun fetchAsmaAlHusna(){
-        repository.fetchAsmaAlHusna()
-
-        val dummyAsmaAlHusna = Resource.success(DummyData.fetchAsmaAlHusnaApi())
-        val asmaAlHusnaApi = MutableLiveData<Resource<AsmaAlHusnaApi>>()
-        asmaAlHusnaApi.value = dummyAsmaAlHusna
-
-        Mockito.`when`(remote.fetchAsmaAlHusnaApi()).thenReturn(asmaAlHusnaApi)
-        Mockito.verify(remote).fetchAsmaAlHusnaApi()
-
-        assertNotNull(asmaAlHusnaApi.value)
-    } */
-
-    /* @Test
-    fun syncNotifiedPrayer() = coroutinesTestRule.testDispatcher.runBlockingTest {
-        val retVal = MutableLiveData<List<NotifiedPrayer>>()
-
-        val prayerDummy = DummyRetValue.fetchPrayerApi()
-        Mockito.`when`(remoteDataSourceAladhan.fetchPrayerApi(msApi1)).thenReturn(prayerDummy)
-        val notifiedPrayerDummy = DummyRetValue.getNotifiedPrayer()
-        Mockito.`when`(notifiedPrayerDao.getListNotifiedPrayerSync()).thenReturn(notifiedPrayerDummy)
-
-        retVal.value = prayerRepository.fetchPrayerApi(msApi1)
-
-        Mockito.verify(remoteDataSourceAladhan).fetchPrayerApi(msApi1)
-        Mockito.verify(notifiedPrayerDao).getListNotifiedPrayerSync()
-
-        assertNotNull(retVal)
-    } */
-
 
     /* Database */
     @Test

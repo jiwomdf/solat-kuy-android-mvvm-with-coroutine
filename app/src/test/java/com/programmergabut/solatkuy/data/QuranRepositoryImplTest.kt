@@ -8,12 +8,13 @@ import com.programmergabut.solatkuy.CoroutinesTestRule
 import com.programmergabut.solatkuy.DummyArgument
 import com.programmergabut.solatkuy.DummyRetValueTest
 import com.programmergabut.solatkuy.data.local.dao.*
-import com.programmergabut.solatkuy.data.remote.FakeRemoteDataSourceAlQuran
+import com.programmergabut.solatkuy.data.remote.RemoteDataSourceApiAlquran
 import com.programmergabut.solatkuy.data.remote.api.ReadSurahArService
 import com.programmergabut.solatkuy.data.remote.api.ReadSurahEnService
 import junit.framework.Assert
 import junit.framework.Assert.assertNotNull
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before
 import org.junit.Rule
@@ -33,47 +34,39 @@ class QuranRepositoryImplTest {
 
     private val msFavAyahDao = mock(MsFavAyahDao::class.java)
     private val msFavSurahDao = mock(MsFavSurahDao::class.java)
-    private val remoteDataSourceApiAlquran = mock(FakeRemoteDataSourceAlQuran::class.java)
+    private val remoteDataSourceApiAlquran = mock(RemoteDataSourceApiAlquran::class.java)
     private val quranRepository = FakeQuranRepository(remoteDataSourceApiAlquran, msFavAyahDao, msFavSurahDao)
     private val surahID = DummyArgument.surahID
 
-    @Before
-    fun setup(){
-        //prayerRepository.getMsApi1()
-    }
-
     /* Remote */
     @Test
-    fun fetchReadSurahEn() = coroutinesTestRule.testDispatcher.runBlockingTest {
-
-        quranRepository.fetchReadSurahEn(surahID).toDeferred()
+    fun fetchReadSurahEn() = runBlocking {
 
         val dummyQuranSurah = DummyRetValueTest.surahEnID_1<QuranRepositoryImplTest>()
         `when`(remoteDataSourceApiAlquran.fetchReadSurahEn(surahID)).thenReturn(dummyQuranSurah)
+        quranRepository.fetchReadSurahEn(surahID).await()
         verify(remoteDataSourceApiAlquran).fetchReadSurahEn(surahID)
 
         assertNotNull(dummyQuranSurah)
     }
 
     @Test
-    fun fetchReadSurahAr() = coroutinesTestRule.testDispatcher.runBlockingTest {
-
-        quranRepository.fetchReadSurahAr(surahID).toDeferred()
+    fun fetchReadSurahAr() = runBlocking {
 
         val dummyQuranSurah = DummyRetValueTest.surahArID_1<QuranRepositoryImplTest>()
         `when`(remoteDataSourceApiAlquran.fetchReadSurahAr(surahID)).thenReturn(dummyQuranSurah)
+        quranRepository.fetchReadSurahAr(surahID).await()
         verify(remoteDataSourceApiAlquran).fetchReadSurahAr(surahID)
 
         assertNotNull(dummyQuranSurah)
     }
 
     @Test
-    fun fetchAllSurah() = coroutinesTestRule.testDispatcher.runBlockingTest {
-
-        quranRepository.fetchAllSurah().toDeferred()
+    fun fetchAllSurah() = runBlocking {
 
         val dummyQuranSurah = DummyRetValueTest.fetchAllSurahAr<QuranRepositoryImplTest>()
         `when`(remoteDataSourceApiAlquran.fetchAllSurah()).thenReturn(dummyQuranSurah)
+        quranRepository.fetchAllSurah().await()
         verify(remoteDataSourceApiAlquran).fetchAllSurah()
 
         assertNotNull(dummyQuranSurah)

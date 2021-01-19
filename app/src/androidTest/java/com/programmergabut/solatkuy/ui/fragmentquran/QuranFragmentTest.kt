@@ -15,7 +15,10 @@ import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.TaskExecutorWithIdlingResourceRule
 import com.programmergabut.solatkuy.launchFragmentInHiltContainer
 import com.programmergabut.solatkuy.ui.SolatKuyFragmentFactoryAndroidTest
-import com.programmergabut.solatkuy.ui.fragmentreadsurah.ReadSurahAdapter
+import com.programmergabut.solatkuy.ui.main.fragmentreadsurah.ReadSurahAdapter
+import com.programmergabut.solatkuy.ui.main.fragmentquran.QuranFragment
+import com.programmergabut.solatkuy.ui.main.fragmentquran.QuranFragmentDirections
+import com.programmergabut.solatkuy.ui.main.fragmentquran.QuranFragmentViewModel
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -91,7 +94,8 @@ class QuranFragmentTest{
 
         val data = testViewModel?.allSurah?.value?.data?.last()!!
 
-        verify(navController).navigate(QuranFragmentDirections.actionQuranFragmentToReadSurahActivity(
+        verify(navController).navigate(
+            QuranFragmentDirections.actionQuranFragmentToReadSurahActivity(
             data.number.toString(), data.englishName, data.englishNameTranslation, false
         ))
     }

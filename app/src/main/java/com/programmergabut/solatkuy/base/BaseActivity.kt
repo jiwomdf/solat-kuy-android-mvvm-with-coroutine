@@ -30,12 +30,9 @@ abstract class BaseActivity<DB: ViewDataBinding, VM: ViewModel>(
     lateinit var db : SolatKuyRoom
     @Inject
     lateinit var sharedPrefUtil: SharedPrefUtil
-
     protected val LOCATION_PERMISSIONS = 101
-
     protected lateinit var binding : DB
     protected lateinit var viewModel: VM
-
     private lateinit var root : ViewGroup
 
     override fun onCreate(savedInstanceState: Bundle?) {

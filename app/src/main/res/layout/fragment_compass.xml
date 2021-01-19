@@ -3,7 +3,7 @@
     xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".ui.fragmentcompass.CompassFragment">
+    tools:context=".ui.main.fragmentcompass.CompassFragment">
 
     <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
         android:id="@+id/sl_compass"
@@ -29,12 +29,13 @@
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent">
 
-                    <LinearLayout
+                    <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
                         android:layout_margin="@dimen/medium_margin"
                         android:orientation="vertical">
                         <TextView
+                            android:id="@+id/tv_qibla_dir_text"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
                             android:layout_marginStart="@dimen/smaller_margin"
@@ -42,16 +43,45 @@
                             android:layout_marginBottom="@dimen/smaller_margin"
                             android:gravity="center"
                             android:layout_gravity="center"
-                            android:text="@string/qibla"
-                            android:textStyle="bold"/>
+                            android:text="@string/qibla_degree"
+                            android:textStyle="bold"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toTopOf="parent"/>
 
                         <TextView
                             android:id="@+id/tv_qibla_dir"
                             android:layout_width="wrap_content"
                             android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
                             android:layout_gravity="center"
+                            app:layout_constraintTop_toTopOf="parent"
+                            app:layout_constraintStart_toEndOf="@id/tv_qibla_dir_text"
                             android:text="@string/loading"/>
-                    </LinearLayout>
+
+                        <TextView
+                            android:id="@+id/tv_qibla_accuracy_text"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="@dimen/smaller_margin"
+                            android:layout_marginEnd="@dimen/smaller_margin"
+                            android:layout_marginBottom="@dimen/smaller_margin"
+                            android:gravity="center"
+                            android:layout_gravity="center"
+                            android:text="@string/compass_accuracy"
+                            android:textStyle="bold"
+                            app:layout_constraintStart_toStartOf="parent"
+                            app:layout_constraintTop_toBottomOf="@id/tv_qibla_dir_text"/>
+
+                        <TextView
+                            android:id="@+id/tv_qibla_accuracy"
+                            android:layout_width="wrap_content"
+                            android:layout_height="wrap_content"
+                            android:layout_marginStart="8dp"
+                            android:layout_gravity="center"
+                            android:text="@string/loading"
+                            app:layout_constraintStart_toEndOf="@id/tv_qibla_accuracy_text"
+                            app:layout_constraintTop_toBottomOf="@id/tv_qibla_dir_text"/>
+                    </androidx.constraintlayout.widget.ConstraintLayout>
                 </com.google.android.material.card.MaterialCardView>
 
                 <androidx.cardview.widget.CardView

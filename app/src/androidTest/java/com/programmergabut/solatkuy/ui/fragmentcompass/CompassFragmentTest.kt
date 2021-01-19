@@ -1,17 +1,15 @@
 package com.programmergabut.solatkuy.ui.fragmentcompass
 
-import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.test.espresso.IdlingRegistry
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.MediumTest
 import com.programmergabut.solatkuy.TaskExecutorWithIdlingResourceRule
 import com.programmergabut.solatkuy.launchFragmentInHiltContainer
 import com.programmergabut.solatkuy.ui.SolatKuyFragmentFactoryAndroidTest
-import com.programmergabut.solatkuy.util.idlingresource.EspressoIdlingResource
+import com.programmergabut.solatkuy.ui.main.fragmentcompass.CompassFragment
+import com.programmergabut.solatkuy.ui.main.fragmentcompass.FragmentCompassViewModel
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import org.junit.After
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test

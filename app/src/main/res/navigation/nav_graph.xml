@@ -3,27 +3,27 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
     android:id="@+id/nav_graph"
-    app:startDestination="@id/fragmentMain">
+    app:startDestination="@id/fragmentHome">
 
     <fragment
         android:id="@+id/fragmentCompass"
-        android:name="com.programmergabut.solatkuy.ui.fragmentcompass.CompassFragment"
+        android:name="com.programmergabut.solatkuy.ui.main.fragmentcompass.CompassFragment"
         android:label="fragment_compass"
         tools:layout="@layout/fragment_compass" />
     <fragment
-        android:id="@+id/fragmentMain"
-        android:name="com.programmergabut.solatkuy.ui.fragmentmain.MainFragment"
-        android:label="fragment_main"
-        tools:layout="@layout/fragment_main" >
+        android:id="@+id/fragmentHome"
+        android:name="com.programmergabut.solatkuy.ui.main.fragmenthome.HomeFragment"
+        android:label="fragment_home"
+        tools:layout="@layout/fragment_home" >
     </fragment>
     <fragment
         android:id="@+id/fragmentSetting"
-        android:name="com.programmergabut.solatkuy.ui.fragmentsetting.SettingFragment"
+        android:name="com.programmergabut.solatkuy.ui.main.fragmentsetting.SettingFragment"
         android:label="fragment_setting"
         tools:layout="@layout/fragment_setting" />
     <fragment
-        android:id="@+id/quranFragment"
-        android:name="com.programmergabut.solatkuy.ui.fragmentquran.QuranFragment"
+        android:id="@+id/fragmentQuran"
+        android:name="com.programmergabut.solatkuy.ui.main.fragmentquran.QuranFragment"
         android:label="fragment_quran"
         tools:layout="@layout/fragment_quran" >
         <action
@@ -43,12 +43,12 @@
     </fragment>
     <fragment
         android:id="@+id/favAyahFragment"
-        android:name="com.programmergabut.solatkuy.ui.fragmentfavayah.FavAyahFragment"
+        android:name="com.programmergabut.solatkuy.ui.main.fragmentfavayah.FavAyahFragment"
         android:label="fragment_fav_ayah"
         tools:layout="@layout/fragment_fav_ayah" />
     <fragment
         android:id="@+id/readSurahActivity"
-        android:name="com.programmergabut.solatkuy.ui.fragmentreadsurah.ReadSurahFragment"
+        android:name="com.programmergabut.solatkuy.ui.main.fragmentreadsurah.ReadSurahFragment"
         android:label="activity_read_surah"
         tools:layout="@layout/fragment_read_surah" >
         <argument

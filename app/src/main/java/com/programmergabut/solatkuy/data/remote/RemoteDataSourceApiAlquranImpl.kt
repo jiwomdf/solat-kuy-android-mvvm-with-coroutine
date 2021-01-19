@@ -30,38 +30,4 @@ class RemoteDataSourceApiAlquranImpl @Inject constructor(
         return readSurahArService.fetchReadSurahAr(surahID)
     }
 
-    /* override suspend fun fetchReadSurahAr(surahID: Int): ReadSurahArResponse {
-        val listAyah: MutableList<Ayah>
-
-        val retValAr = readSurahArService.fetchReadSurahAr(surahID)
-        Log.d("fetchReadSurahAr", "retValAr")
-
-        val retValEn = readSurahEnService.fetchReadSurahEn(surahID)
-        Log.d("fetchReadSurahAr", "retValEn")
-
-        listAyah = retValAr.data.ayahs.map { x -> Ayah(
-            x.hizbQuarter,
-            x.juz,
-            x.manzil,
-            x.number,
-            x.numberInSurah,
-            x.page,
-            x.ruku,
-            x.text,
-            "",
-            isFav = false,
-            isLastRead = false
-        )} as MutableList<Ayah>
-
-        retValEn.data.ayahs.forEachIndexed { index, x ->
-            listAyah[index].textEn = x.text
-        }
-
-
-        retValAr.data.ayahs = listAyah
-        Log.d("fetchReadSurahAr", "listAyah")
-
-        return retValAr
-    } */
-
 }
