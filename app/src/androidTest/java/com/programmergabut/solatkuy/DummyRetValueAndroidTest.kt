@@ -1,18 +1,12 @@
 package com.programmergabut.solatkuy
 
-import androidx.lifecycle.MutableLiveData
 import com.programmergabut.solatkuy.data.local.localentity.*
 import com.programmergabut.solatkuy.data.remote.remoteentity.asmaalhusnaJson.AsmaAlHusnaResponse
-import com.programmergabut.solatkuy.data.remote.remoteentity.asmaalhusnaJson.Data
-import com.programmergabut.solatkuy.data.remote.remoteentity.asmaalhusnaJson.En
 import com.programmergabut.solatkuy.data.remote.remoteentity.compassJson.CompassResponse
-import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.*
+import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.PrayerResponse
 import com.programmergabut.solatkuy.data.remote.remoteentity.quranallsurahJson.AllSurahResponse
 import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonAr.ReadSurahArResponse
-import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonEn.Ayah
-import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonEn.Edition
 import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonEn.ReadSurahEnResponse
-import com.programmergabut.solatkuy.util.Resource
 import com.programmergabut.solatkuy.util.EnumConfig
 
 object DummyRetValueAndroidTest {
@@ -110,10 +104,6 @@ object DummyRetValueAndroidTest {
     }
 
     fun getListMsFavSurah(): MutableList<MsFavSurah> {
-        return mutableListOf()
-    }
-
-    fun getFavSurahBySurahID(surahid: Int): MutableList<MsFavSurah> {
         return mutableListOf()
     }
 
