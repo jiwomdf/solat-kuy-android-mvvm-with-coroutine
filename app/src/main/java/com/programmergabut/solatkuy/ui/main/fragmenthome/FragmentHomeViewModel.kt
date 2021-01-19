@@ -51,13 +51,6 @@ class FragmentMainViewModel @ViewModelInject constructor(
     fun syncNotifiedPrayer(msApi1: MsApi1) = viewModelScope.launch {
         _notifiedPrayer.postValue(Resource.loading(null))
         try {
-            /* if you want to change the prayer time manually for testing,
-             * uncomment it and comment the code below
-             *
-                prayerRepository.syncNotifiedPrayerTesting().let {
-                _notifiedPrayer.postValue(Resource.success(it))
-            } */
-
             val response = prayerRepository.fetchPrayerApi(msApi1).await()
             val result = prayerRepository.getListNotifiedPrayer()
             if(response.statusResponse == "1" && response.data.isNotEmpty()){

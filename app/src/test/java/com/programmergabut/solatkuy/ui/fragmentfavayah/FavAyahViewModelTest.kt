@@ -2,7 +2,7 @@ package com.programmergabut.solatkuy.ui.fragmentfavayah
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.programmergabut.solatkuy.CoroutinesTestRule
-import com.programmergabut.solatkuy.DummyArgument
+import com.programmergabut.solatkuy.DummyRetValueTest
 import com.programmergabut.solatkuy.data.FakeQuranRepository
 import com.programmergabut.solatkuy.ui.main.fragmentfavayah.FavAyahViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -31,7 +31,7 @@ class FavAyahViewModelTest {
     @Mock
     private lateinit var quranRepository: FakeQuranRepository
 
-    private val msFavAyah = DummyArgument.msFavAyah
+    private val msFavAyah = DummyRetValueTest.msFavAyah
 
     @Before
     fun setUp() {

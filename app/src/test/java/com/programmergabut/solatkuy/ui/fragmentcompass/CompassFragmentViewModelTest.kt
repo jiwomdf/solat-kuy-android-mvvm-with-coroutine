@@ -38,7 +38,7 @@ class CompassFragmentViewModelTest {
     @Mock
     private lateinit var prayerRepository: FakePrayerRepository
 
-    private val msApi1 = MsApi1(0, "", "", "","","")
+    private val msApi1 = DummyRetValueTest.msApi1
 
     @Before
     fun before(){

@@ -3,23 +3,16 @@ package com.programmergabut.solatkuy.data
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import com.nhaarman.mockitokotlin2.verify
-import com.programmergabut.solatkuy.CoroutineTestUtil.Companion.toDeferred
 import com.programmergabut.solatkuy.CoroutinesTestRule
-import com.programmergabut.solatkuy.DummyArgument
 import com.programmergabut.solatkuy.DummyRetValueTest
 import com.programmergabut.solatkuy.data.local.dao.*
 import com.programmergabut.solatkuy.data.remote.RemoteDataSourceApiAlquran
-import com.programmergabut.solatkuy.data.remote.api.ReadSurahArService
-import com.programmergabut.solatkuy.data.remote.api.ReadSurahEnService
-import junit.framework.Assert
 import junit.framework.Assert.assertNotNull
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runBlockingTest
-import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
-import org.mockito.Mockito
 import org.mockito.Mockito.`when`
 import org.mockito.Mockito.mock
 
@@ -36,7 +29,7 @@ class QuranRepositoryImplTest {
     private val msFavSurahDao = mock(MsFavSurahDao::class.java)
     private val remoteDataSourceApiAlquran = mock(RemoteDataSourceApiAlquran::class.java)
     private val quranRepository = FakeQuranRepository(remoteDataSourceApiAlquran, msFavAyahDao, msFavSurahDao)
-    private val surahID = DummyArgument.surahID
+    private val surahID = DummyRetValueTest.surahID
 
     /* Remote */
     @Test

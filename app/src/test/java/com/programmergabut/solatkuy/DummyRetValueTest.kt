@@ -1,18 +1,13 @@
 package com.programmergabut.solatkuy
 
-import androidx.lifecycle.MutableLiveData
 import com.programmergabut.solatkuy.data.local.localentity.*
 import com.programmergabut.solatkuy.data.remote.remoteentity.asmaalhusnaJson.AsmaAlHusnaResponse
-import com.programmergabut.solatkuy.data.remote.remoteentity.asmaalhusnaJson.Data
-import com.programmergabut.solatkuy.data.remote.remoteentity.asmaalhusnaJson.En
 import com.programmergabut.solatkuy.data.remote.remoteentity.compassJson.CompassResponse
 import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.PrayerResponse
 import com.programmergabut.solatkuy.data.remote.remoteentity.quranallsurahJson.AllSurahResponse
 import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonAr.ReadSurahArResponse
-import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonEn.Ayah
-import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonEn.Edition
 import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonEn.ReadSurahEnResponse
-import com.programmergabut.solatkuy.util.Resource
+import com.programmergabut.solatkuy.util.EnumConfig
 import java.util.*
 
 object DummyRetValueTest {
@@ -101,7 +96,7 @@ object DummyRetValueTest {
     inline fun <reified BASE> fetchAllSurahWithLowerCase(): List<com.programmergabut.solatkuy.data.remote.remoteentity.quranallsurahJson.Data> {
         val response = JsonToPojoConverter.convertJson<BASE, AllSurahResponse>(ALL_SURAH_SERVICE_JSON)
 
-        val mappedResponse = response.data.map { surah ->
+        return response.data.map { surah ->
             com.programmergabut.solatkuy.data.remote.remoteentity.quranallsurahJson.Data(
                 surah.englishName,
                 surah.englishName.toLowerCase(Locale.getDefault()).replace("-", " "),
@@ -112,37 +107,33 @@ object DummyRetValueTest {
                 surah.revelationType
             )
         }
-
-        return mappedResponse
     }
 
 
     /* Database */
-    fun getMsApi1(): MsApi1 {
-        return MsApi1(0, EnumConfigTesting.START_LAT, EnumConfigTesting.START_LNG,
+    val surahID = 1
+    val msfavSurah = MsFavSurah(1,"test","test")
+    val msFavAyah = MsFavAyah(1,1,"test","test","test")
+    val msFavSurah = MsFavSurah(1,"test", "test")
+    val msApi1: MsApi1 = MsApi1(1, EnumConfigTesting.START_LAT, EnumConfigTesting.START_LNG,
             EnumConfigTesting.START_METHOD, EnumConfigTesting.START_MONTH, EnumConfigTesting.START_YEAR)
+    val msSetting = MsSetting(1, true, isUsingDBQuotes = true)
+
+    fun getMapPrayer(): MutableMap<String, String> {
+        val map = mutableMapOf<String, String>()
+
+        map[EnumConfig.FAJR] = "04:35"
+        map[EnumConfig.DHUHR] = "11:41"
+        map[EnumConfig.ASR] = "15:02"
+        map[EnumConfig.MAGHRIB] = "17:32"
+        map[EnumConfig.ISHA] = "18:42"
+        map[EnumConfig.SUNRISE] = "05:00"
+
+        return map
     }
 
     fun getListMsFavAyah(): List<MsFavAyah> {
         return mutableListOf(MsFavAyah(1, 2,"test","test","test"))
-    }
-
-    fun getListMsFavSurah(surahid: Int): MutableLiveData<Resource<MsFavSurah>> {
-        val liveData: MutableLiveData<Resource<MsFavSurah>> = MutableLiveData()
-        liveData.value = Resource.success(
-            MsFavSurah(1, "test","test")
-        )
-        return liveData
-    }
-
-    fun getFavSurahBySurahID(surahid: Int): MutableList<MsFavSurah> {
-        return mutableListOf(
-            MsFavSurah(1, "test","test")
-        )
-    }
-
-    fun getMsSetting(): MsSetting {
-        return MsSetting(1, true, isUsingDBQuotes = true)
     }
 
 }

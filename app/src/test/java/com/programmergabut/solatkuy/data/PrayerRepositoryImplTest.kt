@@ -2,17 +2,13 @@ package com.programmergabut.solatkuy.data
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
-import com.programmergabut.solatkuy.CoroutineTestUtil.Companion.toDeferred
 import com.programmergabut.solatkuy.CoroutinesTestRule
-import com.programmergabut.solatkuy.DummyArgument
 import com.programmergabut.solatkuy.data.local.dao.*
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
-import com.programmergabut.solatkuy.data.remote.RemoteDataSourceAladhanImpl
 import com.programmergabut.solatkuy.DummyRetValueTest
 import com.programmergabut.solatkuy.data.remote.RemoteDataSourceAladhan
 import junit.framework.Assert.assertNotNull
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import kotlinx.coroutines.delay
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Rule
@@ -37,8 +33,8 @@ class PrayerRepositoryImplTest{
 
     private val prayerRepository = FakePrayerRepository(remoteDataSourceAladhan, notifiedPrayerDao, msApi1Dao, msSettingDao)
 
-    private val msApi1 = DummyArgument.msApi1
-    private val msFavSurah = DummyArgument.msfavSurah
+    private val msApi1 = DummyRetValueTest.msApi1
+    private val msFavSurah = DummyRetValueTest.msfavSurah
 
     /* Remote */
     @Test
@@ -68,7 +64,7 @@ class PrayerRepositoryImplTest{
     fun getMsApi1(){
         prayerRepository.observeMsApi1()
 
-        val dummyMsApi1 = DummyRetValueTest.getMsApi1()
+        val dummyMsApi1 = DummyRetValueTest.msApi1
         val msApi1 = MutableLiveData<MsApi1>()
         msApi1.value = dummyMsApi1
         Mockito.`when`(msApi1Dao.observeMsApi1()).thenReturn(msApi1)

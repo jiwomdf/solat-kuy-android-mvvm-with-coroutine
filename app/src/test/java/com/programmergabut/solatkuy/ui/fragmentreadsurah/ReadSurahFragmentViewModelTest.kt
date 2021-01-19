@@ -6,7 +6,6 @@ import androidx.lifecycle.Observer
 import com.nhaarman.mockitokotlin2.mock
 import com.nhaarman.mockitokotlin2.verify
 import com.programmergabut.solatkuy.CoroutinesTestRule
-import com.programmergabut.solatkuy.DummyArgument
 import com.programmergabut.solatkuy.DummyRetValueTest
 import com.programmergabut.solatkuy.data.FakeQuranRepository
 import com.programmergabut.solatkuy.data.local.localentity.MsFavAyah
@@ -41,9 +40,9 @@ class ReadSurahFragmentViewModelTest{
     @Mock
     private lateinit var fakeQuranRepository: FakeQuranRepository
 
-    private val surahID = DummyArgument.surahID
-    private val msFavAyah = DummyArgument.msFavAyah
-    private val msFavSurah = DummyArgument.msFavSurah
+    private val surahID = DummyRetValueTest.surahID
+    private val msFavAyah = DummyRetValueTest.msFavAyah
+    private val msFavSurah = DummyRetValueTest.msFavSurah
 
     @Before
     fun before(){
@@ -88,7 +87,7 @@ class ReadSurahFragmentViewModelTest{
 
         //given
         val observer = mock<Observer<MsFavSurah?>>()
-        val dummyData = MutableLiveData(DummyRetValueTest.getFavSurahBySurahID(surahID)[0])
+        val dummyData = MutableLiveData(DummyRetValueTest.msFavSurah)
 
         //scenario
         Mockito.`when`(fakeQuranRepository.getFavSurahBySurahID(surahID)).thenReturn(dummyData)

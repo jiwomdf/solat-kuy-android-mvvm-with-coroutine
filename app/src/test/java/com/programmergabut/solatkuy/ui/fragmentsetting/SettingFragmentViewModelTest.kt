@@ -2,7 +2,7 @@ package com.programmergabut.solatkuy.ui.fragmentsetting
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.programmergabut.solatkuy.CoroutinesTestRule
-import com.programmergabut.solatkuy.DummyArgument
+import com.programmergabut.solatkuy.DummyRetValueTest
 import com.programmergabut.solatkuy.data.FakePrayerRepository
 import com.programmergabut.solatkuy.ui.main.fragmentsetting.FragmentSettingViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -31,7 +31,7 @@ class SettingFragmentViewModelTest {
     @Mock
     private lateinit var prayerRepository: FakePrayerRepository
 
-    private val msApi1 = DummyArgument.msApi1
+    private val msApi1 = DummyRetValueTest.msApi1
 
     @Before
     fun setUp() {

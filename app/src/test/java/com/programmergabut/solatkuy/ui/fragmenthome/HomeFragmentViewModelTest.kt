@@ -6,7 +6,6 @@ import androidx.lifecycle.Observer
 import com.nhaarman.mockitokotlin2.mock
 import com.programmergabut.solatkuy.CoroutineTestUtil.Companion.toDeferred
 import com.programmergabut.solatkuy.CoroutinesTestRule
-import com.programmergabut.solatkuy.DummyArgument
 import com.programmergabut.solatkuy.data.local.localentity.NotifiedPrayer
 import com.programmergabut.solatkuy.ui.main.fragmenthome.FragmentMainViewModel
 import com.programmergabut.solatkuy.util.Resource
@@ -46,14 +45,13 @@ class HomeFragmentViewModelTest {
     @Mock
     private lateinit var fakeQuranRepository: FakeQuranRepository
 
-    private val msApi1 = DummyArgument.msApi1
-    private val surahID = DummyArgument.surahID
-    private val mapPrayer = DummyArgument.getMapPrayer()
+    private val msApi1 = DummyRetValueTest.msApi1
+    private val surahID = DummyRetValueTest.surahID
+    private val mapPrayer = DummyRetValueTest.getMapPrayer()
 
     @Before
     fun before(){
         viewModel = FragmentMainViewModel(fakePrayerRepository, fakeQuranRepository)
-
         verify(fakePrayerRepository).observeMsApi1()
     }
 
@@ -106,7 +104,7 @@ class HomeFragmentViewModelTest {
 
         //given
         val observer = mock<Observer<MsSetting>>()
-        val dummyData = MutableLiveData(DummyRetValueTest.getMsSetting())
+        val dummyData = MutableLiveData(DummyRetValueTest.msSetting)
 
         //scenario
         `when`(fakePrayerRepository.observeMsSetting()).thenReturn(dummyData)
