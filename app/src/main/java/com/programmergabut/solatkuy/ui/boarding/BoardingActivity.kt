@@ -104,10 +104,8 @@ class BoardingActivity : BaseActivity<ActivityBoardingBinding, BoardingViewModel
             if(it != null){
                 if(it.isHasOpenApp){
                     gotoIntent(MainActivity::class.java, null, true)
+                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
                 }
-            }
-            else{
-                SolatKuyRoom.populateDatabase(getDatabase())
             }
         })
     }

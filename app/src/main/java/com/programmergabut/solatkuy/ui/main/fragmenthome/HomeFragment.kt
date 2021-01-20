@@ -30,10 +30,10 @@ import com.programmergabut.solatkuy.util.EnumConfig.Companion.ENDED_SURAH
 import com.programmergabut.solatkuy.util.EnumConfig.Companion.STARTED_SURAH
 import com.programmergabut.solatkuy.util.LogConfig.Companion.COROUTINE_TIMER
 import com.programmergabut.solatkuy.util.LogConfig.Companion.ERROR
-import com.programmergabut.solatkuy.util.hardcodedata.DuaData
-import com.programmergabut.solatkuy.util.helper.LocationHelper
-import com.programmergabut.solatkuy.util.helper.PushNotificationHelper
-import com.programmergabut.solatkuy.util.helper.SelectPrayerHelper
+import com.programmergabut.solatkuy.data.hardcodedata.DuaData
+import com.programmergabut.solatkuy.ui.LocationHelper
+import com.programmergabut.solatkuy.ui.PushNotificationHelper
+import com.programmergabut.solatkuy.ui.main.SelectPrayerHelper
 import dagger.hilt.android.AndroidEntryPoint
 import es.dmoral.toasty.Toasty
 import kotlinx.coroutines.*
@@ -223,14 +223,12 @@ class HomeFragment(
             if(api1 == null )
                 return@observe
 
-            /* save temp data */
             bindWidgetLocation(api1)
             updateMonthAndYearMsApi1(api1)
             viewModel.syncNotifiedPrayer(api1)
 
-            /* info layout */
             val city = LocationHelper.getCity(requireContext(), api1.latitude.toDouble(), api1.longitude.toDouble())
-            binding.includeInfo.tvCity.text = city ?: EnumConfig.CITY_NOT_FOUND_STR
+            binding.includeInfo.tvCity.text = city ?: EnumConfig.CITY_NOT_FOUND
             viewModel.fetchPrayerApi(api1)
         })
 
@@ -244,7 +242,7 @@ class HomeFragment(
                 dialogBinding.rbgQuotesDataSource.check(R.id.rb_fromFavQuote)
                 viewModel.getMsFavAyah()
                 viewModel.readSurahEn.removeObservers(this)
-            } else{
+            } else {
                 dialogBinding.rbgQuotesDataSource.check(R.id.rb_fromApi)
                 viewModel.fetchReadSurahEn((STARTED_SURAH..ENDED_SURAH).random())
                 viewModel.favAyah.removeObservers(this)
@@ -263,24 +261,28 @@ class HomeFragment(
         when(status){
             EnumStatus.SUCCESS -> {/*NO-OP*/}
             EnumStatus.LOADING -> {
-                binding.includeInfo.tvImsakDate.text = getString(R.string.loading)
-                binding.includeInfo.tvImsakTime.text = getString(R.string.loading)
-                binding.includeInfo.tvGregorianDate.text = getString(R.string.loading)
-                binding.includeInfo.tvHijriDate.text = getString(R.string.loading)
-                binding.includeInfo.tvGregorianMonth.text = getString(R.string.loading)
-                binding.includeInfo.tvHijriMonth.text = getString(R.string.loading)
-                binding.includeInfo.tvGregorianDay.text = getString(R.string.loading)
-                binding.includeInfo.tvHijriDay.text = getString(R.string.loading)
+                binding.includeInfo.apply {
+                    tvImsakDate.text = getString(R.string.loading)
+                    tvImsakTime.text = getString(R.string.loading)
+                    tvGregorianDate.text = getString(R.string.loading)
+                    tvHijriDate.text = getString(R.string.loading)
+                    tvGregorianMonth.text = getString(R.string.loading)
+                    tvHijriMonth.text = getString(R.string.loading)
+                    tvGregorianDay.text = getString(R.string.loading)
+                    tvHijriDay.text = getString(R.string.loading)
+                }
             }
             EnumStatus.ERROR ->{
-                binding.includeInfo.tvImsakDate.text = getString(R.string.fetch_failed)
-                binding.includeInfo.tvImsakTime.text = getString(R.string.fetch_failed_na)
-                binding.includeInfo.tvGregorianDate.text = getString(R.string.fetch_failed_na)
-                binding.includeInfo.tvHijriDate.text = getString(R.string.fetch_failed_na)
-                binding.includeInfo.tvGregorianMonth.text = getString(R.string.fetch_failed_na)
-                binding.includeInfo.tvHijriMonth.text = getString(R.string.fetch_failed_na)
-                binding.includeInfo.tvGregorianDay.text = getString(R.string.fetch_failed_na)
-                binding.includeInfo.tvHijriDay.text = getString(R.string.fetch_failed_na)
+                binding.includeInfo.apply {
+                    tvImsakDate.text = getString(R.string.fetch_failed)
+                    tvImsakTime.text = getString(R.string.fetch_failed_na)
+                    tvGregorianDate.text = getString(R.string.fetch_failed_na)
+                    tvHijriDate.text = getString(R.string.fetch_failed_na)
+                    tvGregorianMonth.text = getString(R.string.fetch_failed_na)
+                    tvHijriMonth.text = getString(R.string.fetch_failed_na)
+                    tvGregorianDay.text = getString(R.string.fetch_failed_na)
+                    tvHijriDay.text = getString(R.string.fetch_failed_na)
+                }
             }
         }
     }
@@ -377,25 +379,29 @@ class HomeFragment(
         mCityName = LocationHelper.getCity(requireContext(), it.latitude.toDouble(), it.longitude.toDouble())
         binding.tvViewLatitude.text = it.latitude + " °N"
         binding.tvViewLongitude.text = it.longitude + " °W"
-        binding.tvViewCity.text = mCityName ?: EnumConfig.CITY_NOT_FOUND_STR
+        binding.tvViewCity.text = mCityName ?: EnumConfig.CITY_NOT_FOUND
     }
 
     private fun bindPrayerText(apiData: MsTimings?) {
         if(apiData == null){
-            binding.includePrayerTime.tvFajrTime.text = getString(R.string.loading)
-            binding.includePrayerTime.tvDhuhrTime.text = getString(R.string.loading)
-            binding.includePrayerTime.tvAsrTime.text = getString(R.string.loading)
-            binding.includePrayerTime.tvMaghribTime.text = getString(R.string.loading)
-            binding.includePrayerTime.tvIshaTime.text = getString(R.string.loading)
-            binding.includePrayerTime.tvDateChange.text = getString(R.string.loading)
+            binding.includePrayerTime.apply {
+                tvFajrTime.text = getString(R.string.loading)
+                tvDhuhrTime.text = getString(R.string.loading)
+                tvAsrTime.text = getString(R.string.loading)
+                tvMaghribTime.text = getString(R.string.loading)
+                tvIshaTime.text = getString(R.string.loading)
+                tvDateChange.text = getString(R.string.loading)
+            }
         }
         else{
-            binding.includePrayerTime.tvFajrTime.text = apiData.fajr
-            binding.includePrayerTime.tvDhuhrTime.text = apiData.dhuhr
-            binding.includePrayerTime.tvAsrTime.text = apiData.asr
-            binding.includePrayerTime.tvMaghribTime.text = apiData.maghrib
-            binding.includePrayerTime.tvIshaTime.text = apiData.isha
-            binding.includePrayerTime.tvDateChange.text = "${apiData.month} ${apiData.day} "
+            binding.includePrayerTime.apply {
+                tvFajrTime.text = apiData.fajr
+                tvDhuhrTime.text = apiData.dhuhr
+                tvAsrTime.text = apiData.asr
+                tvMaghribTime.text = apiData.maghrib
+                tvIshaTime.text = apiData.isha
+                tvDateChange.text = "${apiData.month} ${apiData.day} "
+            }
         }
     }
 
@@ -476,8 +482,7 @@ class HomeFragment(
             val ayah = data.ayahEn + " - QS " + data.surahName + " Ayah " + data.ayahID
             binding.includeQuranQuote.tvQuranAyahQuote.text = if(ayah.length > 100) ayah.substring(0, 100) + "..." else ayah
             binding.includeQuranQuote.tvQuranAyahQuoteClick.text = ayah
-        }
-        else{
+        } else {
             binding.includeQuranQuote.tvQuranAyahQuote.text = getString(R.string.youHaventFavAnyAyah)
             binding.includeQuranQuote.tvQuranAyahQuoteClick.text = getString(R.string.youHaventFavAnyAyah)
         }

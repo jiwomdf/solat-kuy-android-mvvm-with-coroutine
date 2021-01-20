@@ -8,7 +8,7 @@
         android:id="@+id/cc_allsurah"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:background="@color/dark_700"
+        android:background="@color/dark_200"
         android:orientation="vertical">
 
         <TextView
@@ -62,7 +62,7 @@
         <View
             android:layout_width="match_parent"
             android:layout_height="1dp"
-            android:background="@color/dark_200"
+            android:background="@color/dark_700"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintTop_toTopOf="parent" />

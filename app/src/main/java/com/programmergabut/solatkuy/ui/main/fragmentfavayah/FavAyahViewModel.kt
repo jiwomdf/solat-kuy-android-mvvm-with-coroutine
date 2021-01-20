@@ -8,7 +8,7 @@ import kotlinx.coroutines.launch
 
 class FavAyahViewModel @ViewModelInject constructor(val quranRepository: QuranRepository): ViewModel() {
 
-    val favAyah: LiveData<List<MsFavAyah>> = quranRepository.getListFavAyah()
+    val favAyah: LiveData<List<MsFavAyah>> = quranRepository.observeListFavAyah()
 
     fun deleteFavAyah(msFavAyah: MsFavAyah) = viewModelScope.launch {
         quranRepository.deleteFavAyah(msFavAyah)

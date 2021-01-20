@@ -48,9 +48,9 @@ class EnumConfig {
         const val AWAIT_VIBRATE_MS = 800L
 
         /* City not found */
-        const val CITY_NOT_FOUND_STR = "City not found"
+        const val CITY_NOT_FOUND = "City not found"
 
         /* Dua after adhan*/
-        const val DUA_AFTER_ADHAN_STR = "Tap to see the dua after adhan \uD83D\uDE4F"
+        const val DUA_AFTER_ADHAN = "Tap to see the dua after adhan \uD83D\uDE4F"
     }
 }

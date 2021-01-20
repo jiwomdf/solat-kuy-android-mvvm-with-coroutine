@@ -99,7 +99,7 @@ class ReadSurahViewModel @ViewModelInject constructor(val quranRepository: Quran
             }
             else{
                 val fetchedArSurah = selectedSurahAr.value?.data?.data?.ayahs!!
-                local.forEach { ayah ->
+                local?.forEach { ayah ->
                     fetchedArSurah.forEach out@{ remoteAyah ->
                         if (remoteAyah.numberInSurah == ayah.ayahID && selectedSurahId == ayah.surahID) {
                             remoteAyah.isFav = true
@@ -120,7 +120,7 @@ class ReadSurahViewModel @ViewModelInject constructor(val quranRepository: Quran
 
     private var ayahID = MutableLiveData<Int>()
     val msFavSurah: LiveData<MsFavSurah?> = Transformations.switchMap(ayahID) { ayahID ->
-        quranRepository.getFavSurahBySurahID(ayahID)
+        quranRepository.observeFavSurahBySurahID(ayahID)
     }
     fun getFavSurahBySurahID(ayahID: Int){
         this.ayahID.value = ayahID

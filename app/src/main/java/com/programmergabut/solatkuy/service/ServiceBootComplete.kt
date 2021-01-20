@@ -7,11 +7,12 @@ import android.util.Log
 import com.programmergabut.solatkuy.data.local.SolatKuyRoom
 import com.programmergabut.solatkuy.util.LogConfig.Companion.ERROR
 import com.programmergabut.solatkuy.util.LogConfig.Companion.SERVICE_BOOT_COMPLETE
-import com.programmergabut.solatkuy.util.helper.PushNotificationHelper
+import com.programmergabut.solatkuy.ui.PushNotificationHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
 import java.lang.Exception
+import java.lang.NullPointerException
 
 /*
  * Created by Katili Jiwo Adi Wiyono on 18/04/20.
@@ -25,7 +26,11 @@ class ServiceBootComplete: Service() {
         CoroutineScope(Dispatchers.IO).launch {
             try{
                 val data = db.notifiedPrayerDao().getListNotifiedPrayer()
-                PushNotificationHelper(this@ServiceBootComplete, data.toMutableList(), "-")
+                if(data != null){
+                    PushNotificationHelper(this@ServiceBootComplete, data.toMutableList(), "-")
+                } else {
+                    throw NullPointerException("ServiceBootComplete onStartCommand data != null")
+                }
             }
             catch(ex: Exception){
                 Log.d(ERROR, ex.message.toString())

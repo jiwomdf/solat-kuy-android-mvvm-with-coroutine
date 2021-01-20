@@ -175,8 +175,8 @@ class ReadSurahFragment(
         } else {
             binding.tbReadSurah.setTitleTextColor(ContextCompat.getColor(requireContext(), R.color.white))
             binding.tbReadSurah.setSubtitleTextColor(ContextCompat.getColor(requireContext(), R.color.white))
-            binding.tbReadSurah.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.dark_700))
-            binding.clSurah.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.dark_200))
+            binding.tbReadSurah.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.dark_200))
+            binding.clSurah.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.dark_700))
         }
     }
 

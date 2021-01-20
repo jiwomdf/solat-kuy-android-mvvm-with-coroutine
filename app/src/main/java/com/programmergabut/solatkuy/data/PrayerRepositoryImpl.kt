@@ -32,7 +32,7 @@ class PrayerRepositoryImpl @Inject constructor(
     override suspend fun updatePrayerIsNotified(prayerName: String, isNotified: Boolean) =
         notifiedPrayerDao.updatePrayerIsNotified(prayerName, isNotified)
     override fun updatePrayerTime(prayerName: String, prayerTime: String) = notifiedPrayerDao.updatePrayerTime(prayerName, prayerTime)
-    override suspend fun getListNotifiedPrayer() = notifiedPrayerDao.getListNotifiedPrayer()
+    override suspend fun getListNotifiedPrayer(): List<NotifiedPrayer>? = notifiedPrayerDao.getListNotifiedPrayer()
 
     /* MsApi1 */
     override fun observeMsApi1(): LiveData<MsApi1> = msApi1Dao.observeMsApi1()

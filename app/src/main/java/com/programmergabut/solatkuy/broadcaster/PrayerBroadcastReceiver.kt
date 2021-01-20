@@ -12,8 +12,8 @@ import com.programmergabut.solatkuy.data.local.localentity.NotifiedPrayer
 import com.programmergabut.solatkuy.ui.dua.DuaActivity
 import com.programmergabut.solatkuy.util.EnumConfig
 import com.programmergabut.solatkuy.util.LogConfig.Companion.ERROR
-import com.programmergabut.solatkuy.util.helper.NotificationHelper
-import com.programmergabut.solatkuy.util.hardcodedata.DuaData
+import com.programmergabut.solatkuy.ui.NotificationHelper
+import com.programmergabut.solatkuy.data.hardcodedata.DuaData
 import java.util.*
 
 /*
@@ -133,7 +133,7 @@ class PrayerBroadcastReceiver: BroadcastReceiver() {
 
         for(i in 0 until listPrayerID.count()){
             val isNotified: Boolean = listPrayerIsNotified[i] == 1
-            listData.add(NotifiedPrayer(listPrayerID[i], listPrayerName.get(i)!!, isNotified, listPrayerTime.get(i)!!))
+            listData.add(NotifiedPrayer(listPrayerID[i], listPrayerName[i]!!, isNotified, listPrayerTime[i]!!))
         }
         return listData
     }

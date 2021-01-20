@@ -5,7 +5,7 @@
     xmlns:tools="http://schemas.android.com/tools">
 
     <androidx.constraintlayout.widget.ConstraintLayout
-        android:background="@color/dark_200"
+        android:background="@color/dark_700"
         android:layout_margin="@dimen/medium_margin"
         android:layout_width="match_parent"
         android:layout_height="wrap_content">

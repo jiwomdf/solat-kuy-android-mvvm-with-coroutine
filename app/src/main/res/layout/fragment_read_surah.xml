@@ -20,7 +20,7 @@
                 android:id="@+id/tb_readSurah"
                 android:layout_width="match_parent"
                 android:layout_height="?attr/actionBarSize"
-                android:background="@color/dark_700"
+                android:background="@color/dark_200"
                 app:titleTextColor="@color/white"
                 app:subtitleTextColor="@color/white"
                 app:layout_scrollFlags="scroll|enterAlways" />
@@ -60,7 +60,7 @@
                 android:text="@string/please_wait_for_a_while"
                 android:textStyle="bold"
                 android:textSize="@dimen/large_text_size"
-                android:textColor="@color/dark_200"
+                android:textColor="@color/dark_700"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintBottom_toBottomOf="parent"

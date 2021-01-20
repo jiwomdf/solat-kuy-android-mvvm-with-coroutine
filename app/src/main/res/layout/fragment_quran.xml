@@ -102,7 +102,7 @@
             android:id="@+id/cv_quran_content"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            app:cardBackgroundColor="@color/dark_700"
+            app:cardBackgroundColor="@color/dark_200"
             app:layout_constraintTop_toBottomOf="@id/rv_stared_ayah"
             app:layout_constraintStart_toStartOf="parent"
             app:layout_constraintEnd_toEndOf="parent"

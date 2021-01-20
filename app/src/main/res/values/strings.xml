@@ -42,7 +42,7 @@
     <string name="compass_art">Compass Art:</string>
     <string name="qibla_degree">Qibla degrees:</string>
     <string name="compass_accuracy">Compass accuracy:</string>
-    <string name="please_tilt_your_phone_until_the_image_is_balanced">Please calibrate your phone compass util the compass accuracy is high</string>
+    <string name="please_tilt_your_phone_until_the_image_is_balanced">Please calibrate your phone compass until the compass accuracy is high</string>
     <string name="please_do_this_move_before_using_the_compass_to_calibrate_the_compass">Please do this move before using the compass, in order to calibrate the compass</string>
     <string name="unreliable">Unreliable</string>
     <string name="lowAccuracy">Low Accuracy</string>
@@ -124,5 +124,6 @@
     <string name="api_alquran_cloud">https://api.alquran.cloud</string>
     <string name="solat_kuy">Solat Kuy</string>
     <string name="oke">Oke</string>
+    <string name="solat_kuy_exclamation">Solat Kuy!</string>
 
 </resources>

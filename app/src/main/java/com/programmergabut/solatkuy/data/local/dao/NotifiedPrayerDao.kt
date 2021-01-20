@@ -16,7 +16,7 @@ interface NotifiedPrayerDao {
     fun observeListNotifiedPrayer(): LiveData<List<NotifiedPrayer>>
 
     @Query("select * from notified_prayer order by prayerID asc")
-    suspend fun getListNotifiedPrayer(): List<NotifiedPrayer>
+    suspend fun getListNotifiedPrayer(): List<NotifiedPrayer>?
 
     @Query("delete from notified_prayer")
     suspend fun deleteAll()

@@ -39,7 +39,7 @@ class FragmentMainViewModel @ViewModelInject constructor(
         if (!isFirstLoad) {
             AbsentLiveData.create()
         } else {
-            quranRepository.getListFavAyah()
+            quranRepository.observeListFavAyah()
         }
     }
     fun getMsFavAyah(value: Boolean = true) {
@@ -54,20 +54,24 @@ class FragmentMainViewModel @ViewModelInject constructor(
         try {
             val response = prayerRepository.fetchPrayerApi(msApi1).await()
             val result = prayerRepository.getListNotifiedPrayer()
-            if(response.statusResponse == "1" && response.data.isNotEmpty()){
+            if(response.statusResponse == "1" && response.data.isNotEmpty() && !result.isNullOrEmpty()){
                 val timings = getTodayTimings(response.data)
                 if(timings != null){
                     val prayers = createPrayerTime(timings)
-                    prayers.forEach { prayer -> prayerRepository.updatePrayerTime(prayer.key, prayer.value) }
+                    prayers.forEach { prayer ->
+                        prayerRepository.updatePrayerTime(prayer.key, prayer.value)
+                    }
                     _notifiedPrayer.postValue(Resource.success(result, APPLICATION_ONLINE))
-                }
-                else{
+                } else {
                     _notifiedPrayer.postValue(Resource.error(result, TODAY_PRAYER_DATA_IS_NOT_FOUND))
                     return@launch
                 }
             }
             else{
-                _notifiedPrayer.postValue(Resource.error(result, APPLICATION_OFFLINE))
+                if(result.isNullOrEmpty())
+                    _notifiedPrayer.postValue(Resource.error(result))
+                else
+                    _notifiedPrayer.postValue(Resource.error(result, APPLICATION_OFFLINE))
                 return@launch
             }
         }
@@ -120,8 +124,7 @@ class FragmentMainViewModel @ViewModelInject constructor(
                 val response  = prayerRepository.fetchPrayerApi(msApi1).await()
                 if(response.statusResponse == "1"){
                     _prayer.postValue(Resource.success(response))
-                }
-                else{
+                } else {
                     _prayer.postValue(Resource.error(null, response.messageResponse))
                 }
             }

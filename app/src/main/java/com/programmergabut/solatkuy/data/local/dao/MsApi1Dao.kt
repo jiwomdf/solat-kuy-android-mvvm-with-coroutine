@@ -18,6 +18,9 @@ interface MsApi1Dao {
     @Query("select * from MsApi1")
     fun observeMsApi1(): LiveData<MsApi1>
 
+    @Query("select * from MsApi1")
+    fun getMsApi1(): MsApi1?
+
     @Query("delete from MsApi1")
     suspend fun deleteAll()
 

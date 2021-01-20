@@ -84,7 +84,7 @@ class ReadSurahFragmentViewModelTest{
         val dummyData = MutableLiveData(DummyRetValueTest.msFavSurah)
 
         //scenario
-        Mockito.`when`(fakeQuranRepository.getFavSurahBySurahID(surahID)).thenReturn(dummyData)
+        Mockito.`when`(fakeQuranRepository.observeFavSurahBySurahID(surahID)).thenReturn(dummyData)
 
         //start observer
         viewModel.msFavSurah.observeForever(observer)
@@ -94,7 +94,7 @@ class ReadSurahFragmentViewModelTest{
         val result = viewModel.msFavSurah.value
 
         //--verify
-        Mockito.verify(fakeQuranRepository).getFavSurahBySurahID(surahID)
+        Mockito.verify(fakeQuranRepository).observeFavSurahBySurahID(surahID)
         Assert.assertEquals(dummyData.value, result)
         Mockito.verify(observer).onChanged(dummyData.value)
 

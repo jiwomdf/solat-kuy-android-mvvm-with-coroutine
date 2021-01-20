@@ -30,7 +30,7 @@ import com.programmergabut.solatkuy.databinding.LayoutBottomsheetBygpsBinding
 import com.programmergabut.solatkuy.databinding.LayoutBottomsheetBylatitudelongitudeBinding
 import com.programmergabut.solatkuy.util.EnumConfig
 import com.programmergabut.solatkuy.util.EnumStatus
-import com.programmergabut.solatkuy.util.helper.LocationHelper
+import com.programmergabut.solatkuy.ui.LocationHelper
 import dagger.hilt.android.AndroidEntryPoint
 import es.dmoral.toasty.Toasty
 import org.joda.time.LocalDate
@@ -91,7 +91,7 @@ class SettingFragment(viewModelTest: FragmentSettingViewModel? = null) : BaseFra
                 val city = LocationHelper.getCity(requireContext(), retVal.latitude.toDouble(), retVal.longitude.toDouble())
                 binding.tvViewLatitude.text = retVal.latitude + " °S"
                 binding.tvViewLongitude.text = retVal.longitude + " °E"
-                binding.tvViewCity.text = city ?: EnumConfig.CITY_NOT_FOUND_STR
+                binding.tvViewCity.text = city ?: EnumConfig.CITY_NOT_FOUND
             }
         })
     }

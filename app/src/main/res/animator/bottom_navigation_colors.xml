@@ -7,5 +7,5 @@
         android:color="@color/dark_500" />
     <item
         android:state_checked="false"
-        android:color="@color/dark_700" />
+        android:color="@color/dark_200" />
 </selector>

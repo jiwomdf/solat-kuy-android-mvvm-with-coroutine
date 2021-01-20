@@ -110,7 +110,7 @@ class FakePrayerRepositoryAndroidTest: PrayerRepository {
     override suspend fun syncNotifiedPrayerTesting(): List<NotifiedPrayer> {
         return DummyRetValueAndroidTest.getNotifiedPrayer()
     }
-    override suspend fun getListNotifiedPrayer(): List<NotifiedPrayer> {
+    override suspend fun getListNotifiedPrayer(): List<NotifiedPrayer>? {
         return observableNotifiedPrayer.value!!
     }
 }

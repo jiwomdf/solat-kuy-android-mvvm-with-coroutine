@@ -20,7 +20,7 @@
             android:id="@+id/bottom_navigation"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
-            android:background="@color/dark_700"
+            android:background="@color/dark_200"
             app:elevation="@dimen/elevation"
             app:itemIconTint="@drawable/style_bottom_nav_selector"
             app:labelVisibilityMode="unlabeled"

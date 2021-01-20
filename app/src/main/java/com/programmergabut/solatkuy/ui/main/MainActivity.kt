@@ -1,6 +1,7 @@
 package com.programmergabut.solatkuy.ui.main
 
 import android.os.Bundle
+import android.util.Log
 import android.view.View
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
@@ -9,6 +10,8 @@ import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.base.BaseActivity
 import com.programmergabut.solatkuy.databinding.ActivityMainBinding
 import com.programmergabut.solatkuy.ui.SolatKuyFragmentFactory
+import com.programmergabut.solatkuy.util.LogConfig
+import com.programmergabut.solatkuy.util.LogConfig.Companion.ERROR
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -55,7 +58,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>(
             binding.bottomNavigation.setOnNavigationItemReselectedListener {/* NO-OP */ }
         }
         catch (ex: Exception){
-            print(ex.message)
+            Log.d(ERROR, ex.message.toString())
         }
     }
 

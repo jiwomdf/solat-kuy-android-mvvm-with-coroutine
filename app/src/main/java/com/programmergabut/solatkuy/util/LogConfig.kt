@@ -6,6 +6,7 @@ class LogConfig {
         const val COROUTINE_TIMER = "<CoroutineTimer>"
         const val ERROR = "<Error>"
         const val SERVICE_BOOT_COMPLETE = "<ServiceBootComplete>"
+        const val SERVICE_MONTH_YEAR = "<ServiceMonthYear>"
     }
 
 }

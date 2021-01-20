@@ -1,4 +1,4 @@
-package com.programmergabut.solatkuy.util.helper
+package com.programmergabut.solatkuy.ui
 
 import android.app.Notification
 import android.app.NotificationChannel
@@ -41,7 +41,6 @@ class NotificationHelper(context: Context): ContextWrapper(context) {
             channelNotificationPrayer.enableVibration(true)
             channelNotificationPrayer.lightColor = R.color.purple_500
             channelNotificationPrayer.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
-
             getManager()?.createNotificationChannel(channelNotificationPrayer)
         }
     }
@@ -49,31 +48,14 @@ class NotificationHelper(context: Context): ContextWrapper(context) {
     fun getManager(): NotificationManager? {
         if(mManager == null)
             mManager = getSystemService(Context.NOTIFICATION_SERVICE) as NotificationManager?
-
         return mManager
     }
 
-    fun getPrayerReminderNC(/* pID: Int, */ pTime: String, pCity: String, pName: String,
-        /* listPrayerBundle: Bundle, */ intent: PendingIntent
-    ): NotificationCompat.Builder {
-
-        val message = "now is $pTime in $pCity let's pray $pName"
-
-        /*
-        * Deprecated, 4 June 2020
-        * because the changes of the notification mechanism
-        * first fire all the data then cancel all alarm manager when the notification come, then fire it all again
-        * also remove the more time feature
-        *
-        val moreTimeIntent = Intent(this, MoreTimeBroadcastReceiver::class.java)
-        moreTimeIntent.putExtra("moreTime_prayerID", pID)
-        moreTimeIntent.putExtra("moreTime_prayerTime", pTime)
-        moreTimeIntent.putExtra("moreTime_prayerCity", pCity)
-        moreTimeIntent.putExtra("moreTime_prayerName", pName)
-        moreTimeIntent.putExtra("moreTime_listPrayerBundle", listPrayerBundle)
-
-        val actionIntent = PendingIntent.getBroadcast(this, 0, moreTimeIntent,
-            PendingIntent.FLAG_UPDATE_CURRENT) */
+    fun getPrayerReminderNC(pTime: String, pCity: String, pName: String, intent: PendingIntent): NotificationCompat.Builder {
+        val message = if(pCity.isEmpty())
+            "now is $pTime in - let's pray $pName"
+        else
+            "now is $pTime in $pCity let's pray $pName"
 
         val bitmap = BitmapFactory.decodeResource(
             resources, when (pName) {
@@ -90,15 +72,8 @@ class NotificationHelper(context: Context): ContextWrapper(context) {
         if(vibrator.hasVibrator()){
             val vibrationPattern = longArrayOf(0, VIBRATE_MS, AWAIT_VIBRATE_MS, VIBRATE_MS, AWAIT_VIBRATE_MS, VIBRATE_MS, AWAIT_VIBRATE_MS, VIBRATE_MS)
             val mAmplitudes = intArrayOf(0, 225, 0, 225, 0, 225, 0, 225)
-
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-                vibrator.vibrate(
-                    VibrationEffect.createWaveform(
-                        vibrationPattern,
-                        mAmplitudes,
-                        -1
-                    )
-                )
+                vibrator.vibrate(VibrationEffect.createWaveform(vibrationPattern, mAmplitudes, -1))
             else
                 vibrator.vibrate(vibrationPattern, -1)
         }
@@ -107,11 +82,10 @@ class NotificationHelper(context: Context): ContextWrapper(context) {
             return NotificationCompat.Builder(applicationContext, channelNotificationPrayerID)
                 .setContentTitle(pName)
                 .setContentText(message)
-                .setSubText(EnumConfig.DUA_AFTER_ADHAN_STR)
+                .setSubText(EnumConfig.DUA_AFTER_ADHAN)
                 .setColor(getColor(R.color.dark_500))
                 .setStyle(NotificationCompat.BigTextStyle().bigText(message))
                 .setAutoCancel(true)
-                //.addAction(R.mipmap.ic_launcher, "remind me 10 more minute", actionIntent)
                 .setLargeIcon(bitmap)
                 .setSmallIcon(R.drawable.ic_notifications_active_24dp)
                 .setContentIntent(intent)
@@ -123,7 +97,7 @@ class NotificationHelper(context: Context): ContextWrapper(context) {
             return NotificationCompat.Builder(this, channelNotificationPrayerID)
                 .setContentTitle(pName)
                 .setContentText(message)
-                .setSubText(EnumConfig.DUA_AFTER_ADHAN_STR)
+                .setSubText(EnumConfig.DUA_AFTER_ADHAN)
                 .setVibrate(longArrayOf(500, 500, 500))
                 .setSmallIcon(R.drawable.ic_notifications_active_24dp)
                 .setAutoCancel(true)

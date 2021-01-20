@@ -62,9 +62,9 @@ class QuranRepositoryImplTest {
     @Test
     fun getListFavAyah() = coroutinesTestRule.testDispatcher.runBlockingTest{
         val listMsFavAyah = MutableLiveData(DummyRetValueTest.getListMsFavAyah())
-        `when`(msFavAyahDao.getListFavAyah()).thenReturn(listMsFavAyah)
-        quranRepository.getListFavAyah()
-        verify(msFavAyahDao).getListFavAyah()
+        `when`(msFavAyahDao.observeListFavAyah()).thenReturn(listMsFavAyah)
+        quranRepository.observeListFavAyah()
+        verify(msFavAyahDao).observeListFavAyah()
         assertNotNull(listMsFavAyah)
     }
 

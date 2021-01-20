@@ -16,12 +16,12 @@ class BootCompleteReceiver: BroadcastReceiver() {
     override fun onReceive(context: Context?, intent: Intent?) {
         if(intent?.action == Intent.ACTION_BOOT_COMPLETED) {
             if(context != null) {
-               val serviceIntent = Intent(context, ServiceBootComplete::class.java)
+                val service = Intent(context, ServiceBootComplete::class.java)
                 if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-                    context.startForegroundService(serviceIntent)
+                    context.startForegroundService(service)
                 }
                 else{
-                    context.startService(serviceIntent)
+                    context.startService(service)
                 }
             }
             else{

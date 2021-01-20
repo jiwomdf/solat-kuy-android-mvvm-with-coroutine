@@ -32,7 +32,7 @@ class FakePrayerRepository constructor(
         notifiedPrayerDao.updatePrayerIsNotified(prayerName, isNotified)
     override fun updatePrayerTime(prayerName: String, prayerTime: String) =
         notifiedPrayerDao.updatePrayerTime(prayerName, prayerTime)
-    override suspend fun getListNotifiedPrayer() =
+    override suspend fun getListNotifiedPrayer(): List<NotifiedPrayer>? =
         notifiedPrayerDao.getListNotifiedPrayer()
 
     /* MsApi1 */
