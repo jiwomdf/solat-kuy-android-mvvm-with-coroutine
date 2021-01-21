@@ -34,6 +34,7 @@ import com.programmergabut.solatkuy.data.hardcodedata.DuaData
 import com.programmergabut.solatkuy.ui.LocationHelper
 import com.programmergabut.solatkuy.ui.PushNotificationHelper
 import com.programmergabut.solatkuy.ui.main.SelectPrayerHelper
+import com.programmergabut.solatkuy.util.LogConfig.Companion.DEBUG
 import dagger.hilt.android.AndroidEntryPoint
 import es.dmoral.toasty.Toasty
 import kotlinx.coroutines.*
@@ -155,7 +156,7 @@ class HomeFragment(
         viewModel.notifiedPrayer.observe(viewLifecycleOwner, { retVal ->
             when(retVal.status){
                 EnumStatus.SUCCESS, EnumStatus.ERROR -> {
-                    Log.d(ERROR, retVal.message.toString())
+                    Log.d(DEBUG, retVal.message.toString())
                     if(retVal.data == null){
                         showBottomSheet(isCancelable = false, isFinish = true)
                         return@observe

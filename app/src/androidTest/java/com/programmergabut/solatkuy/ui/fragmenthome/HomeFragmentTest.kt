@@ -9,7 +9,7 @@ import androidx.test.filters.MediumTest
 import com.programmergabut.solatkuy.*
 import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.Data
 import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.PrayerResponse
-import com.programmergabut.solatkuy.ui.EnumConfigAndroidTesting
+import com.programmergabut.solatkuy.EnumConfigAndroidTesting
 import com.programmergabut.solatkuy.ui.SolatKuyFragmentFactoryAndroidTest
 import com.programmergabut.solatkuy.ui.main.fragmenthome.FragmentMainViewModel
 import com.programmergabut.solatkuy.ui.main.fragmenthome.HomeFragment
@@ -46,7 +46,7 @@ class HomeFragmentTest{
     }
 
     @Test
-    fun testWidgetVisibilityAndData(){
+    fun testComponentVisibilityAndData_componentDisplayedWithCorrectValue(){
         var testViewModel: FragmentMainViewModel? = null
         launchFragmentInHiltContainer<HomeFragment>(fragmentFactory = fragmentFactory) {
             testViewModel = viewModel
@@ -65,7 +65,7 @@ class HomeFragmentTest{
     }
 
     @Test
-    fun testVisibilityQuote(){
+    fun testVisibilityQuote_componentDisplayed(){
         var testViewModel: FragmentMainViewModel? = null
         launchFragmentInHiltContainer<HomeFragment>(fragmentFactory = fragmentFactory) {
             testViewModel = viewModel
@@ -77,7 +77,7 @@ class HomeFragmentTest{
 
 
     @Test
-    fun testVisibilityAndDataPrayer(){
+    fun testVisibilityAndDataPrayer_componentDisplayedWithCorrectValue(){
         var testViewModel: FragmentMainViewModel? = null
         launchFragmentInHiltContainer<HomeFragment>(fragmentFactory = fragmentFactory) {
             testViewModel = viewModel
@@ -115,7 +115,7 @@ class HomeFragmentTest{
     }
 
     @Test
-    fun testVisibilityAndDataInfo(){
+    fun testVisibilityAndDataInfo_componentDisplayedWithCorrectValue(){
         var testViewModel: FragmentMainViewModel? = null
         launchFragmentInHiltContainer<HomeFragment>(fragmentFactory = fragmentFactory) {
             testViewModel = viewModel
@@ -159,7 +159,7 @@ class HomeFragmentTest{
     }
 
     @Test
-    fun testClickQuranQuote() {
+    fun testClickQuranQuote_componentVisibilityChangedFollowingTheClickAction() {
         var testViewModel: FragmentMainViewModel? = null
         launchFragmentInHiltContainer<HomeFragment>(fragmentFactory = fragmentFactory) {
             testViewModel = viewModel
@@ -168,13 +168,14 @@ class HomeFragmentTest{
         onView(withId(R.id.tv_quran_ayah_quote_click)).check(matches(isDisplayed()))
         onView(withId(R.id.tv_quran_ayah_quote_click)).perform(click())
         onView(withId(R.id.tv_quran_ayah_quote)).check(matches(isDisplayed()))
+
         onView(withId(R.id.tv_quran_ayah_quote)).check(matches(isDisplayed()))
         onView(withId(R.id.tv_quran_ayah_quote)).perform(click())
         onView(withId(R.id.tv_quran_ayah_quote_click)).check(matches(isDisplayed()))
     }
 
     @Test
-    fun testClickCbPrayer(){
+    fun testClickCbPrayer_allCbPrayerValueIsFalse(){
         var testViewModel: FragmentMainViewModel? = null
         launchFragmentInHiltContainer<HomeFragment>(fragmentFactory = fragmentFactory) {
             testViewModel = viewModel

@@ -53,7 +53,7 @@ class QuranFragmentViewModel @ViewModelInject constructor(private val quranRepos
         }
     }
 
-    fun getSurahBySeach(stringName: String){
+    fun getSurahBySeachString(stringName: String){
         if(!isFetchingAllSurahFinish){
             return
         }
@@ -61,7 +61,8 @@ class QuranFragmentViewModel @ViewModelInject constructor(private val quranRepos
             _allSurah.postValue(Resource.error(null, SAVED_ALL_SURAH_NULL))
             return
         }
-        val newData = savedAllSurah?.filter { surah -> surah.englishNameLowerCase!!.contains(stringName) }
+        val lowerCaseString = if(stringName.isNotEmpty()) stringName.toLowerCase(Locale.ROOT).trim() else ""
+        val newData = savedAllSurah?.filter { surah -> surah.englishNameLowerCase!!.contains(lowerCaseString) }
         _allSurah.postValue(Resource.success(data = newData ?: emptyList()))
     }
 

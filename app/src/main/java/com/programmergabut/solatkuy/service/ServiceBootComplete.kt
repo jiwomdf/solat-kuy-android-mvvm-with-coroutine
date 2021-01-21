@@ -22,9 +22,9 @@ class ServiceBootComplete: Service() {
 
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
-        val db = SolatKuyRoom.getDataBase(this)
         CoroutineScope(Dispatchers.IO).launch {
             try{
+                val db = SolatKuyRoom.getDataBase(this@ServiceBootComplete)
                 val data = db.notifiedPrayerDao().getListNotifiedPrayer()
                 if(data != null){
                     PushNotificationHelper(this@ServiceBootComplete, data.toMutableList(), "-")

@@ -43,23 +43,18 @@ class CompassFragmentViewModelTest {
     }
 
     @Test
-    fun fetchCompassApi() = coroutinesTestRule.testDispatcher.runBlockingTest{
-
-        //given
+    fun `fetchCompassApi, observe compass change`() = coroutinesTestRule.testDispatcher.runBlockingTest{
         val observer = mock<Observer<Resource<CompassResponse>>>()
         val dummyCompass = Resource.success(DummyRetValueTest.fetchCompassApi<CompassFragmentViewModelTest>())
         dummyCompass.data?.statusResponse = "1"
         `when`(prayerRepository.fetchCompass(msApi1)).thenReturn(dummyCompass.data!!.toDeferred())
 
-        //when
         viewModel.fetchCompassApi(msApi1)
         val result = viewModel.compass.value
 
-        //--return value
         Mockito.verify(prayerRepository).fetchCompass(msApi1).toDeferred()
         Assert.assertEquals(dummyCompass, result)
 
-        //--observer
         viewModel.compass.observeForever(observer)
         Mockito.verify(observer).onChanged(dummyCompass)
     }

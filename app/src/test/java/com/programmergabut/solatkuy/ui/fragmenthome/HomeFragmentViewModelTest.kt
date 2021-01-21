@@ -51,91 +51,77 @@ class HomeFragmentViewModelTest {
     }
 
     @Test
-    fun syncNotifiedPrayer() = coroutinesTestRule.testDispatcher.runBlockingTest{
-        //given
+    fun `syncNotifiedPrayer, observe notifiedPrayer`() = coroutinesTestRule.testDispatcher.runBlockingTest{
         val observer = mock<Observer<Resource<List<NotifiedPrayer>>>>()
         val dummyNotifiedPrayer = Resource.success(DummyRetValueTest.fetchPrayerApi<HomeFragmentViewModelTest>())
-        val dummyPrayerResponse = Resource.success(DummyRetValueTest.getNotifiedPrayer())
+        val dummyPrayerResponse = Resource.success(DummyRetValueTest.getNotifiedPrayer(), "Application Online")
         dummyNotifiedPrayer.data?.statusResponse = "1"
         `when`(fakePrayerRepository.fetchPrayerApi(msApi1)).thenReturn(dummyNotifiedPrayer.data!!.toDeferred())
         `when`(fakePrayerRepository.getListNotifiedPrayer()).thenReturn(dummyPrayerResponse.data)
 
-        //when
         viewModel.syncNotifiedPrayer(msApi1)
         val result = viewModel.notifiedPrayer.value
 
-        //--return value
         verify(fakePrayerRepository).fetchPrayerApi(msApi1).toDeferred()
         assertEquals(dummyPrayerResponse, result)
 
-        //--observer
         viewModel.notifiedPrayer.observeForever(observer)
         verify(observer).onChanged(dummyPrayerResponse)
     }
 
     @Test
-    fun fetchReadSurahEn() = coroutinesTestRule.testDispatcher.runBlockingTest{
-        //given
+    fun `fetchReadSurahEn, observe readSurahEn`() = coroutinesTestRule.testDispatcher.runBlockingTest{
         val observer = mock<Observer<Resource<ReadSurahEnResponse>>>()
         val dummyQuranSurah = Resource.success(DummyRetValueTest.surahEnID_1<HomeFragmentViewModelTest>())
         dummyQuranSurah.data?.statusResponse= "1"
         `when`(fakeQuranRepository.fetchReadSurahEn(surahID)).thenReturn(dummyQuranSurah.data!!.toDeferred())
 
-        //when
         viewModel.fetchReadSurahEn(surahID)
         val result = viewModel.readSurahEn.value
 
-        //--return value
         verify(fakeQuranRepository).fetchReadSurahEn(surahID).toDeferred()
         assertEquals(dummyQuranSurah, result)
 
-        //--observer
         viewModel.readSurahEn.observeForever(observer)
         verify(observer).onChanged(dummyQuranSurah)
     }
 
     @Test
-    fun getMsSetting() = coroutinesTestRule.testDispatcher.runBlockingTest {
-        //given
+    fun `getMsSetting, observe msSetting`() = coroutinesTestRule.testDispatcher.runBlockingTest {
         val observer = mock<Observer<MsSetting>>()
         val dummyData = MutableLiveData(DummyRetValueTest.msSetting)
 
-        //scenario
         `when`(fakePrayerRepository.observeMsSetting()).thenReturn(dummyData)
 
-        //start observer
         viewModel.msSetting.observeForever(observer)
 
-        //when
         viewModel.getMsSetting()
         val result = viewModel.msSetting.value
 
-        //--verify
         verify(fakePrayerRepository).observeMsSetting()
         assertEquals(dummyData.value, result)
         verify(observer).onChanged(dummyData.value)
 
-        //end observer
         viewModel.msSetting.removeObserver(observer)
     }
 
 
     @Test
-    fun updateMsApi1() = coroutinesTestRule.testDispatcher.runBlockingTest {
+    fun `updateMsApi1, updateMsApi1() called`() = coroutinesTestRule.testDispatcher.runBlockingTest {
         viewModel.updateMsApi1(msApi1)
-        com.nhaarman.mockitokotlin2.verify(fakePrayerRepository).updateMsApi1(msApi1)
+        verify(fakePrayerRepository).updateMsApi1(msApi1)
     }
 
     @Test
-    fun updatePrayerIsNotified() = coroutinesTestRule.testDispatcher.runBlockingTest {
+    fun `updatePrayerIsNotified, updatePrayerIsNotified() called`() = coroutinesTestRule.testDispatcher.runBlockingTest {
         viewModel.updatePrayerIsNotified(mapPrayer.keys.elementAt(0), true)
-        com.nhaarman.mockitokotlin2.verify(fakePrayerRepository).updatePrayerIsNotified(mapPrayer.keys.elementAt(0), true)
+        verify(fakePrayerRepository).updatePrayerIsNotified(mapPrayer.keys.elementAt(0), true)
     }
 
     @Test
-    fun updateIsUsingDBQuotes() = coroutinesTestRule.testDispatcher.runBlockingTest {
+    fun `updateIsUsingDBQuotes, updateIsUsingDBQuotes() called`() = coroutinesTestRule.testDispatcher.runBlockingTest {
         viewModel.updateIsUsingDBQuotes(true)
-        com.nhaarman.mockitokotlin2.verify(fakePrayerRepository).updateIsUsingDBQuotes(true)
+        verify(fakePrayerRepository).updateIsUsingDBQuotes(true)
     }
 
 }

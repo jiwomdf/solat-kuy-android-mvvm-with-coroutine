@@ -46,8 +46,8 @@ class ReadSurahFragmentViewModelTest{
     }
 
     @Test
-    fun fetchQuranSurah() = coroutinesTestRule.testDispatcher.runBlockingTest{
-        //given
+    fun `fetchReadSurahAr, observe selectedSurahAr`() =
+        coroutinesTestRule.testDispatcher.runBlockingTest{
         val observer = mock<Observer<Resource<ReadSurahArResponse>>>()
 
         val dummyDataAr = DummyRetValueTest.surahArID_1<ReadSurahFragmentViewModelTest>()
@@ -58,93 +58,78 @@ class ReadSurahFragmentViewModelTest{
         dummyDataEn.statusResponse = "1"
         val dummySelectedSurahEn = Resource.success(dummyDataEn)
 
-        //scenario
         Mockito.`when`(fakeQuranRepository.fetchReadSurahAr(surahID)).thenReturn(dummySelectedSurahAr.data!!.toDeferred())
         Mockito.`when`(fakeQuranRepository.fetchReadSurahEn(surahID)).thenReturn(dummySelectedSurahEn.data!!.toDeferred())
-        //start observer
+
         viewModel.selectedSurahAr.observeForever(observer)
 
-        //when
         viewModel.fetchReadSurahAr(surahID)
         val result = viewModel.selectedSurahAr.value
 
-        //--verify
         Mockito.verify(fakeQuranRepository).fetchReadSurahAr(surahID).toDeferred()
         Assert.assertEquals(dummySelectedSurahAr, result)
         Mockito.verify(observer).onChanged(dummySelectedSurahAr)
 
-        //end observer
         viewModel.selectedSurahAr.removeObserver(observer)
     }
 
     @Test
-    fun getFavSurahBySurahID() = coroutinesTestRule.testDispatcher.runBlockingTest{
-        //given
+    fun `getFavSurahBySurahID, observe favSurahBySurahID`() =
+        coroutinesTestRule.testDispatcher.runBlockingTest{
         val observer = mock<Observer<MsFavSurah?>>()
         val dummyData = MutableLiveData(DummyRetValueTest.msFavSurah)
 
-        //scenario
         Mockito.`when`(fakeQuranRepository.observeFavSurahBySurahID(surahID)).thenReturn(dummyData)
 
-        //start observer
-        viewModel.msFavSurah.observeForever(observer)
+        viewModel.favSurahBySurahID.observeForever(observer)
 
-        //when
         viewModel.getFavSurahBySurahID(surahID)
-        val result = viewModel.msFavSurah.value
+        val result = viewModel.favSurahBySurahID.value
 
-        //--verify
         Mockito.verify(fakeQuranRepository).observeFavSurahBySurahID(surahID)
         Assert.assertEquals(dummyData.value, result)
         Mockito.verify(observer).onChanged(dummyData.value)
 
-        //end observer
-        viewModel.msFavSurah.removeObserver(observer)
+        viewModel.favSurahBySurahID.removeObserver(observer)
     }
 
     @Test
-    fun getListFavAyahBySurahID() = coroutinesTestRule.testDispatcher.runBlockingTest{
-        //given
+    fun `getListFavAyahBySurahID, observe msFavAyahBySurahID`() =
+        coroutinesTestRule.testDispatcher.runBlockingTest{
         val observer = mock<Observer<Resource<List<MsFavAyah>>>>()
         val dummyData = DummyRetValueTest.getListMsFavAyah()
-        //viewModel.fetchedArSurah = DummyRetValueTest.surahArID_1<ReadSurahFragmentViewModelTest>()
 
-        //scenario
         Mockito.`when`(fakeQuranRepository.getListFavAyahBySurahID(surahID)).thenReturn(dummyData)
 
-        //start observer
         viewModel.msFavAyahBySurahID.observeForever(observer)
 
-        //when
         viewModel.getListFavAyahBySurahID(surahID, 0, 0 ,0)
         val result = viewModel.msFavAyahBySurahID.value
 
-        //--verify
         Mockito.verify(fakeQuranRepository).getListFavAyahBySurahID(surahID)
         Assert.assertEquals(dummyData, result?.data)
         Mockito.verify(observer).onChanged(Resource.success(dummyData))
 
-        //end observer
         viewModel.msFavAyahBySurahID.removeObserver(observer)
     }
 
     @Test
-    fun insertFavAyah() = coroutinesTestRule.testDispatcher.runBlockingTest {
+    fun `insertFavAyah, insertFavAyah called`() = coroutinesTestRule.testDispatcher.runBlockingTest {
         viewModel.insertFavAyah(msFavAyah)
         verify(fakeQuranRepository).insertFavAyah(msFavAyah)
     }
     @Test
-    fun deleteFavAyah() = coroutinesTestRule.testDispatcher.runBlockingTest {
+    fun `deleteFavAyah, deleteFavAyah called`() = coroutinesTestRule.testDispatcher.runBlockingTest {
         viewModel.deleteFavAyah(msFavAyah)
         verify(fakeQuranRepository).deleteFavAyah(msFavAyah)
     }
     @Test
-    fun insertFavSurah() = coroutinesTestRule.testDispatcher.runBlockingTest {
+    fun `insertFavSurah, insertFavSurah called`() = coroutinesTestRule.testDispatcher.runBlockingTest {
         viewModel.insertFavSurah(msFavSurah)
         verify(fakeQuranRepository).insertFavSurah(msFavSurah)
     }
     @Test
-    fun deleteFavSurah() = coroutinesTestRule.testDispatcher.runBlockingTest {
+    fun `deleteFavSurah, deleteFavSurah called`() = coroutinesTestRule.testDispatcher.runBlockingTest {
         viewModel.deleteFavSurah(msFavSurah)
         verify(fakeQuranRepository).deleteFavSurah(msFavSurah)
     }

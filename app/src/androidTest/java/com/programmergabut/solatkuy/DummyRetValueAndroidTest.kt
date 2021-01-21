@@ -27,42 +27,42 @@ object DummyRetValueAndroidTest {
             NotifiedPrayer(
                 EnumConfig.FAJR,
                 true,
-                "04:29"
+                EnumConfig.FAJR_TIME
             )
         )
         listNotifiedPrayer.add(
             NotifiedPrayer(
                 EnumConfig.DHUHR,
                 true,
-                "11:35"
+                EnumConfig.DHUHR_TIME
             )
         )
         listNotifiedPrayer.add(
             NotifiedPrayer(
                 EnumConfig.ASR,
                 true,
-                "14:56"
+                EnumConfig.ASR_TIME
             )
         )
         listNotifiedPrayer.add(
             NotifiedPrayer(
                 EnumConfig.MAGHRIB,
                 true,
-                "17:26"
+                EnumConfig.MAGHRIB_TIME
             )
         )
         listNotifiedPrayer.add(
             NotifiedPrayer(
                 EnumConfig.ISHA,
                 true,
-                "18:36"
+                EnumConfig.ISHA_TIME
             )
         )
         listNotifiedPrayer.add(
             NotifiedPrayer(
                 EnumConfig.SUNRISE,
                 true,
-                "05:00"
+                EnumConfig.SUNRISE_TIME
             )
         )
 

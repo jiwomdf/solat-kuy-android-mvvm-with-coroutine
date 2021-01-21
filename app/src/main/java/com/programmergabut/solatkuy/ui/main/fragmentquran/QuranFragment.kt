@@ -81,7 +81,7 @@ class QuranFragment(
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
             if(s.isNullOrEmpty() && binding.sJuzz.selectedItemPosition != 0)
                 return
-            viewModel.getSurahBySeach(s.toString())
+            viewModel.getSurahBySeachString(s.toString())
             binding.sJuzz.setSelection(0, true)
         }
     }

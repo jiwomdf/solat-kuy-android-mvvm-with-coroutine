@@ -131,7 +131,7 @@ class ReadSurahFragment(
             }
         })
 
-        viewModel.msFavSurah.observe(this, {
+        viewModel.favSurahBySurahID.observe(this, {
             if (it == null)
                 menu?.findItem(R.id.i_star_surah)?.icon =
                     ContextCompat.getDrawable(requireContext(), R.drawable.ic_star_24)

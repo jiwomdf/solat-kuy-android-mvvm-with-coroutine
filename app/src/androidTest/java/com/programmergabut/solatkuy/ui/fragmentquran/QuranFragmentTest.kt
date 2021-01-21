@@ -22,8 +22,11 @@ import com.programmergabut.solatkuy.ui.main.fragmentquran.QuranFragmentViewModel
 import com.programmergabut.solatkuy.data.remote.remoteentity.quranallsurahJson.Data
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
+import junit.framework.Assert.assertEquals
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import org.hamcrest.CoreMatchers.anything
+import org.hamcrest.core.IsCollectionContaining.hasItems
+import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -104,40 +107,37 @@ class QuranFragmentTest{
 
         onView(withId(R.id.s_juzz)).perform(click())
         onData(anything()).atPosition(1).perform(click())
+        Assert.assertEquals(testViewModel?.allSurah?.value?.data?.size, 2)
 
         onView(withId(R.id.s_juzz)).perform(click())
         onData(anything()).atPosition(15).perform(click())
+        Assert.assertEquals(testViewModel?.allSurah?.value?.data?.size, 2)
 
         onView(withId(R.id.s_juzz)).perform(click())
         onData(anything()).atPosition(30).perform(click())
+        Assert.assertEquals(testViewModel?.allSurah?.value?.data?.size, 37)
     }
 
     @Test
-    fun testSearchSurah(){
+    fun testSearchSurah_recyclerViewChangeAndDataIsSameWithSearchString(){
         var testViewModel: QuranFragmentViewModel? = null
         launchFragmentInHiltContainer<QuranFragment>(fragmentFactory = fragmentFactory) {
             testViewModel = viewModel
         }
 
-        onView(withId(R.id.et_search)).perform(replaceText("Al Faathia"))
-        onView(withId(R.id.et_search)).check(matches(withText("Al Faathia")))
-        testViewModel?.allSurah?.value?.data?.contains(
-            Data("Al-Faatiha","al-faatiha", "The Opening",
-                "سُورَةُ ٱلْفَاتِحَة", 1, 7, "Meccan")
-        )
+        onView(withId(R.id.et_search)).perform(replaceText("Al Faatiha"))
+        onView(withId(R.id.et_search)).check(matches(withText("Al Faatiha")))
+        assertEquals(testViewModel?.allSurah?.value?.data?.size, 1)
+        assertEquals(testViewModel?.allSurah?.value?.data!![0].englishName, "Al-Faatiha")
 
-        onView(withId(R.id.et_search)).perform(replaceText("Al Baq"))
-        onView(withId(R.id.et_search)).check(matches(withText("Al Baq")))
-        testViewModel?.allSurah?.value?.data?.contains(
-            Data("Al-Baqara","al-baqara", "The Cow",
-                "سورة البقرة", 2, 286, "Medinan")
-        )
+        onView(withId(R.id.et_search)).perform(replaceText("Al Baqara"))
+        onView(withId(R.id.et_search)).check(matches(withText("Al Baqara")))
+        assertEquals(testViewModel?.allSurah?.value?.data?.size, 1)
+        assertEquals(testViewModel?.allSurah?.value?.data!![0].englishName, "Al-Baqara")
 
-        onView(withId(R.id.et_search)).perform(replaceText("An Nas"))
-        onView(withId(R.id.et_search)).check(matches(withText("An Nas")))
-        testViewModel?.allSurah?.value?.data?.contains(
-            Data("An-Naas","an-naas", "The Cow",
-                "سورة الناس", 114, 6, "Meccan")
-        )
+        onView(withId(R.id.et_search)).perform(replaceText("An Naas"))
+        onView(withId(R.id.et_search)).check(matches(withText("An Naas")))
+        assertEquals(testViewModel?.allSurah?.value?.data?.size, 1)
+        assertEquals(testViewModel?.allSurah?.value?.data!![0].englishName, "An-Naas")
     }
 }

@@ -56,7 +56,7 @@ class ReadSurahFragmentTest {
     }
 
     @Test
-    fun testVisibilityAndData(){
+    fun testVisibilityAndData_componentDisplayedWithCorrectValue(){
         var testViewModel: ReadSurahViewModel? = null
         val initData = DummyRetValueAndroidTest.fetchAllSurah<ReadSurahFragmentTest>().data.last()
         val arg = Bundle()
@@ -80,7 +80,7 @@ class ReadSurahFragmentTest {
     }
 
     @Test
-    fun testScrollToTheLastAyah(){
+    fun testScrollToTheLastAyah_successfullyScrollToLastAyah(){
         var testViewModel: ReadSurahViewModel? = null
         val initData = DummyRetValueAndroidTest.fetchAllSurah<ReadSurahFragmentTest>().data.last()
         val arg = Bundle()
@@ -106,7 +106,7 @@ class ReadSurahFragmentTest {
     }
 
     @Test
-    fun testOpenFirstSurah_thenClickFavorite_assertMsFavSurahHasChange(){
+    fun testOpenFirstSurahThenClickFavorite_favSurahHasSaved(){
         var testViewModel: ReadSurahViewModel? = null
         val initData = DummyRetValueAndroidTest.fetchAllSurah<ReadSurahFragmentTest>().data.last()
         val arg = Bundle()
@@ -123,10 +123,12 @@ class ReadSurahFragmentTest {
 
         onView(withId(R.id.i_star_surah)).check(matches(isDisplayed()))
         onView(withId(R.id.i_star_surah)).perform(click())
+        assertEquals(testViewModel?.favSurahBySurahID?.value?.surahID,  initData.number)
+        assertEquals(testViewModel?.favSurahBySurahID?.value?.surahName,  initData.englishName)
     }
 
     @Test
-    fun testOpenLastSurah_thanSwipeLeftFirstAyah(){
+    fun testOpenLastSurahThanSwipeLeftFirstAyah(){
         var testViewModel: ReadSurahViewModel? = null
         val initData = DummyRetValueAndroidTest.fetchAllSurah<ReadSurahFragmentTest>().data.last()
         val arg = Bundle()
@@ -149,7 +151,7 @@ class ReadSurahFragmentTest {
     }
 
     @Test
-    fun testLikeAllAnNaasAyah(){
+    fun testLikeAllAnNaasAyah_allAnNaasAyahLiked(){
         var testViewModel: ReadSurahViewModel? = null
         val initData = DummyRetValueAndroidTest.fetchAllSurah<ReadSurahFragmentTest>().data.last()
         val arg = Bundle()

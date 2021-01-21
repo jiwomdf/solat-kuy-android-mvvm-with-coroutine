@@ -118,12 +118,12 @@ class ReadSurahViewModel @ViewModelInject constructor(val quranRepository: Quran
         }
     }
 
-    private var ayahID = MutableLiveData<Int>()
-    val msFavSurah: LiveData<MsFavSurah?> = Transformations.switchMap(ayahID) { ayahID ->
+    private var surahID = MutableLiveData<Int>()
+    val favSurahBySurahID: LiveData<MsFavSurah?> = Transformations.switchMap(surahID) { ayahID ->
         quranRepository.observeFavSurahBySurahID(ayahID)
     }
-    fun getFavSurahBySurahID(ayahID: Int){
-        this.ayahID.value = ayahID
+    fun getFavSurahBySurahID(surahID: Int){
+        this.surahID.value = surahID
     }
 
     fun insertFavAyah(msFavAyah: MsFavAyah) = viewModelScope.launch { quranRepository.insertFavAyah(msFavAyah) }

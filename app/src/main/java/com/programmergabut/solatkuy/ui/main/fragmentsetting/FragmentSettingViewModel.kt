@@ -43,7 +43,7 @@ class FragmentSettingViewModel @ViewModelInject constructor(private val prayerRe
         }
 
         prayerRepositoryImpl.updateMsApi1(msApi1)
-        updateMessage.postValue(Resource.error(null, successChangeTheCoordinate))
+        updateMessage.postValue(Resource.success(null, successChangeTheCoordinate))
     }
 
 }

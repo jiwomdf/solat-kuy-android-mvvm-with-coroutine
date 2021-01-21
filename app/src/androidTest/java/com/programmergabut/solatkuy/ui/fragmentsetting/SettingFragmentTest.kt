@@ -1,19 +1,20 @@
 package com.programmergabut.solatkuy.ui.fragmentsetting
 
+import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.MediumTest
-import com.programmergabut.solatkuy.R
-import com.programmergabut.solatkuy.TaskExecutorWithIdlingResourceRule
-import com.programmergabut.solatkuy.launchFragmentInHiltContainer
+import com.programmergabut.solatkuy.*
+import com.programmergabut.solatkuy.data.local.localentity.MsApi1
 import com.programmergabut.solatkuy.ui.SolatKuyFragmentFactoryAndroidTest
 import com.programmergabut.solatkuy.ui.main.fragmentsetting.FragmentSettingViewModel
 import com.programmergabut.solatkuy.ui.main.fragmentsetting.SettingFragment
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
+import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -39,12 +40,13 @@ class SettingFragmentTest{
     }
 
     @Test
-    fun testVisibilityAndData(){
+    fun testVisibilityAndData_componentDisplayedWithCorrectValue(){
         var testViewModel: FragmentSettingViewModel? = null
         launchFragmentInHiltContainer<SettingFragment>(fragmentFactory = fragmentFactory) {
             testViewModel = viewModel
         }
 
+        onView(withId(R.id.ll_content)).check(matches(isDisplayed()))
         onView(withId(R.id.tv_cur_loc)).check(matches(isDisplayed()))
         onView(withId(R.id.tv_view_latitude)).check(matches(isDisplayed()))
         onView(withId(R.id.tv_text_latitude)).check(matches(isDisplayed()))
@@ -68,6 +70,66 @@ class SettingFragmentTest{
         onView(withId(R.id.tv_view_city)).check(matches((withText("Kota Surakarta"))))
         onView(withId(R.id.tv_authorCredit)).check(matches((withText("Author & Credit"))))
         onView(withId(R.id.tv_changeLocation)).check(matches((withText("Change Location"))))
+    }
+
+    @Test
+    fun insertMsApi1WithEmptyLatitude_updateMessageEqualWithTheError(){
+        val latitudeAndLongitudeCannotBeEmpty = "latitude and longitude cannot be empty"
+        val msApi1 = MsApi1(1, "", "123", "3", "3", "2020")
+        var testViewModel: FragmentSettingViewModel? = null
+        launchFragmentInHiltContainer<SettingFragment>(fragmentFactory = fragmentFactory) {
+            testViewModel = viewModel
+            testViewModel?.updateMsApi1(msApi1)
+        }
+
+        onView(withId(R.id.ll_content)).check(matches(isDisplayed()))
+        Assert.assertEquals(latitudeAndLongitudeCannotBeEmpty, testViewModel?.updateMessage?.value?.message)
+        Assert.assertNotEquals(msApi1, testViewModel?.msApi1?.value)
+    }
+
+    @Test
+    fun insertMsApi1WithDotBeforeLatitude_updateMessageEqualWithTheError() {
+        val latitudeAndLongitudeCannotBeStartedWithDot = "latitude and longitude cannot be started with ."
+        val msApi1 = MsApi1(1, ".123", "123", "3", "3", "2020")
+        var testViewModel: FragmentSettingViewModel? = null
+        launchFragmentInHiltContainer<SettingFragment>(fragmentFactory = fragmentFactory) {
+            testViewModel = viewModel
+            testViewModel?.updateMsApi1(msApi1)
+        }
+
+        onView(withId(R.id.ll_content)).check(matches(isDisplayed()))
+        Assert.assertEquals(latitudeAndLongitudeCannotBeStartedWithDot, testViewModel?.updateMessage?.value?.message)
+        Assert.assertNotEquals(msApi1, testViewModel?.msApi1?.value)
+    }
+
+    @Test
+    fun insertMsApi1WithDotAfterLatitude_updateMessageEqualWithTheError() {
+        val latitudeAndLongitudeCannotBeEndedWithDot = "latitude and longitude cannot be ended with ."
+        val msApi1 = MsApi1(1, "123.", "123", "3", "3", "2020")
+        var testViewModel: FragmentSettingViewModel? = null
+        launchFragmentInHiltContainer<SettingFragment>(fragmentFactory = fragmentFactory) {
+            testViewModel = viewModel
+            testViewModel?.updateMsApi1(msApi1)
+        }
+
+        onView(withId(R.id.ll_content)).check(matches(isDisplayed()))
+        Assert.assertEquals(latitudeAndLongitudeCannotBeEndedWithDot, testViewModel?.updateMessage?.value?.message)
+        Assert.assertNotEquals(msApi1, testViewModel?.msApi1?.value)
+    }
+
+    @Test
+    fun insertMsApi1WithCorrectValue_insertDataComplete(){
+        val successChangeTheCoordinate = "Success change the coordinate"
+        val msApi1 = MsApi1(1, "123", "123", "3", "3", "2020")
+        var testViewModel: FragmentSettingViewModel? = null
+        launchFragmentInHiltContainer<SettingFragment>(fragmentFactory = fragmentFactory) {
+            testViewModel = viewModel
+            testViewModel?.updateMsApi1(msApi1)
+        }
+
+        onView(withId(R.id.ll_content)).check(matches(isDisplayed()))
+        Assert.assertEquals(successChangeTheCoordinate, testViewModel?.updateMessage?.value?.message)
+        Assert.assertEquals(msApi1, testViewModel?.msApi1?.value)
     }
 
 }

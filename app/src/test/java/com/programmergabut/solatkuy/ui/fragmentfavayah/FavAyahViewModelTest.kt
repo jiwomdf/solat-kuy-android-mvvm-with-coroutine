@@ -35,13 +35,13 @@ class FavAyahViewModelTest {
     }
 
     @Test
-    fun getFavAyah() = coroutinesTestRule.testDispatcher.runBlockingTest {
+    fun `getFavAyah, observeListFavAyah() called`() = coroutinesTestRule.testDispatcher.runBlockingTest {
         viewModel.favAyah
         verify(quranRepository).observeListFavAyah()
     }
 
     @Test
-    fun deleteFavAyah() = coroutinesTestRule.testDispatcher.runBlockingTest{
+    fun `deleteFavAyah, deleteFavAyah() called`() = coroutinesTestRule.testDispatcher.runBlockingTest{
         viewModel.deleteFavAyah(msFavAyah)
         verify(quranRepository).deleteFavAyah(msFavAyah)
     }

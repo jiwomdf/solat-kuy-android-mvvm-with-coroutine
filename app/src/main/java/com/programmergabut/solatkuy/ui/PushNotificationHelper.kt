@@ -69,10 +69,7 @@ class PushNotificationHelper(context: Context, selectedList: List<NotifiedPrayer
 
     private fun startUpdateMonthYearService(context: Context) {
         val serviceIntent = Intent(context, ServiceUpdateMonthAndYear::class.java)
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
-            context.startService(serviceIntent)
-        else
-            context.startService(serviceIntent)
+        context.startService(serviceIntent)
     }
 
     private fun bundleCreator(selectedList: List<NotifiedPrayer>): Bundle {

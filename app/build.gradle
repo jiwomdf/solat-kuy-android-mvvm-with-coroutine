@@ -12,7 +12,7 @@ android {
         applicationId "com.programmergabut.solatkuy"
         minSdkVersion 21
         targetSdkVersion 30
-        versionCode 49
+        versionCode 50
         versionName "4.0"
         multiDexEnabled true
 

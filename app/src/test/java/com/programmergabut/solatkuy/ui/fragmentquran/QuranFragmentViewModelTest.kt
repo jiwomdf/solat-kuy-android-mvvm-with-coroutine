@@ -40,31 +40,74 @@ class QuranFragmentViewModelTest {
         verify(fakeQuranRepository).observeListFavSurah()
     }
 
-
     @Test
-    fun fetchAllSurah() = coroutinesTestRule.testDispatcher.runBlockingTest{
-        //given
+    fun `fetchAllSurah, observe allSurah`() = coroutinesTestRule.testDispatcher.runBlockingTest{
         val observer = mock<Observer<Resource<List<Data>?>>>()
         val dummySelectedSurahAr = Resource.success(DummyRetValueTest.fetchAllSurahAr<QuranRepositoryImplTest>())
         dummySelectedSurahAr.data?.statusResponse = "1"
         val dummySelectedSurahData = Resource.success(DummyRetValueTest.fetchAllSurahWithLowerCase<QuranFragmentViewModelTest>())
 
-        //scenario
         `when`(fakeQuranRepository.fetchAllSurah()).thenReturn(dummySelectedSurahAr.data!!.toDeferred())
 
-        //start observer
         viewModel.allSurah.observeForever(observer)
 
-        //when
         viewModel.fetchAllSurah()
         val result = viewModel.allSurah.value
 
-        //--verify
         verify(fakeQuranRepository).fetchAllSurah().toDeferred()
         assertEquals(dummySelectedSurahData, result)
         verify(observer).onChanged(dummySelectedSurahData)
 
-        //end observer
         viewModel.allSurah.removeObserver(observer)
     }
+
+    @Test
+    fun `getSurahBySeachString, observe allSurah that contains searched string`() = coroutinesTestRule.testDispatcher.runBlockingTest{
+        val searchString = "Al Faatiha"
+        val observer = mock<Observer<Resource<List<Data>?>>>()
+        val dummySelectedSurahAr = Resource.success(DummyRetValueTest.fetchAllSurahAr<QuranRepositoryImplTest>())
+        dummySelectedSurahAr.data?.statusResponse = "1"
+        val dummySelectedSurahData = Resource.success(DummyRetValueTest.fetchAllSurahWithLowerCase<QuranFragmentViewModelTest>())
+        val filteredData = dummySelectedSurahData.data?.filter { data ->
+            data.englishNameLowerCase == searchString.toLowerCase()
+        }
+
+        `when`(fakeQuranRepository.fetchAllSurah()).thenReturn(dummySelectedSurahAr.data!!.toDeferred())
+
+        viewModel.allSurah.observeForever(observer)
+
+        viewModel.fetchAllSurah()
+        viewModel.getSurahBySeachString(searchString)
+        val result = viewModel.allSurah.value
+
+        assertEquals(filteredData, result?.data)
+        verify(observer).onChanged(dummySelectedSurahData)
+
+        viewModel.allSurah.removeObserver(observer)
+    }
+
+    @Test
+    fun `getSurahByJuzz, observe allSurah based on Al-Quran juzz`() = coroutinesTestRule.testDispatcher.runBlockingTest{
+        val observer = mock<Observer<Resource<List<Data>?>>>()
+        val dummySelectedSurahAr = Resource.success(DummyRetValueTest.fetchAllSurahAr<QuranRepositoryImplTest>())
+        dummySelectedSurahAr.data?.statusResponse = "1"
+        val dummySelectedSurahData = Resource.success(DummyRetValueTest.fetchAllSurahWithLowerCase<QuranFragmentViewModelTest>())
+        val filteredData = dummySelectedSurahData.data?.filter { data ->
+            data.number in 1..2
+        }
+
+        `when`(fakeQuranRepository.fetchAllSurah()).thenReturn(dummySelectedSurahAr.data!!.toDeferred())
+
+        viewModel.allSurah.observeForever(observer)
+
+        viewModel.fetchAllSurah()
+        viewModel.getSurahByJuzz(1)
+        val result = viewModel.allSurah.value
+
+        assertEquals(filteredData, result?.data)
+        verify(observer).onChanged(dummySelectedSurahData)
+
+        viewModel.allSurah.removeObserver(observer)
+    }
+
 }

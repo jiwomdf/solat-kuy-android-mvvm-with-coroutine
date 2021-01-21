@@ -25,7 +25,7 @@ class ServiceUpdateMonthAndYear: Service() {
 
     private suspend fun updateMonthAndYearMsApi1() {
         try {
-            val db = SolatKuyRoom.getDataBase(this)
+            val db = SolatKuyRoom.getDataBase(this@ServiceUpdateMonthAndYear)
             val msApi1 = db.msApi1Dao().getMsApi1()
             val arrDate = LocalDate.now().toString("dd/M/yyyy").split("/")
 
