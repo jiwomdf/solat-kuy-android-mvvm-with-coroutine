@@ -44,7 +44,6 @@ class BoardingActivity : BaseActivity<ActivityBoardingBinding, BoardingViewModel
 
     override fun onStart() {
         super.onStart()
-
         if(isHasOpenSettingButton){
             getGPSLocation()
             isHasOpenSettingButton = false

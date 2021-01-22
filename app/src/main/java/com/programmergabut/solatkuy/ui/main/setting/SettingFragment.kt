@@ -51,6 +51,15 @@ class SettingFragment(viewModelTest: FragmentSettingViewModel? = null) : BaseFra
     private lateinit var dialogGpsBinding: LayoutBottomsheetBygpsBinding
     private lateinit var dialogLatLngBinding: LayoutBottomsheetBylatitudelongitudeBinding
     private lateinit var dialogAuthorBinding: LayoutAboutAuthorBinding
+    private var isHasOpenSettingButton = false
+
+    override fun onStart() {
+        super.onStart()
+        if(isHasOpenSettingButton){
+            getGPSLocation()
+            isHasOpenSettingButton = false
+        }
+    }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -134,6 +143,7 @@ class SettingFragment(viewModelTest: FragmentSettingViewModel? = null) : BaseFra
             R.id.btn_proceedByGps -> {
                 if(dialogGpsBinding.tvGpsDialogLatitude.visibility != View.VISIBLE &&
                     dialogGpsBinding.tvViewLongitude.visibility != View.VISIBLE){
+                    isHasOpenSettingButton = true
                     startActivity(Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS))
                 }
                 else {
