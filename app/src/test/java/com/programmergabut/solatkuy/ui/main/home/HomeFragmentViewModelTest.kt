@@ -50,10 +50,10 @@ class HomeFragmentViewModelTest {
     }
 
     @Test
-    fun `syncNotifiedPrayer, observe notifiedPrayer`() = coroutinesTestRule.testDispatcher.runBlockingTest{
+    fun `getListNotifiedPrayer, observe notifiedPrayer`() = coroutinesTestRule.testDispatcher.runBlockingTest{
         val observer = mock<Observer<Resource<List<NotifiedPrayer>>>>()
         val dummyNotifiedPrayer = Resource.success(DummyRetValueTest.fetchPrayerApi<HomeFragmentViewModelTest>())
-        val dummyPrayerResponse = Resource.success(DummyRetValueTest.getNotifiedPrayer(), "Application Online")
+        val dummyPrayerResponse = Resource.success(DummyRetValueTest.getListNotifiedPrayer(), "Application Online")
         dummyNotifiedPrayer.data?.statusResponse = "1"
         `when`(fakePrayerRepository.fetchPrayerApi(msApi1)).thenReturn(dummyNotifiedPrayer.data!!.toDeferred())
         `when`(fakePrayerRepository.getListNotifiedPrayer()).thenReturn(dummyPrayerResponse.data)

@@ -21,7 +21,7 @@ object DummyRetValueTest {
    val READ_SURAH_SERVICE_JSON = "readSurahService.json"
 
     /* Remote */
-    fun getNotifiedPrayer(): List<NotifiedPrayer> {
+    fun getListNotifiedPrayer(): List<NotifiedPrayer> {
         val listNotifiedPrayer = mutableListOf<NotifiedPrayer>()
 
         listNotifiedPrayer.add(
