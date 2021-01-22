@@ -7,25 +7,25 @@
 
     <fragment
         android:id="@+id/fragmentCompass"
-        android:name="com.programmergabut.solatkuy.ui.main.fragmentcompass.CompassFragment"
+        android:name="com.programmergabut.solatkuy.ui.main.qibla.CompassFragment"
         android:label="fragment_compass"
         tools:layout="@layout/fragment_compass" />
     <fragment
         android:id="@+id/fragmentHome"
-        android:name="com.programmergabut.solatkuy.ui.main.fragmenthome.HomeFragment"
+        android:name="com.programmergabut.solatkuy.ui.main.home.HomeFragment"
         android:label="fragment_home"
         tools:layout="@layout/fragment_home" >
     </fragment>
     <fragment
         android:id="@+id/fragmentSetting"
-        android:name="com.programmergabut.solatkuy.ui.main.fragmentsetting.SettingFragment"
+        android:name="com.programmergabut.solatkuy.ui.main.setting.SettingFragment"
         android:label="fragment_setting"
         tools:layout="@layout/fragment_setting" />
     <fragment
         android:id="@+id/fragmentQuran"
-        android:name="com.programmergabut.solatkuy.ui.main.fragmentquran.QuranFragment"
+        android:name="com.programmergabut.solatkuy.ui.main.quran.listsurah.ListSurahFragment"
         android:label="fragment_quran"
-        tools:layout="@layout/fragment_quran" >
+        tools:layout="@layout/fragment_list_surah" >
         <action
             android:id="@+id/action_quranFragment_to_favAyahFragment"
             app:destination="@id/favAyahFragment"
@@ -43,12 +43,12 @@
     </fragment>
     <fragment
         android:id="@+id/favAyahFragment"
-        android:name="com.programmergabut.solatkuy.ui.main.fragmentfavayah.FavAyahFragment"
+        android:name="com.programmergabut.solatkuy.ui.main.quran.favayah.FavAyahFragment"
         android:label="fragment_fav_ayah"
         tools:layout="@layout/fragment_fav_ayah" />
     <fragment
         android:id="@+id/readSurahActivity"
-        android:name="com.programmergabut.solatkuy.ui.main.fragmentreadsurah.ReadSurahFragment"
+        android:name="com.programmergabut.solatkuy.ui.main.quran.readsurah.ReadSurahFragment"
         android:label="activity_read_surah"
         tools:layout="@layout/fragment_read_surah" >
         <argument

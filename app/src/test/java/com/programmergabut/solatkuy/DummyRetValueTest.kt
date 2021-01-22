@@ -8,6 +8,7 @@ import com.programmergabut.solatkuy.data.remote.remoteentity.quranallsurahJson.A
 import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonAr.ReadSurahArResponse
 import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonEn.ReadSurahEnResponse
 import com.programmergabut.solatkuy.util.EnumConfig
+import retrofit2.Call
 import java.util.*
 
 object DummyRetValueTest {
@@ -81,7 +82,7 @@ object DummyRetValueTest {
         return JsonToPojoConverter.convertJson<BASE, ReadSurahArResponse>(READ_SURAH_SERVICE_JSON)
     }
 
-    inline fun <reified BASE> fetchPrayerApi(): PrayerResponse{
+    inline fun <reified BASE> fetchPrayerApi(): PrayerResponse {
         return JsonToPojoConverter.convertJson<BASE, PrayerResponse>(CALENDAR_API_SERVICE_JSON)
     }
 

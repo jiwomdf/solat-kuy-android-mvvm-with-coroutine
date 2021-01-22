@@ -23,7 +23,6 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.base.BaseActivity
-import com.programmergabut.solatkuy.data.local.SolatKuyRoom
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
 import com.programmergabut.solatkuy.databinding.*
 import com.programmergabut.solatkuy.ui.main.MainActivity
@@ -41,6 +40,16 @@ class BoardingActivity : BaseActivity<ActivityBoardingBinding, BoardingViewModel
     private lateinit var bsByGpsBinding: LayoutBottomsheetBygpsBinding
     private lateinit var bsByLatLngBinding: LayoutBottomsheetBylatitudelongitudeBinding
     private lateinit var bottomSheetDialog: Dialog
+    private var isHasOpenSettingButton = false
+
+    override fun onStart() {
+        super.onStart()
+
+        if(isHasOpenSettingButton){
+            getGPSLocation()
+            isHasOpenSettingButton = false
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -88,6 +97,7 @@ class BoardingActivity : BaseActivity<ActivityBoardingBinding, BoardingViewModel
             R.id.btn_proceedByGps -> {
                 if(bsByGpsBinding.tvGpsDialogLatitude.visibility != View.VISIBLE &&
                     bsByGpsBinding.tvViewLongitude.visibility != View.VISIBLE){
+                    isHasOpenSettingButton = true
                     startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
                 }
                 else{
@@ -204,7 +214,7 @@ class BoardingActivity : BaseActivity<ActivityBoardingBinding, BoardingViewModel
     private fun onUpdateLocationListener(){
         val mLocationRequest = LocationRequest()
         mLocationRequest.priority = LocationRequest.PRIORITY_HIGH_ACCURACY
-        mLocationRequest.interval = 60 * 1000 /* 1 minute */
+        mLocationRequest.interval = 10 * 1000 /* 10 minute */
         mLocationRequest.fastestInterval = 1 * 1000 /* 1 second */
         if (!isLocationPermissionGranted()) {
             showPermissionDialog()

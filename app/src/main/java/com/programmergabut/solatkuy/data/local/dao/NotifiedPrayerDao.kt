@@ -11,12 +11,11 @@ import com.programmergabut.solatkuy.data.local.localentity.NotifiedPrayer
 
 @Dao
 interface NotifiedPrayerDao {
-
     @Query("select * from notified_prayer order by prayerID asc")
     fun observeListNotifiedPrayer(): LiveData<List<NotifiedPrayer>>
 
     @Query("select * from notified_prayer order by prayerID asc")
-    suspend fun getListNotifiedPrayer(): List<NotifiedPrayer>?
+    fun getListNotifiedPrayer(): List<NotifiedPrayer>?
 
     @Query("delete from notified_prayer")
     suspend fun deleteAll()

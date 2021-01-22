@@ -1,5 +1,9 @@
 package com.programmergabut.solatkuy.data
 
+/*
+ * Created by Katili Jiwo Adi Wiyono on 26/03/20.
+ */
+
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
@@ -12,10 +16,6 @@ import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.async
-
-/*
- * Created by Katili Jiwo Adi Wiyono on 26/03/20.
- */
 
 class FakePrayerRepositoryAndroidTest: PrayerRepository {
 
@@ -52,7 +52,7 @@ class FakePrayerRepositoryAndroidTest: PrayerRepository {
 
         observableNotifiedPrayer.postValue(newList)
     }
-    override fun updatePrayerTime(prayerName: String, prayerTime: String) {
+    override suspend fun updatePrayerTime(prayerName: String, prayerTime: String) {
         val newList = notifiedPrayer
         newList.map { data ->
             if(data.prayerName == prayerName){
@@ -107,9 +107,7 @@ class FakePrayerRepositoryAndroidTest: PrayerRepository {
             data
         }
     }
-    override suspend fun syncNotifiedPrayerTesting(): List<NotifiedPrayer> {
-        return DummyRetValueAndroidTest.getNotifiedPrayer()
-    }
+
     override suspend fun getListNotifiedPrayer(): List<NotifiedPrayer>? {
         return observableNotifiedPrayer.value!!
     }

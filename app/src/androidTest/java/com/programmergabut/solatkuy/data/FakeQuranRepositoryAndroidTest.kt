@@ -1,5 +1,9 @@
 package com.programmergabut.solatkuy.data
 
+/*
+ * Created by Katili Jiwo Adi Wiyono on 26/03/20.
+ */
+
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.programmergabut.solatkuy.data.local.localentity.MsFavAyah

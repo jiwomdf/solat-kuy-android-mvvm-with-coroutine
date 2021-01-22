@@ -22,9 +22,6 @@ class QuranRepositoryImpl @Inject constructor(
     private val msFavSurahDao: MsFavSurahDao
 ): QuranRepository {
 
-    /*
-     *Room
-     */
     /* MsFavAyah */
     override fun observeListFavAyah(): LiveData<List<MsFavAyah>> = msFavAyahDao.observeListFavAyah()
     override suspend fun getListFavAyahBySurahID(surahID: Int): List<MsFavAyah>? = msFavAyahDao.getListFavAyahBySurahID(surahID)
@@ -39,9 +36,7 @@ class QuranRepositoryImpl @Inject constructor(
     override suspend fun insertFavSurah(msFavSurah: MsFavSurah) = msFavSurahDao.insertMsSurah(msFavSurah)
     override suspend fun deleteFavSurah(msFavSurah: MsFavSurah) = msFavSurahDao.deleteMsFavSurah(msFavSurah)
 
-    /*
-     * Retrofit
-     */
+    /* Remote */
     override suspend fun fetchReadSurahEn(surahID: Int): Deferred<ReadSurahEnResponse> {
         return CoroutineScope(IO).async {
             lateinit var response: ReadSurahEnResponse

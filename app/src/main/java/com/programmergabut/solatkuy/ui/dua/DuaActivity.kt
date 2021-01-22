@@ -9,7 +9,9 @@ import com.programmergabut.solatkuy.util.LogConfig.Companion.ERROR
 import java.lang.Exception
 import java.lang.NullPointerException
 
-class DuaActivity : BaseActivity<ActivityDuaBinding, ViewModel>(R.layout.activity_dua, null) {
+class DuaActivity : BaseActivity<ActivityDuaBinding, DuaViewModel>(
+    R.layout.activity_dua, DuaViewModel::class.java
+) {
 
     companion object{
         const val DUA_TITLE = "duaTitle"

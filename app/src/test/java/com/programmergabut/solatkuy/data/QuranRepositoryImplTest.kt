@@ -7,7 +7,7 @@ import com.programmergabut.solatkuy.CoroutinesTestRule
 import com.programmergabut.solatkuy.DummyRetValueTest
 import com.programmergabut.solatkuy.data.local.dao.*
 import com.programmergabut.solatkuy.data.remote.RemoteDataSourceApiAlquran
-import junit.framework.Assert.assertNotNull
+import junit.framework.TestCase.assertNotNull
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runBlockingTest

@@ -3,11 +3,14 @@ package com.programmergabut.solatkuy.data
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
 import com.programmergabut.solatkuy.CoroutinesTestRule
-import com.programmergabut.solatkuy.data.local.dao.*
-import com.programmergabut.solatkuy.data.local.localentity.MsApi1
 import com.programmergabut.solatkuy.DummyRetValueTest
+import com.programmergabut.solatkuy.data.local.dao.MsApi1Dao
+import com.programmergabut.solatkuy.data.local.dao.MsFavSurahDao
+import com.programmergabut.solatkuy.data.local.dao.MsSettingDao
+import com.programmergabut.solatkuy.data.local.dao.NotifiedPrayerDao
+import com.programmergabut.solatkuy.data.local.localentity.MsApi1
 import com.programmergabut.solatkuy.data.remote.RemoteDataSourceAladhan
-import junit.framework.Assert.assertNotNull
+import junit.framework.TestCase.assertNotNull
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runBlockingTest
@@ -18,6 +21,7 @@ import org.mockito.Mockito.mock
 
 @ExperimentalCoroutinesApi
 class PrayerRepositoryImplTest{
+
     @get:Rule
     var instantTaskExecutorRule = InstantTaskExecutorRule()
     @get:Rule
