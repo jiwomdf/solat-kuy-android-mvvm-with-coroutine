@@ -29,7 +29,7 @@ class ServiceBootComplete: Service() {
                 if(data != null){
                     PushNotificationHelper(this@ServiceBootComplete, data.toMutableList(), "-")
                 } else {
-                    throw NullPointerException("ServiceBootComplete onStartCommand data != null")
+                    throw NullPointerException("ServiceBootComplete onStartCommand data == null")
                 }
             }
             catch(ex: Exception){

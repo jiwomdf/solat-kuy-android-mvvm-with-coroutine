@@ -12,7 +12,7 @@ class DuaData {
                 "O Allah! Lord of this perfect call (perfect by not ascribing partners to You) and of the regular prayer which is going to be established, give Muhammad the right of intercession and illustriousness, and resurrect him to the best and the highest place in Paradise that You promised him (of)], then my intercession for him will be allowed on the Day of Resurrection.",
                 "Ya Allah Tuhan yang memiliki seruan yang sempurna dan shalat yang tetap didirikan, kurniailah Nabi Muhammad wasilah (tempat yang luhur) dan kelebihan serta kemuliaan dan derajat yang tinggi dan tempatkanlah dia pada kependudukan yang terpuji yang telah Engkaujanjikan, sesungguhnya Engkau tiada menyalahi janji, wahai dzat yang paling Penyayang.",
             "-"))
-            listDua.add(Dua(2, "Dua Save from Hell & World",
+            listDua.add(Dua(2, "Dua Saved from Hell & World",
                 "اَللهُمَّ اِنَّا نَسْئَلُكَ سَلاَمَةً فِى الدِّيْنِ وَعَافِيَةً فِى الْجَسَدِ وَزِيَادَةً فِى الْعِلْمِ وَبَرَكَةً فِى الرِّزْقِ وَتَوْبَةً قَبْلَ الْمَوْتِ وَرَحْمَةً عِنْدَ الْمَوْتِ وَمَغْفِرَةً بَعْدَ الْمَوْتِ. اَللهُمَّ هَوِّنْ عَلَيْنَا فِىْ سَكَرَاتِ الْمَوْتِ وَالنَّجَاةَ مِنَ النَّارِ وَالْعَفْوَ عِنْدَ الْحِسَابِ",
                 "Allaahumma innaa nas aluka salaamatan fid diin, wa 'aafiyatan fil jasad, wa ziyadatan fil 'ilmi, wabarokatan dir rizqi, wa taubatan qoblal maut, warohmatan indal maut, wa maghfirotan ba'dal maut. Allaahumma hawwin 'alainaa fii sakarootil maut, wan najaata minan naar, wal 'afwa indal hisaab",
                 "-",

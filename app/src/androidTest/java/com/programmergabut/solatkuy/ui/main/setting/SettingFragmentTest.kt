@@ -8,8 +8,6 @@ import androidx.test.filters.MediumTest
 import com.programmergabut.solatkuy.*
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
 import com.programmergabut.solatkuy.ui.SolatKuyFragmentFactoryAndroidTest
-import com.programmergabut.solatkuy.ui.main.setting.FragmentSettingViewModel
-import com.programmergabut.solatkuy.ui.main.setting.SettingFragment
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
