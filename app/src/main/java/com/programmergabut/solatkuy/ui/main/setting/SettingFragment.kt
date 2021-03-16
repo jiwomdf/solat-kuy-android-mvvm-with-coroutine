@@ -69,6 +69,7 @@ class SettingFragment(viewModelTest: FragmentSettingViewModel? = null) : BaseFra
 
     override fun setListener() {
         super.setListener()
+
         inflateBinding()
         binding.btnByLatitudeLongitude.setOnClickListener(this)
         binding.btnByGps.setOnClickListener(this)
@@ -76,7 +77,6 @@ class SettingFragment(viewModelTest: FragmentSettingViewModel? = null) : BaseFra
         dialogGpsBinding.btnProceedByGps.setOnClickListener(this)
         dialogLatLngBinding.btnProceedByLL.setOnClickListener(this)
         subscribeObserversDB()
-        observeErrorMsg()
     }
 
     private fun inflateBinding() {
@@ -105,25 +105,6 @@ class SettingFragment(viewModelTest: FragmentSettingViewModel? = null) : BaseFra
         })
     }
 
-    private fun observeErrorMsg() {
-        viewModel.updateMessage.observe(viewLifecycleOwner, {
-            when(it.status) {
-                EnumStatus.SUCCESS -> {
-                    if(it.message.isNullOrEmpty()){
-                        showBottomSheet()
-                        return@observe
-                    }
-                    Toasty.success(requireContext(), it.message, Toasty.LENGTH_SHORT).show()
-                    bottomSheetDialog.dismiss()
-                }
-                EnumStatus.ERROR -> {
-                    Toasty.error(requireContext(), it.message ?: "", Toasty.LENGTH_SHORT).show()
-                }
-                else -> {/* NO-OP */}
-            }
-        })
-    }
-
     override fun onClick(v: View?) {
         when(v?.id){
             R.id.btn_by_latitude_longitude -> {
@@ -145,11 +126,11 @@ class SettingFragment(viewModelTest: FragmentSettingViewModel? = null) : BaseFra
                     dialogGpsBinding.tvViewLongitude.visibility != View.VISIBLE){
                     isHasOpenSettingButton = true
                     startActivity(Intent(android.provider.Settings.ACTION_LOCATION_SOURCE_SETTINGS))
-                }
-                else {
+                } else {
                     val latitude = dialogGpsBinding.tvGpsDialogLatitude.text.toString().trim()
                     val longitude = dialogGpsBinding.tvGpsDialogLongitude.text.toString().trim()
                     insertLocationSettingToDb(latitude, longitude)
+                    bottomSheetDialog.dismiss()
                 }
             }
             R.id.btn_seeAuthor -> {
@@ -171,9 +152,37 @@ class SettingFragment(viewModelTest: FragmentSettingViewModel? = null) : BaseFra
             currDate.year.toString()
         )
 
-        viewModel.updateMsApi1(data)
+        val result = updateMsApi1(data)
+        if(result[true] != null)
+            Toasty.success(requireContext(), result[true].toString(), Toasty.LENGTH_SHORT).show()
+        else
+            Toasty.error(requireContext(), result[false].toString(), Toasty.LENGTH_SHORT).show()
     }
 
+    fun updateMsApi1(msApi1: MsApi1): Map<Boolean, String> {
+        val latitudeAndLongitudeCannotBeEmpty = "latitude and longitude cannot be empty"
+        val latitudeAndLongitudeCannotBeEndedWithDot = "latitude and longitude cannot be ended with ."
+        val latitudeAndLongitudeCannotBeStartedWithDot = "latitude and longitude cannot be started with ."
+        val successChangeTheCoordinate = "Success change the coordinate"
+
+        if(msApi1.latitude.isEmpty() || msApi1.longitude.isEmpty() || msApi1.latitude == "." || msApi1.longitude == "."){
+            return mapOf(false to latitudeAndLongitudeCannotBeEmpty)
+        }
+
+        val arrLatitude = msApi1.latitude.toCharArray()
+        val arrLongitude = msApi1.longitude.toCharArray()
+
+        if(arrLatitude[arrLatitude.size - 1] == '.' || arrLongitude[arrLongitude.size - 1] == '.'){
+            return mapOf(false to latitudeAndLongitudeCannotBeEndedWithDot)
+        }
+
+        if(arrLatitude[0] == '.' || arrLongitude[0] == '.'){
+            return mapOf(false to latitudeAndLongitudeCannotBeStartedWithDot)
+        }
+
+        viewModel.updateMsApi1(msApi1)
+        return mapOf(true to successChangeTheCoordinate)
+    }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)

@@ -24,13 +24,14 @@ import java.util.*
  * Created by Katili Jiwo Adi Wiyono on 25/03/20.
  */
 
-const val TODAY_PRAYER_DATA_IS_NOT_FOUND = "Today prayer data is not found"
-const val APPLICATION_OFFLINE = "Application Offline"
-const val APPLICATION_ONLINE = "Application Online"
 class FragmentMainViewModel @ViewModelInject constructor(
     private val prayerRepository: PrayerRepository,
     private val quranRepository: QuranRepository
 ): ViewModel() {
+
+    private val TODAY_PRAYER_DATA_IS_NOT_FOUND = "Today prayer data is not found"
+    private val APPLICATION_OFFLINE = "Application Offline"
+    private val APPLICATION_ONLINE = "Application Online"
 
     val msApi1 = prayerRepository.observeMsApi1()
 

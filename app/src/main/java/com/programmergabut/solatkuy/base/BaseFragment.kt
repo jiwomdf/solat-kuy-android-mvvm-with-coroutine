@@ -45,8 +45,12 @@ abstract class BaseFragment<DB: ViewDataBinding, VM: ViewModel>(
         viewModelClass?.let {
             viewModel = viewModelTest ?: ViewModelProvider(requireActivity()).get(it)
         }
-        setListener()
         return binding.root
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        super.onViewCreated(view, savedInstanceState)
+        setListener()
     }
 
     protected open fun setListener(){

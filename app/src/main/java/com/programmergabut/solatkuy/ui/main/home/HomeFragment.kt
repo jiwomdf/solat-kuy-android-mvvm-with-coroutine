@@ -182,14 +182,16 @@ class HomeFragment(
                     val hijriDate = date?.hijri
                     val gregorianDate = date?.gregorian
 
-                    binding.includeInfo.tvImsakDate.text = date?.readable
-                    binding.includeInfo.tvImsakTime.text = data?.timings?.imsak
-                    binding.includeInfo.tvGregorianDate.text = gregorianDate?.date
-                    binding.includeInfo.tvHijriDate.text = hijriDate?.date
-                    binding.includeInfo.tvGregorianMonth.text = gregorianDate?.month?.en
-                    binding.includeInfo.tvHijriMonth.text = hijriDate?.month?.en + " / " + hijriDate?.month?.ar
-                    binding.includeInfo.tvGregorianDay.text = gregorianDate?.weekday?.en
-                    binding.includeInfo.tvHijriDay.text = hijriDate?.weekday?.en + " / " + hijriDate?.weekday?.ar
+                    binding.includeInfo.apply {
+                        tvImsakDate.text = date?.readable
+                        tvImsakTime.text = data?.timings?.imsak
+                        tvGregorianDate.text = gregorianDate?.date
+                        tvHijriDate.text = hijriDate?.date
+                        tvGregorianMonth.text = gregorianDate?.month?.en
+                        tvHijriMonth.text = hijriDate?.month?.en + " / " + hijriDate?.month?.ar
+                        tvGregorianDay.text = gregorianDate?.weekday?.en
+                        tvHijriDay.text = hijriDate?.weekday?.en + " / " + hijriDate?.weekday?.ar
+                    }
                 }
                 EnumStatus.LOADING -> setState(it.status)
                 EnumStatus.ERROR -> setState(it.status)

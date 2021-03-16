@@ -16,6 +16,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import androidx.databinding.DataBindingUtil
+import androidx.lifecycle.viewModelScope
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
@@ -27,8 +28,10 @@ import com.programmergabut.solatkuy.data.local.localentity.MsApi1
 import com.programmergabut.solatkuy.databinding.*
 import com.programmergabut.solatkuy.ui.main.MainActivity
 import com.programmergabut.solatkuy.util.EnumStatus
+import com.programmergabut.solatkuy.util.Resource
 import dagger.hilt.android.AndroidEntryPoint
 import es.dmoral.toasty.Toasty
+import kotlinx.coroutines.launch
 import org.joda.time.LocalDate
 
 @AndroidEntryPoint
@@ -57,13 +60,13 @@ class BoardingActivity : BaseActivity<ActivityBoardingBinding, BoardingViewModel
 
     override fun setListener() {
         super.setListener()
+
         inflateBinding()
         binding.btnByLatitudeLongitude.setOnClickListener(this)
         binding.btnByGps.setOnClickListener(this)
         bsByGpsBinding.btnProceedByGps.setOnClickListener(this)
         bsByLatLngBinding.btnProceedByLL.setOnClickListener(this)
         observeDb()
-        observeErrorMsg()
     }
 
     private fun inflateBinding() {
@@ -119,25 +122,6 @@ class BoardingActivity : BaseActivity<ActivityBoardingBinding, BoardingViewModel
         })
     }
 
-    private fun observeErrorMsg() {
-        viewModel.updateMessage.observe(this, {
-            when(it.status) {
-                EnumStatus.SUCCESS -> {
-                    if(it.message.isNullOrEmpty()){
-                        showBottomSheet()
-                        return@observe
-                    }
-                    Toasty.success(this, it.message, Toasty.LENGTH_SHORT).show()
-                    updateIsHasOpenApp()
-                }
-                EnumStatus.ERROR -> {
-                    Toasty.error(this, it.message ?: "", Toasty.LENGTH_SHORT).show()
-                }
-                else -> {/* NO-OP */}
-            }
-        })
-    }
-
     private fun updateIsHasOpenApp() {
         bottomSheetDialog.dismiss()
         viewModel.updateIsHasOpenApp(true)
@@ -151,7 +135,39 @@ class BoardingActivity : BaseActivity<ActivityBoardingBinding, BoardingViewModel
             "3",
             currDate.monthOfYear.toString(),
             currDate.year.toString())
-        viewModel.updateMsApi1(data)
+
+        val result = updateMsApi1(data)
+        if(result[true] != null)
+            Toasty.success(this, result.values.toString(), Toasty.LENGTH_SHORT).show()
+        else
+            Toasty.error(this, result.values.toString(), Toasty.LENGTH_SHORT).show()
+
+        updateIsHasOpenApp()
+    }
+
+    fun updateMsApi1(msApi1: MsApi1): Map<Boolean, String> {
+        val latitudeAndLongitudeCannotBeEmpty = "latitude and longitude cannot be empty"
+        val latitudeAndLongitudeCannotBeEndedWithDot = "latitude and longitude cannot be ended with ."
+        val latitudeAndLongitudeCannotBeStartedWithDot = "latitude and longitude cannot be started with ."
+        val successChangeTheCoordinate = "Success change the coordinate"
+
+        if(msApi1.latitude.isEmpty() || msApi1.longitude.isEmpty() || msApi1.latitude == "." || msApi1.longitude == "."){
+            return mapOf(false to latitudeAndLongitudeCannotBeEmpty)
+        }
+
+        val arrLatitude = msApi1.latitude.toCharArray()
+        val arrLongitude = msApi1.longitude.toCharArray()
+
+        if(arrLatitude[arrLatitude.size - 1] == '.' || arrLongitude[arrLongitude.size - 1] == '.'){
+            return mapOf(false to latitudeAndLongitudeCannotBeEndedWithDot)
+        }
+
+        if(arrLatitude[0] == '.' || arrLongitude[0] == '.'){
+            return mapOf(false to latitudeAndLongitudeCannotBeStartedWithDot)
+        }
+
+        viewModel.updateMsApi1(msApi1)
+        return mapOf(true to successChangeTheCoordinate)
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {

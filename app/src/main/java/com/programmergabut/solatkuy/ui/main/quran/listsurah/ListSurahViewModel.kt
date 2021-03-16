@@ -10,8 +10,9 @@ import kotlinx.coroutines.launch
 import java.lang.Exception
 import java.util.*
 
-const val SAVED_ALL_SURAH_NULL = "Saved all surah null"
 class ListSurahViewModel @ViewModelInject constructor(private val quranRepository: QuranRepository): ViewModel() {
+
+    val SAVED_ALL_SURAH_NULL = "Saved all surah null"
 
     val staredSurah = quranRepository.observeListFavSurah()
 
