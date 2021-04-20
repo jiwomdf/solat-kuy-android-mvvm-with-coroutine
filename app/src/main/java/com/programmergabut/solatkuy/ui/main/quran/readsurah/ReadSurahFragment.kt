@@ -14,10 +14,11 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.base.BaseFragment
+import com.programmergabut.solatkuy.data.local.localentity.MsAyah
 import com.programmergabut.solatkuy.data.local.localentity.MsFavAyah
 import com.programmergabut.solatkuy.data.local.localentity.MsFavSurah
-import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonAr.Ayah
-import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonAr.Data
+import com.programmergabut.solatkuy.data.remote.json.readsurahJsonAr.Ayah
+import com.programmergabut.solatkuy.data.remote.json.readsurahJsonAr.Result
 import com.programmergabut.solatkuy.databinding.FragmentReadSurahBinding
 import com.programmergabut.solatkuy.databinding.ListReadSurahBinding
 import com.programmergabut.solatkuy.util.EnumStatus
@@ -51,8 +52,9 @@ class ReadSurahFragment(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setFirstView()
-        viewModel.fetchReadSurahAr(args.selectedSurahId.toInt())
+        //viewModel.fetchReadSurahAr(args.selectedSurahId.toInt())
         viewModel.getFavSurahBySurahID(args.selectedSurahId.toInt())
+        viewModel.getAyahsBySurahID(args.selectedSurahId.toInt())
     }
 
     private fun setFirstView() {
@@ -78,6 +80,23 @@ class ReadSurahFragment(
 
     private fun observeApi(){
         viewModel.selectedSurahAr.observe(this, {
+            when (it.status) {
+                EnumStatus.SUCCESS, EnumStatus.ERROR -> {
+                    it?.data?.let { ayahs ->
+                        setVisibility(it.status)
+                        setToolBarText(ayahs)
+
+                        readSurahAdapter.listAyah = ayahs
+                        readSurahAdapter.notifyDataSetChanged()
+                    }
+                }
+                EnumStatus.LOADING -> {
+                    setVisibility(it.status)
+                    binding.tbReadSurah.title = ""
+                }
+            }
+        })
+        /* viewModel.selectedSurahAr.observe(this, {
             when (it.status) {
                 EnumStatus.SUCCESS -> {
                     if (it.data?.data == null){
@@ -108,11 +127,11 @@ class ReadSurahFragment(
                     showBottomSheet(isCancelable = false, isFinish = true)
                 }
             }
-        })
+        }) */
     }
 
     private fun observeDB(){
-        viewModel.msFavAyahBySurahID.observe(this, { local ->
+        /* viewModel.msFavAyahBySurahID.observe(this, { local ->
             when (local.status) {
                 EnumStatus.SUCCESS -> {
                     if(viewModel.selectedSurahAr.value?.data?.data?.ayahs == null)
@@ -129,7 +148,7 @@ class ReadSurahFragment(
                 EnumStatus.ERROR -> showBottomSheet(isCancelable = false, isFinish = true)
                 else -> {/*NO-OP*/ }
             }
-        })
+        }) */
 
         viewModel.favSurahBySurahID.observe(this, {
             if (it == null)
@@ -180,14 +199,14 @@ class ReadSurahFragment(
         }
     }
 
-    private fun setToolBarText(data: Data) {
-        binding.tbReadSurah.title = data.englishName
-        binding.tbReadSurah.subtitle = data.revelationType + " - " + data.numberOfAyahs + " Ayahs"
+    private fun setToolBarText(data: List<MsAyah>) {
+        binding.tbReadSurah.title = data.first().englishName
+        binding.tbReadSurah.subtitle = data.first().revelationType + " - " + data.first().numberOfAyahs + " Ayahs"
     }
 
     private fun setVisibility(status: EnumStatus){
         when(status){
-            EnumStatus.SUCCESS -> {
+            EnumStatus.SUCCESS, EnumStatus.ERROR -> {
                 binding.rvReadSurah.visibility = View.VISIBLE
                 binding.abReadQuran.visibility = View.VISIBLE
                 binding.ccReadQuranLoading.visibility = View.GONE
@@ -200,11 +219,6 @@ class ReadSurahFragment(
                 binding.abReadQuran.visibility = View.INVISIBLE
                 binding.rvReadSurah.visibility = View.INVISIBLE
                 binding.fabBrightness.visibility = View.GONE
-            }
-            EnumStatus.ERROR -> {
-                binding.abReadQuran.visibility = View.INVISIBLE
-                binding.rvReadSurah.visibility = View.INVISIBLE
-                binding.fabBrightness.visibility = View.INVISIBLE
             }
         }
     }
@@ -237,7 +251,7 @@ class ReadSurahFragment(
 
     private fun initRVReadSurah() {
         readSurahAdapter = ReadSurahAdapter(
-            onClickFavAyah,
+            //onClickFavAyah,
             adapterTheme,
             ContextCompat.getDrawable(requireContext(), R.drawable.ic_favorite_red_24)!!,
             ContextCompat.getDrawable(requireContext(), R.drawable.ic_favorite_24)!!,
@@ -250,7 +264,7 @@ class ReadSurahFragment(
         }
     }
 
-    private val onClickFavAyah = fun(data: Ayah, binding: ListReadSurahBinding){
+    /* private val onClickFavAyah = fun(data: Ayah, binding: ListReadSurahBinding){
         val msFavAyah = MsFavAyah(args.selectedSurahId.toInt(), data.numberInSurah, args.selectedSurahName, data.text, data.textEn!!)
         if (binding.ivListFavFav.drawable.constantState ==
             ContextCompat.getDrawable(requireContext(), R.drawable.ic_favorite_red_24)?.constantState
@@ -263,8 +277,8 @@ class ReadSurahFragment(
             binding.ivListFavFav.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_favorite_red_24))
         }
         readSurahAdapter.notifyItemChanged(data.numberInSurah - 1)
-        viewModel.getFavAyah()
-    }
+        //viewModel.getFavAyah()
+    } */
 
     private val adapterTheme = fun(vhBinding: ListReadSurahBinding){
         if(getIsBrightnessActive()){
@@ -296,7 +310,7 @@ class ReadSurahFragment(
                 "Surah ${args.selectedSurahId} ayah ${item.numberInSurah} is now your last read",
                 Toasty.LENGTH_LONG
             ).show()
-            viewModel.getLastReadAyah()
+            //viewModel.getLastReadAyah()
             readSurahAdapter.notifyDataSetChanged()
         }
 

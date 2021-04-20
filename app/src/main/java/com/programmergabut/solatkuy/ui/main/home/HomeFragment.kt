@@ -21,9 +21,9 @@ import com.programmergabut.solatkuy.data.local.localentity.MsApi1
 import com.programmergabut.solatkuy.data.local.localentity.MsFavAyah
 import com.programmergabut.solatkuy.data.local.localentity.MsTimings
 import com.programmergabut.solatkuy.data.local.localentity.NotifiedPrayer
-import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.Data
-import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.PrayerResponse
-import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonEn.ReadSurahEnResponse
+import com.programmergabut.solatkuy.data.remote.json.prayerJson.Result
+import com.programmergabut.solatkuy.data.remote.json.prayerJson.PrayerResponse
+import com.programmergabut.solatkuy.data.remote.json.readsurahJsonEn.ReadSurahEnResponse
 import com.programmergabut.solatkuy.databinding.*
 import com.programmergabut.solatkuy.ui.LocationHelper
 import com.programmergabut.solatkuy.ui.PushNotificationHelper
@@ -287,7 +287,7 @@ class HomeFragment(
         }
     }
 
-    private fun createTodayData(it: PrayerResponse?, currentDate: String): Data? =
+    private fun createTodayData(it: PrayerResponse?, currentDate: String): Result? =
         it?.data?.find { obj -> obj.date.gregorian?.day == currentDate }
 
     private fun updateMonthAndYearMsApi1(data: MsApi1) {

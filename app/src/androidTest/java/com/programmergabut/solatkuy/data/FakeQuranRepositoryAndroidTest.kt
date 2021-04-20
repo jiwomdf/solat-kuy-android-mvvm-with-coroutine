@@ -8,14 +8,14 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import com.programmergabut.solatkuy.data.local.localentity.MsFavAyah
 import com.programmergabut.solatkuy.data.local.localentity.MsFavSurah
-import com.programmergabut.solatkuy.data.remote.remoteentity.quranallsurahJson.AllSurahResponse
-import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonAr.ReadSurahArResponse
-import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonEn.ReadSurahEnResponse
+import com.programmergabut.solatkuy.data.remote.json.quranallsurahJson.AllSurahResponse
+import com.programmergabut.solatkuy.data.remote.json.readsurahJsonAr.ReadSurahArResponse
+import com.programmergabut.solatkuy.data.remote.json.readsurahJsonEn.ReadSurahEnResponse
 import com.programmergabut.solatkuy.DummyRetValueAndroidTest
 import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
 
-class FakeQuranRepositoryAndroidTest: QuranRepository {
+/* class FakeQuranRepositoryAndroidTest: QuranRepository {
 
     private var listMsFavAyah = DummyRetValueAndroidTest.getListMsFavAyah()
     private val observableMsFavAyahs = MutableLiveData<List<MsFavAyah>>()
@@ -69,7 +69,7 @@ class FakeQuranRepositoryAndroidTest: QuranRepository {
         return CoroutineScope(IO).async {
             val data = DummyRetValueAndroidTest.surahEnID_1<FakeQuranRepositoryAndroidTest>()
             data.statusResponse = "1"
-            data.messageResponse = "testing"
+            data.message = "testing"
             data
         }
     }
@@ -77,7 +77,7 @@ class FakeQuranRepositoryAndroidTest: QuranRepository {
         return CoroutineScope(IO).async {
             val data = DummyRetValueAndroidTest.fetchAllSurah<FakeQuranRepositoryAndroidTest>()
             data.statusResponse = "1"
-            data.messageResponse = "testing"
+            data.message = "testing"
             data
         }
     }
@@ -85,9 +85,9 @@ class FakeQuranRepositoryAndroidTest: QuranRepository {
         return CoroutineScope(IO).async {
             val data = DummyRetValueAndroidTest.surahArID_1<FakeQuranRepositoryAndroidTest>()
             data.statusResponse = "1"
-            data.messageResponse = "testing"
+            data.message = "testing"
             data
         }
     }
 
-}
+} */

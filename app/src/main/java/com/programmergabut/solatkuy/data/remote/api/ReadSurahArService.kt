@@ -1,6 +1,6 @@
 package com.programmergabut.solatkuy.data.remote.api
 
-import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonAr.ReadSurahArResponse
+import com.programmergabut.solatkuy.data.remote.json.readsurahJsonAr.ReadSurahArResponse
 import retrofit2.Call
 import retrofit2.http.GET
 import retrofit2.http.Path

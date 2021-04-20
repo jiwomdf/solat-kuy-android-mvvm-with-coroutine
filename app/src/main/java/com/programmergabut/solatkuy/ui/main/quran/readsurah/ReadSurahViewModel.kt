@@ -5,18 +5,23 @@ import androidx.lifecycle.*
 import com.programmergabut.solatkuy.data.QuranRepository
 import com.programmergabut.solatkuy.data.local.localentity.MsFavAyah
 import com.programmergabut.solatkuy.data.local.localentity.MsFavSurah
-import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonAr.Ayah
-import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonAr.ReadSurahArResponse
-import com.programmergabut.solatkuy.util.Resource
-import com.programmergabut.solatkuy.util.livedata.SingleLiveEvent
-import com.programmergabut.solatkuy.util.idlingresource.RunIdlingResourceHelper.Companion.runIdlingResourceDecrement
-import com.programmergabut.solatkuy.util.idlingresource.RunIdlingResourceHelper.Companion.runIdlingResourceIncrement
+import com.programmergabut.solatkuy.util.livedata.AbsentLiveData
 import kotlinx.coroutines.launch
-import java.lang.Exception
 
 class ReadSurahViewModel @ViewModelInject constructor(val quranRepository: QuranRepository): ViewModel() {
 
-    private var _selectedSurahAr = SingleLiveEvent<Resource<ReadSurahArResponse>>()
+    private var surahID2 = MutableLiveData<Int>()
+    val selectedSurahAr = Transformations.switchMap(surahID2){
+        if (it == null) {
+            AbsentLiveData.create()
+        } else {
+            quranRepository.getReadSurahAr(it)
+        }
+    }
+    fun getAyahsBySurahID(surahID: Int){
+        this.surahID2.value = surahID
+    }
+    /* private var _selectedSurahAr = SingleLiveEvent<Resource<ReadSurahArResponse>>()
     val selectedSurahAr: LiveData<Resource<ReadSurahArResponse>> = _selectedSurahAr
     fun fetchReadSurahAr(surahID: Int){
         viewModelScope.launch {
@@ -25,8 +30,8 @@ class ReadSurahViewModel @ViewModelInject constructor(val quranRepository: Quran
                 runIdlingResourceIncrement()
                 val readSurahAr = quranRepository.fetchReadSurahAr(surahID).await()
                 val readSurahEn = quranRepository.fetchReadSurahEn(surahID).await()
-                if(readSurahAr.statusResponse == "1" &&
-                    readSurahEn.statusResponse == "1" &&
+                if(readSurahAr.responseStatus == "1" &&
+                    readSurahEn.responseStatus == "1" &&
                     readSurahAr.data != null &&
                     readSurahEn.data != null
                 ){
@@ -50,7 +55,7 @@ class ReadSurahViewModel @ViewModelInject constructor(val quranRepository: Quran
                     _selectedSurahAr.postValue(Resource.success(readSurahAr))
                 }
                 else{
-                    _selectedSurahAr.postValue(Resource.error(null, readSurahAr.messageResponse))
+                    _selectedSurahAr.postValue(Resource.error(null, readSurahAr.message))
                 }
                 runIdlingResourceDecrement()
             }
@@ -60,9 +65,9 @@ class ReadSurahViewModel @ViewModelInject constructor(val quranRepository: Quran
                 runIdlingResourceDecrement()
             }
         }
-    }
+    } */
 
-    fun getFavAyah(){
+    /* fun getFavAyah(){
         if(selectedSurahAr.value?.data?.data?.ayahs == null){
             _selectedSurahAr.postValue(selectedSurahAr.value)
         } else {
@@ -112,7 +117,7 @@ class ReadSurahViewModel @ViewModelInject constructor(val quranRepository: Quran
                 _msFavAyahBySurahID.postValue(Resource.success(local))
             }
         }
-    }
+    } */
 
     private var surahID = MutableLiveData<Int>()
     val favSurahBySurahID: LiveData<MsFavSurah?> = Transformations.switchMap(surahID) { ayahID ->

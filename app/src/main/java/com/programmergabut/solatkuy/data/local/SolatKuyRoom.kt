@@ -15,7 +15,7 @@ import androidx.room.Room
  * Created by Katili Jiwo Adi Wiyono on 25/03/20.
  */
 
-@Database(version = 12, entities = [NotifiedPrayer::class, MsApi1::class, MsSetting::class, MsFavAyah::class, MsFavSurah::class])
+@Database(version = 14, entities = [NotifiedPrayer::class, MsApi1::class, MsSetting::class, MsFavAyah::class, MsFavSurah::class, MsSurah::class, MsAyah::class])
 abstract class SolatKuyRoom: RoomDatabase() {
 
     abstract fun notifiedPrayerDao(): NotifiedPrayerDao
@@ -23,6 +23,8 @@ abstract class SolatKuyRoom: RoomDatabase() {
     abstract fun msSettingDao(): MsSettingDao
     abstract fun msFavAyahDao(): MsFavAyahDao
     abstract fun msFavSurahDao(): MsFavSurahDao
+    abstract fun msSurahDao(): MsSurahDao
+    abstract fun msAyahDao(): MsAyahDao
 
     companion object{
         @Volatile
@@ -35,6 +37,7 @@ abstract class SolatKuyRoom: RoomDatabase() {
                 return tempInstance
             synchronized(this) {
                 val instance = Room.databaseBuilder(context.applicationContext, SolatKuyRoom::class.java, dbName)
+                    .fallbackToDestructiveMigration()
                     .allowMainThreadQueries()
                     .build()
 

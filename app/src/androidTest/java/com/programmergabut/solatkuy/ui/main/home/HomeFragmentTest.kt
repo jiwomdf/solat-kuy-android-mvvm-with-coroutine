@@ -7,12 +7,10 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.MediumTest
 import com.programmergabut.solatkuy.*
-import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.Data
-import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.PrayerResponse
+import com.programmergabut.solatkuy.data.remote.json.prayerJson.Result
+import com.programmergabut.solatkuy.data.remote.json.prayerJson.PrayerResponse
 import com.programmergabut.solatkuy.EnumConfigAndroidTesting
 import com.programmergabut.solatkuy.ui.SolatKuyFragmentFactoryAndroidTest
-import com.programmergabut.solatkuy.ui.main.home.FragmentMainViewModel
-import com.programmergabut.solatkuy.ui.main.home.HomeFragment
 import com.programmergabut.solatkuy.ui.nestedScrollTo
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -154,7 +152,7 @@ class HomeFragmentTest{
         onView(withId(R.id.tv_hijri_day)).check(matches(withText(hijriDate?.weekday?.en + " / " + hijriDate?.weekday?.ar)))
     }
 
-    private fun createTodayData(it: PrayerResponse?, currentDate: String): Data? {
+    private fun createTodayData(it: PrayerResponse?, currentDate: String): Result? {
         return it?.data?.find { obj -> obj.date.gregorian?.day == currentDate }
     }
 

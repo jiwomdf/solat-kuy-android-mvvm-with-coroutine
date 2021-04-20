@@ -1,12 +1,12 @@
 package com.programmergabut.solatkuy
 
 import com.programmergabut.solatkuy.data.local.localentity.*
-import com.programmergabut.solatkuy.data.remote.remoteentity.asmaalhusnaJson.AsmaAlHusnaResponse
-import com.programmergabut.solatkuy.data.remote.remoteentity.compassJson.CompassResponse
-import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.PrayerResponse
-import com.programmergabut.solatkuy.data.remote.remoteentity.quranallsurahJson.AllSurahResponse
-import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonAr.ReadSurahArResponse
-import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonEn.ReadSurahEnResponse
+import com.programmergabut.solatkuy.data.remote.json.asmaalhusnaJson.AsmaAlHusnaResponse
+import com.programmergabut.solatkuy.data.remote.json.compassJson.CompassResponse
+import com.programmergabut.solatkuy.data.remote.json.prayerJson.PrayerResponse
+import com.programmergabut.solatkuy.data.remote.json.quranallsurahJson.AllSurahResponse
+import com.programmergabut.solatkuy.data.remote.json.readsurahJsonAr.ReadSurahArResponse
+import com.programmergabut.solatkuy.data.remote.json.readsurahJsonEn.ReadSurahEnResponse
 import com.programmergabut.solatkuy.util.EnumConfig
 
 object DummyRetValueAndroidTest {

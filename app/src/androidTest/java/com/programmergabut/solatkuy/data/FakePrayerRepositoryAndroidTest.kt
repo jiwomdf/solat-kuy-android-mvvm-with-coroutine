@@ -9,15 +9,15 @@ import androidx.lifecycle.MutableLiveData
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
 import com.programmergabut.solatkuy.data.local.localentity.MsSetting
 import com.programmergabut.solatkuy.data.local.localentity.NotifiedPrayer
-import com.programmergabut.solatkuy.data.remote.remoteentity.compassJson.CompassResponse
-import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.PrayerResponse
+import com.programmergabut.solatkuy.data.remote.json.compassJson.CompassResponse
+import com.programmergabut.solatkuy.data.remote.json.prayerJson.PrayerResponse
 import com.programmergabut.solatkuy.DummyRetValueAndroidTest
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.async
 
-class FakePrayerRepositoryAndroidTest: PrayerRepository {
+/* class FakePrayerRepositoryAndroidTest: PrayerRepository {
 
     private var msApi11 = DummyRetValueAndroidTest.getMsApi1()
     private val observableMsApi1 = MutableLiveData<MsApi1>()
@@ -95,7 +95,7 @@ class FakePrayerRepositoryAndroidTest: PrayerRepository {
         return CoroutineScope(IO).async {
             val data = DummyRetValueAndroidTest.fetchCompassApi<FakePrayerRepositoryAndroidTest>()
             data.statusResponse = "1"
-            data.messageResponse = "testing"
+            data.message = "testing"
             data
         }
     }
@@ -103,7 +103,7 @@ class FakePrayerRepositoryAndroidTest: PrayerRepository {
         return CoroutineScope(IO).async {
             val data = DummyRetValueAndroidTest.fetchPrayerApi<FakePrayerRepositoryAndroidTest>()
             data.statusResponse = "1"
-            data.messageResponse = "testing"
+            data.message = "testing"
             data
         }
     }
@@ -112,4 +112,4 @@ class FakePrayerRepositoryAndroidTest: PrayerRepository {
         return observableNotifiedPrayer.value!!
     }
 }
-
+*/

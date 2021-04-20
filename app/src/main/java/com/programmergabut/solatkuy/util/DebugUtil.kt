@@ -8,7 +8,7 @@ import com.programmergabut.solatkuy.util.LogConfig.Companion.RES
 import retrofit2.Call
 import retrofit2.HttpException
 
-class DebugUtil {
+abstract class DebugUtil {
     companion object {
         fun<T : BaseResponse> execute(call : Call<T>) : T {
             try{

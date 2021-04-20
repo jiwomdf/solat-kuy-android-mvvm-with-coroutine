@@ -8,25 +8,26 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.programmergabut.solatkuy.R
-import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonAr.Ayah
+import com.programmergabut.solatkuy.data.local.localentity.MsAyah
+import com.programmergabut.solatkuy.data.remote.json.readsurahJsonAr.Ayah
 import com.programmergabut.solatkuy.databinding.ListReadSurahBinding
 
 class ReadSurahAdapter(
-    val onClickFavAyah: (Ayah, ListReadSurahBinding) -> Unit,
+    //val onClickFavAyah: (MsAyah, ListReadSurahBinding) -> Unit,
     val setTheme: (ListReadSurahBinding) -> Unit,
     val isFav: Drawable,
     val isNotFav: Drawable,
     val accentColor: Int
 ) : RecyclerView.Adapter<ReadSurahAdapter.ReadSurahViewHolder>() {
 
-    private val diffCallback = object: DiffUtil.ItemCallback<Ayah>(){
-        override fun areItemsTheSame(oldItem: Ayah, newItem: Ayah) = oldItem == newItem
-        override fun areContentsTheSame(oldItem: Ayah, newItem: Ayah) = oldItem == newItem
+    private val diffCallback = object: DiffUtil.ItemCallback<MsAyah>(){
+        override fun areItemsTheSame(oldItem: MsAyah, newItem: MsAyah) = oldItem == newItem
+        override fun areContentsTheSame(oldItem: MsAyah, newItem: MsAyah) = oldItem == newItem
     }
 
     private val differ = AsyncListDiffer(this, diffCallback)
 
-    var listAyah : List<Ayah>
+    var listAyah : List<MsAyah>
         get() = differ.currentList
         set(value) = differ.submitList(value)
 
@@ -43,7 +44,7 @@ class ReadSurahAdapter(
     override fun onBindViewHolder(holder: ReadSurahViewHolder, position: Int) = holder.bind(listAyah[position])
 
     inner class ReadSurahViewHolder(private val binding: ListReadSurahBinding): RecyclerView.ViewHolder(binding.root) {
-        fun bind(data: Ayah){
+        fun bind(data: MsAyah){
             binding.tvListFavAr.text = data.text
             binding.tvListFavEn.text = data.textEn
             binding.tvListFavNum.text = data.numberInSurah.toString()
@@ -57,7 +58,7 @@ class ReadSurahAdapter(
                 binding.clVhReadSurah.setBackgroundColor(accentColor)
             }
             binding.ivListFavFav.setOnClickListener {
-                onClickFavAyah(data, binding)
+                //onClickFavAyah(data, binding)
             }
         }
     }

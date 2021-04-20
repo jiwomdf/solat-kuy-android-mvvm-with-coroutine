@@ -5,10 +5,9 @@ import com.programmergabut.solatkuy.data.local.dao.MsFavAyahDao
 import com.programmergabut.solatkuy.data.local.dao.MsFavSurahDao
 import com.programmergabut.solatkuy.data.local.localentity.MsFavAyah
 import com.programmergabut.solatkuy.data.local.localentity.MsFavSurah
-import com.programmergabut.solatkuy.data.remote.RemoteDataSourceApiAlquran
-import com.programmergabut.solatkuy.data.remote.remoteentity.quranallsurahJson.AllSurahResponse
-import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonAr.ReadSurahArResponse
-import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonEn.ReadSurahEnResponse
+import com.programmergabut.solatkuy.data.remote.json.quranallsurahJson.AllSurahResponse
+import com.programmergabut.solatkuy.data.remote.json.readsurahJsonAr.ReadSurahArResponse
+import com.programmergabut.solatkuy.data.remote.json.readsurahJsonEn.ReadSurahEnResponse
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
@@ -43,7 +42,7 @@ class FakeQuranRepository constructor(
             catch (ex: Exception){
                 response = ReadSurahEnResponse()
                 response.statusResponse = "-1"
-                response.messageResponse = ex.message.toString()
+                response.message = ex.message.toString()
             }
             response
         }
@@ -59,7 +58,7 @@ class FakeQuranRepository constructor(
             catch (ex: Exception){
                 response = AllSurahResponse()
                 response.statusResponse = "-1"
-                response.messageResponse = ex.message.toString()
+                response.message = ex.message.toString()
             }
             response
         }
@@ -75,7 +74,7 @@ class FakeQuranRepository constructor(
             catch (ex: Exception){
                 response = ReadSurahArResponse()
                 response.statusResponse = "-1"
-                response.messageResponse = ex.message.toString()
+                response.message = ex.message.toString()
             }
             response
         }

@@ -20,6 +20,7 @@ object DatabaseModule {
     fun provideSolatKuyDatabase(
         @ApplicationContext context: Context
     ) = Room.databaseBuilder(context, SolatKuyRoom::class.java, DATABASE_NAME)
+        .fallbackToDestructiveMigration()
         .allowMainThreadQueries()
         .build()
 
@@ -43,5 +44,13 @@ object DatabaseModule {
     @Singleton
     @Provides
     fun provideMsFavSurahDao(db: SolatKuyRoom) = db.msFavSurahDao()
+
+    @Singleton
+    @Provides
+    fun provideMsSurahDao(db: SolatKuyRoom) = db.msSurahDao()
+
+    @Singleton
+    @Provides
+    fun provideMsAyahDao(db: SolatKuyRoom) = db.msAyahDao()
 
 }

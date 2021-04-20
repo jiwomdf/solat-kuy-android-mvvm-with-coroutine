@@ -9,7 +9,6 @@ import com.programmergabut.solatkuy.data.local.dao.MsFavSurahDao
 import com.programmergabut.solatkuy.data.local.dao.MsSettingDao
 import com.programmergabut.solatkuy.data.local.dao.NotifiedPrayerDao
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
-import com.programmergabut.solatkuy.data.remote.RemoteDataSourceAladhan
 import junit.framework.TestCase.assertNotNull
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking

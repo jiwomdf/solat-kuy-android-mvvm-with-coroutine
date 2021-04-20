@@ -27,7 +27,7 @@ class ServiceBootComplete: Service() {
                 val db = SolatKuyRoom.getDataBase(this@ServiceBootComplete)
                 val data = db.notifiedPrayerDao().getListNotifiedPrayer()
                 if(data != null){
-                    PushNotificationHelper(this@ServiceBootComplete, data.toMutableList(), "-")
+                    PushNotificationHelper(this@ServiceBootComplete, data.value!!.toMutableList(), "-")
                 } else {
                     throw NullPointerException("ServiceBootComplete onStartCommand data == null")
                 }

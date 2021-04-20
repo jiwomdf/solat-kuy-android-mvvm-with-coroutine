@@ -6,9 +6,8 @@ package com.programmergabut.solatkuy.data
 import androidx.lifecycle.LiveData
 import com.programmergabut.solatkuy.data.local.dao.*
 import com.programmergabut.solatkuy.data.local.localentity.*
-import com.programmergabut.solatkuy.data.remote.RemoteDataSourceAladhan
-import com.programmergabut.solatkuy.data.remote.remoteentity.compassJson.CompassResponse
-import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.PrayerResponse
+import com.programmergabut.solatkuy.data.remote.json.compassJson.CompassResponse
+import com.programmergabut.solatkuy.data.remote.json.prayerJson.PrayerResponse
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers
@@ -56,7 +55,7 @@ class FakePrayerRepository constructor(
             catch (ex: Exception){
                 response = CompassResponse()
                 response.statusResponse = "-1"
-                response.messageResponse = ex.message.toString()
+                response.message = ex.message.toString()
             }
             response
         }
@@ -72,7 +71,7 @@ class FakePrayerRepository constructor(
             catch (ex: Exception){
                 response = PrayerResponse()
                 response.statusResponse= "-1"
-                response.messageResponse = ex.message.toString()
+                response.message = ex.message.toString()
             }
             response
         }
