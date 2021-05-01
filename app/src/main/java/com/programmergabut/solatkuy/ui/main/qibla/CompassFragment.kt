@@ -7,16 +7,15 @@ import android.hardware.SensorEvent
 import android.hardware.SensorEventListener
 import android.hardware.SensorManager
 import android.os.Bundle
-import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.RotateAnimation
 import androidx.core.content.ContextCompat
-import androidx.databinding.DataBindingUtil
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.base.BaseFragment
+import com.programmergabut.solatkuy.data.remote.json.compassJson.Result
 import com.programmergabut.solatkuy.databinding.FragmentCompassBinding
 import com.programmergabut.solatkuy.databinding.LayoutPhoneTiltBinding
 import com.programmergabut.solatkuy.util.EnumStatus
@@ -40,6 +39,8 @@ class CompassFragment constructor(
     private var mGravity = FloatArray(3)
     private var mGeomagnetic = FloatArray(3)
     private lateinit var mSensorManager: SensorManager
+
+    override fun getViewBinding() = FragmentCompassBinding.inflate(layoutInflater)
 
     override fun onResume() {
         super.onResume()
@@ -85,17 +86,19 @@ class CompassFragment constructor(
                         showBottomSheet()
                         return@observe
                     }
-                    val data = retVal.data.data
-                    binding.tvQiblaDir.text =
-                        if (data.direction.toString().length > 6)
-                            data.direction.toString().substring(0, 6).trim() + "°"
-                        else
-                            data.direction.toString()
+                    binding.tvQiblaDir.text = shortenTextDegree(retVal.data.data)
                 }
                 EnumStatus.LOADING -> binding.tvQiblaDir.text = getString(R.string.loading)
                 EnumStatus.ERROR -> binding.tvQiblaDir.text = getString(R.string.fetch_failed)
             }
         })
+    }
+
+    private fun shortenTextDegree(data: Result): String {
+        return if (data.direction.toString().length > 6)
+            data.direction.toString().substring(0, 6).trim() + "°"
+        else
+            data.direction.toString()
     }
 
     private fun subscribeObserversDB() {
@@ -172,10 +175,7 @@ class CompassFragment constructor(
 
     private fun createLottieAnimation() {
         val dialog =  Dialog(requireContext())
-        val dialogBinding: LayoutPhoneTiltBinding = DataBindingUtil.inflate(
-            LayoutInflater.from(requireContext()),
-            R.layout.layout_phone_tilt, null, true
-        )
+        val dialogBinding = LayoutPhoneTiltBinding.inflate(layoutInflater)
         dialog.apply {
             window?.setLayout(
                 ViewGroup.LayoutParams.MATCH_PARENT,

@@ -1,31 +1,28 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<LinearLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical">
 
-    <LinearLayout
+    <androidx.fragment.app.FragmentContainerView
+        android:id="@+id/navHostFragment"
+        android:name="androidx.navigation.fragment.NavHostFragment"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        android:orientation="vertical">
+        android:layout_height="0dp"
+        android:layout_weight="1"
+        app:defaultNavHost="true"
+        app:navGraph="@navigation/nav_graph" />
 
-        <androidx.fragment.app.FragmentContainerView
-            android:id="@+id/navHostFragment"
-            android:name="androidx.navigation.fragment.NavHostFragment"
-            android:layout_width="match_parent"
-            android:layout_height="0dp"
-            android:layout_weight="1"
-            app:defaultNavHost="true"
-            app:navGraph="@navigation/nav_graph" />
+    <com.google.android.material.bottomnavigation.BottomNavigationView
+        android:id="@+id/bottom_navigation"
+        android:layout_width="match_parent"
+        android:layout_height="?attr/actionBarSize"
+        android:background="@color/dark_200"
+        app:elevation="@dimen/elevation"
+        app:itemIconTint="@drawable/style_bottom_nav_selector"
+        app:labelVisibilityMode="unlabeled"
+        app:layout_behavior="com.programmergabut.solatkuy.ui.activitymain.BottomNavigationBehavior"
+        app:menu="@menu/bottom_navigation_menu" />
 
-        <com.google.android.material.bottomnavigation.BottomNavigationView
-            android:id="@+id/bottom_navigation"
-            android:layout_width="match_parent"
-            android:layout_height="?attr/actionBarSize"
-            android:background="@color/dark_200"
-            app:elevation="@dimen/elevation"
-            app:itemIconTint="@drawable/style_bottom_nav_selector"
-            app:labelVisibilityMode="unlabeled"
-            app:layout_behavior="com.programmergabut.solatkuy.ui.activitymain.BottomNavigationBehavior"
-            app:menu="@menu/bottom_navigation_menu" />
-
-    </LinearLayout>
-</layout>
+</LinearLayout>

@@ -3,13 +3,11 @@ package com.programmergabut.solatkuy.ui.main.quran.readsurah
 import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.data.local.localentity.MsAyah
-import com.programmergabut.solatkuy.data.remote.json.readsurahJsonAr.Ayah
 import com.programmergabut.solatkuy.databinding.ListReadSurahBinding
 
 class ReadSurahAdapter(
@@ -32,10 +30,7 @@ class ReadSurahAdapter(
         set(value) = differ.submitList(value)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReadSurahViewHolder {
-        val binding = DataBindingUtil.inflate<ListReadSurahBinding>(
-            LayoutInflater.from(parent.context),
-            R.layout.list_read_surah, parent, false
-        )
+        val binding = ListReadSurahBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ReadSurahViewHolder(binding)
     }
 

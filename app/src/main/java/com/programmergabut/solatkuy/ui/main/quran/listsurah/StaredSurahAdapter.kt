@@ -2,11 +2,9 @@ package com.programmergabut.solatkuy.ui.main.quran.listsurah
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.data.local.localentity.MsFavSurah
 import com.programmergabut.solatkuy.databinding.ListStaredSurahBinding
 
@@ -26,9 +24,7 @@ class StaredSurahAdapter(
         set(value) = differ.submitList(value)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): StaredSurahViewHolder {
-        val binding = DataBindingUtil.inflate<ListStaredSurahBinding>(
-            LayoutInflater.from(parent.context), R.layout.list_stared_surah, parent, false
-        )
+        val binding = ListStaredSurahBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return StaredSurahViewHolder(binding)
     }
 

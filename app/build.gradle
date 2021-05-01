@@ -43,8 +43,7 @@ android {
     }
 
     buildFeatures {
-        dataBinding = true
-        // viewBinding = true
+         viewBinding = true
     }
     testOptions {
         unitTests.returnDefaultValues = true

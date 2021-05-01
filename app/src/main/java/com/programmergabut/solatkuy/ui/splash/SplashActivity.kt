@@ -18,6 +18,8 @@ class SplashActivity : BaseActivity<ActivitySplashBinding, SplashViewModel>(
 
     private val splashDelay : Long= 1000
 
+    override fun getViewBinding() = ActivitySplashBinding.inflate(layoutInflater)
+
     override fun setListener() {
         super.setListener()
         observeDb()

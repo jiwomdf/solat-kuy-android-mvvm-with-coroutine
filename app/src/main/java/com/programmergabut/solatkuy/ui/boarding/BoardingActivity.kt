@@ -11,12 +11,9 @@ import android.location.LocationManager
 import android.os.Bundle
 import android.os.Looper
 import android.provider.Settings
-import android.view.LayoutInflater
 import android.view.View
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
-import androidx.databinding.DataBindingUtil
-import androidx.lifecycle.viewModelScope
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
@@ -25,13 +22,13 @@ import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.base.BaseActivity
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
-import com.programmergabut.solatkuy.databinding.*
+import com.programmergabut.solatkuy.databinding.ActivityBoardingBinding
+import com.programmergabut.solatkuy.databinding.LayoutBottomsheetBygpsBinding
+import com.programmergabut.solatkuy.databinding.LayoutBottomsheetBylatitudelongitudeBinding
 import com.programmergabut.solatkuy.ui.main.MainActivity
 import com.programmergabut.solatkuy.util.EnumStatus
-import com.programmergabut.solatkuy.util.Resource
 import dagger.hilt.android.AndroidEntryPoint
 import es.dmoral.toasty.Toasty
-import kotlinx.coroutines.launch
 import org.joda.time.LocalDate
 
 @AndroidEntryPoint
@@ -45,18 +42,19 @@ class BoardingActivity : BaseActivity<ActivityBoardingBinding, BoardingViewModel
     private lateinit var bottomSheetDialog: Dialog
     private var isHasOpenSettingButton = false
 
+    override fun getViewBinding(): ActivityBoardingBinding = ActivityBoardingBinding.inflate(layoutInflater)
+
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        bottomSheetDialog = BottomSheetDialog(this)
+    }
+
     override fun onStart() {
         super.onStart()
         if(isHasOpenSettingButton){
             getGPSLocation()
             isHasOpenSettingButton = false
         }
-    }
-
-    override fun onCreate(savedInstanceState: Bundle?) {
-        super.onCreate(savedInstanceState)
-        bottomSheetDialog = BottomSheetDialog(this)
-        inflateBinding()
     }
 
     override fun setListener() {
@@ -68,24 +66,16 @@ class BoardingActivity : BaseActivity<ActivityBoardingBinding, BoardingViewModel
         bsByLatLngBinding.btnProceedByLL.setOnClickListener(this)
 
         viewModel.msSetting.observe(this, {
-            if(it != null){
-                if(it.isHasOpenApp){
-                    gotoIntent(MainActivity::class.java, null, true)
-                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
-                }
+            if(it != null && it.isHasOpenApp){
+                gotoIntent(MainActivity::class.java, null, true)
+                overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
             }
         })
     }
 
-    private fun inflateBinding() {
-        bsByLatLngBinding = DataBindingUtil.inflate(
-            LayoutInflater.from(this),
-            R.layout.layout_bottomsheet_bylatitudelongitude, null, false
-        )
-        bsByGpsBinding = DataBindingUtil.inflate(
-            LayoutInflater.from(this),
-            R.layout.layout_bottomsheet_bygps, null, false
-        )
+    override fun inflateBinding() {
+        bsByLatLngBinding = LayoutBottomsheetBylatitudelongitudeBinding.inflate(layoutInflater)
+        bsByGpsBinding = LayoutBottomsheetBygpsBinding.inflate(layoutInflater)
     }
 
     override fun onClick(v: View?) {
@@ -109,8 +99,7 @@ class BoardingActivity : BaseActivity<ActivityBoardingBinding, BoardingViewModel
                     bsByGpsBinding.tvViewLongitude.visibility != View.VISIBLE){
                     isHasOpenSettingButton = true
                     startActivity(Intent(Settings.ACTION_LOCATION_SOURCE_SETTINGS))
-                }
-                else{
+                } else {
                     val latitude = bsByGpsBinding.tvGpsDialogLatitude.text.toString().trim()
                     val longitude = bsByGpsBinding.tvGpsDialogLongitude.text.toString().trim()
                     insertLocationSettingToDb(latitude, longitude)
@@ -199,8 +188,7 @@ class BoardingActivity : BaseActivity<ActivityBoardingBinding, BoardingViewModel
         if (isLocationPermissionGranted()) {
             setGpsBottomSheetState()
             onUpdateLocationListener()
-        }
-        else {
+        } else {
             showPermissionDialog()
             return
         }

@@ -1,235 +1,229 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
     tools:context=".ui.main.setting.SettingFragment">
 
-    <ScrollView
+    <LinearLayout
+        android:id="@+id/ll_content"
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <LinearLayout
-            android:id="@+id/ll_content"
+        <com.google.android.material.card.MaterialCardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_margin="@dimen/small_margin"
+            app:cardBackgroundColor="@color/dark_200"
+            app:cardCornerRadius="@dimen/medium_margin">
 
-            <com.google.android.material.card.MaterialCardView
+            <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                app:cardBackgroundColor="@color/dark_200"
-                app:cardCornerRadius="@dimen/medium_margin"
-                android:layout_margin="@dimen/small_margin">
+                android:layout_marginStart="@dimen/medium_margin"
+                android:layout_marginTop="@dimen/medium_margin"
+                android:layout_marginBottom="@dimen/medium_margin"
+                android:orientation="vertical"
+                app:layout_constraintBottom_toBottomOf="@+id/rg_lcation_setting"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toEndOf="@+id/rg_lcation_setting"
+                app:layout_constraintTop_toTopOf="@+id/rg_lcation_setting">
 
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
+                <TextView
+                    android:id="@+id/tv_cur_loc"
+                    android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/medium_margin"
-                    android:layout_marginTop="@dimen/medium_margin"
-                    android:layout_marginBottom="@dimen/medium_margin"
+                    android:layout_marginBottom="@dimen/small_margin"
+                    android:text="@string/current_location"
+                    android:textSize="@dimen/medium_text_size"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tv_text_latitude"
+                    android:layout_width="@dimen/info_width_size"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/latitude"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_cur_loc" />
+
+                <TextView
+                    android:id="@+id/tv_view_latitude"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/large_margin"
+                    android:layout_marginTop="16dp"
+                    android:gravity="start"
+                    android:text="@string/loading"
+                    app:layout_constraintStart_toEndOf="@id/tv_text_latitude"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_cur_loc" />
+
+                <TextView
+                    android:id="@+id/tv_text_longitude"
+                    android:layout_width="@dimen/info_width_size"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/longitude"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_text_latitude" />
+
+                <TextView
+                    android:id="@+id/tv_view_longitude"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/large_margin"
+                    android:layout_marginTop="8dp"
+                    android:gravity="start"
+                    android:text="@string/loading"
+                    app:layout_constraintStart_toEndOf="@+id/tv_text_longitude"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_view_latitude" />
+
+                <TextView
+                    android:id="@+id/tv_text_city"
+                    android:layout_width="@dimen/info_width_size"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/city"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_text_longitude" />
+
+                <TextView
+                    android:id="@+id/tv_view_city"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/large_margin"
+                    android:layout_marginTop="8dp"
+                    android:gravity="start"
+                    android:text="@string/loading"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/tv_text_city"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_view_longitude" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/small_margin"
+            app:cardBackgroundColor="@color/dark_200"
+            app:cardCornerRadius="@dimen/medium_margin">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/medium_margin"
+                android:layout_marginBottom="@dimen/medium_margin">
+
+                <ImageView
+                    android:id="@+id/iv_location_logo"
+                    android:layout_width="@dimen/avatar_size"
+                    android:layout_height="@dimen/avatar_size"
+                    android:layout_marginStart="@dimen/small_margin"
+                    android:layout_marginBottom="@dimen/small_margin"
+                    android:contentDescription="@string/locationicon"
+                    android:src="@drawable/ic_location_24dp"
+                    app:layout_constraintBottom_toTopOf="@+id/rg_lcation_setting"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tv_changeLocation"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/small_margin"
+                    android:text="@string/changelocation"
+                    android:textSize="@dimen/medium_text_size"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toTopOf="@+id/rg_lcation_setting"
+                    app:layout_constraintStart_toEndOf="@+id/iv_location_logo"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.506" />
+
+                <LinearLayout
+                    android:id="@+id/rg_lcation_setting"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/small_margin"
                     android:orientation="vertical"
-                    app:layout_constraintBottom_toBottomOf="@+id/rg_lcation_setting"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toEndOf="@+id/rg_lcation_setting"
-                    app:layout_constraintTop_toTopOf="@+id/rg_lcation_setting">
-
-                    <TextView
-                        android:id="@+id/tv_cur_loc"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textStyle="bold"
-                        android:layout_marginBottom="@dimen/small_margin"
-                        android:text="@string/current_location"
-                        android:textSize="@dimen/medium_text_size"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        />
-
-                    <TextView
-                        android:id="@+id/tv_text_latitude"
-                        android:layout_width="@dimen/info_width_size"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:text="@string/latitude"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/tv_cur_loc" />
-
-                    <TextView
-                        android:id="@+id/tv_view_latitude"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="16dp"
-                        android:layout_marginStart="@dimen/large_margin"
-                        android:gravity="start"
-                        android:text="@string/loading"
-                        app:layout_constraintStart_toEndOf="@id/tv_text_latitude"
-                        app:layout_constraintTop_toBottomOf="@+id/tv_cur_loc" />
-
-                    <TextView
-                        android:id="@+id/tv_text_longitude"
-                        android:layout_width="@dimen/info_width_size"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="@string/longitude"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/tv_text_latitude" />
-
-                    <TextView
-                        android:id="@+id/tv_view_longitude"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginStart="@dimen/large_margin"
-                        android:gravity="start"
-                        android:text="@string/loading"
-                        app:layout_constraintStart_toEndOf="@+id/tv_text_longitude"
-                        app:layout_constraintTop_toBottomOf="@+id/tv_view_latitude" />
-
-                    <TextView
-                        android:id="@+id/tv_text_city"
-                        android:layout_width="@dimen/info_width_size"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:text="@string/city"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/tv_text_longitude" />
-
-                    <TextView
-                        android:id="@+id/tv_view_city"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="8dp"
-                        android:layout_marginStart="@dimen/large_margin"
-                        android:gravity="start"
-                        android:text="@string/loading"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toEndOf="@+id/tv_text_city"
-                        app:layout_constraintTop_toBottomOf="@+id/tv_view_longitude" />
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:cardBackgroundColor="@color/dark_200"
-                app:cardCornerRadius="@dimen/medium_margin"
-                android:layout_margin="@dimen/small_margin">
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/medium_margin"
-                    android:layout_marginBottom="@dimen/medium_margin">
-
-                    <ImageView
-                        android:id="@+id/iv_location_logo"
-                        android:layout_width="@dimen/avatar_size"
-                        android:layout_height="@dimen/avatar_size"
-                        android:layout_marginStart="@dimen/small_margin"
-                        android:layout_marginBottom="@dimen/small_margin"
-                        android:src="@drawable/ic_location_24dp"
-                        app:layout_constraintBottom_toTopOf="@+id/rg_lcation_setting"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        android:contentDescription="@string/locationicon" />
-
-                    <TextView
-                        android:id="@+id/tv_changeLocation"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textStyle="bold"
-                        android:layout_marginStart="@dimen/small_margin"
-                        android:text="@string/changelocation"
-                        android:textSize="@dimen/medium_text_size"
-                        app:layout_constraintBottom_toTopOf="@+id/rg_lcation_setting"
-                        app:layout_constraintStart_toEndOf="@+id/iv_location_logo"
-                        app:layout_constraintTop_toTopOf="parent"
-                        app:layout_constraintVertical_bias="0.506" />
-
-                    <LinearLayout
-                        android:id="@+id/rg_lcation_setting"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:layout_marginStart="@dimen/small_margin"
-                        android:orientation="vertical"
-                        app:layout_constraintBottom_toBottomOf="parent"
-                        app:layout_constraintStart_toStartOf="parent">
-
-                        <Button
-                            android:id="@+id/btn_by_latitude_longitude"
-                            android:layout_width="wrap_content"
-                            android:layout_height="match_parent"
-                            android:layout_marginTop="@dimen/small_margin"
-                            android:text="@string/by_latitude_amp_longitude"
-                            android:textSize="@dimen/small_text_size" />
-
-                        <Button
-                            android:id="@+id/btn_by_gps"
-                            android:layout_width="match_parent"
-                            android:layout_height="wrap_content"
-                            android:layout_marginTop="@dimen/small_margin"
-                            android:text="@string/by_gps"
-                            android:textSize="@dimen/small_text_size" />
-
-                    </LinearLayout>
-
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </com.google.android.material.card.MaterialCardView>
-
-            <com.google.android.material.card.MaterialCardView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                app:cardBackgroundColor="@color/dark_200"
-                app:cardCornerRadius="@dimen/medium_margin"
-                android:layout_margin="@dimen/small_margin">
-
-                <androidx.constraintlayout.widget.ConstraintLayout
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:layout_marginTop="@dimen/medium_margin"
-                    android:layout_marginBottom="@dimen/medium_margin">
-
-                    <ImageView
-                        android:id="@+id/iv_author_logo"
-                        android:layout_width="@dimen/avatar_size"
-                        android:layout_height="@dimen/avatar_size"
-                        android:layout_marginStart="@dimen/small_margin"
-                        android:layout_marginBottom="@dimen/small_margin"
-                        android:src="@drawable/ic_person_accent_24dp"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toTopOf="parent"
-                        android:contentDescription="@string/abouticon" />
-
-                    <TextView
-                        android:id="@+id/tv_authorCredit"
-                        android:layout_width="wrap_content"
-                        android:layout_height="wrap_content"
-                        android:textStyle="bold"
-                        android:layout_marginStart="8dp"
-                        android:text="@string/author_credit"
-                        android:textSize="@dimen/large_text_size"
-                        app:layout_constraintStart_toEndOf="@+id/iv_author_logo"
-                        app:layout_constraintTop_toTopOf="parent" />
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent">
 
                     <Button
-                        android:id="@+id/btn_seeAuthor"
+                        android:id="@+id/btn_by_latitude_longitude"
                         android:layout_width="wrap_content"
+                        android:layout_height="match_parent"
+                        android:layout_marginTop="@dimen/small_margin"
+                        android:text="@string/by_latitude_amp_longitude"
+                        android:textSize="@dimen/small_text_size" />
+
+                    <Button
+                        android:id="@+id/btn_by_gps"
+                        android:layout_width="match_parent"
                         android:layout_height="wrap_content"
-                        android:layout_marginStart="8dp"
-                        android:layout_marginTop="16dp"
-                        android:text="@string/see_author_and_credit"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/tv_authorCredit" />
+                        android:layout_marginTop="@dimen/small_margin"
+                        android:text="@string/by_gps"
+                        android:textSize="@dimen/small_text_size" />
 
-                </androidx.constraintlayout.widget.ConstraintLayout>
-            </com.google.android.material.card.MaterialCardView>
-        </LinearLayout>
+                </LinearLayout>
 
-    </ScrollView>
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </com.google.android.material.card.MaterialCardView>
 
-</layout>
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/small_margin"
+            app:cardBackgroundColor="@color/dark_200"
+            app:cardCornerRadius="@dimen/medium_margin">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginTop="@dimen/medium_margin"
+                android:layout_marginBottom="@dimen/medium_margin">
+
+                <ImageView
+                    android:id="@+id/iv_author_logo"
+                    android:layout_width="@dimen/avatar_size"
+                    android:layout_height="@dimen/avatar_size"
+                    android:layout_marginStart="@dimen/small_margin"
+                    android:layout_marginBottom="@dimen/small_margin"
+                    android:contentDescription="@string/abouticon"
+                    android:src="@drawable/ic_person_accent_24dp"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tv_authorCredit"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:text="@string/author_credit"
+                    android:textSize="@dimen/large_text_size"
+                    android:textStyle="bold"
+                    app:layout_constraintStart_toEndOf="@+id/iv_author_logo"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <Button
+                    android:id="@+id/btn_seeAuthor"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="8dp"
+                    android:layout_marginTop="16dp"
+                    android:text="@string/see_author_and_credit"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_authorCredit" />
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </com.google.android.material.card.MaterialCardView>
+    </LinearLayout>
+
+</ScrollView>

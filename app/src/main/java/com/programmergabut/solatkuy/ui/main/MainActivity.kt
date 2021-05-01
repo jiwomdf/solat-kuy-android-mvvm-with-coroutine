@@ -27,6 +27,8 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>(
     @Inject
     lateinit var fragmentFactory: SolatKuyFragmentFactory
 
+    override fun getViewBinding() = ActivityMainBinding.inflate(layoutInflater)
+
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initBottomNav()

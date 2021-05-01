@@ -33,6 +33,8 @@ class ListSurahFragment(
     private lateinit var allSurahAdapter: AllSurahAdapter
     private lateinit var staredSurahAdapter: StaredSurahAdapter
 
+    override fun getViewBinding() = FragmentListSurahBinding.inflate(layoutInflater)
+
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initRvAllSurah()

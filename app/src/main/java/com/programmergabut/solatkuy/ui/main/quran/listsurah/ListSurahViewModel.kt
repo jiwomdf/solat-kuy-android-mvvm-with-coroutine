@@ -10,7 +10,6 @@ import kotlinx.coroutines.launch
 
 class ListSurahViewModel @ViewModelInject constructor(private val quranRepository: QuranRepository): ViewModel() {
 
-
     val staredSurah = quranRepository.observeListFavSurah()
 
     private var isAyahsCalled = MutableLiveData(false)

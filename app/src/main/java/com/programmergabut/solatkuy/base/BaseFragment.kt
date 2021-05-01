@@ -1,7 +1,6 @@
 package com.programmergabut.solatkuy.base
 
 import android.Manifest
-import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
@@ -9,11 +8,10 @@ import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
 import androidx.core.app.ActivityCompat
-import androidx.databinding.DataBindingUtil
-import androidx.databinding.ViewDataBinding
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.*
 import androidx.navigation.fragment.findNavController
+import androidx.viewbinding.ViewBinding
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.data.local.SolatKuyRoom
@@ -21,7 +19,7 @@ import com.programmergabut.solatkuy.databinding.LayoutErrorBottomsheetBinding
 import com.programmergabut.solatkuy.util.SharedPrefUtil
 import javax.inject.Inject
 
-abstract class BaseFragment<DB: ViewDataBinding, VM: ViewModel>(
+abstract class BaseFragment<VB: ViewBinding, VM: ViewModel>(
     private val layout: Int,
     private val viewModelClass: Class<VM>?,
     private val viewModelTest: VM?
@@ -31,17 +29,21 @@ abstract class BaseFragment<DB: ViewDataBinding, VM: ViewModel>(
     lateinit var db: SolatKuyRoom
     @Inject
     lateinit var sharedPrefUtil: SharedPrefUtil
+
     lateinit var viewModel: VM
-    protected lateinit var binding : DB
     protected val LOCATION_PERMISSIONS = 101
+
+    abstract fun getViewBinding(): VB
+    private var _binding: ViewBinding? = null
+    protected val binding: VB
+        get() = _binding as VB
 
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
         savedInstanceState: Bundle?
     ): View? {
-        binding = DataBindingUtil.inflate(inflater, layout, container, false)
-        binding.lifecycleOwner = this
+        _binding = getViewBinding()
         viewModelClass?.let {
             viewModel = viewModelTest ?: ViewModelProvider(requireActivity()).get(it)
         }
@@ -51,11 +53,11 @@ abstract class BaseFragment<DB: ViewDataBinding, VM: ViewModel>(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setListener()
+        inflateBinding()
     }
 
-    protected open fun setListener(){
-
-    }
+    protected open fun setListener(){}
+    protected open fun inflateBinding(){}
 
     protected fun isLocationPermissionGranted(): Boolean {
         return (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
@@ -83,9 +85,8 @@ abstract class BaseFragment<DB: ViewDataBinding, VM: ViewModel>(
         callback: (() -> Unit)? = null) {
 
         val dialog =  BottomSheetDialog(requireContext())
-        val dialogBinding: LayoutErrorBottomsheetBinding = DataBindingUtil.inflate(
-            layoutInflater, R.layout.layout_error_bottomsheet, null, true
-        )
+        val dialogBinding = LayoutErrorBottomsheetBinding.inflate(layoutInflater)
+
         dialog.apply{
             window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
             setCancelable(isCancelable)

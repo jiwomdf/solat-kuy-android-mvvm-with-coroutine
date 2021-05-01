@@ -36,6 +36,8 @@ class ReadSurahFragment(
     private var isFirstLoad = true
     private var menu: Menu? = null
 
+    override fun getViewBinding() = FragmentReadSurahBinding.inflate(layoutInflater)
+
     override fun onCreateView(
         inflater: LayoutInflater,
         container: ViewGroup?,
@@ -79,7 +81,6 @@ class ReadSurahFragment(
                     it?.data?.let { ayahs ->
                         setVisibility(it.status)
                         setToolBarText(ayahs)
-
                         readSurahAdapter.listAyah = ayahs
                         readSurahAdapter.notifyDataSetChanged()
                     }
@@ -94,12 +95,13 @@ class ReadSurahFragment(
 
     private fun observeDB(){
         viewModel.favSurahBySurahID.observe(this, {
-            if (it == null)
+            if (it == null){
                 menu?.findItem(R.id.i_star_surah)?.icon =
                     ContextCompat.getDrawable(requireContext(), R.drawable.ic_star_24)
-            else
+            } else {
                 menu?.findItem(R.id.i_star_surah)?.icon =
                     ContextCompat.getDrawable(requireContext(), R.drawable.ic_star_purple_24)
+            }
         })
     }
 
@@ -156,9 +158,7 @@ class ReadSurahFragment(
                 binding.fabBrightness.visibility = View.VISIBLE
             }
             EnumStatus.LOADING -> {
-                if (isFirstLoad) {
-                    binding.ccReadQuranLoading.visibility = View.VISIBLE
-                }
+                if (isFirstLoad) binding.ccReadQuranLoading.visibility = View.VISIBLE
                 binding.abReadQuran.visibility = View.INVISIBLE
                 binding.rvReadSurah.visibility = View.INVISIBLE
                 binding.fabBrightness.visibility = View.GONE

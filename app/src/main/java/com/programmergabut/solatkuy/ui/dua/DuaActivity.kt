@@ -24,9 +24,7 @@ class DuaActivity : BaseActivity<ActivityDuaBinding, DuaViewModel>(
 
     override fun setListener(){
         try {
-            if(intent == null)
-                throw NullPointerException("DuaActivity intent")
-
+            if(intent == null) throw NullPointerException("DuaActivity intent")
             binding.tvPrayerTitle.text = intent.getStringExtra(DUA_TITLE) ?: throw NullPointerException("DuaActivity getExtras $DUA_TITLE")
             binding.tvPrayerAr.text = intent.getStringExtra(DUA_AR) ?: throw NullPointerException("DuaActivity getExtras $DUA_AR")
             binding.tvPrayerLt.text = intent.getStringExtra(DUA_LT) ?: throw NullPointerException("DuaActivity getExtras $DUA_LT")
@@ -39,5 +37,7 @@ class DuaActivity : BaseActivity<ActivityDuaBinding, DuaViewModel>(
             showBottomSheet(isCancelable = false, isFinish = true)
         }
     }
+
+    override fun getViewBinding() = ActivityDuaBinding.inflate(layoutInflater)
 
 }

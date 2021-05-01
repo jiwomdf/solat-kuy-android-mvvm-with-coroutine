@@ -1,133 +1,129 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<androidx.swiperefreshlayout.widget.SwipeRefreshLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     xmlns:tools="http://schemas.android.com/tools"
+    android:id="@+id/sl_compass"
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
     tools:context=".ui.main.qibla.CompassFragment">
 
-    <androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-        android:id="@+id/sl_compass"
+    <ScrollView
         android:layout_width="match_parent"
         android:layout_height="match_parent">
 
-        <ScrollView
+        <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
-            android:layout_height="match_parent">
+            android:layout_height="wrap_content">
 
-            <androidx.constraintlayout.widget.ConstraintLayout
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content">
+            <com.google.android.material.card.MaterialCardView
+                android:id="@+id/cv_qiblaDegrees"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/medium_margin"
+                app:cardBackgroundColor="@color/dark_200"
+                app:cardCornerRadius="@dimen/medium_margin"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent">
 
-                <com.google.android.material.card.MaterialCardView
-                    android:id="@+id/cv_qiblaDegrees"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    app:cardCornerRadius="@dimen/medium_margin"
-                    app:cardBackgroundColor="@color/dark_200"
-                    android:layout_marginTop="@dimen/medium_margin"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
+                <androidx.constraintlayout.widget.ConstraintLayout
+                    android:layout_width="match_parent"
+                    android:layout_height="match_parent"
+                    android:layout_margin="@dimen/medium_margin"
+                    android:orientation="vertical">
 
-                    <androidx.constraintlayout.widget.ConstraintLayout
-                        android:layout_width="match_parent"
-                        android:layout_height="match_parent"
-                        android:layout_margin="@dimen/medium_margin"
-                        android:orientation="vertical">
-                        <TextView
-                            android:id="@+id/tv_qibla_dir_text"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/smaller_margin"
-                            android:layout_marginEnd="@dimen/smaller_margin"
-                            android:layout_marginBottom="@dimen/smaller_margin"
-                            android:gravity="center"
-                            android:layout_gravity="center"
-                            android:text="@string/qibla_degree"
-                            android:textStyle="bold"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toTopOf="parent"/>
-
-                        <TextView
-                            android:id="@+id/tv_qibla_dir"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
-                            android:layout_gravity="center"
-                            app:layout_constraintTop_toTopOf="parent"
-                            app:layout_constraintStart_toEndOf="@id/tv_qibla_dir_text"
-                            android:text="@string/loading"/>
-
-                        <TextView
-                            android:id="@+id/tv_qibla_accuracy_text"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="@dimen/smaller_margin"
-                            android:layout_marginEnd="@dimen/smaller_margin"
-                            android:layout_marginBottom="@dimen/smaller_margin"
-                            android:gravity="center"
-                            android:layout_gravity="center"
-                            android:text="@string/compass_accuracy"
-                            android:textStyle="bold"
-                            app:layout_constraintStart_toStartOf="parent"
-                            app:layout_constraintTop_toBottomOf="@id/tv_qibla_dir_text"/>
-
-                        <TextView
-                            android:id="@+id/tv_qibla_accuracy"
-                            android:layout_width="wrap_content"
-                            android:layout_height="wrap_content"
-                            android:layout_marginStart="8dp"
-                            android:layout_gravity="center"
-                            android:text="@string/loading"
-                            app:layout_constraintStart_toEndOf="@id/tv_qibla_accuracy_text"
-                            app:layout_constraintTop_toBottomOf="@id/tv_qibla_dir_text"/>
-                    </androidx.constraintlayout.widget.ConstraintLayout>
-                </com.google.android.material.card.MaterialCardView>
-
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/cv_compass"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:elevation="8dp"
-                    app:cardCornerRadius="30dp"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/cv_qiblaDegrees" >
-
-                    <ImageView
-                        android:id="@+id/iv_compass"
-                        android:layout_width="@dimen/compassSize"
-                        android:layout_height="@dimen/compassSize"
-                        android:background="@color/white"
-                        android:layout_centerInParent="true"
-                        android:contentDescription="@string/compass"
-                        android:src="@drawable/img_degree"
-                        app:layout_constraintEnd_toEndOf="parent"
+                    <TextView
+                        android:id="@+id/tv_qibla_dir_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="@dimen/smaller_margin"
+                        android:layout_marginEnd="@dimen/smaller_margin"
+                        android:layout_marginBottom="@dimen/smaller_margin"
+                        android:gravity="center"
+                        android:text="@string/qibla_degree"
+                        android:textStyle="bold"
                         app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/cv_qiblaDegrees" />
+                        app:layout_constraintTop_toTopOf="parent" />
 
-                </androidx.cardview.widget.CardView>
+                    <TextView
+                        android:id="@+id/tv_qibla_dir"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="8dp"
+                        android:text="@string/loading"
+                        app:layout_constraintStart_toEndOf="@id/tv_qibla_dir_text"
+                        app:layout_constraintTop_toTopOf="parent" />
 
-                <TextView
-                    android:id="@+id/tv_compass_cuation"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginBottom="32dp"
-                    android:gravity="center"
-                    android:text="@string/please_tilt_your_phone_until_the_image_is_balanced"
-                    android:textStyle="bold"
+                    <TextView
+                        android:id="@+id/tv_qibla_accuracy_text"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="@dimen/smaller_margin"
+                        android:layout_marginEnd="@dimen/smaller_margin"
+                        android:layout_marginBottom="@dimen/smaller_margin"
+                        android:gravity="center"
+                        android:text="@string/compass_accuracy"
+                        android:textStyle="bold"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@id/tv_qibla_dir_text" />
+
+                    <TextView
+                        android:id="@+id/tv_qibla_accuracy"
+                        android:layout_width="wrap_content"
+                        android:layout_height="wrap_content"
+                        android:layout_gravity="center"
+                        android:layout_marginStart="8dp"
+                        android:text="@string/loading"
+                        app:layout_constraintStart_toEndOf="@id/tv_qibla_accuracy_text"
+                        app:layout_constraintTop_toBottomOf="@id/tv_qibla_dir_text" />
+                </androidx.constraintlayout.widget.ConstraintLayout>
+            </com.google.android.material.card.MaterialCardView>
+
+            <androidx.cardview.widget.CardView
+                android:id="@+id/cv_compass"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:elevation="8dp"
+                app:cardCornerRadius="30dp"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/cv_qiblaDegrees">
+
+                <ImageView
+                    android:id="@+id/iv_compass"
+                    android:layout_width="@dimen/compassSize"
+                    android:layout_height="@dimen/compassSize"
+                    android:layout_centerInParent="true"
+                    android:background="@color/white"
+                    android:contentDescription="@string/compass"
+                    android:src="@drawable/img_degree"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintHorizontal_bias="0.461"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/cv_compass"
-                    app:layout_constraintVertical_bias="0.0" />
+                    app:layout_constraintTop_toBottomOf="@+id/cv_qiblaDegrees" />
 
-            </androidx.constraintlayout.widget.ConstraintLayout>
+            </androidx.cardview.widget.CardView>
 
-        </ScrollView>
+            <TextView
+                android:id="@+id/tv_compass_cuation"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="16dp"
+                android:layout_marginBottom="32dp"
+                android:gravity="center"
+                android:text="@string/please_tilt_your_phone_until_the_image_is_balanced"
+                android:textStyle="bold"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintHorizontal_bias="0.461"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/cv_compass"
+                app:layout_constraintVertical_bias="0.0" />
 
-    </androidx.swiperefreshlayout.widget.SwipeRefreshLayout>
+        </androidx.constraintlayout.widget.ConstraintLayout>
 
-</layout>
+    </ScrollView>
+
+</androidx.swiperefreshlayout.widget.SwipeRefreshLayout>

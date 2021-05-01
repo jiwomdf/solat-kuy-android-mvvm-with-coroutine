@@ -10,11 +10,9 @@ import android.content.pm.PackageManager
 import android.location.LocationManager
 import android.os.Bundle
 import android.os.Looper
-import android.view.LayoutInflater
 import android.view.View
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
-import androidx.databinding.DataBindingUtil
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
@@ -28,9 +26,9 @@ import com.programmergabut.solatkuy.databinding.FragmentSettingBinding
 import com.programmergabut.solatkuy.databinding.LayoutAboutAuthorBinding
 import com.programmergabut.solatkuy.databinding.LayoutBottomsheetBygpsBinding
 import com.programmergabut.solatkuy.databinding.LayoutBottomsheetBylatitudelongitudeBinding
+import com.programmergabut.solatkuy.ui.LocationHelper
 import com.programmergabut.solatkuy.util.EnumConfig
 import com.programmergabut.solatkuy.util.EnumStatus
-import com.programmergabut.solatkuy.ui.LocationHelper
 import dagger.hilt.android.AndroidEntryPoint
 import es.dmoral.toasty.Toasty
 import org.joda.time.LocalDate
@@ -52,6 +50,8 @@ class SettingFragment(viewModelTest: FragmentSettingViewModel? = null) : BaseFra
     private lateinit var dialogLatLngBinding: LayoutBottomsheetBylatitudelongitudeBinding
     private lateinit var dialogAuthorBinding: LayoutAboutAuthorBinding
     private var isHasOpenSettingButton = false
+
+    override fun getViewBinding() = FragmentSettingBinding.inflate(layoutInflater)
 
     override fun onStart() {
         super.onStart()
@@ -79,19 +79,10 @@ class SettingFragment(viewModelTest: FragmentSettingViewModel? = null) : BaseFra
         subscribeObserversDB()
     }
 
-    private fun inflateBinding() {
-        dialogGpsBinding = DataBindingUtil.inflate(
-            LayoutInflater.from(requireContext()),
-            R.layout.layout_bottomsheet_bygps, null, false
-        )
-        dialogLatLngBinding = DataBindingUtil.inflate(
-            LayoutInflater.from(requireContext()),
-            R.layout.layout_bottomsheet_bylatitudelongitude, null, false
-        )
-        dialogAuthorBinding = DataBindingUtil.inflate(
-            LayoutInflater.from(requireContext()),
-            R.layout.layout_about_author, null, false
-        )
+    override fun inflateBinding() {
+        dialogGpsBinding = LayoutBottomsheetBygpsBinding.inflate(layoutInflater)
+        dialogLatLngBinding = LayoutBottomsheetBylatitudelongitudeBinding.inflate(layoutInflater)
+        dialogAuthorBinding = LayoutAboutAuthorBinding.inflate(layoutInflater)
     }
 
     private fun subscribeObserversDB() {

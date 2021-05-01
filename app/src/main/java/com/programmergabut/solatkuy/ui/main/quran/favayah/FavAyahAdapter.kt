@@ -2,11 +2,9 @@ package com.programmergabut.solatkuy.ui.main.quran.favayah
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.data.local.localentity.MsFavAyah
 import com.programmergabut.solatkuy.databinding.ListFavAyahBinding
 
@@ -26,9 +24,7 @@ class FavAyahAdapter(
         set(value) = differ.submitList(value)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): FavAyahAdapterViewHolder {
-        val binding = DataBindingUtil.inflate<ListFavAyahBinding>(
-            LayoutInflater.from(parent.context), R.layout.list_fav_ayah, parent, false
-        )
+        val binding = ListFavAyahBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return FavAyahAdapterViewHolder(binding)
     }
 
@@ -41,7 +37,6 @@ class FavAyahAdapter(
             binding.tvListFavAr.text = data.ayahAr
             binding.tvListFavEn.text = data.ayahEn
             binding.tvListFavSurahName.text = data.surahName + " | Ayah " + data.ayahID.toString()
-
             binding.tvListFavDel.setOnClickListener {
                 onClickFavAyah(data)
             }

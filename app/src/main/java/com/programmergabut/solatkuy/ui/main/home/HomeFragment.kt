@@ -7,7 +7,6 @@ import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
-import androidx.databinding.DataBindingUtil
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.bumptech.glide.Glide
@@ -62,6 +61,8 @@ class HomeFragment(
     private lateinit var dialogBinding: LayoutPopupChooseQuoteSettingBinding
     private lateinit var dialog: Dialog
 
+    override fun getViewBinding() = FragmentHomeBinding.inflate(layoutInflater)
+
     override fun onPause() {
         super.onPause()
         isTimerHasBanded = false
@@ -86,7 +87,6 @@ class HomeFragment(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initRvDuaCollection()
-        inflateBinding()
     }
 
     override fun setListener() {
@@ -100,13 +100,8 @@ class HomeFragment(
         subscribeObserversAPI()
     }
 
-    private fun inflateBinding() {
-        dialogBinding = DataBindingUtil.inflate(
-            layoutInflater,
-            R.layout.layout_popup_choose_quote_setting,
-            null,
-            false
-        )
+    override fun inflateBinding() {
+        dialogBinding = LayoutPopupChooseQuoteSettingBinding.inflate(layoutInflater)
         dialog = Dialog(requireContext())
     }
 

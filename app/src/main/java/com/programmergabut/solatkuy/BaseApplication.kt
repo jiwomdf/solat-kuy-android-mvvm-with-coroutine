@@ -1,4 +1,4 @@
-package com.programmergabut.solatkuy.base
+package com.programmergabut.solatkuy
 
 import android.app.Application
 import android.content.Context

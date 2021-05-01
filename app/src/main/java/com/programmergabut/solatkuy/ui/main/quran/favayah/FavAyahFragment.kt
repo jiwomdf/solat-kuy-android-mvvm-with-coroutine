@@ -4,7 +4,6 @@ import android.app.Dialog
 import android.os.Bundle
 import android.view.View
 import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.LinearLayoutManager
 import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.base.BaseFragment
@@ -22,6 +21,8 @@ class FavAyahFragment constructor(
     FavAyahViewModel::class.java, viewModelTest
 ) {
     private lateinit var favAyahAdapter: FavAyahAdapter
+
+    override fun getViewBinding() = FragmentFavAyahBinding.inflate(layoutInflater)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
@@ -57,7 +58,7 @@ class FavAyahFragment constructor(
 
     private val onClickFavAyah = fun(data: MsFavAyah) {
         val dialog = Dialog(requireContext())
-        val dialogView = DataBindingUtil.inflate<LayoutDeleteBinding>(layoutInflater, R.layout.layout_delete, null, true)
+        val dialogView = LayoutDeleteBinding.inflate(layoutInflater)
         dialog.apply {
             window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
             setContentView(dialogView.root)
