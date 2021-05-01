@@ -16,7 +16,7 @@ import com.programmergabut.solatkuy.data.remote.json.prayerJson.Result
 import com.programmergabut.solatkuy.data.remote.json.prayerJson.PrayerResponse
 import com.programmergabut.solatkuy.data.remote.json.prayerJson.Timings
 import com.programmergabut.solatkuy.util.ContextProviders
-import com.programmergabut.solatkuy.util.DebugUtil
+import com.programmergabut.solatkuy.base.BaseRepository
 import com.programmergabut.solatkuy.util.EnumConfig
 import com.programmergabut.solatkuy.util.Resource
 import kotlinx.coroutines.CoroutineScope
@@ -39,7 +39,7 @@ class PrayerRepositoryImpl @Inject constructor(
     private val contextProviders: ContextProviders,
     private val qiblaApiService: QiblaApiService,
     private val prayerApiService: PrayerApiService
-): DebugUtil(), PrayerRepository {
+): BaseRepository(), PrayerRepository {
 
     /* NotifiedPrayer */
     override suspend fun updatePrayerIsNotified(prayerName: String, isNotified: Boolean) =
@@ -126,9 +126,6 @@ class PrayerRepositoryImpl @Inject constructor(
                 }
             }
 
-            override fun onFetchFailed() {
-
-            }
         }.asLiveData()
     }
 

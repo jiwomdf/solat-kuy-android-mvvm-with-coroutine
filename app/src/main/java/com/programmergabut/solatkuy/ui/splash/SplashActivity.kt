@@ -32,7 +32,7 @@ class SplashActivity : BaseActivity<ActivitySplashBinding, SplashViewModel>(
                     gotoBoardingActivity()
                 }
             } else {
-                SolatKuyRoom.populateDatabase(getDatabase())
+                SolatKuyRoom.populateDatabase(db)
             }
         })
     }

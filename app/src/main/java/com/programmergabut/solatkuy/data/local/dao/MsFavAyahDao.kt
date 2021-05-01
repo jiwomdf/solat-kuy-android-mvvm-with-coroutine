@@ -11,7 +11,7 @@ interface MsFavAyahDao {
     fun observeListFavAyah(): LiveData<List<MsFavAyah>>
 
     @Query("select * from MsFavAyah where surahID like :surahID")
-    suspend fun getListFavAyahBySurahID(surahID: Int): List<MsFavAyah>?
+    fun getListFavAyahBySurahID(surahID: Int): List<MsFavAyah>?
 
     @Query("delete from MsFavAyah")
     suspend fun deleteAll()

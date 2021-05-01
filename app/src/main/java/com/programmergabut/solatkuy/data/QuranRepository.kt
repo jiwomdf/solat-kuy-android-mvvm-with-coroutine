@@ -22,5 +22,5 @@ interface QuranRepository {
     suspend fun fetchAllSurah(): Deferred<AllSurahResponse>
     fun getAllSurah(): LiveData<Resource<List<MsSurah>>>
     suspend fun fetchReadSurahAr(surahID: Int): Deferred<ReadSurahArResponse>
-    fun getReadSurahAr(surahID: Int): LiveData<Resource<List<MsAyah>>>
+    fun getSelectedSurah(surahID: Int): LiveData<Resource<List<MsAyah>>>
 }

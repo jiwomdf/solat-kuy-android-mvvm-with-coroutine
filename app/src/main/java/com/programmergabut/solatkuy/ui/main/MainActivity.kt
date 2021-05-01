@@ -34,7 +34,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>(
     }
 
     override fun onDestroy() {
-        setIsHasOpenAnimation(false)
+        sharedPrefUtil.setIsHasOpenAnimation(false)
         super.onDestroy()
     }
 

@@ -56,17 +56,25 @@ class BoardingActivity : BaseActivity<ActivityBoardingBinding, BoardingViewModel
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         bottomSheetDialog = BottomSheetDialog(this)
+        inflateBinding()
     }
 
     override fun setListener() {
         super.setListener()
 
-        inflateBinding()
         binding.btnByLatitudeLongitude.setOnClickListener(this)
         binding.btnByGps.setOnClickListener(this)
         bsByGpsBinding.btnProceedByGps.setOnClickListener(this)
         bsByLatLngBinding.btnProceedByLL.setOnClickListener(this)
-        observeDb()
+
+        viewModel.msSetting.observe(this, {
+            if(it != null){
+                if(it.isHasOpenApp){
+                    gotoIntent(MainActivity::class.java, null, true)
+                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
+                }
+            }
+        })
     }
 
     private fun inflateBinding() {
@@ -109,17 +117,6 @@ class BoardingActivity : BaseActivity<ActivityBoardingBinding, BoardingViewModel
                 }
             }
         }
-    }
-
-    private fun observeDb(){
-        viewModel.msSetting.observe(this, {
-            if(it != null){
-                if(it.isHasOpenApp){
-                    gotoIntent(MainActivity::class.java, null, true)
-                    overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)
-                }
-            }
-        })
     }
 
     private fun updateIsHasOpenApp() {

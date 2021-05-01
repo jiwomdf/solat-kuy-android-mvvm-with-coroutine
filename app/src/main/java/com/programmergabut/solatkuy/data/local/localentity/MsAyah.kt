@@ -21,7 +21,8 @@ data class MsAyah(
     val revelationType: String,
     var textEn: String? = "",
     var isFav: Boolean = false,
-    var isLastRead: Boolean = false
+    var isLastRead: Boolean = false,
+    var surahID: Int,
 ){
     @PrimaryKey(autoGenerate = true)
     var ayahID: Int = 0

@@ -60,16 +60,16 @@ class ReadMsSurahFragmentViewModelTest{
         Mockito.`when`(fakeQuranRepository.fetchReadSurahAr(surahID)).thenReturn(dummySelectedSurahAr.data!!.toDeferred())
         Mockito.`when`(fakeQuranRepository.fetchReadSurahEn(surahID)).thenReturn(dummySelectedSurahEn.data!!.toDeferred())
 
-        viewModel.selectedSurahAr.observeForever(observer)
+        viewModel.selectedSurah.observeForever(observer)
 
         viewModel.fetchReadSurahAr(surahID)
-        val result = viewModel.selectedSurahAr.value
+        val result = viewModel.selectedSurah.value
 
         Mockito.verify(fakeQuranRepository).fetchReadSurahAr(surahID).toDeferred()
         Assert.assertEquals(dummySelectedSurahAr, result)
         Mockito.verify(observer).onChanged(dummySelectedSurahAr)
 
-        viewModel.selectedSurahAr.removeObserver(observer)
+        viewModel.selectedSurah.removeObserver(observer)
     }
 
     @Test
@@ -82,7 +82,7 @@ class ReadMsSurahFragmentViewModelTest{
 
         viewModel.favSurahBySurahID.observeForever(observer)
 
-        viewModel.getFavSurahBySurahID(surahID)
+        viewModel.getSelectedSurah(surahID)
         val result = viewModel.favSurahBySurahID.value
 
         Mockito.verify(fakeQuranRepository).observeFavSurahBySurahID(surahID)

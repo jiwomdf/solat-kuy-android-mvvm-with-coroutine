@@ -11,11 +11,11 @@ import com.programmergabut.solatkuy.data.local.localentity.MsSurah
 @Dao
 interface MsAyahDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
-    fun insertAyahs(msSurah: List<MsAyah>)
+    fun insertAyahs(msAyah: List<MsAyah>)
 
-    @Query("delete from MsAyah")
-    fun deleteAyahs()
+    @Query("DELETE FROM MsAyah WHERE surahID = :surahID")
+    fun deleteAyahsBySurahID(surahID: Int)
 
-    @Query("select * from MsAyah")
-    fun getAyahs(): LiveData<List<MsAyah>>
+    @Query("SELECT * FROM MsAyah WHERE surahID = :surahID")
+    fun getAyahsBySurahID(surahID: Int): LiveData<List<MsAyah>>
 }

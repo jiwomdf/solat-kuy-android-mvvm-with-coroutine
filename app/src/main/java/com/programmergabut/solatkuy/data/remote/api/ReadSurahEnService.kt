@@ -13,6 +13,6 @@ interface ReadSurahEnService {
 
     //http://api.alquran.cloud/v1/surah/110/en.asad
 
-    @GET("surah/{nInSurah}/en.asad")
-    fun fetchReadSurahEn(@Path("nInSurah") nInSurah: Int): Call<ReadSurahEnResponse>
+    @GET("surah/{surahID}/en.asad")
+    fun fetchReadSurahEn(@Path("surahID") surahID: Int): Call<ReadSurahEnResponse>
 }

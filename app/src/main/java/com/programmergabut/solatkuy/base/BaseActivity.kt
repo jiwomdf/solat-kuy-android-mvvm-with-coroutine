@@ -102,37 +102,4 @@ abstract class BaseActivity<DB: ViewDataBinding, VM: ViewModel>(
                 finish()
         }
     }
-
-    protected fun getDatabase(): SolatKuyRoom {
-        return db
-    }
-
-    protected fun insertLastReadSharedPref(selectedSurahId: Int, numberInSurah: Int) {
-        sharedPrefUtil.insertLastReadSharedPref(selectedSurahId, numberInSurah)
-    }
-
-    protected fun getLastReadSurah(): Int {
-        return sharedPrefUtil.getLastReadSurah()
-    }
-
-    protected fun getLastReadAyah(): Int {
-        return sharedPrefUtil.getLastReadAyah()
-    }
-
-    protected fun getIsNotHasOpenAnimation(): Boolean {
-        return sharedPrefUtil.getIsHasOpenAnimation()
-    }
-
-    protected fun setIsHasOpenAnimation(value: Boolean){
-        sharedPrefUtil.setIsHasOpenAnimation(value)
-    }
-
-    protected fun getIsBrightnessActive(): Boolean {
-        return sharedPrefUtil.getIsBrightnessActive()
-    }
-
-    protected fun setIsBrightnessActive(value: Boolean){
-        sharedPrefUtil.setIsBrightnessActive(value)
-    }
-
 }

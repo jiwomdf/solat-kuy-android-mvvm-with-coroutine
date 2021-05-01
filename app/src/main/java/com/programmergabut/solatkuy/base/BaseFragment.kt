@@ -104,37 +104,4 @@ abstract class BaseFragment<DB: ViewDataBinding, VM: ViewModel>(
         }
     }
 
-    protected fun getDatabase() = db
-
-    protected fun getLastReadSurah(): Int {
-        return sharedPrefUtil.getLastReadSurah()
-    }
-
-    protected fun getIsHasOpenAnimation(): Boolean {
-        return sharedPrefUtil.getIsHasOpenAnimation()
-    }
-
-    protected fun insertLastReadSharedPref(selectedSurahId: Int, numberInSurah: Int) {
-        sharedPrefUtil.insertLastReadSharedPref(selectedSurahId, numberInSurah)
-    }
-
-    protected fun getLastReadAyah(): Int {
-        return sharedPrefUtil.getLastReadAyah()
-    }
-
-    protected fun getIsNotHasOpenAnimation(): Boolean {
-        return sharedPrefUtil.getIsHasOpenAnimation()
-    }
-
-    protected fun setIsHasOpenAnimation(value: Boolean){
-        sharedPrefUtil.setIsHasOpenAnimation(value)
-    }
-
-    protected fun getIsBrightnessActive(): Boolean {
-        return sharedPrefUtil.getIsBrightnessActive()
-    }
-
-    protected fun setIsBrightnessActive(value: Boolean){
-        sharedPrefUtil.setIsBrightnessActive(value)
-    }
 }

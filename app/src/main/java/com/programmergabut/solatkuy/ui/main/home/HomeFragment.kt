@@ -78,7 +78,7 @@ class HomeFragment(
         if(viewModel.notifiedPrayer.value?.data != null){
             val data = viewModel.notifiedPrayer.value?.data!!
             val timing = createWidgetData(data)
-            val selectedPrayer = SelectPrayerHelper.selectNextPrayerToInt(timing)
+            val selectedPrayer = SelectPrayerHelper.selectNextPrayer(timing)
             selectNextPrayerTime(selectedPrayer, timing)
         }
     }
@@ -86,11 +86,11 @@ class HomeFragment(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initRvDuaCollection()
+        inflateBinding()
     }
 
     override fun setListener() {
         super.setListener()
-        inflateBinding()
         cbClickListener()
         binding.includeQuranQuote.tvQuranAyahQuoteClick.setOnClickListener(this)
         binding.includeQuranQuote.tvQuranAyahQuote.setOnClickListener(this)
@@ -175,9 +175,7 @@ class HomeFragment(
         viewModel.prayer.observe(viewLifecycleOwner, {
             when(it.status){
                 EnumStatus.SUCCESS -> {
-                    val sdf = SimpleDateFormat("dd", Locale.getDefault())
-                    val currentDate = sdf.format(Date())
-                    val data = createTodayData(it.data, currentDate)
+                    val data = createTodayData(it.data)
                     val date = data?.date
                     val hijriDate = date?.hijri
                     val gregorianDate = date?.gregorian
@@ -287,8 +285,10 @@ class HomeFragment(
         }
     }
 
-    private fun createTodayData(it: PrayerResponse?, currentDate: String): Result? =
-        it?.data?.find { obj -> obj.date.gregorian?.day == currentDate }
+    private fun createTodayData(it: PrayerResponse?): Result? =
+        it?.data?.find {
+            obj -> obj.date.gregorian?.day == SimpleDateFormat("dd", Locale.getDefault()).format(Date())
+        }
 
     private fun updateMonthAndYearMsApi1(data: MsApi1) {
         val arrDate = LocalDate.now().toString("dd/M/yyyy").split("/")
@@ -368,7 +368,7 @@ class HomeFragment(
         if(data == null)
             return
 
-        val selectedPrayer = SelectPrayerHelper.selectNextPrayerToInt(data)
+        val selectedPrayer = SelectPrayerHelper.selectNextPrayer(data)
         bindPrayerText(data)
         selectWidgetTitle(selectedPrayer)
         selectWidgetPic(selectedPrayer)

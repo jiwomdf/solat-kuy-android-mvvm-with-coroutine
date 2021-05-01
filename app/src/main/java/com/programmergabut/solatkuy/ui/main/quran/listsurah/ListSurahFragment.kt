@@ -78,7 +78,7 @@ class ListSurahFragment(
             }
             R.id.cv_last_read_ayah -> {
                 viewModel.allSurah.value?.data?.let {
-                    val selectedSurah = getLastReadSurah(it, getLastReadSurah())
+                    val selectedSurah = getLastReadSurah(it, sharedPrefUtil.getLastReadSurah())
                     if(selectedSurah == null){
                         showBottomSheet(getString(R.string.last_read_ayah_not_found_title), getString(R.string.last_read_ayah_not_found_dsc))
                         return

@@ -8,7 +8,7 @@ import java.util.*
 
 class SelectPrayerHelper {
     companion object {
-        fun selectNextPrayerToInt(timings: MsTimings): Int {
+        fun selectNextPrayer(timings: MsTimings): Int {
             var prayer: Int = -1
 
             //prayer time

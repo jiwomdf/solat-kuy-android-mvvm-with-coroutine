@@ -11,17 +11,20 @@ import com.programmergabut.solatkuy.data.local.localentity.MsFavAyah
 import com.programmergabut.solatkuy.data.local.localentity.MsFavSurah
 import com.programmergabut.solatkuy.data.local.localentity.MsSurah
 import com.programmergabut.solatkuy.data.remote.ApiResponse
-import com.programmergabut.solatkuy.data.remote.api.*
+import com.programmergabut.solatkuy.data.remote.api.AllSurahService
+import com.programmergabut.solatkuy.data.remote.api.ReadSurahArService
+import com.programmergabut.solatkuy.data.remote.api.ReadSurahEnService
 import com.programmergabut.solatkuy.data.remote.json.quranallsurahJson.AllSurahResponse
 import com.programmergabut.solatkuy.data.remote.json.readsurahJsonAr.Ayah
 import com.programmergabut.solatkuy.data.remote.json.readsurahJsonAr.ReadSurahArResponse
 import com.programmergabut.solatkuy.data.remote.json.readsurahJsonEn.ReadSurahEnResponse
 import com.programmergabut.solatkuy.util.ContextProviders
-import com.programmergabut.solatkuy.util.DebugUtil
+import com.programmergabut.solatkuy.base.BaseRepository
 import com.programmergabut.solatkuy.util.Resource
-import kotlinx.coroutines.*
-import kotlinx.coroutines.Dispatchers.IO
-import java.lang.Exception
+import kotlinx.coroutines.CoroutineScope
+import kotlinx.coroutines.Deferred
+import kotlinx.coroutines.async
+import kotlinx.coroutines.withContext
 import java.util.*
 import javax.inject.Inject
 
@@ -34,7 +37,7 @@ class QuranRepositoryImpl @Inject constructor(
     private val allSurahService: AllSurahService,
     private val readSurahArService: ReadSurahArService,
     private val contextProviders: ContextProviders,
-    ): DebugUtil(), QuranRepository {
+): BaseRepository(), QuranRepository {
 
     /* MsFavAyah */
     override fun observeListFavAyah(): LiveData<List<MsFavAyah>> = msFavAyahDao.observeListFavAyah()
@@ -52,7 +55,7 @@ class QuranRepositoryImpl @Inject constructor(
 
     /* Remote */
     override suspend fun fetchReadSurahEn(surahID: Int): Deferred<ReadSurahEnResponse> {
-        return CoroutineScope(IO).async {
+        return CoroutineScope(contextProviders.IO).async {
             lateinit var response: ReadSurahEnResponse
             try {
                 response = execute(readSurahEnService.fetchReadSurahEn(surahID))
@@ -68,7 +71,7 @@ class QuranRepositoryImpl @Inject constructor(
     }
 
     override suspend fun fetchAllSurah(): Deferred<AllSurahResponse> {
-        return CoroutineScope(IO).async {
+        return CoroutineScope(contextProviders.IO).async {
             lateinit var response: AllSurahResponse
             try {
                 response = execute(allSurahService.fetchAllSurah())
@@ -87,11 +90,11 @@ class QuranRepositoryImpl @Inject constructor(
         return object : NetworkBoundResource<List<MsSurah>, AllSurahResponse>(contextProviders) {
             override fun loadFromDB(): LiveData<List<MsSurah>> = msSurahDao.getSurahs()
 
-            override fun shouldFetch(data: List<MsSurah>?): Boolean = true
+            override fun shouldFetch(data: List<MsSurah>?): Boolean = data == null || data.isEmpty()
 
             override fun createCall(): LiveData<ApiResponse<AllSurahResponse>> {
                 return liveData {
-                    withContext(CoroutineScope(IO).coroutineContext) {
+                    withContext(contextProviders.IO) {
                         lateinit var response: AllSurahResponse
                         try {
                             response = execute(allSurahService.fetchAllSurah())
@@ -125,7 +128,7 @@ class QuranRepositoryImpl @Inject constructor(
     }
 
     override suspend fun fetchReadSurahAr(surahID: Int): Deferred<ReadSurahArResponse> {
-        return CoroutineScope(IO).async {
+        return CoroutineScope(contextProviders.IO).async {
             lateinit var response : ReadSurahArResponse
             try {
                 response = execute(readSurahArService.fetchReadSurahAr(surahID))
@@ -140,15 +143,15 @@ class QuranRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun getReadSurahAr(surahID: Int): LiveData<Resource<List<MsAyah>>> {
+    override fun getSelectedSurah(surahID: Int): LiveData<Resource<List<MsAyah>>> {
         return object : NetworkBoundResource<List<MsAyah>, ReadSurahArResponse>(contextProviders) {
-            override fun loadFromDB(): LiveData<List<MsAyah>> = msAyahDao.getAyahs()
+            override fun loadFromDB(): LiveData<List<MsAyah>> = msAyahDao.getAyahsBySurahID(surahID)
 
-            override fun shouldFetch(data: List<MsAyah>?): Boolean = true
+            override fun shouldFetch(data: List<MsAyah>?): Boolean = data == null || data.isEmpty()
 
             override fun createCall(): LiveData<ApiResponse<ReadSurahArResponse>> {
                 return liveData {
-                    withContext(CoroutineScope(IO).coroutineContext) {
+                    withContext(contextProviders.IO) {
                         lateinit var arResponse: ReadSurahArResponse
                         lateinit var enResponse: ReadSurahEnResponse
                         try {
@@ -167,7 +170,6 @@ class QuranRepositoryImpl @Inject constructor(
                             }
 
                             arResponse.data.ayahs = hashMapOfAyah.values.toList()
-
                             emit(ApiResponse.success(arResponse))
                         } catch (ex: Exception) {
                             arResponse = ReadSurahArResponse()
@@ -197,16 +199,15 @@ class QuranRepositoryImpl @Inject constructor(
                             name = result.name,
                             numberOfAyahs = result.numberOfAyahs,
                             revelationType = result.revelationType,
+                            surahID = result.number
                         )
                     }
                 }
 
-                msAyahDao.deleteAyahs()
-                msAyahDao.insertAyahs(ayahs)
-            }
-
-            override fun onFetchFailed() {
-
+                ayahs?.first()?.let {
+                    msAyahDao.deleteAyahsBySurahID(it.number)
+                    msAyahDao.insertAyahs(ayahs)
+                }
             }
 
         }.asLiveData()

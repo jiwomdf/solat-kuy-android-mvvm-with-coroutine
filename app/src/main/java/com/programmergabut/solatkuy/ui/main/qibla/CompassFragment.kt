@@ -72,7 +72,7 @@ class CompassFragment constructor(
     }
 
     private fun openLottieAnimation() {
-        val isHasOpenAnimation = getIsHasOpenAnimation()
+        val isHasOpenAnimation = sharedPrefUtil.getIsHasOpenAnimation()
         if(!isHasOpenAnimation)
             createLottieAnimation()
     }
@@ -186,7 +186,7 @@ class CompassFragment constructor(
             show()
         }
         dialogBinding.btnHideAnimation.setOnClickListener {
-            setIsHasOpenAnimation(true)
+            sharedPrefUtil.setIsHasOpenAnimation(true)
             dialog.hide()
         }
     }

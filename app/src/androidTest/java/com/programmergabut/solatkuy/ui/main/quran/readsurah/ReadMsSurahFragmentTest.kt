@@ -18,8 +18,6 @@ import com.programmergabut.solatkuy.launchFragmentInHiltContainer
 import com.programmergabut.solatkuy.ui.MyViewAction
 import com.programmergabut.solatkuy.ui.SolatKuyFragmentFactoryAndroidTest
 import com.programmergabut.solatkuy.ui.main.quran.listsurah.StaredSurahAdapter
-import com.programmergabut.solatkuy.ui.main.quran.readsurah.ReadSurahFragment
-import com.programmergabut.solatkuy.ui.main.quran.readsurah.ReadSurahViewModel
 import com.programmergabut.solatkuy.util.idlingresource.EspressoIdlingResource
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -76,7 +74,7 @@ class ReadMsSurahFragmentTest {
         onView(withId(R.id.i_star_surah)).check(matches(isDisplayed()))
         onView(withId(R.id.rv_read_surah)).check(matches(isDisplayed()))
         onView(withId(R.id.fab_brightness)).check(matches(isDisplayed()))
-        onView(withId(R.id.tb_readSurah)).check(matches(hasDescendant(withText(testViewModel?.selectedSurahAr?.value?.data?.data?.englishName))))
+        onView(withId(R.id.tb_readSurah)).check(matches(hasDescendant(withText(testViewModel?.selectedSurah?.value?.data?.data?.englishName))))
     }
 
     @Test
@@ -97,7 +95,7 @@ class ReadMsSurahFragmentTest {
 
         onView(withId(R.id.rv_read_surah)).check(matches(isDisplayed()))
 
-        val selectedSurahAr = testViewModel!!.selectedSurahAr.value
+        val selectedSurahAr = testViewModel!!.selectedSurah.value
         val totalAyah = selectedSurahAr?.data!!.data.ayahs.size - 1
         onView(withId(R.id.rv_read_surah)).perform(
             RecyclerViewActions
@@ -167,7 +165,7 @@ class ReadMsSurahFragmentTest {
         }
 
         onView(withId(R.id.rv_read_surah)).check(matches(isDisplayed()))
-        for (i in testViewModel!!.selectedSurahAr.value!!.data!!.data.ayahs.indices){
+        for (i in testViewModel!!.selectedSurah.value!!.data!!.data.ayahs.indices){
             onView(withId(R.id.rv_read_surah)).perform(
                 RecyclerViewActions.actionOnItemAtPosition<StaredSurahAdapter.StaredSurahViewHolder>(
                     i,
