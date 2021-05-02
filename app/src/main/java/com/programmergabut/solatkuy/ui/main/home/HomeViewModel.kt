@@ -42,7 +42,7 @@ class FragmentMainViewModel @ViewModelInject constructor(
         if(_msApi1 == null){
             AbsentLiveData.create()
         } else {
-            prayerRepository.getListNotifiedPrayerr(it)
+            prayerRepository.getListNotifiedPrayer(it)
         }
     }
     fun getListNotifiedPrayer(msApi1: MsApi1){

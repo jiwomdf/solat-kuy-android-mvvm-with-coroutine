@@ -9,7 +9,7 @@ import com.programmergabut.solatkuy.data.remote.json.readsurahJsonAr.ReadSurahAr
 import com.programmergabut.solatkuy.data.remote.json.readsurahJsonEn.ReadSurahEnResponse
 import com.programmergabut.solatkuy.util.EnumConfig
 
-object DummyRetValueAndroidTest {
+object DummyValueAndroidTest {
 
     /* Last update : 4 Jan 2021 */
     val ALL_SURAH_SERVICE_JSON = "allSurahService.json"
@@ -68,10 +68,6 @@ object DummyRetValueAndroidTest {
 
 
         return listNotifiedPrayer
-    }
-
-    inline fun <reified BASE> fetchAsmaAlHusnaApi(): AsmaAlHusnaResponse {
-        return JsonToPojoConverterAndroidTest.convertJson<BASE, AsmaAlHusnaResponse>(READ_SURAH_EN_SERVICE_JSON)
     }
 
     inline fun <reified BASE> surahEnID_1(): ReadSurahEnResponse{

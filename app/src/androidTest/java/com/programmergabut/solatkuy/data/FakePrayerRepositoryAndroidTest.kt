@@ -6,24 +6,30 @@ package com.programmergabut.solatkuy.data
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
+import androidx.lifecycle.liveData
+import com.programmergabut.solatkuy.DummyValueAndroidTest
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
 import com.programmergabut.solatkuy.data.local.localentity.MsSetting
 import com.programmergabut.solatkuy.data.local.localentity.NotifiedPrayer
 import com.programmergabut.solatkuy.data.remote.json.compassJson.CompassResponse
 import com.programmergabut.solatkuy.data.remote.json.prayerJson.PrayerResponse
-import com.programmergabut.solatkuy.DummyRetValueAndroidTest
+import com.programmergabut.solatkuy.util.Resource
+import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
 import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.async
 
-/* class FakePrayerRepositoryAndroidTest: PrayerRepository {
+@HiltAndroidTest
+class FakePrayerRepositoryAndroidTest(
+): PrayerRepository {
 
-    private var msApi11 = DummyRetValueAndroidTest.getMsApi1()
+    private var msApi11 = DummyValueAndroidTest.getMsApi1()
+    private var msSetting = DummyValueAndroidTest.getMsSetting()
+    private var notifiedPrayer = DummyValueAndroidTest.getNotifiedPrayer()
+
     private val observableMsApi1 = MutableLiveData<MsApi1>()
-    private var msSetting = DummyRetValueAndroidTest.getMsSetting()
     private val observableMsSetting = MutableLiveData<MsSetting>()
-    private var notifiedPrayer = DummyRetValueAndroidTest.getNotifiedPrayer()
     private val observableNotifiedPrayer = MutableLiveData<List<NotifiedPrayer>>()
 
     init {
@@ -91,20 +97,26 @@ import kotlinx.coroutines.async
     }
 
     /* Retrofit */
-    override suspend fun fetchCompass(msApi1: MsApi1): Deferred<CompassResponse> {
+    override suspend fun fetchQibla(msApi1: MsApi1): Deferred<CompassResponse> {
         return CoroutineScope(IO).async {
-            val data = DummyRetValueAndroidTest.fetchCompassApi<FakePrayerRepositoryAndroidTest>()
-            data.statusResponse = "1"
+            val data = DummyValueAndroidTest.fetchCompassApi<FakePrayerRepositoryAndroidTest>()
+            data.responseStatus = "1"
             data.message = "testing"
             data
         }
     }
     override suspend fun fetchPrayerApi(msApi1: MsApi1): Deferred<PrayerResponse> {
         return CoroutineScope(IO).async {
-            val data = DummyRetValueAndroidTest.fetchPrayerApi<FakePrayerRepositoryAndroidTest>()
-            data.statusResponse = "1"
+            val data = DummyValueAndroidTest.fetchPrayerApi<FakePrayerRepositoryAndroidTest>()
+            data.responseStatus = "1"
             data.message = "testing"
             data
+        }
+    }
+
+    override fun getListNotifiedPrayer(msApi1: MsApi1): LiveData<Resource<List<NotifiedPrayer>>> {
+        return liveData {
+            emit(Resource.success(DummyValueAndroidTest.getNotifiedPrayer()))
         }
     }
 
@@ -112,4 +124,3 @@ import kotlinx.coroutines.async
         return observableNotifiedPrayer.value!!
     }
 }
-*/

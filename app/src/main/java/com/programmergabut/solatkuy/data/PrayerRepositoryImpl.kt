@@ -94,7 +94,7 @@ class PrayerRepositoryImpl @Inject constructor(
         }
     }
 
-    override fun getListNotifiedPrayerr(msApi1: MsApi1): LiveData<Resource<List<NotifiedPrayer>>> {
+    override fun getListNotifiedPrayer(msApi1: MsApi1): LiveData<Resource<List<NotifiedPrayer>>> {
         return object : NetworkBoundResource<List<NotifiedPrayer>, PrayerResponse>(contextProviders) {
             override fun loadFromDB(): LiveData<List<NotifiedPrayer>> = notifiedPrayerDao.getListNotifiedPrayer()
 

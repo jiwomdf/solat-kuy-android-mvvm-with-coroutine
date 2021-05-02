@@ -21,5 +21,5 @@ interface PrayerRepository {
     suspend fun getListNotifiedPrayer(): List<NotifiedPrayer>?
     suspend fun fetchQibla(msApi1: MsApi1): Deferred<CompassResponse>
     suspend fun fetchPrayerApi(msApi1: MsApi1): Deferred<PrayerResponse>
-    fun getListNotifiedPrayerr(msApi1: MsApi1): LiveData<Resource<List<NotifiedPrayer>>>
+    fun getListNotifiedPrayer(msApi1: MsApi1): LiveData<Resource<List<NotifiedPrayer>>>
 }
