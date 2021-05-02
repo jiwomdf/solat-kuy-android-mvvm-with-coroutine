@@ -90,20 +90,34 @@ object DummyRetValueTest {
         return JsonToPojoConverter.convertJson<BASE, CompassResponse>(QIBLA_API_SERVICE_JSON)
     }
 
-    inline fun <reified BASE> fetchAllSurahAr(): AllSurahResponse{
+    inline fun <reified BASE> fetchAllSurahAr(): AllSurahResponse {
         return JsonToPojoConverter.convertJson<BASE, AllSurahResponse>(ALL_SURAH_SERVICE_JSON)
     }
 
-    inline fun <reified BASE> fetchAllSurahWithLowerCase(): List<Result> {
+    inline fun <reified BASE> getAllSurahAr(): List<MsSurah>{
         val response = JsonToPojoConverter.convertJson<BASE, AllSurahResponse>(ALL_SURAH_SERVICE_JSON)
-
         return response.data.map { surah ->
-            com.programmergabut.solatkuy.data.remote.json.quranallsurahJson.Result(
+            MsSurah(
+                surah.number,
                 surah.englishName,
                 surah.englishName.toLowerCase(Locale.getDefault()).replace("-", " "),
                 surah.englishNameTranslation,
                 surah.name,
+                surah.numberOfAyahs,
+                surah.revelationType
+            )
+        }
+    }
+
+    inline fun <reified BASE> fetchAllSurahWithLowerCase(): List<MsSurah> {
+        val response = JsonToPojoConverter.convertJson<BASE, AllSurahResponse>(ALL_SURAH_SERVICE_JSON)
+        return response.data.map { surah ->
+            MsSurah(
                 surah.number,
+                surah.englishName,
+                surah.englishName.toLowerCase(Locale.getDefault()).replace("-", " "),
+                surah.englishNameTranslation,
+                surah.name,
                 surah.numberOfAyahs,
                 surah.revelationType
             )

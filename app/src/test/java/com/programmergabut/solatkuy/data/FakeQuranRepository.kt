@@ -1,22 +1,38 @@
 package com.programmergabut.solatkuy.data
 
 import androidx.lifecycle.LiveData
+import androidx.lifecycle.liveData
+import com.programmergabut.solatkuy.base.BaseRepository
+import com.programmergabut.solatkuy.data.local.dao.MsAyahDao
 import com.programmergabut.solatkuy.data.local.dao.MsFavAyahDao
 import com.programmergabut.solatkuy.data.local.dao.MsFavSurahDao
+import com.programmergabut.solatkuy.data.local.dao.MsSurahDao
+import com.programmergabut.solatkuy.data.local.localentity.MsAyah
 import com.programmergabut.solatkuy.data.local.localentity.MsFavAyah
 import com.programmergabut.solatkuy.data.local.localentity.MsFavSurah
+import com.programmergabut.solatkuy.data.local.localentity.MsSurah
+import com.programmergabut.solatkuy.data.remote.ApiResponse
+import com.programmergabut.solatkuy.data.remote.api.AllSurahService
+import com.programmergabut.solatkuy.data.remote.api.ReadSurahArService
+import com.programmergabut.solatkuy.data.remote.api.ReadSurahEnService
 import com.programmergabut.solatkuy.data.remote.json.quranallsurahJson.AllSurahResponse
 import com.programmergabut.solatkuy.data.remote.json.readsurahJsonAr.ReadSurahArResponse
 import com.programmergabut.solatkuy.data.remote.json.readsurahJsonEn.ReadSurahEnResponse
-import kotlinx.coroutines.CoroutineScope
-import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.Dispatchers
-import kotlinx.coroutines.async
+import com.programmergabut.solatkuy.util.ContextProviders
+import com.programmergabut.solatkuy.util.Resource
+import kotlinx.coroutines.*
+import retrofit2.await
+import java.util.*
 
 class FakeQuranRepository constructor(
-    private val remoteDataSourceApiAlquran: RemoteDataSourceApiAlquran,
     private val msFavAyahDao: MsFavAyahDao,
-    private val msFavSurahDao: MsFavSurahDao
+    private val msFavSurahDao: MsFavSurahDao,
+    private val msSurahDao: MsSurahDao,
+    private val msAyahDao: MsAyahDao,
+    private val readSurahEnService: ReadSurahEnService,
+    private val allSurahService: AllSurahService,
+    private val readSurahArService: ReadSurahArService,
+    private val contextProviders: ContextProviders,
 ): QuranRepository {
 
     /* MsFavAyah */
@@ -36,12 +52,12 @@ class FakeQuranRepository constructor(
         return CoroutineScope(Dispatchers.IO).async {
             lateinit var response: ReadSurahEnResponse
             try {
-                response = remoteDataSourceApiAlquran.fetchReadSurahEn(surahID)
-                response.statusResponse = "1"
+                response = readSurahEnService.fetchReadSurahEn(surahID).await()
+                response.status = "1"
             }
             catch (ex: Exception){
                 response = ReadSurahEnResponse()
-                response.statusResponse = "-1"
+                response.status = "-1"
                 response.message = ex.message.toString()
             }
             response
@@ -52,32 +68,76 @@ class FakeQuranRepository constructor(
         return CoroutineScope(Dispatchers.IO).async {
             lateinit var response: AllSurahResponse
             try {
-                response = remoteDataSourceApiAlquran.fetchAllSurah()
-                response.statusResponse = "1"
+                response = allSurahService.fetchAllSurah().await()
+                response.status = "1"
             }
             catch (ex: Exception){
                 response = AllSurahResponse()
-                response.statusResponse = "-1"
+                response.status = "-1"
                 response.message = ex.message.toString()
             }
             response
         }
     }
 
+    override fun getAllSurah(): LiveData<Resource<List<MsSurah>>> {
+        return object : NetworkBoundResource<List<MsSurah>, AllSurahResponse>(contextProviders) {
+            override fun loadFromDB(): LiveData<List<MsSurah>> = msSurahDao.getSurahs()
+
+            override fun shouldFetch(data: List<MsSurah>?): Boolean = data == null || data.isEmpty()
+
+            override fun createCall(): LiveData<ApiResponse<AllSurahResponse>> {
+                return liveData {
+                    withContext(contextProviders.IO) {
+                        lateinit var response: AllSurahResponse
+                        try {
+                            response = BaseRepository.execute(allSurahService.fetchAllSurah())
+                            emit(ApiResponse.success(response))
+                        } catch (ex: Exception) {
+                            response = AllSurahResponse()
+                            response.message = ex.message.toString()
+                            emit(ApiResponse.error(ex.message.toString(), response))
+                        }
+                    }
+                }
+            }
+
+            override fun saveCallResult(data: AllSurahResponse) {
+                val allSurah = data.data.map {
+                    MsSurah(
+                        englishName = it.englishName,
+                        englishNameLowerCase = it.englishNameTranslation.toLowerCase(Locale.ROOT),
+                        englishNameTranslation = it.englishNameTranslation,
+                        name = it.name,
+                        number = it.number,
+                        numberOfAyahs = it.numberOfAyahs,
+                        revelationType = it.revelationType
+                    )
+                }
+                msSurahDao.insertSurahs(allSurah)
+            }
+
+        }.asLiveData()
+    }
+
     override suspend fun fetchReadSurahAr(surahID: Int): Deferred<ReadSurahArResponse> {
         return CoroutineScope(Dispatchers.IO).async {
             lateinit var response : ReadSurahArResponse
             try {
-                response = remoteDataSourceApiAlquran.fetchReadSurahAr(surahID)
-                response.statusResponse = "1"
+                response = readSurahArService.fetchReadSurahAr(surahID).await()
+                response.status = "1"
             }
             catch (ex: Exception){
                 response = ReadSurahArResponse()
-                response.statusResponse = "-1"
+                response.status = "-1"
                 response.message = ex.message.toString()
             }
             response
         }
+    }
+
+    override fun getSelectedSurah(surahID: Int): LiveData<Resource<List<MsAyah>>> {
+        TODO("Not yet implemented")
     }
 
 }
