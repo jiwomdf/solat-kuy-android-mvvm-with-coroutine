@@ -19,7 +19,7 @@ interface PrayerRepository {
     suspend fun updateMsApi1MonthAndYear(api1ID: Int, month: String, year:String)
     suspend fun updateIsHasOpenApp(isHasOpen: Boolean)
     suspend fun getListNotifiedPrayer(): List<NotifiedPrayer>?
-    suspend fun fetchCompass(msApi1: MsApi1): Deferred<CompassResponse>
+    suspend fun fetchQibla(msApi1: MsApi1): Deferred<CompassResponse>
     suspend fun fetchPrayerApi(msApi1: MsApi1): Deferred<PrayerResponse>
     fun getListNotifiedPrayerr(msApi1: MsApi1): LiveData<Resource<List<NotifiedPrayer>>>
 }

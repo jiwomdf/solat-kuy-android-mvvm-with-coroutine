@@ -22,7 +22,7 @@ class CompassViewModel @ViewModelInject constructor(val prayerRepository: Prayer
         viewModelScope.launch {
             _compass.postValue(Resource.loading(null))
             try {
-                val response = prayerRepository.fetchCompass(msApi1).await()
+                val response = prayerRepository.fetchQibla(msApi1).await()
                 if(response.responseStatus == "1"){
                     _compass.postValue(Resource.success(response))
                 } else {

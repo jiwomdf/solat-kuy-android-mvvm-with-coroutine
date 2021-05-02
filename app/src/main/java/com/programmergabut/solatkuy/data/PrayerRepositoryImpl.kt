@@ -62,7 +62,7 @@ class PrayerRepositoryImpl @Inject constructor(
     override suspend fun updateIsHasOpenApp(isHasOpen: Boolean) = msSettingDao.updateIsHasOpenApp(isHasOpen)
 
     /* Remote */
-    override suspend fun fetchCompass(msApi1: MsApi1): Deferred<CompassResponse> {
+    override suspend fun fetchQibla(msApi1: MsApi1): Deferred<CompassResponse> {
       return CoroutineScope(IO).async {
           lateinit var response: CompassResponse
           try {

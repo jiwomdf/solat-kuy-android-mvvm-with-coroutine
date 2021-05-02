@@ -123,7 +123,6 @@ class QuranRepositoryImpl @Inject constructor(
                 msSurahDao.insertSurahs(allSurah)
             }
 
-            override fun onFetchFailed() {}
         }.asLiveData()
     }
 

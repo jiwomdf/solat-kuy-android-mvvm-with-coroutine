@@ -1,4 +1,4 @@
-package com.programmergabut.solatkuy.di.app
+package com.programmergabut.solatkuy.di
 
 import javax.inject.Qualifier
 
