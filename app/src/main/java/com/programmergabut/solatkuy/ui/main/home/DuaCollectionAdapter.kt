@@ -7,6 +7,7 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
 import com.programmergabut.solatkuy.data.local.localentity.Dua
 import com.programmergabut.solatkuy.databinding.ListDuaBinding
+import com.programmergabut.solatkuy.model.DuaExtraData
 import com.programmergabut.solatkuy.ui.dua.DuaActivity
 
 class DuaCollectionAdapter(private val context: Context): RecyclerView.Adapter<DuaCollectionAdapter.DuaCollectionViewHolder>() {
@@ -36,14 +37,14 @@ class DuaCollectionAdapter(private val context: Context): RecyclerView.Adapter<D
         private fun openDuaAfterAdhan(data: Dua) {
             val intent = Intent(context, DuaActivity::class.java)
             binding.btnDuaBtn.setOnClickListener {
-                intent.apply {
-                    putExtra(DuaActivity.DUA_TITLE, data.title)
-                    putExtra(DuaActivity.DUA_AR, data.arab)
-                    putExtra(DuaActivity.DUA_LT, data.latin)
-                    putExtra(DuaActivity.DUA_EN, data.english)
-                    putExtra(DuaActivity.DUA_IN, data.indonesia)
-                    putExtra(DuaActivity.DUA_REF, data.reference)
-                }
+                intent.putExtra(DuaActivity.DuaData, DuaExtraData(
+                    duaTitle = data.title,
+                    duaAr = data.arab,
+                    duaLt = data.latin,
+                    duaEn = data.english,
+                    duaIn = data.indonesia,
+                    duaRef = data.reference
+                ))
                 context.startActivity(intent)
             }
         }
