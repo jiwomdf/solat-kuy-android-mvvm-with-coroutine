@@ -68,20 +68,18 @@ class FragmentMainViewModel @ViewModelInject constructor(
 
     private var _prayer = MutableLiveData<Resource<PrayerResponse>>()
     val prayer: LiveData<Resource<PrayerResponse>> = _prayer
-    fun fetchPrayerApi(msApi1: MsApi1){
-        viewModelScope.launch {
-            _prayer.postValue(Resource.loading(null))
-            try{
-                val response  = prayerRepository.fetchPrayerApi(msApi1).await()
-                if(response.responseStatus == "1"){
-                    _prayer.postValue(Resource.success(response))
-                } else {
-                    _prayer.postValue(Resource.error(null, response.message))
-                }
+    fun fetchPrayerApi(msApi1: MsApi1) = viewModelScope.launch {
+        _prayer.postValue(Resource.loading(null))
+        try{
+            val response  = prayerRepository.fetchPrayerApi(msApi1).await()
+            if(response.responseStatus == "1"){
+                _prayer.postValue(Resource.success(response))
+            } else {
+                _prayer.postValue(Resource.error(null, response.message))
             }
-            catch (ex: Exception){
-                _prayer.postValue(Resource.error(null, ex.message.toString()))
-            }
+        }
+        catch (ex: Exception){
+            _prayer.postValue(Resource.error(null, ex.message.toString()))
         }
     }
 

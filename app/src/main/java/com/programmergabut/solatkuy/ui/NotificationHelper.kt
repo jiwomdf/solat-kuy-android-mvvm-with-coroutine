@@ -6,6 +6,7 @@ import android.app.NotificationManager
 import android.app.PendingIntent
 import android.content.Context
 import android.content.ContextWrapper
+import android.graphics.Bitmap
 import android.graphics.BitmapFactory
 import android.media.RingtoneManager
 import android.os.Build
@@ -36,12 +37,15 @@ class NotificationHelper(context: Context): ContextWrapper(context) {
                 NotificationManager.IMPORTANCE_DEFAULT
             )
 
-            channelNotificationPrayer.enableLights(true)
-            channelNotificationPrayer.vibrationPattern = longArrayOf(0)
-            channelNotificationPrayer.enableVibration(true)
-            channelNotificationPrayer.lightColor = R.color.purple_500
-            channelNotificationPrayer.lockscreenVisibility = Notification.VISIBILITY_PUBLIC
-            getManager()?.createNotificationChannel(channelNotificationPrayer)
+            channelNotificationPrayer.apply {
+                enableLights(true)
+                vibrationPattern = longArrayOf(0)
+                enableVibration(true)
+                lightColor = R.color.purple_500
+                lockscreenVisibility = Notification.VISIBILITY_PUBLIC
+            }.also {
+                getManager()?.createNotificationChannel(it)
+            }
         }
     }
 
@@ -51,13 +55,21 @@ class NotificationHelper(context: Context): ContextWrapper(context) {
         return mManager
     }
 
-    fun getPrayerReminderNC(pTime: String, pCity: String, pName: String, intent: PendingIntent): NotificationCompat.Builder {
-        val message = if(pCity.isEmpty())
-            "now is $pTime in - let's pray $pName"
-        else
-            "now is $pTime in $pCity let's pray $pName"
+    fun createPrayerReminderNotification(
+        prayerTime: String,
+        prayerCity: String,
+        prayerName: String,
+        intent: PendingIntent
+    ): NotificationCompat.Builder {
 
-        val bitmap = BitmapFactory.decodeResource(
+        val message = createMessage(prayerCity, prayerTime, prayerName)
+        val bitmap = createPrayerBitmap(prayerName)
+        createVibration()
+        return createNotificationBuilder(prayerName, intent, message, bitmap)
+    }
+
+    private fun createPrayerBitmap(pName: String): Bitmap {
+        return BitmapFactory.decodeResource(
             resources, when (pName) {
                 getString(R.string.fajr) -> R.drawable.img_fajr
                 getString(R.string.dhuhr) -> R.drawable.img_dhuhr
@@ -67,7 +79,16 @@ class NotificationHelper(context: Context): ContextWrapper(context) {
                 else -> R.drawable.img_fajr
             }
         )
+    }
 
+    private fun createMessage(pCity: String, pTime: String, pName: String): String {
+        return if (pCity.isEmpty())
+            "now is $pTime in - let's pray $pName"
+        else
+            "now is $pTime in $pCity let's pray $pName"
+    }
+
+    private fun createVibration() {
         val vibrator = this.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
         if(vibrator.hasVibrator()){
             val vibrationPattern = longArrayOf(0, VIBRATE_MS, AWAIT_VIBRATE_MS, VIBRATE_MS, AWAIT_VIBRATE_MS, VIBRATE_MS, AWAIT_VIBRATE_MS, VIBRATE_MS)
@@ -77,9 +98,16 @@ class NotificationHelper(context: Context): ContextWrapper(context) {
             else
                 vibrator.vibrate(vibrationPattern, -1)
         }
+    }
 
-        if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
-            return NotificationCompat.Builder(applicationContext, channelNotificationPrayerID)
+    private fun createNotificationBuilder(
+        pName: String,
+        intent: PendingIntent,
+        message: String,
+        bitmap: Bitmap
+    ): NotificationCompat.Builder {
+        return if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O){
+             NotificationCompat.Builder(applicationContext, channelNotificationPrayerID)
                 .setContentTitle(pName)
                 .setContentText(message)
                 .setSubText(EnumConfig.DUA_AFTER_ADHAN)
@@ -94,7 +122,7 @@ class NotificationHelper(context: Context): ContextWrapper(context) {
                 .setPriority(NotificationCompat.DEFAULT_ALL)
         }
         else{
-            return NotificationCompat.Builder(this, channelNotificationPrayerID)
+             NotificationCompat.Builder(this, channelNotificationPrayerID)
                 .setContentTitle(pName)
                 .setContentText(message)
                 .setSubText(EnumConfig.DUA_AFTER_ADHAN)

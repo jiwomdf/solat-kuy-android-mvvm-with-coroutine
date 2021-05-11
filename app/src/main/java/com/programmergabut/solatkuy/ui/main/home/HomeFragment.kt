@@ -1,6 +1,7 @@
 package com.programmergabut.solatkuy.ui.main.home
 
 import android.app.Dialog
+import android.content.Context
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
@@ -9,6 +10,7 @@ import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.LinearLayoutManager
+import androidx.work.*
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
 import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
@@ -32,6 +34,8 @@ import com.programmergabut.solatkuy.util.EnumConfig.Companion.ENDED_SURAH
 import com.programmergabut.solatkuy.util.EnumConfig.Companion.STARTED_SURAH
 import com.programmergabut.solatkuy.util.EnumStatus
 import com.programmergabut.solatkuy.util.LogConfig.Companion.COROUTINE_TIMER
+import com.programmergabut.solatkuy.worker.FireAlarmManagerWorker
+import com.programmergabut.solatkuy.worker.UpdateMonthAndYearWorker
 import dagger.hilt.android.AndroidEntryPoint
 import es.dmoral.toasty.Toasty
 import kotlinx.coroutines.*
@@ -40,6 +44,7 @@ import org.joda.time.LocalDate
 import org.joda.time.Period
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.concurrent.TimeUnit
 import kotlin.math.abs
 
 /*
@@ -56,7 +61,6 @@ class HomeFragment(
 
     private var isTimerHasBanded = false
     private var coroutineTimerJob: Job? = null
-    private var mCityName: String? = null
     private lateinit var duaCollectionAdapter: DuaCollectionAdapter
     private lateinit var dialogBinding: LayoutPopupChooseQuoteSettingBinding
     private lateinit var dialog: Dialog
@@ -76,9 +80,8 @@ class HomeFragment(
         binding.includeQuranQuote?.tvQuranAyahQuote.visibility = View.GONE
         binding.includeQuranQuote?.tvQuranAyahQuoteClick.visibility = View.VISIBLE
 
-        if(viewModel.notifiedPrayer.value?.data != null){
-            val data = viewModel.notifiedPrayer.value?.data!!
-            val timing = createWidgetData(data)
+        viewModel.notifiedPrayer.value?.data?.let {
+            val timing = createWidgetData(it)
             val selectedPrayer = SelectPrayerHelper.selectNextPrayer(timing)
             selectNextPrayerTime(selectedPrayer, timing)
         }
@@ -87,6 +90,7 @@ class HomeFragment(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initRvDuaCollection()
+        fireUpdateMonthYearWorker()
     }
 
     override fun setListener() {
@@ -157,7 +161,8 @@ class HomeFragment(
                         return@observe
 
                     bindCheckBox(retVal.data)
-                    updateAlarmManager(retVal.data)
+                    //updateAlarmManager(retVal.data)
+                    fireWorker()
                     bindWidget(createWidgetData(retVal.data))
                 }
                 EnumStatus.LOADING -> {
@@ -175,16 +180,14 @@ class HomeFragment(
                     val hijriDate = date?.hijri
                     val gregorianDate = date?.gregorian
 
-                    binding.includeInfo.apply {
-                        tvImsakDate.text = date?.readable
-                        tvImsakTime.text = data?.timings?.imsak
-                        tvGregorianDate.text = gregorianDate?.date
-                        tvHijriDate.text = hijriDate?.date
-                        tvGregorianMonth.text = gregorianDate?.month?.en
-                        tvHijriMonth.text = hijriDate?.month?.en + " / " + hijriDate?.month?.ar
-                        tvGregorianDay.text = gregorianDate?.weekday?.en
-                        tvHijriDay.text = hijriDate?.weekday?.en + " / " + hijriDate?.weekday?.ar
-                    }
+                    binding.includeInfo.tvImsakDate.text = date?.readable
+                    binding.includeInfo.tvImsakTime.text = data?.timings?.imsak
+                    binding.includeInfo.tvGregorianDate.text = gregorianDate?.date
+                    binding.includeInfo.tvHijriDate.text = hijriDate?.date
+                    binding.includeInfo.tvGregorianMonth.text = gregorianDate?.month?.en
+                    binding.includeInfo.tvHijriMonth.text = hijriDate?.month?.en + " / " + hijriDate?.month?.ar
+                    binding.includeInfo.tvGregorianDay.text = gregorianDate?.weekday?.en
+                    binding.includeInfo.tvHijriDay.text = hijriDate?.weekday?.en + " / " + hijriDate?.weekday?.ar
                 }
                 EnumStatus.LOADING -> setState(it.status)
                 EnumStatus.ERROR -> setState(it.status)
@@ -280,10 +283,9 @@ class HomeFragment(
         }
     }
 
-    private fun createTodayData(it: PrayerResponse?): Result? =
-        it?.data?.find {
-            obj -> obj.date.gregorian?.day == SimpleDateFormat("dd", Locale.getDefault()).format(Date())
-        }
+    private fun createTodayData(it: PrayerResponse?): Result? = it?.data?.find {
+        obj -> obj.date.gregorian?.day == SimpleDateFormat("dd", Locale.getDefault()).format(Date())
+    }
 
     private fun updateMonthAndYearMsApi1(data: MsApi1) {
         val arrDate = LocalDate.now().toString("dd/M/yyyy").split("/")
@@ -371,10 +373,10 @@ class HomeFragment(
     }
 
     private fun bindWidgetLocation(it: MsApi1) {
-        mCityName = LocationHelper.getCity(requireContext(), it.latitude.toDouble(), it.longitude.toDouble())
+        val city = LocationHelper.getCity(requireContext(), it.latitude.toDouble(), it.longitude.toDouble())
         binding.tvViewLatitude.text = it.latitude + " °N"
         binding.tvViewLongitude.text = it.longitude + " °W"
-        binding.tvViewCity.text = mCityName ?: EnumConfig.CITY_NOT_FOUND
+        binding.tvViewCity.text = city ?: EnumConfig.CITY_NOT_FOUND
     }
 
     private fun bindPrayerText(apiData: MsTimings?) {
@@ -387,8 +389,7 @@ class HomeFragment(
                 tvIshaTime.text = getString(R.string.loading)
                 tvDateChange.text = getString(R.string.loading)
             }
-        }
-        else{
+        } else {
             binding.includePrayerTime.apply {
                 tvFajrTime.text = apiData.fajr
                 tvDhuhrTime.text = apiData.dhuhr
@@ -543,10 +544,24 @@ class HomeFragment(
         }
     }
 
-    private fun updateAlarmManager(listNotifiedPrayer: List<NotifiedPrayer>){
+    /* private fun updateAlarmManager(listNotifiedPrayer: List<NotifiedPrayer>){
         if(mCityName.isNullOrEmpty())
             mCityName = "-"
         PushNotificationHelper(requireContext(), listNotifiedPrayer, mCityName!!)
+    } */
+
+    private fun fireWorker() {
+        val task = PeriodicWorkRequest.Builder(FireAlarmManagerWorker::class.java, 60, TimeUnit.MINUTES)
+            .build()
+        val workManager = WorkManager.getInstance(requireActivity().application)
+        workManager.enqueueUniquePeriodicWork(FireAlarmManagerWorker.UNIQUE_KEY, ExistingPeriodicWorkPolicy.KEEP, task)
+    }
+
+    private fun fireUpdateMonthYearWorker() {
+        val task = PeriodicWorkRequest.Builder(UpdateMonthAndYearWorker::class.java, 720, TimeUnit.MINUTES)
+            .build()
+        val workManager = WorkManager.getInstance(requireActivity().application)
+        workManager.enqueueUniquePeriodicWork(UpdateMonthAndYearWorker.UNIQUE_KEY, ExistingPeriodicWorkPolicy.KEEP, task)
     }
 
     private fun dismissDialog(){

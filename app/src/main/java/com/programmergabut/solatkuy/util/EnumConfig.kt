@@ -18,7 +18,7 @@ class EnumConfig {
         /* For the first time populating the database MsApi1 table */
         const val START_LAT = "0.0"
         const val START_LNG = "0.0"
-        const val START_METHOD = "3"
+        const val START_METHOD = "11"
         const val START_MONTH = "1"
         const val START_YEAR = "2020"
 

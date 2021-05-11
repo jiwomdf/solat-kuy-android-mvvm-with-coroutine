@@ -15,6 +15,7 @@ import androidx.viewbinding.ViewBinding
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.data.local.SolatKuyRoom
+import androidx.lifecycle.ViewModelProvider
 import com.programmergabut.solatkuy.databinding.LayoutErrorBottomsheetBinding
 import com.programmergabut.solatkuy.util.SharedPrefUtil
 import javax.inject.Inject
@@ -25,8 +26,6 @@ abstract class BaseFragment<VB: ViewBinding, VM: ViewModel>(
     private val viewModelTest: VM?
 ) : Fragment(), LifecycleObserver {
 
-    @Inject
-    lateinit var db: SolatKuyRoom
     @Inject
     lateinit var sharedPrefUtil: SharedPrefUtil
 

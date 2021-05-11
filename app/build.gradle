@@ -104,6 +104,9 @@ dependencies {
     // JodaTime
     implementation 'joda-time:joda-time:2.10.5'
 
+    // Work Manager
+    implementation "androidx.work:work-runtime-ktx:2.5.0"
+
     // Room
     implementation "androidx.room:room-runtime:$roomVersion"
     implementation "androidx.room:room-ktx:$roomVersion"

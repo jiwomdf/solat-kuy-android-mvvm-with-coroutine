@@ -105,7 +105,8 @@ class PrayerRepositoryImpl @Inject constructor(
                     withContext(CoroutineScope(IO).coroutineContext) {
                         lateinit var response: PrayerResponse
                         try {
-                            response = execute(prayerApiService.fetchPrayer(msApi1.latitude, msApi1.longitude, msApi1.method, msApi1.month, msApi1.year))
+                            response = execute(prayerApiService.fetchPrayer(msApi1.latitude,
+                                msApi1.longitude, msApi1.method, msApi1.month, msApi1.year))
                             emit(ApiResponse.success(response))
                         } catch (ex: Exception) {
                             response = PrayerResponse()
@@ -142,6 +143,17 @@ class PrayerRepositoryImpl @Inject constructor(
         prayerMap[EnumConfig.MAGHRIB] = timings.maghrib
         prayerMap[EnumConfig.ISHA] = timings.isha
         prayerMap[EnumConfig.SUNRISE] = timings.sunrise
+        return prayerMap
+    }
+
+    private fun createDummyPrayerMap(timings: Timings): MutableMap<String, String> {
+        val prayerMap = mutableMapOf<String, String>()
+        prayerMap[EnumConfig.FAJR] = "04:45 (WIB)"
+        prayerMap[EnumConfig.DHUHR] = "10:14 (WIB)"
+        prayerMap[EnumConfig.ASR] = "10:28 (WIB)"
+        prayerMap[EnumConfig.MAGHRIB] = "14:18 (WIB)"
+        prayerMap[EnumConfig.ISHA] = "16:05 (WIB)"
+        prayerMap[EnumConfig.SUNRISE] = "16:07 (WIB)"
         return prayerMap
     }
 

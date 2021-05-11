@@ -6,11 +6,8 @@ import android.content.Context
 import android.content.ContextWrapper
 import android.content.Intent
 import android.os.Build
-import android.os.Bundle
 import com.programmergabut.solatkuy.broadcaster.PrayerBroadcastReceiver
 import com.programmergabut.solatkuy.data.local.localentity.NotifiedPrayer
-import com.programmergabut.solatkuy.model.PrayerExtraData
-import com.programmergabut.solatkuy.model.PrayerListExtraData
 import com.programmergabut.solatkuy.service.ServiceUpdateMonthAndYear
 import com.programmergabut.solatkuy.util.EnumConfig
 import java.util.*
@@ -19,30 +16,22 @@ import java.util.*
  * Created by Katili Jiwo Adi Wiyono on 02/04/20.
  */
 
-class PushNotificationHelper(context: Context, selectedList: List<NotifiedPrayer>, cityName: String): ContextWrapper(context) {
+class PushNotificationHelper(context: Context, prayerList: List<NotifiedPrayer>, cityName: String): ContextWrapper(context) {
 
     private var mCityName: String? = null
 
     init {
         this.mCityName = cityName
 
-        val intent = Intent(context, PrayerBroadcastReceiver::class.java)
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val listPrayerBundle = bundleCreator(selectedList)
-        val newList = selectedList.filter { x -> x.prayerName !=  EnumConfig.SUNRISE} //remove sunrise from list
+        //val listPrayerBundle = bundleCreator(selectedList)
+        val newList = prayerList.filter { x -> x.prayerName !=  EnumConfig.SUNRISE} //remove sunrise from list
         newList.toMutableList().sortBy { x -> x.prayerID }
 
         newList.forEach { prayer ->
 
-            intent.putExtra(PrayerBroadcastReceiver.PrayerData, PrayerExtraData(
-                prayerId = prayer.prayerID,
-                prayerName = prayer.prayerName,
-                prayerTime = prayer.prayerTime,
-                prayerCity = cityName,
-                listPrayerBundle = listPrayerBundle
-            ))
-
-            val pendingIntent = PendingIntent.getBroadcast(context, prayer.prayerID, intent, 0)
+            val intent = createIntent(context, prayer)
+            val pendingIntent = PendingIntent.getBroadcast(context, prayer.prayerID, intent, PendingIntent.FLAG_CANCEL_CURRENT)
             val calendar = createCalendar(prayer)
             if(calendar.before(Calendar.getInstance()))
                 calendar.add(Calendar.DATE, 1)
@@ -50,7 +39,16 @@ class PushNotificationHelper(context: Context, selectedList: List<NotifiedPrayer
             fireAlarmManager(prayer, pendingIntent, alarmManager, calendar)
         }
 
-        startUpdateMonthYearService(context)
+        //startUpdateMonthYearService(context)
+    }
+
+    private fun createIntent(context: Context, prayer: NotifiedPrayer): Intent {
+        return Intent(context, PrayerBroadcastReceiver::class.java).also {
+            it.putExtra(PrayerBroadcastReceiver.prayerID, prayer.prayerID)
+            it.putExtra(PrayerBroadcastReceiver.prayerName, prayer.prayerName)
+            it.putExtra(PrayerBroadcastReceiver.prayerTime, prayer.prayerTime)
+            it.putExtra(PrayerBroadcastReceiver.prayerCity, mCityName)
+        }
     }
 
     private fun fireAlarmManager(
@@ -60,10 +58,11 @@ class PushNotificationHelper(context: Context, selectedList: List<NotifiedPrayer
         calendar: Calendar
     ) {
         if(prayer.isNotified){
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
                 alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
-            else
+            } else {
                 alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
+            }
         } else {
             alarmManager.cancel(pendingIntent)
         }
@@ -84,12 +83,12 @@ class PushNotificationHelper(context: Context, selectedList: List<NotifiedPrayer
         return calendar
     }
 
-    private fun startUpdateMonthYearService(context: Context) {
+    /* private fun startUpdateMonthYearService(context: Context) {
         val serviceIntent = Intent(context, ServiceUpdateMonthAndYear::class.java)
         context.startService(serviceIntent)
-    }
+    } */
 
-    private fun bundleCreator(selectedList: List<NotifiedPrayer>): Bundle {
+    /* private fun bundleCreator(selectedList: List<NotifiedPrayer>): Bundle {
         val listPrayerID = arrayListOf<Int>()
         val listPrayerName = arrayListOf<String>()
         val listPrayerTime = arrayListOf<String>()
@@ -113,6 +112,6 @@ class PushNotificationHelper(context: Context, selectedList: List<NotifiedPrayer
             listPrayerCity = listPrayerCity,
         ))
         return bundle
-    }
+    } */
 
 }

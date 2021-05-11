@@ -16,7 +16,7 @@ class SplashActivity : BaseActivity<ActivitySplashBinding, SplashViewModel>(
     SplashViewModel::class.java
 ) {
 
-    private val splashDelay : Long= 1000
+    private val splashDelay : Long = 1000
 
     override fun getViewBinding() = ActivitySplashBinding.inflate(layoutInflater)
 

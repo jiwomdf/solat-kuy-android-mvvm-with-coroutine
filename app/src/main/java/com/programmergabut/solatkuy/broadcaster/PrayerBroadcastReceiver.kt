@@ -5,13 +5,10 @@ import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.os.Build
 import android.os.Bundle
-import android.util.Log
 import com.programmergabut.solatkuy.data.local.localentity.NotifiedPrayer
 import com.programmergabut.solatkuy.ui.dua.DuaActivity
 import com.programmergabut.solatkuy.util.EnumConfig
-import com.programmergabut.solatkuy.util.LogConfig.Companion.ERROR
 import com.programmergabut.solatkuy.ui.NotificationHelper
 import com.programmergabut.solatkuy.data.hardcodedata.DuaData
 import com.programmergabut.solatkuy.model.DuaExtraData
@@ -26,42 +23,56 @@ import java.util.*
 class PrayerBroadcastReceiver: BroadcastReceiver() {
 
     companion object{
-        const val PrayerData = "prayer_data"
+        const val prayerID = "prayerId"
+        const val prayerName = "prayerName"
+        const val prayerTime = "prayerTime"
+        const val prayerCity = "prayerCity"
+
         const val PrayerListData = "prayer_list_data"
     }
 
     override fun onReceive(context: Context?, intent: Intent?) {
         if(context == null || intent == null){
-            val errMsg = "context == null || intent == null"
-            Log.d(ERROR,errMsg)
-            throw NullPointerException("PrayerBroadcastReceiver $errMsg")
+            throw NullPointerException()
         }
 
         val notificationHelper = NotificationHelper(context)
-        val prayerData = intent.getParcelableExtra<PrayerExtraData>(PrayerData)
-        val city = prayerData?.prayerCity ?: "-"
 
-        if(prayerData?.prayerId == null || prayerData.prayerName.isNullOrEmpty() ||
-            prayerData.prayerTime.isNullOrEmpty() || prayerData?.listPrayerBundle == null){
-            val errMsg = "PrayerBroadcastReceiver, pID == -1 || pName.isNullOrEmpty() || pTime.isNullOrEmpty() || listPrayerBundle == null"
-            Log.d(ERROR,errMsg)
-            throw NullPointerException("PrayerBroadcastReceiver $errMsg")
+        val prayerData = PrayerExtraData().also {
+            it.prayerId = intent.getIntExtra(prayerID, 0)
+            it.prayerName = intent.getStringExtra(prayerName)
+            it.prayerTime = intent.getStringExtra(prayerTime)
+            it.prayerCity = intent.getStringExtra(prayerCity)
         }
 
-        val listData = bundleDeserializer(prayerData.listPrayerBundle)
-        if(listData.isNullOrEmpty()){
-            val errMsg = "listData.isNullOrEmpty()"
-            Log.d(ERROR,errMsg)
-            throw Exception("PrayerBroadcastReceiver $errMsg")
+        if(prayerData.prayerName.isNullOrEmpty() || prayerData.prayerTime.isNullOrEmpty()){
+            throw NullPointerException()
         }
-        removeAllNotification(context, listData)
 
-        val duaIntent = intentToDuaAfterAdhanGenerator(context)
+        //val listData = bundleDeserializer(prayerData.listPrayerBundle)
+        //if(listData.isNullOrEmpty()){
+        //    throw NullPointerException()
+        //}
+
+        //removeAllNotification(context, listData)
+        removeAllNotification(context)
+
+        val duaIntent = createDuaIntent(context)
         val pendingIntent = PendingIntent.getActivity(context, EnumConfig.ID_DUA_PENDING_INTENT, duaIntent, PendingIntent.FLAG_UPDATE_CURRENT)
-        val notificationBuilder = notificationHelper.getPrayerReminderNC(prayerData.prayerTime, city, prayerData.prayerName, pendingIntent)
+        val notificationBuilder = notificationHelper.createPrayerReminderNotification(prayerData.prayerTime!!,
+            prayerData.prayerCity ?: "-", prayerData.prayerName!!, pendingIntent)
 
         notificationHelper.getManager()?.notify(EnumConfig.ID_PRAYER_NOTIFICATION, notificationBuilder.build())
-        executeNextNotification(listData, prayerData.listPrayerBundle, context, city)
+        //executeNextNotification(listData, prayerData.listPrayerBundle, context, city)
+    }
+
+    private fun removeAllNotification(context: Context){
+        val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
+        val intent = Intent(context, PrayerBroadcastReceiver::class.java)
+        for (id in 1 until 5){
+            val pendingIntent = PendingIntent.getBroadcast(context, id, intent, 0)
+            alarmManager.cancel(pendingIntent)
+        }
     }
 
     private fun removeAllNotification(context: Context, listData: List<NotifiedPrayer>){
@@ -73,7 +84,7 @@ class PrayerBroadcastReceiver: BroadcastReceiver() {
         }
     }
 
-    private fun executeNextNotification(listPrayer: List<NotifiedPrayer>, listPrayerBundle: Bundle?, context: Context, pCity: String) {
+    /* private fun executeNextNotification(listPrayer: List<NotifiedPrayer>, listPrayerBundle: Bundle?, context: Context, pCity: String) {
         val intent = Intent(context, PrayerBroadcastReceiver::class.java)
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
         val newPrayerList = listPrayer.filter { x -> x.prayerName !=  EnumConfig.SUNRISE} // remove img_sunrise
@@ -97,9 +108,9 @@ class PrayerBroadcastReceiver: BroadcastReceiver() {
 
             fireAlarmManager(prayer, pendingIntent, alarmManager, calendar)
         }
-    }
+    } */
 
-    private fun fireAlarmManager(
+    /* private fun fireAlarmManager(
         prayer: NotifiedPrayer,
         pendingIntent: PendingIntent,
         alarmManager: AlarmManager,
@@ -128,9 +139,9 @@ class PrayerBroadcastReceiver: BroadcastReceiver() {
         }
 
         return calendar
-    }
+    } */
 
-    private fun bundleDeserializer(listPrayerBundle: Bundle): List<NotifiedPrayer> {
+    /* private fun bundleDeserializer(listPrayerBundle: Bundle): List<NotifiedPrayer> {
         val extra = listPrayerBundle.getParcelable<PrayerListExtraData>(PrayerListData)
         if(extra?.listPrayerID.isNullOrEmpty() || extra?.listPrayerName.isNullOrEmpty() ||
             extra?.listPrayerTime.isNullOrEmpty() || extra?.listPrayerIsNotified.isNullOrEmpty()){
@@ -139,15 +150,17 @@ class PrayerBroadcastReceiver: BroadcastReceiver() {
 
         val listData = mutableListOf<NotifiedPrayer>()
         for(i in 0 until extra!!.listPrayerID.count()){
-            val isNotified: Boolean = extra.listPrayerIsNotified[i] == 1
-            listData.add(NotifiedPrayer(extra.listPrayerID[i],
-                extra.listPrayerName[i], isNotified, extra.listPrayerTime[i]
+            listData.add(NotifiedPrayer(
+                extra.listPrayerID[i],
+                extra.listPrayerName[i],
+                extra.listPrayerIsNotified[i] == 1,
+                extra.listPrayerTime[i]
             ))
         }
         return listData
-    }
+    } */
 
-    private fun intentToDuaAfterAdhanGenerator(context: Context): Intent {
+    private fun createDuaIntent(context: Context): Intent {
         val intent = Intent(context, DuaActivity::class.java)
         val duaAfterAdhan = DuaData.getListDua().find { dua -> dua.id == 1}!!
         intent.apply {

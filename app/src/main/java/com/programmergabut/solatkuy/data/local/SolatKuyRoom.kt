@@ -56,27 +56,14 @@ abstract class SolatKuyRoom: RoomDatabase() {
 
         private suspend fun populateMsSetting(msSettingDao: MsSettingDao){
             msSettingDao.deleteAll()
-            msSettingDao.insertMsSetting(
-                MsSetting(
-                    1,
-                    false,
-                    isUsingDBQuotes = false
-                )
-            )
+            msSettingDao.insertMsSetting(MsSetting(1, false, isUsingDBQuotes = false))
         }
 
         private suspend fun populateMsApi1(msApi1Dao: MsApi1Dao) {
             msApi1Dao.deleteAll()
             msApi1Dao.insertMsApi1(
-                MsApi1(
-                    1,
-                    EnumConfig.START_LAT,
-                    EnumConfig.START_LNG,
-                    EnumConfig.START_METHOD,
-                    EnumConfig.START_MONTH,
-                    EnumConfig.START_YEAR
-                )
-            )
+                MsApi1(1, EnumConfig.START_LAT, EnumConfig.START_LNG,
+                    EnumConfig.START_METHOD, EnumConfig.START_MONTH, EnumConfig.START_YEAR))
         }
 
         private suspend fun populateNotifiedPrayer(notifiedPrayerDao: NotifiedPrayerDao){
