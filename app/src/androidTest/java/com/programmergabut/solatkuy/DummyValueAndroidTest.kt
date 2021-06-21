@@ -92,7 +92,7 @@ object DummyValueAndroidTest {
 
     /* Database */
     fun getMsApi1(): MsApi1 {
-        return MsApi1(0, "-7.5633548", "110.8041806", "3","7","2020")
+        return MsApi1(0, "-7.5633548", "110.8041806", "11","7","2020")
     }
 
     fun getListMsFavAyah(): MutableList<MsFavAyah> {

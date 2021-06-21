@@ -5,8 +5,6 @@ import android.content.Intent
 import android.os.IBinder
 import android.util.Log
 import com.programmergabut.solatkuy.data.local.SolatKuyRoom
-import com.programmergabut.solatkuy.util.LogConfig.Companion.ERROR
-import com.programmergabut.solatkuy.util.LogConfig.Companion.SERVICE_MONTH_YEAR
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.launch
@@ -14,7 +12,9 @@ import org.joda.time.LocalDate
 import java.lang.Exception
 
 class ServiceUpdateMonthAndYear: Service() {
-    
+
+    private val TAG = "ServiceUpdateMonthAndYear"
+
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
         CoroutineScope(Dispatchers.IO).launch {
@@ -42,7 +42,7 @@ class ServiceUpdateMonthAndYear: Service() {
             }
         }
         catch (ex: Exception){
-            Log.d(ERROR, ex.message.toString())
+            Log.d(TAG, ex.message.toString())
         }
     }
 
@@ -50,6 +50,6 @@ class ServiceUpdateMonthAndYear: Service() {
 
     override fun onDestroy() {
         super.onDestroy()
-        Log.d(SERVICE_MONTH_YEAR,"Service Destroyed")
+        Log.d(TAG,"Service Destroyed")
     }
 }

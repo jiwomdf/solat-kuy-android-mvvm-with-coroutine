@@ -45,8 +45,8 @@ abstract class BaseActivity<VB: ViewBinding, VM: ViewModel>(
         viewModelClass?.let {
             viewModel = ViewModelProvider(this).get(it)
         }
-        setListener()
         inflateBinding()
+        setListener()
         setContentView(requireNotNull(_binding).root)
     }
 

@@ -24,7 +24,6 @@ class PushNotificationHelper(context: Context, prayerList: List<NotifiedPrayer>,
         this.mCityName = cityName
 
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        //val listPrayerBundle = bundleCreator(selectedList)
         val newList = prayerList.filter { x -> x.prayerName !=  EnumConfig.SUNRISE} //remove sunrise from list
         newList.toMutableList().sortBy { x -> x.prayerID }
 
@@ -38,8 +37,6 @@ class PushNotificationHelper(context: Context, prayerList: List<NotifiedPrayer>,
 
             fireAlarmManager(prayer, pendingIntent, alarmManager, calendar)
         }
-
-        //startUpdateMonthYearService(context)
     }
 
     private fun createIntent(context: Context, prayer: NotifiedPrayer): Intent {
@@ -82,36 +79,5 @@ class PushNotificationHelper(context: Context, prayerList: List<NotifiedPrayer>,
 
         return calendar
     }
-
-    /* private fun startUpdateMonthYearService(context: Context) {
-        val serviceIntent = Intent(context, ServiceUpdateMonthAndYear::class.java)
-        context.startService(serviceIntent)
-    } */
-
-    /* private fun bundleCreator(selectedList: List<NotifiedPrayer>): Bundle {
-        val listPrayerID = arrayListOf<Int>()
-        val listPrayerName = arrayListOf<String>()
-        val listPrayerTime = arrayListOf<String>()
-        val listPrayerIsNotified = arrayListOf<Int>()
-        val listPrayerCity = arrayListOf<String>()
-
-        selectedList.forEach {
-            listPrayerID.add(it.prayerID)
-            listPrayerName.add(it.prayerName)
-            listPrayerTime.add(it.prayerTime)
-            if(it.isNotified) listPrayerIsNotified.add(1) else listPrayerIsNotified.add(0)
-            if(mCityName.isNullOrEmpty()) listPrayerCity.add("-") else listPrayerCity.add(mCityName!!)
-        }
-
-        val bundle = Bundle()
-        bundle.putParcelable(PrayerBroadcastReceiver.PrayerListData, PrayerListExtraData(
-            listPrayerID = listPrayerID,
-            listPrayerName = listPrayerName,
-            listPrayerTime = listPrayerTime,
-            listPrayerIsNotified = listPrayerIsNotified,
-            listPrayerCity = listPrayerCity,
-        ))
-        return bundle
-    } */
 
 }

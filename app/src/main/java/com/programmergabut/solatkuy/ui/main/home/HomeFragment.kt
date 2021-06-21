@@ -33,7 +33,6 @@ import com.programmergabut.solatkuy.util.EnumConfig
 import com.programmergabut.solatkuy.util.EnumConfig.Companion.ENDED_SURAH
 import com.programmergabut.solatkuy.util.EnumConfig.Companion.STARTED_SURAH
 import com.programmergabut.solatkuy.util.EnumStatus
-import com.programmergabut.solatkuy.util.LogConfig.Companion.COROUTINE_TIMER
 import com.programmergabut.solatkuy.worker.FireAlarmManagerWorker
 import com.programmergabut.solatkuy.worker.UpdateMonthAndYearWorker
 import dagger.hilt.android.AndroidEntryPoint
@@ -59,6 +58,8 @@ class HomeFragment(
     FragmentMainViewModel::class.java, viewModelTestFragment
 ), View.OnClickListener{
 
+    private val TAG = "HomeFragment"
+
     private var isTimerHasBanded = false
     private var coroutineTimerJob: Job? = null
     private lateinit var duaCollectionAdapter: DuaCollectionAdapter
@@ -71,7 +72,7 @@ class HomeFragment(
         super.onPause()
         isTimerHasBanded = false
         coroutineTimerJob?.cancel()
-        Log.d(COROUTINE_TIMER, "Canceled.. $coroutineTimerJob ${Thread.currentThread().id}")
+        Log.d(TAG, "Canceled.. $coroutineTimerJob ${Thread.currentThread().id}")
     }
 
     override fun onStart() {
@@ -90,7 +91,7 @@ class HomeFragment(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initRvDuaCollection()
-        fireUpdateMonthYearWorker()
+        //fireUpdateMonthYearWorker()
     }
 
     override fun setListener() {
@@ -161,8 +162,7 @@ class HomeFragment(
                         return@observe
 
                     bindCheckBox(retVal.data)
-                    //updateAlarmManager(retVal.data)
-                    fireWorker()
+                    //fireWorker()
                     bindWidget(createWidgetData(retVal.data))
                 }
                 EnumStatus.LOADING -> {
@@ -493,9 +493,9 @@ class HomeFragment(
 
         while(true){
             if(scope.isActive){
-                Log.d(COROUTINE_TIMER, "Running.. $scope $tempSecond ${Thread.currentThread().id}")
+                Log.d(TAG, "Running.. $scope $tempSecond ${Thread.currentThread().id}")
             } else {
-                Log.d(COROUTINE_TIMER, "Stopping.. $scope $tempSecond ${Thread.currentThread().id}")
+                Log.d(TAG, "Stopping.. $scope $tempSecond ${Thread.currentThread().id}")
                 coroutineTimerJob?.cancel()
                 break
             }
@@ -536,7 +536,7 @@ class HomeFragment(
                     viewModel.msApi1.value?.let {
                         viewModel.getListNotifiedPrayer(it)
                         isTimerHasBanded = false
-                        Log.d(COROUTINE_TIMER, "Fetching.. $scope $tempSecond ${Thread.currentThread().id}")
+                        Log.d(TAG, "Fetching.. $scope $tempSecond ${Thread.currentThread().id}")
                     }
                 }
                 break
@@ -544,13 +544,7 @@ class HomeFragment(
         }
     }
 
-    /* private fun updateAlarmManager(listNotifiedPrayer: List<NotifiedPrayer>){
-        if(mCityName.isNullOrEmpty())
-            mCityName = "-"
-        PushNotificationHelper(requireContext(), listNotifiedPrayer, mCityName!!)
-    } */
-
-    private fun fireWorker() {
+    /* private fun fireWorker() {
         val task = PeriodicWorkRequest.Builder(FireAlarmManagerWorker::class.java, 60, TimeUnit.MINUTES)
             .build()
         val workManager = WorkManager.getInstance(requireActivity().application)
@@ -562,7 +556,7 @@ class HomeFragment(
             .build()
         val workManager = WorkManager.getInstance(requireActivity().application)
         workManager.enqueueUniquePeriodicWork(UpdateMonthAndYearWorker.UNIQUE_KEY, ExistingPeriodicWorkPolicy.KEEP, task)
-    }
+    } */
 
     private fun dismissDialog(){
         viewModel.getMsSetting()

@@ -62,7 +62,7 @@ class HomeFragmentTest{
         onView(withId(R.id.tv_view_longitude)).check(matches(withText("${data?.longitude} °W")))
     }
 
-    @Test
+    /* @Test
     fun testVisibilityQuote_componentDisplayed(){
         var testViewModel: FragmentMainViewModel? = null
         launchFragmentInHiltContainer<HomeFragment>(fragmentFactory = fragmentFactory) {
@@ -71,10 +71,10 @@ class HomeFragmentTest{
         onView(withId(R.id.tv_quran_ayah_quote_click)).check(matches(isDisplayed()))
         onView(withId(R.id.iv_quote_setting)).check(matches(isDisplayed()))
         onView(withId(R.id.iv_refresh)).check(matches(isDisplayed()))
-    }
+    } */
 
 
-    @Test
+    /*@Test
     fun testVisibilityAndDataPrayer_componentDisplayedWithCorrectValue(){
         var testViewModel: FragmentMainViewModel? = null
         launchFragmentInHiltContainer<HomeFragment>(fragmentFactory = fragmentFactory) {
@@ -110,7 +110,7 @@ class HomeFragmentTest{
                 else -> {}
             }
         }
-    }
+    } */
 
     @Test
     fun testVisibilityAndDataInfo_componentDisplayedWithCorrectValue(){

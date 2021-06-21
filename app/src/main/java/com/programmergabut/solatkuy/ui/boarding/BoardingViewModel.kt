@@ -7,9 +7,12 @@ import androidx.lifecycle.viewModelScope
 import com.programmergabut.solatkuy.data.PrayerRepository
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
 import com.programmergabut.solatkuy.util.Resource
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class BoardingViewModel @ViewModelInject constructor(val prayerRepository: PrayerRepository) : ViewModel(){
+@HiltViewModel
+class BoardingViewModel @Inject constructor(val prayerRepository: PrayerRepository) : ViewModel(){
 
     val msSetting =  prayerRepository.observeMsSetting()
 

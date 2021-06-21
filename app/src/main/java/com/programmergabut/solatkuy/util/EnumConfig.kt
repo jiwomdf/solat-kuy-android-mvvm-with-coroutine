@@ -15,6 +15,9 @@ class EnumConfig {
         const val STARTED_SURAH = 1
         const val ENDED_SURAH = 114
 
+        /* Adhan calculation method (Singapore) */
+        const val METHOD = "11"
+
         /* For the first time populating the database MsApi1 table */
         const val START_LAT = "0.0"
         const val START_LNG = "0.0"

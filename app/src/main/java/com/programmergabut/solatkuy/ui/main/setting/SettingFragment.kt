@@ -70,7 +70,6 @@ class SettingFragment(viewModelTest: FragmentSettingViewModel? = null) : BaseFra
     override fun setListener() {
         super.setListener()
 
-        inflateBinding()
         binding.btnByLatitudeLongitude.setOnClickListener(this)
         binding.btnByGps.setOnClickListener(this)
         binding.btnSeeAuthor.setOnClickListener(this)
@@ -138,7 +137,7 @@ class SettingFragment(viewModelTest: FragmentSettingViewModel? = null) : BaseFra
             1,
             latitude,
             longitude,
-            "3",
+            EnumConfig.METHOD,
             currDate.monthOfYear.toString(),
             currDate.year.toString()
         )

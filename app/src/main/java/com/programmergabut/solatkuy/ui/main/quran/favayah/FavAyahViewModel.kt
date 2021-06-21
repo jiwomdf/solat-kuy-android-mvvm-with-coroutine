@@ -4,9 +4,12 @@ import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import com.programmergabut.solatkuy.data.QuranRepository
 import com.programmergabut.solatkuy.data.local.localentity.MsFavAyah
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class FavAyahViewModel @ViewModelInject constructor(val quranRepository: QuranRepository): ViewModel() {
+@HiltViewModel
+class FavAyahViewModel @Inject constructor(val quranRepository: QuranRepository): ViewModel() {
 
     val favAyah: LiveData<List<MsFavAyah>> = quranRepository.observeListFavAyah()
 

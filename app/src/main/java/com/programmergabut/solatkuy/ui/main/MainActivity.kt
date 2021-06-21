@@ -10,8 +10,6 @@ import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.base.BaseActivity
 import com.programmergabut.solatkuy.databinding.ActivityMainBinding
 import com.programmergabut.solatkuy.ui.SolatKuyFragmentFactory
-import com.programmergabut.solatkuy.util.LogConfig
-import com.programmergabut.solatkuy.util.LogConfig.Companion.ERROR
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -23,6 +21,8 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>(
     R.layout.activity_main,
     MainActivityViewModel::class.java
 ) {
+
+    private val TAG = "MainActivity"
 
     @Inject
     lateinit var fragmentFactory: SolatKuyFragmentFactory
@@ -60,7 +60,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>(
             binding.bottomNavigation.setOnNavigationItemReselectedListener {/* NO-OP */ }
         }
         catch (ex: Exception){
-            Log.d(ERROR, ex.message.toString())
+            Log.d(TAG, ex.message.toString())
         }
     }
 

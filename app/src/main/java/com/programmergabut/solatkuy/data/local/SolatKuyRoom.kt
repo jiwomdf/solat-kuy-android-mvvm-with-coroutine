@@ -10,13 +10,14 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import androidx.room.Room
+import javax.inject.Inject
 
 /*
  * Created by Katili Jiwo Adi Wiyono on 25/03/20.
  */
 
 @Database(version = 14, entities = [NotifiedPrayer::class, MsApi1::class, MsSetting::class, MsFavAyah::class, MsFavSurah::class, MsSurah::class, MsAyah::class])
-abstract class SolatKuyRoom: RoomDatabase() {
+abstract class SolatKuyRoom : RoomDatabase() {
 
     abstract fun notifiedPrayerDao(): NotifiedPrayerDao
     abstract fun msApi1Dao(): MsApi1Dao

@@ -51,8 +51,8 @@ abstract class BaseFragment<VB: ViewBinding, VM: ViewModel>(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setListener()
         inflateBinding()
+        setListener()
     }
 
     protected open fun setListener(){}

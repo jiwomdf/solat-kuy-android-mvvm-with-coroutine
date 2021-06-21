@@ -21,8 +21,7 @@ import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.async
 
 @HiltAndroidTest
-class FakePrayerRepositoryAndroidTest(
-): PrayerRepository {
+class FakePrayerRepositoryAndroidTest : PrayerRepository {
 
     private var msApi11 = DummyValueAndroidTest.getMsApi1()
     private var msSetting = DummyValueAndroidTest.getMsSetting()

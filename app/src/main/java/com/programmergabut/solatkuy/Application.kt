@@ -22,9 +22,6 @@ class Application : Application(), Configuration.Provider {
     }
 
     override fun getWorkManagerConfiguration(): Configuration {
-        //val myWorkerFactory = DelegatingWorkerFactory()
-        //myWorkerFactory.addFactory(MyWorkerFactory(db.notifiedPrayerDao(), db.msApi1Dao()))
-
         return Configuration.Builder()
             .setMinimumLoggingLevel(android.util.Log.DEBUG)
             .setWorkerFactory(MyWorkerFactory(db.notifiedPrayerDao(), db.msApi1Dao()))

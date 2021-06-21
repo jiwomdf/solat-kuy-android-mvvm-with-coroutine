@@ -56,14 +56,14 @@ class PrayerRepositoryImplTest: BaseRepository(){
         assertNotNull(dummyPrayerApi)
     }
 
-    @Test
+   /*  @Test
     fun fetchCompass() = runBlocking {
         val dummyCompassApi = DummyRetValueTest.fetchCompassApi<PrayerRepositoryImplTest>()
         Mockito.`when`(qiblaApiService.fetchQibla(msApi1.latitude, msApi1.longitude)).thenReturn(dummyCompassApi)
         prayerRepository.fetchQibla(msApi1).toDeferred()
         Mockito.verify(qiblaApiService).fetchQibla(msApi1.latitude, msApi1.longitude)
         assertNotNull(dummyCompassApi)
-    }
+    } */
 
     /* Database */
     @Test

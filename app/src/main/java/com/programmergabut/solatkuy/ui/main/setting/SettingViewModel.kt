@@ -7,13 +7,16 @@ import androidx.lifecycle.viewModelScope
 import com.programmergabut.solatkuy.data.PrayerRepository
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
 import com.programmergabut.solatkuy.util.Resource
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
 /*
  * Created by Katili Jiwo Adi Wiyono on 25/03/20.
  */
 
-class FragmentSettingViewModel @ViewModelInject constructor(private val prayerRepositoryImpl: PrayerRepository): ViewModel() {
+@HiltViewModel
+class FragmentSettingViewModel @Inject constructor(private val prayerRepositoryImpl: PrayerRepository): ViewModel() {
 
     val msApi1 = prayerRepositoryImpl.observeMsApi1()
 

@@ -22,18 +22,14 @@ class BootCompleteReceiver: BroadcastReceiver() {
 
     override fun onReceive(context: Context?, intent: Intent?) {
         if(intent?.action == Intent.ACTION_BOOT_COMPLETED) {
-
             try {
                 if(context != null) {
                     fireAlarmManagerWorker(context)
                     fireUpdateMonthYearWorker(context)
-                    Log.e(TAG, "MASUK BootCompleteReceiver")
+                    startUpdateMonthYearService(context)
                 } else {
-                    Log.e(TAG, "ERROR context != null")
                     throw Exception()
                 }
-
-                startUpdateMonthYearService(context)
             }catch (ex: Exception){
                 Log.e(TAG, ex.message.toString())
                 throw Exception(ex.message)

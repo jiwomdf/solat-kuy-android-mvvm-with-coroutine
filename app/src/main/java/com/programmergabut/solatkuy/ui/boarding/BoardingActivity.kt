@@ -26,6 +26,7 @@ import com.programmergabut.solatkuy.databinding.ActivityBoardingBinding
 import com.programmergabut.solatkuy.databinding.LayoutBottomsheetBygpsBinding
 import com.programmergabut.solatkuy.databinding.LayoutBottomsheetBylatitudelongitudeBinding
 import com.programmergabut.solatkuy.ui.main.MainActivity
+import com.programmergabut.solatkuy.util.EnumConfig
 import com.programmergabut.solatkuy.util.EnumStatus
 import dagger.hilt.android.AndroidEntryPoint
 import es.dmoral.toasty.Toasty
@@ -118,7 +119,7 @@ class BoardingActivity : BaseActivity<ActivityBoardingBinding, BoardingViewModel
         val data = MsApi1(1,
             latitude,
             longitude,
-            "3",
+            EnumConfig.METHOD,
             currDate.monthOfYear.toString(),
             currDate.year.toString())
 

@@ -6,9 +6,12 @@ import com.programmergabut.solatkuy.data.QuranRepository
 import com.programmergabut.solatkuy.data.local.localentity.MsSurah
 import com.programmergabut.solatkuy.util.Resource
 import com.programmergabut.solatkuy.util.livedata.AbsentLiveData
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
+import javax.inject.Inject
 
-class ListSurahViewModel @ViewModelInject constructor(private val quranRepository: QuranRepository): ViewModel() {
+@HiltViewModel
+class ListSurahViewModel @Inject constructor(private val quranRepository: QuranRepository): ViewModel() {
 
     val staredSurah = quranRepository.observeListFavSurah()
 

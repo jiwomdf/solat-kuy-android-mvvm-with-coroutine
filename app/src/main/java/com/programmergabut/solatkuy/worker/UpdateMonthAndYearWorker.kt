@@ -5,7 +5,6 @@ import android.util.Log
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.programmergabut.solatkuy.data.local.dao.MsApi1Dao
-import com.programmergabut.solatkuy.util.LogConfig
 import kotlinx.coroutines.runBlocking
 import org.joda.time.LocalDate
 import java.lang.Exception
