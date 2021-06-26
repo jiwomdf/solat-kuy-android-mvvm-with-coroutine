@@ -124,7 +124,7 @@ class ListMsSurahFragmentTest{
         }
 
         onView(withId(R.id.et_search)).perform(replaceText("Al Faatiha"))
-        onView(withId(R.id.et_search)).check(matches(withText("Al Faatiha")))
+        onView(withId(R.id.et_search)).check(matches(withText("Al-Faatiha")))
         assertEquals(testViewModel?.allSurah?.value?.data?.size, 1)
         assertEquals(testViewModel?.allSurah?.value?.data!![0].englishName, "Al-Faatiha")
 

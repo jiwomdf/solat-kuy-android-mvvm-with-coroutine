@@ -193,6 +193,8 @@ class HomeFragmentTest{
         onView(withId(R.id.cb_maghrib)).perform(click())
         onView(withId(R.id.cb_isha)).perform(click())
 
+        Thread.sleep(1000)
+
         val prayers = testViewModel?.notifiedPrayer?.value
         prayers?.data?.forEach { prayer ->
             if(prayer.prayerName == EnumConfigAndroidTesting.SUNRISE)

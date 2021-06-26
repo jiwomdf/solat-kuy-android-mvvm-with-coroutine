@@ -132,43 +132,46 @@ class FakeQuranRepositoryAndroidTest : QuranRepository {
         val arResponse = DummyValueAndroidTest.surahArID_1<FakeQuranRepositoryAndroidTest>()
         val enResponse = DummyValueAndroidTest.surahEnID_1<FakeQuranRepositoryAndroidTest>()
 
-        for (i in 0 until arResponse.data.ayahs.size - 1) {
+        for (i in arResponse.data.ayahs.indices) {
             if (hashMapOfAyah[i] == null)
                 hashMapOfAyah[i] = arResponse.data.ayahs[i]
         }
 
-        for (i in 0 until enResponse.data.ayahs.size - 1) {
+        for (i in enResponse.data.ayahs.indices) {
             if (hashMapOfAyah[i] != null)
                 hashMapOfAyah[i]?.textEn = enResponse.data.ayahs[i].text
         }
 
         arResponse.data.ayahs = hashMapOfAyah.values.toList()
 
-        val newResponse =
-            MsAyah(
-                hizbQuarter = arResponse.data.ayahs[0].hizbQuarter,
-                juz = arResponse.data.ayahs[0].juz,
-                manzil = arResponse.data.ayahs[0].manzil,
-                number = arResponse.data.ayahs[0].number,
-                numberInSurah = arResponse.data.ayahs[0].numberInSurah,
-                page = arResponse.data.ayahs[0].page,
-                ruku = arResponse.data.ayahs[0].ruku,
-                text = arResponse.data.ayahs[0].text,
+        var idx = 1
+        val newList = hashMapOfAyah.values.map {
+            return@map MsAyah(
+                hizbQuarter = it.hizbQuarter,
+                juz = it.juz,
+                manzil = it.manzil,
+                number = it.number,
+                numberInSurah = it.numberInSurah,
+                page = it.page,
+                ruku = it.ruku,
+                text = it.text,
                 englishName = arResponse.data.englishName,
                 englishNameTranslation = arResponse.data.englishNameTranslation,
                 name = arResponse.data.name,
                 numberOfAyahs = arResponse.data.numberOfAyahs,
                 revelationType = arResponse.data.revelationType,
-                textEn = arResponse.data.ayahs[0].textEn,
-                isFav = arResponse.data.ayahs[0].isFav,
-                isLastRead = arResponse.data.ayahs[0].isLastRead,
-                surahID = 1
-            )
+                textEn = it.textEn,
+                isFav = it.isFav,
+                isLastRead = it.isLastRead,
+                surahID = 114,
+            ).also { ayah ->
+                ayah.ayahID = idx
+                idx++
+            }
+        }
 
         return liveData {
-            emit(
-                Resource.success(listOf(newResponse)
-            ))
+            emit(Resource.success(newList))
         }
     }
 }

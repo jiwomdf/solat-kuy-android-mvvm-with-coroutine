@@ -110,9 +110,10 @@ class QuranRepositoryImpl @Inject constructor(
 
             override fun saveCallResult(data: AllSurahResponse) {
                 val allSurah = data.data.map {
+                    val lowerEngName = it.englishName.lowercase(Locale.ROOT).replace("-"," ").trim()
                     MsSurah(
                         englishName = it.englishName,
-                        englishNameLowerCase = it.englishNameTranslation.toLowerCase(Locale.ROOT),
+                        englishNameLowerCase = lowerEngName,
                         englishNameTranslation = it.englishNameTranslation,
                         name = it.name,
                         number = it.number,
@@ -158,12 +159,12 @@ class QuranRepositoryImpl @Inject constructor(
                             arResponse = execute(readSurahArService.fetchReadSurahAr(surahID))
                             enResponse = execute(readSurahEnService.fetchReadSurahEn(surahID))
 
-                            for(i in 0 until arResponse.data.ayahs.size - 1){
+                            for(i in arResponse.data.ayahs.indices){
                                 if(hashMapOfAyah[i] == null)
                                     hashMapOfAyah[i] = arResponse.data.ayahs[i]
                             }
 
-                            for(i in 0 until enResponse.data.ayahs.size - 1){
+                            for(i in enResponse.data.ayahs.indices){
                                 if(hashMapOfAyah[i] != null)
                                     hashMapOfAyah[i]?.textEn = enResponse.data.ayahs[i].text
                             }

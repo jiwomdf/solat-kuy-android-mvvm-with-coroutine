@@ -115,7 +115,7 @@ class FakePrayerRepositoryAndroidTest : PrayerRepository {
 
     override fun getListNotifiedPrayer(msApi1: MsApi1): LiveData<Resource<List<NotifiedPrayer>>> {
         return liveData {
-            emit(Resource.success(DummyValueAndroidTest.getNotifiedPrayer()))
+            emit(Resource.success(notifiedPrayer))
         }
     }
 

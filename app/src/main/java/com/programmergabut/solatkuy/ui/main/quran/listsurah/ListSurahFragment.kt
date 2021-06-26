@@ -113,7 +113,8 @@ class ListSurahFragment(
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
             if(s.isNullOrEmpty() && binding.sJuzz.selectedItemPosition != 0)
                 return
-            allSurahAdapter.listSurah = getSurahBySeachString(s.toString())
+            val list = getSurahBySeachString(s.toString())
+            allSurahAdapter.listSurah = list
             allSurahAdapter.notifyDataSetChanged()
             binding.sJuzz.setSelection(0, true)
         }
@@ -121,11 +122,14 @@ class ListSurahFragment(
 
     fun getSurahBySeachString(stringName: String): List<MsSurah> {
         viewModel.allSurah?.value?.data?.let{
-            val lowerCaseString = if(stringName.isNotEmpty()) stringName.toLowerCase(Locale.ROOT).trim() else ""
-            return it.filter { surah ->
+            val lowerCaseString = if(stringName.isNotEmpty()) stringName.lowercase(Locale.ROOT).trim() else ""
+            val list = it.filter { surah ->
                 surah.englishNameLowerCase!!.contains(lowerCaseString)
             }
-        } ?: return emptyList()
+            return list
+        } ?: run {
+            return emptyList()
+        }
     }
 
     private fun updateListSurahAdapter(datas: List<MsSurah>){
