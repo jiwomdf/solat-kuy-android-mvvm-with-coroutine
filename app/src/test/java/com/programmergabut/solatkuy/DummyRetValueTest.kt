@@ -5,10 +5,9 @@ import com.programmergabut.solatkuy.data.remote.json.asmaalhusnaJson.AsmaAlHusna
 import com.programmergabut.solatkuy.data.remote.json.compassJson.CompassResponse
 import com.programmergabut.solatkuy.data.remote.json.prayerJson.PrayerResponse
 import com.programmergabut.solatkuy.data.remote.json.quranallsurahJson.AllSurahResponse
-import com.programmergabut.solatkuy.data.remote.json.quranallsurahJson.Result
 import com.programmergabut.solatkuy.data.remote.json.readsurahJsonAr.ReadSurahArResponse
 import com.programmergabut.solatkuy.data.remote.json.readsurahJsonEn.ReadSurahEnResponse
-import com.programmergabut.solatkuy.util.EnumConfig
+import com.programmergabut.solatkuy.util.Constant
 import java.util.*
 
 object DummyRetValueTest {
@@ -21,46 +20,46 @@ object DummyRetValueTest {
    val READ_SURAH_SERVICE_JSON = "readSurahService.json"
 
     /* Remote */
-    fun getListNotifiedPrayer(): List<NotifiedPrayer> {
-        val listNotifiedPrayer = mutableListOf<NotifiedPrayer>()
+    fun getListNotifiedPrayer(): List<MsNotifiedPrayer> {
+        val listNotifiedPrayer = mutableListOf<MsNotifiedPrayer>()
 
         listNotifiedPrayer.add(
-            NotifiedPrayer(
+            MsNotifiedPrayer(
                 EnumConfigTesting.FAJR,
                 true,
                 EnumConfigTesting.FAJR_TIME
             )
         )
         listNotifiedPrayer.add(
-            NotifiedPrayer(
+            MsNotifiedPrayer(
                 EnumConfigTesting.DHUHR,
                 true,
                 EnumConfigTesting.DHUHR_TIME
             )
         )
         listNotifiedPrayer.add(
-            NotifiedPrayer(
+            MsNotifiedPrayer(
                 EnumConfigTesting.ASR,
                 true,
                 EnumConfigTesting.ASR_TIME
             )
         )
         listNotifiedPrayer.add(
-            NotifiedPrayer(
+            MsNotifiedPrayer(
                 EnumConfigTesting.MAGHRIB,
                 true,
                 EnumConfigTesting.MAGHRIB_TIME
             )
         )
         listNotifiedPrayer.add(
-            NotifiedPrayer(
+            MsNotifiedPrayer(
                 EnumConfigTesting.ISHA,
                 true,
                 EnumConfigTesting.ISHA_TIME
             )
         )
         listNotifiedPrayer.add(
-            NotifiedPrayer(
+            MsNotifiedPrayer(
                 EnumConfigTesting.SUNRISE,
                 true,
                 EnumConfigTesting.SUNRISE_TIME
@@ -137,12 +136,12 @@ object DummyRetValueTest {
     fun getMapPrayer(): MutableMap<String, String> {
         val map = mutableMapOf<String, String>()
 
-        map[EnumConfig.FAJR] = "04:35"
-        map[EnumConfig.DHUHR] = "11:41"
-        map[EnumConfig.ASR] = "15:02"
-        map[EnumConfig.MAGHRIB] = "17:32"
-        map[EnumConfig.ISHA] = "18:42"
-        map[EnumConfig.SUNRISE] = "05:00"
+        map[Constant.FAJR] = "04:35"
+        map[Constant.DHUHR] = "11:41"
+        map[Constant.ASR] = "15:02"
+        map[Constant.MAGHRIB] = "17:32"
+        map[Constant.ISHA] = "18:42"
+        map[Constant.SUNRISE] = "05:00"
 
         return map
     }

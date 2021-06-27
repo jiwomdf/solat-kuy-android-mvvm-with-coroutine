@@ -1,13 +1,12 @@
 package com.programmergabut.solatkuy
 
 import com.programmergabut.solatkuy.data.local.localentity.*
-import com.programmergabut.solatkuy.data.remote.json.asmaalhusnaJson.AsmaAlHusnaResponse
 import com.programmergabut.solatkuy.data.remote.json.compassJson.CompassResponse
 import com.programmergabut.solatkuy.data.remote.json.prayerJson.PrayerResponse
 import com.programmergabut.solatkuy.data.remote.json.quranallsurahJson.AllSurahResponse
 import com.programmergabut.solatkuy.data.remote.json.readsurahJsonAr.ReadSurahArResponse
 import com.programmergabut.solatkuy.data.remote.json.readsurahJsonEn.ReadSurahEnResponse
-import com.programmergabut.solatkuy.util.EnumConfig
+import com.programmergabut.solatkuy.util.Constant
 
 object DummyValueAndroidTest {
 
@@ -20,49 +19,49 @@ object DummyValueAndroidTest {
 
 
     /* Remote */
-    fun getNotifiedPrayer(): List<NotifiedPrayer> {
-        val listNotifiedPrayer = mutableListOf<NotifiedPrayer>()
+    fun getNotifiedPrayer(): List<MsNotifiedPrayer> {
+        val listNotifiedPrayer = mutableListOf<MsNotifiedPrayer>()
 
         listNotifiedPrayer.add(
-            NotifiedPrayer(
-                EnumConfig.FAJR,
+            MsNotifiedPrayer(
+                Constant.FAJR,
                 true,
-                EnumConfig.FAJR_TIME
+                Constant.FAJR_TIME
             )
         )
         listNotifiedPrayer.add(
-            NotifiedPrayer(
-                EnumConfig.DHUHR,
+            MsNotifiedPrayer(
+                Constant.DHUHR,
                 true,
-                EnumConfig.DHUHR_TIME
+                Constant.DHUHR_TIME
             )
         )
         listNotifiedPrayer.add(
-            NotifiedPrayer(
-                EnumConfig.ASR,
+            MsNotifiedPrayer(
+                Constant.ASR,
                 true,
-                EnumConfig.ASR_TIME
+                Constant.ASR_TIME
             )
         )
         listNotifiedPrayer.add(
-            NotifiedPrayer(
-                EnumConfig.MAGHRIB,
+            MsNotifiedPrayer(
+                Constant.MAGHRIB,
                 true,
-                EnumConfig.MAGHRIB_TIME
+                Constant.MAGHRIB_TIME
             )
         )
         listNotifiedPrayer.add(
-            NotifiedPrayer(
-                EnumConfig.ISHA,
+            MsNotifiedPrayer(
+                Constant.ISHA,
                 true,
-                EnumConfig.ISHA_TIME
+                Constant.ISHA_TIME
             )
         )
         listNotifiedPrayer.add(
-            NotifiedPrayer(
-                EnumConfig.SUNRISE,
+            MsNotifiedPrayer(
+                Constant.SUNRISE,
                 true,
-                EnumConfig.SUNRISE_TIME
+                Constant.SUNRISE_TIME
             )
         )
 

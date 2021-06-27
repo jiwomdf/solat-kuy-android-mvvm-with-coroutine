@@ -45,7 +45,7 @@ class HomeFragmentTest{
 
     @Test
     fun testComponentVisibilityAndData_componentDisplayedWithCorrectValue(){
-        var testViewModel: FragmentMainViewModel? = null
+        var testViewModel: HomeViewModel? = null
         launchFragmentInHiltContainer<HomeFragment>(fragmentFactory = fragmentFactory) {
             testViewModel = viewModel
         }
@@ -64,7 +64,7 @@ class HomeFragmentTest{
 
     /* @Test
     fun testVisibilityQuote_componentDisplayed(){
-        var testViewModel: FragmentMainViewModel? = null
+        var testViewModel: HomeViewModel? = null
         launchFragmentInHiltContainer<HomeFragment>(fragmentFactory = fragmentFactory) {
             testViewModel = viewModel
         }
@@ -76,7 +76,7 @@ class HomeFragmentTest{
 
     /*@Test
     fun testVisibilityAndDataPrayer_componentDisplayedWithCorrectValue(){
-        var testViewModel: FragmentMainViewModel? = null
+        var testViewModel: HomeViewModel? = null
         launchFragmentInHiltContainer<HomeFragment>(fragmentFactory = fragmentFactory) {
             testViewModel = viewModel
         }
@@ -114,7 +114,7 @@ class HomeFragmentTest{
 
     @Test
     fun testVisibilityAndDataInfo_componentDisplayedWithCorrectValue(){
-        var testViewModel: FragmentMainViewModel? = null
+        var testViewModel: HomeViewModel? = null
         launchFragmentInHiltContainer<HomeFragment>(fragmentFactory = fragmentFactory) {
             testViewModel = viewModel
         }
@@ -158,7 +158,7 @@ class HomeFragmentTest{
 
     @Test
     fun testClickQuranQuote_componentVisibilityChangedFollowingTheClickAction() {
-        var testViewModel: FragmentMainViewModel? = null
+        var testViewModel: HomeViewModel? = null
         launchFragmentInHiltContainer<HomeFragment>(fragmentFactory = fragmentFactory) {
             testViewModel = viewModel
         }
@@ -174,7 +174,7 @@ class HomeFragmentTest{
 
     @Test
     fun testClickCbPrayer_allCbPrayerValueIsFalse(){
-        var testViewModel: FragmentMainViewModel? = null
+        var testViewModel: HomeViewModel? = null
         launchFragmentInHiltContainer<HomeFragment>(fragmentFactory = fragmentFactory) {
             testViewModel = viewModel
         }
@@ -205,7 +205,7 @@ class HomeFragmentTest{
 
     @Test
     fun testRefreshQuote(){
-        var testViewModel: FragmentMainViewModel? = null
+        var testViewModel: HomeViewModel? = null
         launchFragmentInHiltContainer<HomeFragment>(fragmentFactory = fragmentFactory) {
             testViewModel = viewModel
         }

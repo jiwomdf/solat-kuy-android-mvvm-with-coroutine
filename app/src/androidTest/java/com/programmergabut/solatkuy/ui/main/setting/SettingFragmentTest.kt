@@ -6,12 +6,10 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.MediumTest
 import com.programmergabut.solatkuy.*
-import com.programmergabut.solatkuy.data.local.localentity.MsApi1
 import com.programmergabut.solatkuy.ui.SolatKuyFragmentFactoryAndroidTest
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -38,7 +36,7 @@ class SettingFragmentTest{
 
     @Test
     fun testVisibilityAndData_componentDisplayedWithCorrectValue(){
-        var testViewModel: FragmentSettingViewModel? = null
+        var testViewModel: SettingViewModel? = null
         launchFragmentInHiltContainer<SettingFragment>(fragmentFactory = fragmentFactory) {
             testViewModel = viewModel
         }

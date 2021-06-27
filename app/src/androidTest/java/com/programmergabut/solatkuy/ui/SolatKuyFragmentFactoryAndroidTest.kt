@@ -6,11 +6,11 @@ import com.programmergabut.solatkuy.data.FakePrayerRepositoryAndroidTest
 import com.programmergabut.solatkuy.data.FakeQuranRepositoryAndroidTest
 import com.programmergabut.solatkuy.ui.main.qibla.CompassFragment
 import com.programmergabut.solatkuy.ui.main.qibla.CompassViewModel
-import com.programmergabut.solatkuy.ui.main.home.FragmentMainViewModel
 import com.programmergabut.solatkuy.ui.main.home.HomeFragment
+import com.programmergabut.solatkuy.ui.main.home.HomeViewModel
 import com.programmergabut.solatkuy.ui.main.quran.listsurah.ListSurahFragment
 import com.programmergabut.solatkuy.ui.main.quran.listsurah.ListSurahViewModel
-import com.programmergabut.solatkuy.ui.main.setting.FragmentSettingViewModel
+import com.programmergabut.solatkuy.ui.main.setting.SettingViewModel
 import com.programmergabut.solatkuy.ui.main.setting.SettingFragment
 import com.programmergabut.solatkuy.ui.main.quran.favayah.FavAyahFragment
 import com.programmergabut.solatkuy.ui.main.quran.favayah.FavAyahViewModel
@@ -37,10 +37,10 @@ class SolatKuyFragmentFactoryAndroidTest @Inject constructor() : FragmentFactory
                 ListSurahViewModel(FakeQuranRepositoryAndroidTest())
             )
             SettingFragment::class.java.name -> SettingFragment(
-                FragmentSettingViewModel(FakePrayerRepositoryAndroidTest())
+                SettingViewModel(FakePrayerRepositoryAndroidTest())
             )
             HomeFragment::class.java.name -> HomeFragment(
-                FragmentMainViewModel(FakePrayerRepositoryAndroidTest(), FakeQuranRepositoryAndroidTest())
+                HomeViewModel(FakePrayerRepositoryAndroidTest(), FakeQuranRepositoryAndroidTest())
             )
             else -> super.instantiate(classLoader, className)
         }

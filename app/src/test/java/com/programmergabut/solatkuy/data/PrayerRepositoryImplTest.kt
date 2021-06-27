@@ -2,14 +2,10 @@ package com.programmergabut.solatkuy.data
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.lifecycle.MutableLiveData
-import com.programmergabut.solatkuy.CoroutineTestUtil.Companion.toDeferred
 import com.programmergabut.solatkuy.CoroutinesTestRule
 import com.programmergabut.solatkuy.DummyRetValueTest
 import com.programmergabut.solatkuy.base.BaseRepository
-import com.programmergabut.solatkuy.data.local.dao.MsApi1Dao
-import com.programmergabut.solatkuy.data.local.dao.MsFavSurahDao
-import com.programmergabut.solatkuy.data.local.dao.MsSettingDao
-import com.programmergabut.solatkuy.data.local.dao.NotifiedPrayerDao
+import com.programmergabut.solatkuy.data.local.dao.*
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
 import com.programmergabut.solatkuy.data.remote.api.PrayerApiService
 import com.programmergabut.solatkuy.data.remote.api.QiblaApiService
@@ -22,7 +18,6 @@ import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mockito
 import org.mockito.Mockito.mock
-import retrofit2.Call
 
 @ExperimentalCoroutinesApi
 class PrayerRepositoryImplTest: BaseRepository(){
@@ -32,15 +27,16 @@ class PrayerRepositoryImplTest: BaseRepository(){
     @get:Rule
     val coroutinesTestRule: CoroutinesTestRule = CoroutinesTestRule()
 
-    private val notifiedPrayerDao = mock(NotifiedPrayerDao::class.java)
+    private val notifiedPrayerDao = mock(MsNotifiedPrayerDao::class.java)
     private val msApi1Dao = mock(MsApi1Dao::class.java)
     private val msSettingDao = mock(MsSettingDao::class.java)
     private val contextProviders = mock(ContextProviders::class.java)
     private val qiblaApiService = mock(QiblaApiService::class.java)
     private val prayerApiService = mock(PrayerApiService::class.java)
     private val msFavSurahDao = mock(MsFavSurahDao::class.java)
+    private val msCalculationMethodsDao = mock(MsCalculationMethodsDao::class.java)
     private val prayerRepository = FakePrayerRepository(notifiedPrayerDao, msApi1Dao, msSettingDao,
-        contextProviders, qiblaApiService, prayerApiService)
+        msCalculationMethodsDao, contextProviders, qiblaApiService, prayerApiService)
     private val msApi1 = DummyRetValueTest.msApi1
     private val msFavSurah = DummyRetValueTest.msfavSurah
 

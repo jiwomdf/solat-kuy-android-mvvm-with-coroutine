@@ -3,8 +3,8 @@ package com.programmergabut.solatkuy.data.local
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.espresso.matcher.ViewMatchers.assertThat
 import androidx.test.filters.SmallTest
-import com.programmergabut.solatkuy.data.local.dao.NotifiedPrayerDao
-import com.programmergabut.solatkuy.data.local.localentity.NotifiedPrayer
+import com.programmergabut.solatkuy.data.local.dao.MsNotifiedPrayerDao
+import com.programmergabut.solatkuy.data.local.localentity.MsNotifiedPrayer
 import com.programmergabut.solatkuy.getOrAwaitValue
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -21,7 +21,7 @@ import javax.inject.Named
 @ExperimentalCoroutinesApi
 @SmallTest
 @HiltAndroidTest
-class NotifiedPrayerDaoTest {
+class MsMsNotifiedPrayerDaoTest {
     @get:Rule
     var hiltRule = HiltAndroidRule(this)
 
@@ -32,12 +32,12 @@ class NotifiedPrayerDaoTest {
     @Named("test_db")
     lateinit var database: SolatKuyRoom
 
-    lateinit var notifiedPrayerDao: NotifiedPrayerDao
+    lateinit var msNotifiedPrayerDao: MsNotifiedPrayerDao
 
     @Before
     fun setup(){
         hiltRule.inject()
-        notifiedPrayerDao = database.notifiedPrayerDao()
+        msNotifiedPrayerDao = database.notifiedPrayerDao()
     }
 
     @After
@@ -47,9 +47,9 @@ class NotifiedPrayerDaoTest {
 
     @Test
     fun observeListNotifiedPrayer() = runBlockingTest {
-        val testData = NotifiedPrayer(1, "Fajr",  false, "04:00")
-        notifiedPrayerDao.insertNotifiedPrayer(testData)
-        val listPrayer = notifiedPrayerDao.observeListNotifiedPrayer().getOrAwaitValue().first()
+        val testData = MsNotifiedPrayer(1, "Fajr",  false, "04:00")
+        msNotifiedPrayerDao.insertNotifiedPrayer(testData)
+        val listPrayer = msNotifiedPrayerDao.observeListNotifiedPrayer().getOrAwaitValue().first()
         assertThat(listPrayer.prayerID, `is`(1))
         assertThat(listPrayer.prayerName, `is`("Fajr"))
         assertThat(listPrayer.prayerTime, `is`("04:00"))
@@ -68,10 +68,10 @@ class NotifiedPrayerDaoTest {
 
     @Test
     fun deleteAll() = runBlockingTest {
-        val testData1 = NotifiedPrayer(1, "Fajr",  false, "04:00")
-        val testData2 = NotifiedPrayer(2, "Dhuhr",  false, "12:00")
-        notifiedPrayerDao.insertNotifiedPrayer(testData1)
-        notifiedPrayerDao.insertNotifiedPrayer(testData2)
+        val testData1 = MsNotifiedPrayer(1, "Fajr",  false, "04:00")
+        val testData2 = MsNotifiedPrayer(2, "Dhuhr",  false, "12:00")
+        msNotifiedPrayerDao.insertNotifiedPrayer(testData1)
+        msNotifiedPrayerDao.insertNotifiedPrayer(testData2)
         /* assertThat(notifiedPrayerDao.getListNotifiedPrayer()?.size, `is`(2))
         notifiedPrayerDao.deleteAll()
         assertThat(notifiedPrayerDao.getListNotifiedPrayer()?.size, `is`(0)) */

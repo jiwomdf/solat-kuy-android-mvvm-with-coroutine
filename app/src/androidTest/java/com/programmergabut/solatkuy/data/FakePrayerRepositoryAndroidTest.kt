@@ -9,8 +9,9 @@ import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.liveData
 import com.programmergabut.solatkuy.DummyValueAndroidTest
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
+import com.programmergabut.solatkuy.data.local.localentity.MsCalculationMethods
 import com.programmergabut.solatkuy.data.local.localentity.MsSetting
-import com.programmergabut.solatkuy.data.local.localentity.NotifiedPrayer
+import com.programmergabut.solatkuy.data.local.localentity.MsNotifiedPrayer
 import com.programmergabut.solatkuy.data.remote.json.compassJson.CompassResponse
 import com.programmergabut.solatkuy.data.remote.json.prayerJson.PrayerResponse
 import com.programmergabut.solatkuy.util.Resource
@@ -29,7 +30,7 @@ class FakePrayerRepositoryAndroidTest : PrayerRepository {
 
     private val observableMsApi1 = MutableLiveData<MsApi1>()
     private val observableMsSetting = MutableLiveData<MsSetting>()
-    private val observableNotifiedPrayer = MutableLiveData<List<NotifiedPrayer>>()
+    private val observableNotifiedPrayer = MutableLiveData<List<MsNotifiedPrayer>>()
 
     init {
         observableMsApi1.postValue(msApi11)
@@ -77,6 +78,11 @@ class FakePrayerRepositoryAndroidTest : PrayerRepository {
         msApi11 = msApi1
         refreshMsApi1()
     }
+
+    override suspend fun updateMsApi1Method(api1ID: Int, methodID: String) {
+        msApi11 = MsApi1(api1ID, msApi11.latitude, msApi11.longitude, methodID, msApi11.month, msApi11.year)
+    }
+
     override fun observeMsSetting(): LiveData<MsSetting> {
         return observableMsSetting
     }
@@ -113,13 +119,17 @@ class FakePrayerRepositoryAndroidTest : PrayerRepository {
         }
     }
 
-    override fun getListNotifiedPrayer(msApi1: MsApi1): LiveData<Resource<List<NotifiedPrayer>>> {
+    override fun getMethods(): LiveData<Resource<List<MsCalculationMethods>>> {
+        TODO("Not yet implemented")
+    }
+
+    override fun getListNotifiedPrayer(msApi1: MsApi1): LiveData<Resource<List<MsNotifiedPrayer>>> {
         return liveData {
             emit(Resource.success(notifiedPrayer))
         }
     }
 
-    override suspend fun getListNotifiedPrayer(): List<NotifiedPrayer>? {
+    override suspend fun getListNotifiedPrayer(): List<MsNotifiedPrayer>? {
         return observableNotifiedPrayer.value!!
     }
 }

@@ -6,7 +6,6 @@ import androidx.lifecycle.Observer
 import com.nhaarman.mockitokotlin2.mock
 import com.programmergabut.solatkuy.CoroutineTestUtil.Companion.toDeferred
 import com.programmergabut.solatkuy.CoroutinesTestRule
-import com.programmergabut.solatkuy.data.local.localentity.NotifiedPrayer
 import com.programmergabut.solatkuy.util.Resource
 import com.programmergabut.solatkuy.DummyRetValueTest
 import com.programmergabut.solatkuy.data.FakePrayerRepository
@@ -30,7 +29,7 @@ import org.mockito.junit.MockitoJUnitRunner
 @RunWith(MockitoJUnitRunner::class)
 class HomeFragmentViewModelTest {
 
-    private lateinit var viewModel: FragmentMainViewModel
+    private lateinit var viewModel: HomeViewModel
     @get:Rule
     val instantExecutor = InstantTaskExecutorRule()
     @get:Rule
@@ -45,7 +44,7 @@ class HomeFragmentViewModelTest {
 
     @Before
     fun before(){
-        viewModel = FragmentMainViewModel(fakePrayerRepository, fakeQuranRepository)
+        viewModel = HomeViewModel(fakePrayerRepository, fakeQuranRepository)
         verify(fakePrayerRepository).observeMsApi1()
     }
 
