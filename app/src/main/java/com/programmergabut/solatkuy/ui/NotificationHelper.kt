@@ -14,9 +14,7 @@ import android.os.VibrationEffect
 import android.os.Vibrator
 import androidx.core.app.NotificationCompat
 import com.programmergabut.solatkuy.R
-import com.programmergabut.solatkuy.util.EnumConfig
-import com.programmergabut.solatkuy.util.EnumConfig.Companion.AWAIT_VIBRATE_MS
-import com.programmergabut.solatkuy.util.EnumConfig.Companion.VIBRATE_MS
+import com.programmergabut.solatkuy.util.Constant
 
 
 /*
@@ -91,7 +89,14 @@ class NotificationHelper(context: Context): ContextWrapper(context) {
     private fun createVibration() {
         val vibrator = this.getSystemService(Context.VIBRATOR_SERVICE) as Vibrator
         if(vibrator.hasVibrator()){
-            val vibrationPattern = longArrayOf(0, VIBRATE_MS, AWAIT_VIBRATE_MS, VIBRATE_MS, AWAIT_VIBRATE_MS, VIBRATE_MS, AWAIT_VIBRATE_MS, VIBRATE_MS)
+            val vibrationPattern = longArrayOf(0,
+                Constant.VIBRATE_MS,
+                Constant.AWAIT_VIBRATE_MS,
+                Constant.VIBRATE_MS,
+                Constant.AWAIT_VIBRATE_MS,
+                Constant.VIBRATE_MS,
+                Constant.AWAIT_VIBRATE_MS,
+                Constant.VIBRATE_MS)
             val mAmplitudes = intArrayOf(0, 225, 0, 225, 0, 225, 0, 225)
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.O)
                 vibrator.vibrate(VibrationEffect.createWaveform(vibrationPattern, mAmplitudes, -1))
@@ -110,7 +115,7 @@ class NotificationHelper(context: Context): ContextWrapper(context) {
              NotificationCompat.Builder(applicationContext, channelNotificationPrayerID)
                 .setContentTitle(pName)
                 .setContentText(message)
-                .setSubText(EnumConfig.DUA_AFTER_ADHAN)
+                .setSubText(Constant.DUA_AFTER_ADHAN)
                 .setColor(getColor(R.color.dark_500))
                 .setStyle(NotificationCompat.BigTextStyle().bigText(message))
                 .setAutoCancel(true)
@@ -125,7 +130,7 @@ class NotificationHelper(context: Context): ContextWrapper(context) {
              NotificationCompat.Builder(this, channelNotificationPrayerID)
                 .setContentTitle(pName)
                 .setContentText(message)
-                .setSubText(EnumConfig.DUA_AFTER_ADHAN)
+                .setSubText(Constant.DUA_AFTER_ADHAN)
                 .setVibrate(longArrayOf(500, 500, 500))
                 .setSmallIcon(R.drawable.ic_notifications_active_24dp)
                 .setAutoCancel(true)

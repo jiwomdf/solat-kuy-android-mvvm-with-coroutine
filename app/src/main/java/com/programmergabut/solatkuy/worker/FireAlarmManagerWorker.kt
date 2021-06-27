@@ -5,15 +5,14 @@ import android.util.Log
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.programmergabut.solatkuy.data.local.dao.MsApi1Dao
-import com.programmergabut.solatkuy.data.local.dao.NotifiedPrayerDao
+import com.programmergabut.solatkuy.data.local.dao.MsNotifiedPrayerDao
 import com.programmergabut.solatkuy.ui.LocationHelper
 import com.programmergabut.solatkuy.ui.PushNotificationHelper
-import javax.inject.Inject
 
 class FireAlarmManagerWorker(
     val context: Context,
     workerParameters: WorkerParameters,
-    private val notifiedPrayerDao: NotifiedPrayerDao,
+    private val msNotifiedPrayerDao: MsNotifiedPrayerDao,
     private val msApi1Dao: MsApi1Dao
 ): Worker(context, workerParameters) {
 
@@ -31,7 +30,7 @@ class FireAlarmManagerWorker(
             } else {
                 LocationHelper.getCity(context, api1.latitude.toDouble(), api1.longitude.toDouble()) ?: "-"
             }
-            val listPrayer = notifiedPrayerDao.getListNotifiedPrayerSync()
+            val listPrayer = msNotifiedPrayerDao.getListNotifiedPrayerSync()
 
             PushNotificationHelper(context, listPrayer, cityName)
 

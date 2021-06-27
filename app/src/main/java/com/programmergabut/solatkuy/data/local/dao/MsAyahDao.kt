@@ -13,9 +13,9 @@ interface MsAyahDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertAyahs(msAyah: List<MsAyah>)
 
-    @Query("DELETE FROM MsAyah WHERE surahID = :surahID")
+    @Query("DELETE FROM ms_ayah WHERE surahID = :surahID")
     fun deleteAyahsBySurahID(surahID: Int)
 
-    @Query("SELECT * FROM MsAyah WHERE surahID = :surahID")
+    @Query("SELECT * FROM ms_ayah WHERE surahID = :surahID")
     fun getAyahsBySurahID(surahID: Int): LiveData<List<MsAyah>>
 }

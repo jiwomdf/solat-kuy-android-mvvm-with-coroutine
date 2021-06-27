@@ -1,7 +1,6 @@
 package com.programmergabut.solatkuy.ui.main.home
 
 import android.app.Dialog
-import android.content.Context
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.util.Log
@@ -20,21 +19,16 @@ import com.programmergabut.solatkuy.base.BaseFragment
 import com.programmergabut.solatkuy.data.hardcodedata.DuaData
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
 import com.programmergabut.solatkuy.data.local.localentity.MsFavAyah
-import com.programmergabut.solatkuy.data.local.localentity.MsTimings
-import com.programmergabut.solatkuy.data.local.localentity.NotifiedPrayer
+import com.programmergabut.solatkuy.model.Timings
+import com.programmergabut.solatkuy.data.local.localentity.MsNotifiedPrayer
 import com.programmergabut.solatkuy.data.remote.json.prayerJson.Result
 import com.programmergabut.solatkuy.data.remote.json.prayerJson.PrayerResponse
 import com.programmergabut.solatkuy.data.remote.json.readsurahJsonEn.ReadSurahEnResponse
 import com.programmergabut.solatkuy.databinding.*
 import com.programmergabut.solatkuy.ui.LocationHelper
-import com.programmergabut.solatkuy.ui.PushNotificationHelper
 import com.programmergabut.solatkuy.ui.main.SelectPrayerHelper
-import com.programmergabut.solatkuy.util.EnumConfig
-import com.programmergabut.solatkuy.util.EnumConfig.Companion.ENDED_SURAH
-import com.programmergabut.solatkuy.util.EnumConfig.Companion.STARTED_SURAH
+import com.programmergabut.solatkuy.util.Constant
 import com.programmergabut.solatkuy.util.EnumStatus
-import com.programmergabut.solatkuy.worker.FireAlarmManagerWorker
-import com.programmergabut.solatkuy.worker.UpdateMonthAndYearWorker
 import dagger.hilt.android.AndroidEntryPoint
 import es.dmoral.toasty.Toasty
 import kotlinx.coroutines.*
@@ -43,7 +37,6 @@ import org.joda.time.LocalDate
 import org.joda.time.Period
 import java.text.SimpleDateFormat
 import java.util.*
-import java.util.concurrent.TimeUnit
 import kotlin.math.abs
 
 /*
@@ -52,10 +45,10 @@ import kotlin.math.abs
 
 @AndroidEntryPoint
 class HomeFragment(
-    viewModelTestFragment: FragmentMainViewModel? = null
-) : BaseFragment<FragmentHomeBinding, FragmentMainViewModel>(
+    viewModelTestFragment: HomeViewModel? = null
+) : BaseFragment<FragmentHomeBinding, HomeViewModel>(
     R.layout.fragment_home,
-    FragmentMainViewModel::class.java, viewModelTestFragment
+    HomeViewModel::class.java, viewModelTestFragment
 ), View.OnClickListener{
 
     private val TAG = "HomeFragment"
@@ -163,7 +156,8 @@ class HomeFragment(
 
                     bindCheckBox(retVal.data)
                     //fireWorker()
-                    bindWidget(createWidgetData(retVal.data))
+                    val widget = createWidgetData(retVal.data)
+                    bindWidget(widget)
                 }
                 EnumStatus.LOADING -> {
                     Toast.makeText(requireContext(), getString(R.string.syncdata), Toast.LENGTH_SHORT).show()
@@ -224,14 +218,14 @@ class HomeFragment(
             viewModel.getListNotifiedPrayer(api1)
 
             val city = LocationHelper.getCity(requireContext(), api1.latitude.toDouble(), api1.longitude.toDouble())
-            binding.includeInfo.tvCity.text = city ?: EnumConfig.CITY_NOT_FOUND
+            binding.includeInfo.tvCity.text = city ?: Constant.CITY_NOT_FOUND
             viewModel.fetchPrayerApi(api1)
         })
 
         viewModel.msSetting.observe(viewLifecycleOwner, { setting ->
             if(setting == null){
                 dialogBinding.rbgQuotesDataSource.check(R.id.rb_fromApi)
-                viewModel.fetchReadSurahEn((STARTED_SURAH..ENDED_SURAH).random())
+                viewModel.fetchReadSurahEn((Constant.STARTED_SURAH..Constant.ENDED_SURAH).random())
                 return@observe
             }
             if(setting.isUsingDBQuotes){
@@ -240,7 +234,7 @@ class HomeFragment(
                 viewModel.readSurahEn.removeObservers(this)
             } else {
                 dialogBinding.rbgQuotesDataSource.check(R.id.rb_fromApi)
-                viewModel.fetchReadSurahEn((STARTED_SURAH..ENDED_SURAH).random())
+                viewModel.fetchReadSurahEn((Constant.STARTED_SURAH..Constant.ENDED_SURAH).random())
                 viewModel.favAyah.removeObservers(this)
             }
         })
@@ -299,10 +293,10 @@ class HomeFragment(
         }
     }
 
-    private fun createWidgetData(prayer: List<NotifiedPrayer>): MsTimings {
+    private fun createWidgetData(prayerMs: List<MsNotifiedPrayer>): Timings {
         val arrDate = LocalDate.now().toString("dd/MMM/yyyy").split("/")
-        return MsTimings(prayer[0].prayerTime, prayer[1].prayerTime, prayer[2].prayerTime,
-            prayer[3].prayerTime, prayer[4].prayerTime, prayer[5].prayerTime, "",
+        return Timings(prayerMs[0].prayerTime, prayerMs[1].prayerTime, prayerMs[2].prayerTime,
+            prayerMs[3].prayerTime, prayerMs[4].prayerTime, prayerMs[5].prayerTime, "",
             "", "", arrDate[0],arrDate[1])
     }
 
@@ -349,7 +343,7 @@ class HomeFragment(
         }
     }
 
-    private fun bindCheckBox(list: List<NotifiedPrayer>) {
+    private fun bindCheckBox(list: List<MsNotifiedPrayer>) {
         list.forEach {
             when {
                 it.prayerName.trim() == getString(R.string.fajr) && it.isNotified -> binding.includePrayerTime.cbFajr.isChecked = true
@@ -361,7 +355,7 @@ class HomeFragment(
         }
     }
 
-    private fun bindWidget(data: MsTimings?) {
+    private fun bindWidget(data: Timings?) {
         if(data == null)
             return
 
@@ -376,10 +370,10 @@ class HomeFragment(
         val city = LocationHelper.getCity(requireContext(), it.latitude.toDouble(), it.longitude.toDouble())
         binding.tvViewLatitude.text = it.latitude + " °N"
         binding.tvViewLongitude.text = it.longitude + " °W"
-        binding.tvViewCity.text = city ?: EnumConfig.CITY_NOT_FOUND
+        binding.tvViewCity.text = city ?: Constant.CITY_NOT_FOUND
     }
 
-    private fun bindPrayerText(apiData: MsTimings?) {
+    private fun bindPrayerText(apiData: Timings?) {
         if(apiData == null){
             binding.includePrayerTime.apply {
                 tvFajrTime.text = getString(R.string.loading)
@@ -401,7 +395,7 @@ class HomeFragment(
         }
     }
 
-    private fun selectNextPrayerTime(selectedPrayer: Int, timings: MsTimings) {
+    private fun selectNextPrayerTime(selectedPrayer: Int, timings: Timings) {
         val sdfPrayer = SimpleDateFormat("HH:mm:ss", Locale.getDefault())
         val nowTime = DateTime(sdfPrayer.parse(org.joda.time.LocalTime.now().toString()))
         var period: Period? = null

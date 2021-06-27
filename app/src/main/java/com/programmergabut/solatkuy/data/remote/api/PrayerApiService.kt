@@ -1,5 +1,6 @@
 package com.programmergabut.solatkuy.data.remote.api
 
+import com.programmergabut.solatkuy.data.remote.json.methodJson.MethodResponse
 import com.programmergabut.solatkuy.data.remote.json.prayerJson.PrayerResponse
 import retrofit2.Call
 import retrofit2.http.GET
@@ -19,4 +20,7 @@ interface PrayerApiService {
                         @Query("method") method: String,
                         @Query("month") month: String,
                         @Query("year") year: String): Call<PrayerResponse>
+
+    @GET("methods")
+    fun fetchMethod(): Call<MethodResponse>
 }

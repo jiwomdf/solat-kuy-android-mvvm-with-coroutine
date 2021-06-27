@@ -1,13 +1,13 @@
 package com.programmergabut.solatkuy.ui.main
 
-import com.programmergabut.solatkuy.data.local.localentity.MsTimings
+import com.programmergabut.solatkuy.model.Timings
 import org.joda.time.DateTime
 import org.joda.time.LocalTime
 import java.text.SimpleDateFormat
 import java.util.*
 
 object SelectPrayerHelper {
-    fun selectNextPrayer(timings: MsTimings): Int {
+    fun selectNextPrayer(timings: Timings): Int {
 
         //prayer time
         val fajr = parseTimingToDateTime(timings.fajr)

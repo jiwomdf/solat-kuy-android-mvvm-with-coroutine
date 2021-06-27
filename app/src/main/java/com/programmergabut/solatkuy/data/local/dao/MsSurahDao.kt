@@ -10,9 +10,9 @@ interface MsSurahDao {
     @Insert(onConflict = OnConflictStrategy.REPLACE)
     fun insertSurahs(msSurah: List<MsSurah>)
 
-    @Query("delete from MsSurah")
+    @Query("delete from ms_surah")
     fun deleteSurahs()
 
-    @Query("select * from MsSurah")
+    @Query("select * from ms_surah")
     fun getSurahs(): LiveData<List<MsSurah>>
 }

@@ -5,10 +5,10 @@ import androidx.work.ListenableWorker
 import androidx.work.WorkerFactory
 import androidx.work.WorkerParameters
 import com.programmergabut.solatkuy.data.local.dao.MsApi1Dao
-import com.programmergabut.solatkuy.data.local.dao.NotifiedPrayerDao
+import com.programmergabut.solatkuy.data.local.dao.MsNotifiedPrayerDao
 
 class MyWorkerFactory(
-    private val notifiedPrayerDao: NotifiedPrayerDao,
+    private val msNotifiedPrayerDao: MsNotifiedPrayerDao,
     private val msApi1Dao: MsApi1Dao
 ) : WorkerFactory() {
 
@@ -20,7 +20,7 @@ class MyWorkerFactory(
 
         return when(workerClassName) {
             FireAlarmManagerWorker::class.java.name ->
-                FireAlarmManagerWorker(appContext, workerParameters, notifiedPrayerDao, msApi1Dao)
+                FireAlarmManagerWorker(appContext, workerParameters, msNotifiedPrayerDao, msApi1Dao)
             UpdateMonthAndYearWorker::class.java.name ->
                 UpdateMonthAndYearWorker(appContext, workerParameters, msApi1Dao)
             else ->

@@ -3,7 +3,7 @@ package com.programmergabut.solatkuy.di
 import android.content.Context
 import androidx.room.Room
 import com.programmergabut.solatkuy.data.local.SolatKuyRoom
-import com.programmergabut.solatkuy.util.EnumConfig.Companion.DATABASE_NAME
+import com.programmergabut.solatkuy.util.Constant
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -19,7 +19,7 @@ object DatabaseModule {
     @Provides
     fun provideSolatKuyDatabase(
         @ApplicationContext context: Context
-    ) = Room.databaseBuilder(context, SolatKuyRoom::class.java, DATABASE_NAME)
+    ) = Room.databaseBuilder(context, SolatKuyRoom::class.java, Constant.DATABASE_NAME)
         .fallbackToDestructiveMigration()
         .allowMainThreadQueries()
         .build()
@@ -53,4 +53,7 @@ object DatabaseModule {
     @Provides
     fun provideMsAyahDao(db: SolatKuyRoom) = db.msAyahDao()
 
+    @Singleton
+    @Provides
+    fun provideMsCalculationMethodsDao(db: SolatKuyRoom) = db.msCalculationMethodsDao()
 }

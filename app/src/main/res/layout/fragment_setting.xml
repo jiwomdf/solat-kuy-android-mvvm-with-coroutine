@@ -24,6 +24,7 @@
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/medium_margin"
+                android:layout_marginEnd="@dimen/medium_margin"
                 android:layout_marginTop="@dimen/medium_margin"
                 android:layout_marginBottom="@dimen/medium_margin"
                 android:orientation="vertical"
@@ -89,7 +90,6 @@
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
                     android:text="@string/city"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tv_text_longitude" />
 
@@ -101,9 +101,33 @@
                     android:layout_marginTop="8dp"
                     android:gravity="start"
                     android:text="@string/loading"
-                    app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toEndOf="@+id/tv_text_city"
                     app:layout_constraintTop_toBottomOf="@+id/tv_view_longitude" />
+
+                <TextView
+                    android:id="@+id/tv_text_method"
+                    android:layout_width="@dimen/info_width_size"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="8dp"
+                    android:text="@string/calculation_method"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_text_city" />
+
+                <TextView
+                    android:id="@+id/tv_view_method"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    app:layout_constraintHorizontal_bias="0.0"
+                    android:layout_marginStart="@dimen/large_margin"
+                    android:layout_marginTop="8dp"
+                    android:layout_marginEnd="16dp"
+                    android:gravity="start"
+                    android:text="@string/loading"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toEndOf="@+id/tv_text_city"
+                    app:layout_constraintTop_toBottomOf="@+id/tv_view_city" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
@@ -170,6 +194,69 @@
                         android:layout_height="wrap_content"
                         android:layout_marginTop="@dimen/small_margin"
                         android:text="@string/by_gps"
+                        android:textSize="@dimen/small_text_size" />
+
+                </LinearLayout>
+
+            </androidx.constraintlayout.widget.ConstraintLayout>
+        </com.google.android.material.card.MaterialCardView>
+
+        <com.google.android.material.card.MaterialCardView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/small_margin"
+            app:cardBackgroundColor="@color/dark_200"
+            app:cardCornerRadius="@dimen/medium_margin">
+
+            <androidx.constraintlayout.widget.ConstraintLayout
+                android:layout_width="match_parent"
+                android:layout_height="wrap_content"
+                android:layout_marginTop="@dimen/medium_margin"
+                android:layout_marginBottom="@dimen/medium_margin">
+
+                <ImageView
+                    android:id="@+id/iv_methods_logo"
+                    android:layout_width="@dimen/avatar_size"
+                    android:layout_height="@dimen/avatar_size"
+                    android:layout_marginTop="2dp"
+                    android:layout_marginStart="@dimen/small_margin"
+                    android:layout_marginBottom="@dimen/small_margin"
+                    android:contentDescription="@string/locationicon"
+                    android:src="@drawable/ic_access_time_24"
+                    app:layout_constraintBottom_toTopOf="@+id/rg_methods_setting"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent" />
+
+                <TextView
+                    android:id="@+id/tv_calculate_method"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginStart="@dimen/small_margin"
+                    android:text="@string/change_prayer_calculation_method"
+                    android:textSize="@dimen/medium_text_size"
+                    android:textStyle="bold"
+                    app:layout_constraintBottom_toTopOf="@+id/rg_methods_setting"
+                    app:layout_constraintStart_toEndOf="@+id/iv_methods_logo"
+                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintVertical_bias="0.506" />
+
+                <LinearLayout
+                    android:id="@+id/rg_methods_setting"
+                    android:layout_width="match_parent"
+                    android:layout_height="wrap_content"
+                    android:orientation="vertical"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent">
+
+                    <Spinner
+                        android:id="@+id/s_methods"
+                        android:layout_width="match_parent"
+                        android:layout_height="match_parent"
+                        android:layout_marginStart="@dimen/small_margin"
+                        android:layout_marginEnd="@dimen/small_margin"
+                        android:layout_marginTop="@dimen/small_margin"
+                        android:text="@string/by_latitude_amp_longitude"
                         android:textSize="@dimen/small_text_size" />
 
                 </LinearLayout>

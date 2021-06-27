@@ -5,7 +5,7 @@ import android.content.Intent
 import android.view.LayoutInflater
 import android.view.ViewGroup
 import androidx.recyclerview.widget.RecyclerView
-import com.programmergabut.solatkuy.data.local.localentity.Dua
+import com.programmergabut.solatkuy.model.Dua
 import com.programmergabut.solatkuy.databinding.ListDuaBinding
 import com.programmergabut.solatkuy.model.DuaExtraData
 import com.programmergabut.solatkuy.ui.dua.DuaActivity

@@ -37,6 +37,7 @@
     <string name="longitude">Longitude</string>
     <string name="current_location">Current Location</string>
     <string name="city">City</string>
+    <string name="calculation_method">Calculation Method</string>
 
     <!--QIBLA COMPASS-->
     <string name="compass_art">Compass Art:</string>
@@ -125,5 +126,6 @@
     <string name="solat_kuy">Solat Kuy</string>
     <string name="oke">Oke</string>
     <string name="solat_kuy_exclamation">Solat Kuy!</string>
+    <string name="change_prayer_calculation_method">Change Prayer Calculation Method</string>
 
 </resources>

@@ -8,6 +8,7 @@ class SharedPrefUtil @Inject constructor() {
     companion object {
         const val LAST_READ_SURAH = "lastReadSurah"
         const val LAST_READ_AYAH = "lastReadAyah"
+        const val SELECTED_METHOD = "selected_method"
     }
 
     @Inject
@@ -47,6 +48,17 @@ class SharedPrefUtil @Inject constructor() {
         sharedPref.edit()?.apply{
             putInt(LAST_READ_SURAH, selectedSurahId)
             putInt(LAST_READ_AYAH, numberInSurah)
+            apply()
+        }
+    }
+
+    fun getSelectedMethod(): Int {
+        return sharedPref.getInt(SELECTED_METHOD, -1)
+    }
+
+    fun insertSelectedMethod(selectedMethod: Int) {
+        sharedPref.edit()?.apply{
+            putInt(SELECTED_METHOD, selectedMethod)
             apply()
         }
     }

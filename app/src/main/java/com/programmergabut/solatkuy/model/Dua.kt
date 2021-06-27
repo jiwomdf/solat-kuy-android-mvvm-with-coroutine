@@ -1,4 +1,4 @@
-package com.programmergabut.solatkuy.data.local.localentity
+package com.programmergabut.solatkuy.model
 
 data class Dua(val id: Int,
           val title: String,

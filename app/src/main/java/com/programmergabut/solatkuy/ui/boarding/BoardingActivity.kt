@@ -26,7 +26,7 @@ import com.programmergabut.solatkuy.databinding.ActivityBoardingBinding
 import com.programmergabut.solatkuy.databinding.LayoutBottomsheetBygpsBinding
 import com.programmergabut.solatkuy.databinding.LayoutBottomsheetBylatitudelongitudeBinding
 import com.programmergabut.solatkuy.ui.main.MainActivity
-import com.programmergabut.solatkuy.util.EnumConfig
+import com.programmergabut.solatkuy.util.Constant
 import com.programmergabut.solatkuy.util.EnumStatus
 import dagger.hilt.android.AndroidEntryPoint
 import es.dmoral.toasty.Toasty
@@ -115,46 +115,42 @@ class BoardingActivity : BaseActivity<ActivityBoardingBinding, BoardingViewModel
     }
 
     private fun insertLocationSettingToDb(latitude: String, longitude: String) {
-        val currDate = LocalDate()
-        val data = MsApi1(1,
-            latitude,
-            longitude,
-            EnumConfig.METHOD,
-            currDate.monthOfYear.toString(),
-            currDate.year.toString())
-
-        val result = updateMsApi1(data)
-        if(result[true] != null)
-            Toasty.success(this, result.values.toString(), Toasty.LENGTH_SHORT).show()
-        else
-            Toasty.error(this, result.values.toString(), Toasty.LENGTH_SHORT).show()
-
-        updateIsHasOpenApp()
-    }
-
-    fun updateMsApi1(msApi1: MsApi1): Map<Boolean, String> {
         val latitudeAndLongitudeCannotBeEmpty = "latitude and longitude cannot be empty"
         val latitudeAndLongitudeCannotBeEndedWithDot = "latitude and longitude cannot be ended with ."
         val latitudeAndLongitudeCannotBeStartedWithDot = "latitude and longitude cannot be started with ."
         val successChangeTheCoordinate = "Success change the coordinate"
 
+        val msApi1 = MsApi1(
+            1,
+            latitude,
+            longitude,
+            Constant.STARTED_METHOD,
+            LocalDate().monthOfYear.toString(),
+            LocalDate().year.toString()
+        )
+
         if(msApi1.latitude.isEmpty() || msApi1.longitude.isEmpty() || msApi1.latitude == "." || msApi1.longitude == "."){
-            return mapOf(false to latitudeAndLongitudeCannotBeEmpty)
+            Toasty.error(this, latitudeAndLongitudeCannotBeEmpty, Toasty.LENGTH_SHORT).show()
+            return
         }
 
         val arrLatitude = msApi1.latitude.toCharArray()
         val arrLongitude = msApi1.longitude.toCharArray()
 
         if(arrLatitude[arrLatitude.size - 1] == '.' || arrLongitude[arrLongitude.size - 1] == '.'){
-            return mapOf(false to latitudeAndLongitudeCannotBeEndedWithDot)
+            Toasty.error(this, latitudeAndLongitudeCannotBeEndedWithDot, Toasty.LENGTH_SHORT).show()
+            return
         }
 
         if(arrLatitude[0] == '.' || arrLongitude[0] == '.'){
-            return mapOf(false to latitudeAndLongitudeCannotBeStartedWithDot)
+            Toasty.error(this, latitudeAndLongitudeCannotBeStartedWithDot, Toasty.LENGTH_SHORT).show()
+            return
         }
 
         viewModel.updateMsApi1(msApi1)
-        return mapOf(true to successChangeTheCoordinate)
+        Toasty.success(this, successChangeTheCoordinate, Toasty.LENGTH_SHORT).show()
+
+        updateIsHasOpenApp()
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {

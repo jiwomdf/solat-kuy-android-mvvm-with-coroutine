@@ -3,7 +3,7 @@ package com.programmergabut.solatkuy.data.local.localentity
 import androidx.room.Entity
 import androidx.room.PrimaryKey
 
-@Entity(tableName = "MsSurah")
+@Entity(tableName = "ms_surah")
 data class MsSurah(
     @PrimaryKey
     val number: Int,

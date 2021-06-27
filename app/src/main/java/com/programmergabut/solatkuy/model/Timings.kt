@@ -1,6 +1,6 @@
-package com.programmergabut.solatkuy.data.local.localentity
+package com.programmergabut.solatkuy.model
 
-data class MsTimings(
+data class Timings(
     var fajr: String,
     var dhuhr: String,
     var asr: String,

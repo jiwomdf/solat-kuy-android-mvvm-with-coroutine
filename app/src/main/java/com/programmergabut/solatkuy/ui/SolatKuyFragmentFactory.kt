@@ -8,11 +8,11 @@ import com.programmergabut.solatkuy.ui.main.quran.favayah.FavAyahFragment
 import com.programmergabut.solatkuy.ui.main.quran.favayah.FavAyahViewModel
 import com.programmergabut.solatkuy.ui.main.qibla.CompassFragment
 import com.programmergabut.solatkuy.ui.main.qibla.CompassViewModel
-import com.programmergabut.solatkuy.ui.main.home.FragmentMainViewModel
 import com.programmergabut.solatkuy.ui.main.home.HomeFragment
+import com.programmergabut.solatkuy.ui.main.home.HomeViewModel
 import com.programmergabut.solatkuy.ui.main.quran.listsurah.ListSurahFragment
 import com.programmergabut.solatkuy.ui.main.quran.listsurah.ListSurahViewModel
-import com.programmergabut.solatkuy.ui.main.setting.FragmentSettingViewModel
+import com.programmergabut.solatkuy.ui.main.setting.SettingViewModel
 import com.programmergabut.solatkuy.ui.main.setting.SettingFragment
 import javax.inject.Inject
 
@@ -33,10 +33,10 @@ class SolatKuyFragmentFactory @Inject constructor(
                 ListSurahViewModel(quranRepositoryImpl)
             )
             SettingFragment::class.java.name -> SettingFragment(
-                FragmentSettingViewModel(prayerRepositoryImpl)
+                SettingViewModel(prayerRepositoryImpl)
             )
             HomeFragment::class.java.name -> HomeFragment(
-                FragmentMainViewModel(prayerRepositoryImpl,quranRepositoryImpl)
+                HomeViewModel(prayerRepositoryImpl,quranRepositoryImpl)
             )
             else -> super.instantiate(classLoader, className)
         }

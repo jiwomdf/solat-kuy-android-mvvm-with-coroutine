@@ -10,19 +10,19 @@ import com.programmergabut.solatkuy.data.local.localentity.MsSetting
 @Dao
 interface MsSettingDao {
 
-    @Query("select * from MsSetting")
+    @Query("select * from ms_setting")
     fun observeMsSetting(): LiveData<MsSetting>
 
-    @Query("delete from MsSetting")
+    @Query("delete from ms_setting")
     suspend fun deleteAll()
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertMsSetting(msSetting: MsSetting)
 
-    @Query("update MsSetting set isHasOpenApp = :isHasOpen where `no` = 1")
+    @Query("update ms_setting set isHasOpenApp = :isHasOpen where `no` = 1")
     suspend fun updateIsHasOpenApp(isHasOpen: Boolean)
 
-    @Query("update MsSetting set isUsingDBQuotes = :isUsingDBQuotes where `no` = 1")
+    @Query("update ms_setting set isUsingDBQuotes = :isUsingDBQuotes where `no` = 1")
     suspend fun updateIsUsingDBQuotes(isUsingDBQuotes: Boolean)
 
 }

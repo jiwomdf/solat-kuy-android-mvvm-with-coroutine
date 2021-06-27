@@ -2,6 +2,7 @@ package com.programmergabut.solatkuy.di
 
 import android.content.Context
 import android.content.SharedPreferences
+import com.programmergabut.solatkuy.util.Constant
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -16,7 +17,7 @@ object SharedPrefModule {
     @Singleton
     @Provides
     fun provideSharedPref(@ApplicationContext context: Context): SharedPreferences {
-        return context.getSharedPreferences("SolatKuy_fragmentCompass", Context.MODE_PRIVATE)
+        return context.getSharedPreferences(Constant.SHARED_PREF_NAME, Context.MODE_PRIVATE)
     }
 
 }

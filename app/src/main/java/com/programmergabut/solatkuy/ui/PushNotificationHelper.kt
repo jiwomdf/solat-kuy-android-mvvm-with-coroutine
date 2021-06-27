@@ -7,16 +7,15 @@ import android.content.ContextWrapper
 import android.content.Intent
 import android.os.Build
 import com.programmergabut.solatkuy.broadcaster.PrayerBroadcastReceiver
-import com.programmergabut.solatkuy.data.local.localentity.NotifiedPrayer
-import com.programmergabut.solatkuy.service.ServiceUpdateMonthAndYear
-import com.programmergabut.solatkuy.util.EnumConfig
+import com.programmergabut.solatkuy.data.local.localentity.MsNotifiedPrayer
+import com.programmergabut.solatkuy.util.Constant
 import java.util.*
 
 /*
  * Created by Katili Jiwo Adi Wiyono on 02/04/20.
  */
 
-class PushNotificationHelper(context: Context, prayerList: List<NotifiedPrayer>, cityName: String): ContextWrapper(context) {
+class PushNotificationHelper(context: Context, prayerListMs: List<MsNotifiedPrayer>, cityName: String): ContextWrapper(context) {
 
     private var mCityName: String? = null
 
@@ -24,7 +23,7 @@ class PushNotificationHelper(context: Context, prayerList: List<NotifiedPrayer>,
         this.mCityName = cityName
 
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val newList = prayerList.filter { x -> x.prayerName !=  EnumConfig.SUNRISE} //remove sunrise from list
+        val newList = prayerListMs.filter { x -> x.prayerName !=  Constant.SUNRISE} //remove sunrise from list
         newList.toMutableList().sortBy { x -> x.prayerID }
 
         newList.forEach { prayer ->
@@ -39,22 +38,22 @@ class PushNotificationHelper(context: Context, prayerList: List<NotifiedPrayer>,
         }
     }
 
-    private fun createIntent(context: Context, prayer: NotifiedPrayer): Intent {
+    private fun createIntent(context: Context, prayerMs: MsNotifiedPrayer): Intent {
         return Intent(context, PrayerBroadcastReceiver::class.java).also {
-            it.putExtra(PrayerBroadcastReceiver.prayerID, prayer.prayerID)
-            it.putExtra(PrayerBroadcastReceiver.prayerName, prayer.prayerName)
-            it.putExtra(PrayerBroadcastReceiver.prayerTime, prayer.prayerTime)
+            it.putExtra(PrayerBroadcastReceiver.prayerID, prayerMs.prayerID)
+            it.putExtra(PrayerBroadcastReceiver.prayerName, prayerMs.prayerName)
+            it.putExtra(PrayerBroadcastReceiver.prayerTime, prayerMs.prayerTime)
             it.putExtra(PrayerBroadcastReceiver.prayerCity, mCityName)
         }
     }
 
     private fun fireAlarmManager(
-        prayer: NotifiedPrayer,
+        prayerMs: MsNotifiedPrayer,
         pendingIntent: PendingIntent,
         alarmManager: AlarmManager,
         calendar: Calendar
     ) {
-        if(prayer.isNotified){
+        if(prayerMs.isNotified){
             if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
                 alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
             } else {
@@ -65,8 +64,8 @@ class PushNotificationHelper(context: Context, prayerList: List<NotifiedPrayer>,
         }
     }
 
-    private fun createCalendar(prayer: NotifiedPrayer): Calendar {
-        val arrPrayer = prayer.prayerTime.split(":")
+    private fun createCalendar(prayerMs: MsNotifiedPrayer): Calendar {
+        val arrPrayer = prayerMs.prayerTime.split(":")
         val hour = arrPrayer[0].trim()
         val minute = arrPrayer[1].split(" ")[0].trim()
         val calendar = Calendar.getInstance()

@@ -5,16 +5,12 @@ import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
-import android.os.Bundle
-import com.programmergabut.solatkuy.data.local.localentity.NotifiedPrayer
 import com.programmergabut.solatkuy.ui.dua.DuaActivity
-import com.programmergabut.solatkuy.util.EnumConfig
+import com.programmergabut.solatkuy.util.Constant
 import com.programmergabut.solatkuy.ui.NotificationHelper
 import com.programmergabut.solatkuy.data.hardcodedata.DuaData
 import com.programmergabut.solatkuy.model.DuaExtraData
 import com.programmergabut.solatkuy.model.PrayerExtraData
-import com.programmergabut.solatkuy.model.PrayerListExtraData
-import java.util.*
 
 /*
  * Created by Katili Jiwo Adi Wiyono on 27/03/20.
@@ -44,11 +40,11 @@ class PrayerBroadcastReceiver: BroadcastReceiver() {
         removeAllNotification(context)
 
         val duaIntent = createDuaIntent(context)
-        val pendingIntent = PendingIntent.getActivity(context, EnumConfig.ID_DUA_PENDING_INTENT, duaIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val pendingIntent = PendingIntent.getActivity(context, Constant.ID_DUA_PENDING_INTENT, duaIntent, PendingIntent.FLAG_UPDATE_CURRENT)
         val notificationBuilder = notificationHelper.createPrayerReminderNotification(prayerData.prayerTime!!,
             prayerData.prayerCity ?: "-", prayerData.prayerName!!, pendingIntent)
 
-        notificationHelper.getManager()?.notify(EnumConfig.ID_PRAYER_NOTIFICATION, notificationBuilder.build())
+        notificationHelper.getManager()?.notify(Constant.ID_PRAYER_NOTIFICATION, notificationBuilder.build())
     }
 
     private fun setIntent(intent: Intent): PrayerExtraData {

@@ -21,7 +21,7 @@ import javax.inject.Inject
  */
 
 @HiltViewModel
-class FragmentMainViewModel @Inject constructor(
+class HomeViewModel @Inject constructor(
     private val prayerRepository: PrayerRepository,
     private val quranRepository: QuranRepository
 ): ViewModel() {

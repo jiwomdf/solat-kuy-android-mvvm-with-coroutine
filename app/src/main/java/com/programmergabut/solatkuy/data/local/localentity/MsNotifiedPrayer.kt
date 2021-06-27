@@ -8,8 +8,8 @@ import androidx.room.PrimaryKey
  */
 
 
-@Entity(tableName = "notified_prayer")
-class NotifiedPrayer (
+@Entity(tableName = "ms_notified_prayer")
+class MsNotifiedPrayer (
     var prayerName: String,
     var isNotified: Boolean,
     var prayerTime: String){
