@@ -17,9 +17,9 @@ import javax.inject.Inject
  * Created by Katili Jiwo Adi Wiyono on 25/03/20.
  */
 @AndroidEntryPoint
-class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>(
+class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
     R.layout.activity_main,
-    MainActivityViewModel::class.java
+    MainViewModel::class.java
 ) {
 
     private val TAG = "MainActivity"
