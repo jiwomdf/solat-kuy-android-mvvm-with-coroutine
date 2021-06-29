@@ -27,6 +27,7 @@ class FakePrayerRepositoryAndroidTest : PrayerRepository {
     private var msApi11 = DummyValueAndroidTest.getMsApi1()
     private var msSetting = DummyValueAndroidTest.getMsSetting()
     private var notifiedPrayer = DummyValueAndroidTest.getNotifiedPrayer()
+    private var msCalculationMethods = DummyValueAndroidTest.getMsCalculationMethods()
 
     private val observableMsApi1 = MutableLiveData<MsApi1>()
     private val observableMsSetting = MutableLiveData<MsSetting>()
@@ -120,7 +121,9 @@ class FakePrayerRepositoryAndroidTest : PrayerRepository {
     }
 
     override fun getMethods(): LiveData<Resource<List<MsCalculationMethods>>> {
-        TODO("Not yet implemented")
+        return liveData {
+            emit(Resource.success(msCalculationMethods))
+        }
     }
 
     override fun getListNotifiedPrayer(msApi1: MsApi1): LiveData<Resource<List<MsNotifiedPrayer>>> {

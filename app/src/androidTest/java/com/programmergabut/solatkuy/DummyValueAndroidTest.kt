@@ -106,4 +106,11 @@ object DummyValueAndroidTest {
         return MsSetting(1, true, isUsingDBQuotes = true)
     }
 
+    fun getMsCalculationMethods(): List<MsCalculationMethods> {
+        return listOf(
+            MsCalculationMethods(1, "Majlis Ugama Singapura", 11),
+            MsCalculationMethods(2, "Indonesia", 99)
+        )
+    }
+
 }
