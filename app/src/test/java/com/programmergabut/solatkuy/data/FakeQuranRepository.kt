@@ -33,7 +33,7 @@ class FakeQuranRepository constructor(
     private val allSurahService: AllSurahService,
     private val readSurahArService: ReadSurahArService,
     private val contextProviders: ContextProviders,
-): QuranRepository {
+):BaseRepository(), QuranRepository {
 
     /* MsFavAyah */
     override fun observeListFavAyah(): LiveData<List<MsFavAyah>> = msFavAyahDao.observeListFavAyah()
@@ -52,7 +52,7 @@ class FakeQuranRepository constructor(
         return CoroutineScope(Dispatchers.IO).async {
             lateinit var response: ReadSurahEnResponse
             try {
-                response = readSurahEnService.fetchReadSurahEn(surahID).await()
+                response = execute(readSurahEnService.fetchReadSurahEn(surahID))
                 response.status = "1"
             }
             catch (ex: Exception){
@@ -68,7 +68,7 @@ class FakeQuranRepository constructor(
         return CoroutineScope(Dispatchers.IO).async {
             lateinit var response: AllSurahResponse
             try {
-                response = allSurahService.fetchAllSurah().await()
+                response = execute(allSurahService.fetchAllSurah())
                 response.status = "1"
             }
             catch (ex: Exception){
@@ -91,7 +91,7 @@ class FakeQuranRepository constructor(
                     withContext(contextProviders.IO) {
                         lateinit var response: AllSurahResponse
                         try {
-                            response = BaseRepository.execute(allSurahService.fetchAllSurah())
+                            response = execute(allSurahService.fetchAllSurah())
                             emit(ApiResponse.success(response))
                         } catch (ex: Exception) {
                             response = AllSurahResponse()
@@ -106,7 +106,7 @@ class FakeQuranRepository constructor(
                 val allSurah = data.data.map {
                     MsSurah(
                         englishName = it.englishName,
-                        englishNameLowerCase = it.englishNameTranslation.toLowerCase(Locale.ROOT),
+                        englishNameLowerCase = it.englishNameTranslation.lowercase(Locale.ROOT),
                         englishNameTranslation = it.englishNameTranslation,
                         name = it.name,
                         number = it.number,
@@ -124,7 +124,7 @@ class FakeQuranRepository constructor(
         return CoroutineScope(Dispatchers.IO).async {
             lateinit var response : ReadSurahArResponse
             try {
-                response = readSurahArService.fetchReadSurahAr(surahID).await()
+                response = execute(readSurahArService.fetchReadSurahAr(surahID))
                 response.status = "1"
             }
             catch (ex: Exception){

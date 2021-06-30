@@ -26,7 +26,6 @@ import com.programmergabut.solatkuy.util.ContextProviders
 import com.programmergabut.solatkuy.util.Constant
 import com.programmergabut.solatkuy.util.Resource
 import kotlinx.coroutines.*
-import retrofit2.await
 import java.text.SimpleDateFormat
 import java.util.*
 
@@ -46,7 +45,7 @@ class FakePrayerRepository constructor(
         msNotifiedPrayerDao.updatePrayerIsNotified(prayerName, isNotified)
     override suspend fun updatePrayerTime(prayerName: String, prayerTime: String) =
         msNotifiedPrayerDao.updatePrayerTime(prayerName, prayerTime)
-    override suspend fun getListNotifiedPrayer(): List<MsNotifiedPrayer>? =
+    override suspend fun getListNotifiedPrayer(): List<MsNotifiedPrayer> =
         msNotifiedPrayerDao.getListNotifiedPrayerSync()
 
     /* MsApi1 */
@@ -88,8 +87,8 @@ class FakePrayerRepository constructor(
         return CoroutineScope(Dispatchers.IO).async {
             lateinit var response: PrayerResponse
             try {
-                response = prayerApiService.fetchPrayer(msApi1.latitude, msApi1.longitude,
-                    msApi1.method, msApi1.month, msApi1.year).await()
+                response = execute(prayerApiService.fetchPrayer(msApi1.latitude, msApi1.longitude,
+                    msApi1.method, msApi1.month, msApi1.year))
                 response.status= "1"
             }
             catch (ex: Exception){

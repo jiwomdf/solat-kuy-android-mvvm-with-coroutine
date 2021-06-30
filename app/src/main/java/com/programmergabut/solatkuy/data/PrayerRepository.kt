@@ -6,7 +6,6 @@ import com.programmergabut.solatkuy.data.local.localentity.MsCalculationMethods
 import com.programmergabut.solatkuy.data.local.localentity.MsSetting
 import com.programmergabut.solatkuy.data.local.localentity.MsNotifiedPrayer
 import com.programmergabut.solatkuy.data.remote.json.compassJson.CompassResponse
-import com.programmergabut.solatkuy.data.remote.json.methodJson.MethodResponse
 import com.programmergabut.solatkuy.data.remote.json.prayerJson.PrayerResponse
 import com.programmergabut.solatkuy.util.Resource
 import kotlinx.coroutines.Deferred
@@ -21,7 +20,7 @@ interface PrayerRepository {
     suspend fun updateIsUsingDBQuotes(isUsingDBQuotes: Boolean)
     suspend fun updateMsApi1MonthAndYear(api1ID: Int, month: String, year:String)
     suspend fun updateIsHasOpenApp(isHasOpen: Boolean)
-    suspend fun getListNotifiedPrayer(): List<MsNotifiedPrayer>?
+    suspend fun getListNotifiedPrayer(): List<MsNotifiedPrayer>
     suspend fun fetchQibla(msApi1: MsApi1): Deferred<CompassResponse>
     suspend fun fetchPrayerApi(msApi1: MsApi1): Deferred<PrayerResponse>
     fun getListNotifiedPrayer(msApi1: MsApi1): LiveData<Resource<List<MsNotifiedPrayer>>>

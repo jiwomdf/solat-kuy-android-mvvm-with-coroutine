@@ -14,6 +14,7 @@ import com.programmergabut.solatkuy.data.local.dao.MsSurahDao
 import com.programmergabut.solatkuy.data.remote.api.AllSurahService
 import com.programmergabut.solatkuy.data.remote.api.ReadSurahArService
 import com.programmergabut.solatkuy.data.remote.api.ReadSurahEnService
+import com.programmergabut.solatkuy.data.remote.json.readsurahJsonEn.ReadSurahEnResponse
 import com.programmergabut.solatkuy.util.ContextProviders
 import junit.framework.TestCase.assertNotNull
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -21,8 +22,9 @@ import kotlinx.coroutines.runBlocking
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Rule
 import org.junit.Test
-import org.mockito.Mockito.`when`
-import org.mockito.Mockito.mock
+import org.mockito.Mockito.*
+import retrofit2.Call
+import retrofit2.await
 
 @ExperimentalCoroutinesApi
 class QuranRepositoryImplTest: BaseRepository() {
@@ -45,30 +47,21 @@ class QuranRepositoryImplTest: BaseRepository() {
 
     /* Remote */
     @Test
-    fun fetchReadSurahEn() = runBlocking {
-        val dummyQuranSurah = DummyRetValueTest.surahEnID_1<QuranRepositoryImplTest>()
-        `when`(execute(readSurahEnService.fetchReadSurahEn(surahID))).thenReturn(dummyQuranSurah)
+    fun fetchReadSurahEn(): Unit = runBlocking {
         quranRepository.fetchReadSurahEn(surahID).await()
         verify(readSurahEnService).fetchReadSurahEn(surahID)
-        assertNotNull(dummyQuranSurah)
     }
 
     @Test
-    fun fetchReadSurahAr() = runBlocking {
-        val dummyQuranSurah = DummyRetValueTest.surahArID_1<QuranRepositoryImplTest>()
-        `when`(execute(readSurahArService.fetchReadSurahAr(surahID))).thenReturn(dummyQuranSurah)
+    fun fetchReadSurahAr(): Unit = runBlocking {
         quranRepository.fetchReadSurahAr(surahID).await()
         verify(readSurahArService).fetchReadSurahAr(surahID)
-        assertNotNull(dummyQuranSurah)
     }
 
     @Test
-    fun fetchAllSurah() = runBlocking {
-        val dummyQuranSurah = DummyRetValueTest.fetchAllSurahAr<QuranRepositoryImplTest>()
-        `when`(execute(allSurahService.fetchAllSurah())).thenReturn(dummyQuranSurah)
-        quranRepository.fetchAllSurah().toDeferred()
+    fun fetchAllSurah(): Unit = runBlocking {
+        quranRepository.fetchAllSurah().await()
         verify(allSurahService).fetchAllSurah()
-        assertNotNull(dummyQuranSurah)
     }
 
 

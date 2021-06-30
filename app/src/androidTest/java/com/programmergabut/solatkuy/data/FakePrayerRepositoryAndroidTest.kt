@@ -132,7 +132,7 @@ class FakePrayerRepositoryAndroidTest : PrayerRepository {
         }
     }
 
-    override suspend fun getListNotifiedPrayer(): List<MsNotifiedPrayer>? {
+    override suspend fun getListNotifiedPrayer(): List<MsNotifiedPrayer> {
         return observableNotifiedPrayer.value!!
     }
 }

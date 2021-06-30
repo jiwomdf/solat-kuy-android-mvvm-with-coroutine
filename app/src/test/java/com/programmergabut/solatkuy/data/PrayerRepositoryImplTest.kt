@@ -42,24 +42,17 @@ class PrayerRepositoryImplTest: BaseRepository(){
 
     /* Remote */
     @Test
-    fun fetchPrayerApi() = runBlocking {
-        val dummyPrayerApi = DummyRetValueTest.fetchPrayerApi<PrayerRepositoryImplTest>()
-        Mockito.`when`(execute(prayerApiService.fetchPrayer(msApi1.latitude, msApi1.longitude,
-            msApi1.method, msApi1.month, msApi1.year))).thenReturn(dummyPrayerApi)
+    fun fetchPrayerApi(): Unit = runBlocking {
         prayerRepository.fetchPrayerApi(msApi1).await()
         Mockito.verify(prayerApiService).fetchPrayer(msApi1.latitude,
             msApi1.longitude, msApi1.method, msApi1.month, msApi1.year)
-        assertNotNull(dummyPrayerApi)
     }
 
-   /*  @Test
-    fun fetchCompass() = runBlocking {
-        val dummyCompassApi = DummyRetValueTest.fetchCompassApi<PrayerRepositoryImplTest>()
-        Mockito.`when`(qiblaApiService.fetchQibla(msApi1.latitude, msApi1.longitude)).thenReturn(dummyCompassApi)
-        prayerRepository.fetchQibla(msApi1).toDeferred()
+   @Test
+    fun fetchCompass(): Unit = runBlocking {
+        prayerRepository.fetchQibla(msApi1).await()
         Mockito.verify(qiblaApiService).fetchQibla(msApi1.latitude, msApi1.longitude)
-        assertNotNull(dummyCompassApi)
-    } */
+    }
 
     /* Database */
     @Test
