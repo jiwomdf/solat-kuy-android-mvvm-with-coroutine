@@ -10,10 +10,6 @@ import com.programmergabut.solatkuy.util.Resource
 import kotlinx.coroutines.Deferred
 
 interface QuranRepository {
-    fun observeListFavAyah(): LiveData<List<MsFavAyah>>
-    suspend fun getListFavAyahBySurahID(surahID: Int): List<MsFavAyah>?
-    suspend fun insertFavAyah(msFavAyah: MsFavAyah)
-    suspend fun deleteFavAyah(msFavAyah: MsFavAyah)
     fun observeListFavSurah(): LiveData<List<MsFavSurah>>
     fun observeFavSurahBySurahID(surahID: Int): LiveData<MsFavSurah?>
     suspend fun insertFavSurah(msFavSurah: MsFavSurah)
@@ -22,5 +18,5 @@ interface QuranRepository {
     suspend fun fetchAllSurah(): Deferred<AllSurahResponse>
     fun getAllSurah(): LiveData<Resource<List<MsSurah>>>
     suspend fun fetchReadSurahAr(surahID: Int): Deferred<ReadSurahArResponse>
-    fun getSelectedSurah(surahID: Int): LiveData<Resource<List<MsAyah>>>
+    fun getAyahBySurahID(surahID: Int): LiveData<Resource<List<MsAyah>>>
 }

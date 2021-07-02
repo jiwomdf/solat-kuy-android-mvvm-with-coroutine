@@ -3,7 +3,6 @@ package com.programmergabut.solatkuy.ui.main.home
 import android.app.Dialog
 import android.graphics.drawable.Drawable
 import android.os.Bundle
-import android.util.Log
 import android.view.View
 import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
@@ -18,7 +17,7 @@ import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.base.BaseFragment
 import com.programmergabut.solatkuy.data.hardcodedata.DuaData
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
-import com.programmergabut.solatkuy.data.local.localentity.MsFavAyah
+import com.programmergabut.solatkuy.data.local.localentity.MsAyah
 import com.programmergabut.solatkuy.model.Timings
 import com.programmergabut.solatkuy.data.local.localentity.MsNotifiedPrayer
 import com.programmergabut.solatkuy.data.remote.json.prayerJson.Result
@@ -56,8 +55,6 @@ class HomeFragment(
     private var isTimerHasBanded = false
     private var coroutineTimerJob: Job? = null
     private lateinit var duaCollectionAdapter: DuaCollectionAdapter
-    private lateinit var dialogBinding: LayoutPopupChooseQuoteSettingBinding
-    private lateinit var dialog: Dialog
 
     override fun getViewBinding() = FragmentHomeBinding.inflate(layoutInflater)
 
@@ -65,7 +62,6 @@ class HomeFragment(
         super.onPause()
         isTimerHasBanded = false
         coroutineTimerJob?.cancel()
-        Log.d(TAG, "Canceled.. $coroutineTimerJob ${Thread.currentThread().id}")
     }
 
     override fun onStart() {
@@ -93,14 +89,8 @@ class HomeFragment(
         binding.includeQuranQuote.tvQuranAyahQuoteClick.setOnClickListener(this)
         binding.includeQuranQuote.tvQuranAyahQuote.setOnClickListener(this)
         binding.includeQuranQuote.ivRefresh.setOnClickListener(this)
-        binding.includeQuranQuote.ivQuoteSetting.setOnClickListener(this)
         subscribeObserversDB()
         subscribeObserversAPI()
-    }
-
-    override fun inflateBinding() {
-        dialogBinding = LayoutPopupChooseQuoteSettingBinding.inflate(layoutInflater)
-        dialog = Dialog(requireContext())
     }
 
     override fun onClick(v: View?) {
@@ -115,20 +105,6 @@ class HomeFragment(
             }
             R.id.iv_refresh -> {
                 viewModel.getMsSetting()
-            }
-            R.id.iv_quote_setting -> {
-                dialog.apply {
-                    setContentView(dialogBinding.root)
-                    show()
-                }
-                dialogBinding.rbFromApi.setOnClickListener {
-                    viewModel.updateIsUsingDBQuotes(false)
-                    dismissDialog()
-                }
-                dialogBinding.rbFromFavQuote.setOnClickListener {
-                    viewModel.updateIsUsingDBQuotes(true)
-                    dismissDialog()
-                }
             }
         }
     }
@@ -224,26 +200,11 @@ class HomeFragment(
 
         viewModel.msSetting.observe(viewLifecycleOwner, { setting ->
             if(setting == null){
-                dialogBinding.rbgQuotesDataSource.check(R.id.rb_fromApi)
                 viewModel.fetchReadSurahEn((Constant.STARTED_SURAH..Constant.ENDED_SURAH).random())
                 return@observe
             }
-            if(setting.isUsingDBQuotes){
-                dialogBinding.rbgQuotesDataSource.check(R.id.rb_fromFavQuote)
-                viewModel.getMsFavAyah()
-                viewModel.readSurahEn.removeObservers(this)
-            } else {
-                dialogBinding.rbgQuotesDataSource.check(R.id.rb_fromApi)
-                viewModel.fetchReadSurahEn((Constant.STARTED_SURAH..Constant.ENDED_SURAH).random())
-                viewModel.favAyah.removeObservers(this)
-            }
-        })
 
-        viewModel.favAyah.observe(viewLifecycleOwner, { localQuotes ->
-            if(localQuotes == null)
-                return@observe
-
-            bindQuranSurahDB(localQuotes)
+            viewModel.fetchReadSurahEn((Constant.STARTED_SURAH..Constant.ENDED_SURAH).random())
         })
     }
 
@@ -465,19 +426,6 @@ class HomeFragment(
         binding.includeQuranQuote.tvQuranAyahQuoteClick.text = ayah
     }
 
-    private fun bindQuranSurahDB(listAyah: List<MsFavAyah>) {
-        if(listAyah.isNotEmpty()){
-            val randAyah = (listAyah.indices).random()
-            val data = listAyah[randAyah]
-            val ayah = data.ayahEn + " - QS " + data.surahName + " Ayah " + data.ayahID
-            binding.includeQuranQuote.tvQuranAyahQuote.text = if(ayah.length > 100) ayah.substring(0, 100) + "..." else ayah
-            binding.includeQuranQuote.tvQuranAyahQuoteClick.text = ayah
-        } else {
-            binding.includeQuranQuote.tvQuranAyahQuote.text = getString(R.string.youHaventFavAnyAyah)
-            binding.includeQuranQuote.tvQuranAyahQuoteClick.text = getString(R.string.youHaventFavAnyAyah)
-        }
-    }
-
     /* Coroutine Timer */
     private suspend fun coroutineTimer(scope: CoroutineScope, hour: Int, minute: Int, second: Int){
         var tempHour = abs(hour)
@@ -486,10 +434,7 @@ class HomeFragment(
         var isMinuteZero = false
 
         while(true){
-            if(scope.isActive){
-                Log.d(TAG, "Running.. $scope $tempSecond ${Thread.currentThread().id}")
-            } else {
-                Log.d(TAG, "Stopping.. $scope $tempSecond ${Thread.currentThread().id}")
+            if(!scope.isActive){
                 coroutineTimerJob?.cancel()
                 break
             }
@@ -518,8 +463,7 @@ class HomeFragment(
                     val strMinute = if(tempMinute <= 9) "0$tempMinute" else tempMinute
                     val strSecond = if(tempSecond <= 9) "0$tempSecond" else tempSecond
                     binding.tvWidgetPrayerCountdown.text = "$strHour : $strMinute : $strSecond remaining"
-                }
-                else{
+                } else {
                     return@withContext
                 }
             }
@@ -530,7 +474,6 @@ class HomeFragment(
                     viewModel.msApi1.value?.let {
                         viewModel.getListNotifiedPrayer(it)
                         isTimerHasBanded = false
-                        Log.d(TAG, "Fetching.. $scope $tempSecond ${Thread.currentThread().id}")
                     }
                 }
                 break
@@ -551,11 +494,5 @@ class HomeFragment(
         val workManager = WorkManager.getInstance(requireActivity().application)
         workManager.enqueueUniquePeriodicWork(UpdateMonthAndYearWorker.UNIQUE_KEY, ExistingPeriodicWorkPolicy.KEEP, task)
     } */
-
-    private fun dismissDialog(){
-        viewModel.getMsSetting()
-        dialog.dismiss()
-        Toasty.success(requireContext(), "Success change the quotes source", Toast.LENGTH_SHORT).show()
-    }
 
 }

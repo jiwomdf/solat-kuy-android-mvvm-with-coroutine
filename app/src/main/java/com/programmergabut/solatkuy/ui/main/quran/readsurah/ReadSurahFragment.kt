@@ -194,7 +194,6 @@ class ReadSurahFragment(
 
     private fun initRVReadSurah() {
         readSurahAdapter = ReadSurahAdapter(
-            //onClickFavAyah,
             adapterTheme,
             ContextCompat.getDrawable(requireContext(), R.drawable.ic_favorite_red_24)!!,
             ContextCompat.getDrawable(requireContext(), R.drawable.ic_favorite_24)!!,
@@ -207,21 +206,6 @@ class ReadSurahFragment(
         }
     }
 
-    /* private val onClickFavAyah = fun(data: Ayah, binding: ListReadSurahBinding){
-        val msFavAyah = MsFavAyah(args.selectedSurahId.toInt(), data.numberInSurah, args.selectedSurahName, data.text, data.textEn!!)
-        if (binding.ivListFavFav.drawable.constantState ==
-            ContextCompat.getDrawable(requireContext(), R.drawable.ic_favorite_red_24)?.constantState
-        ) {
-            viewModel.deleteFavAyah(msFavAyah)
-            binding.ivListFavFav.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_favorite_24))
-        }
-        else {
-            viewModel.insertFavAyah(msFavAyah)
-            binding.ivListFavFav.setImageDrawable(ContextCompat.getDrawable(requireContext(), R.drawable.ic_favorite_red_24))
-        }
-        readSurahAdapter.notifyItemChanged(data.numberInSurah - 1)
-        //viewModel.getFavAyah()
-    } */
 
     private val adapterTheme = fun(vhBinding: ListReadSurahBinding){
         if(sharedPrefUtil.getIsBrightnessActive()){

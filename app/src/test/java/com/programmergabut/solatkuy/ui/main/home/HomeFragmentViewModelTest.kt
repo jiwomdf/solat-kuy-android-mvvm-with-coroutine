@@ -116,10 +116,4 @@ class HomeFragmentViewModelTest {
         verify(fakePrayerRepository).updatePrayerIsNotified(mapPrayer.keys.elementAt(0), true)
     }
 
-    @Test
-    fun `updateIsUsingDBQuotes, updateIsUsingDBQuotes() called`() = coroutinesTestRule.testDispatcher.runBlockingTest {
-        viewModel.updateIsUsingDBQuotes(true)
-        verify(fakePrayerRepository).updateIsUsingDBQuotes(true)
-    }
-
 }

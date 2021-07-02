@@ -17,7 +17,6 @@ interface PrayerRepository {
     suspend fun updateMsApi1(msApi1: MsApi1)
     suspend fun updateMsApi1Method(api1ID: Int, methodID: String)
     fun observeMsSetting(): LiveData<MsSetting>
-    suspend fun updateIsUsingDBQuotes(isUsingDBQuotes: Boolean)
     suspend fun updateMsApi1MonthAndYear(api1ID: Int, month: String, year:String)
     suspend fun updateIsHasOpenApp(isHasOpen: Boolean)
     suspend fun getListNotifiedPrayer(): List<MsNotifiedPrayer>

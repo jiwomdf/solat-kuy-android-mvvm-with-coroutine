@@ -67,56 +67,5 @@ class SettingFragmentTest{
         onView(withId(R.id.tv_changeLocation)).check(matches((withText("Change Location"))))
     }
 
-    /* @Test
-    fun insertMsApi1WithEmptyLatitude_updateMessageEqualWithTheError(){
-        val msApi1 = MsApi1(1, "", "123", "3", "3", "2020")
-        var testViewModel: FragmentSettingViewModel? = null
-        launchFragmentInHiltContainer<SettingFragment>(fragmentFactory = fragmentFactory) {
-            testViewModel = viewModel
-            testViewModel?.updateMsApi1(msApi1)
-        }
-
-        onView(withId(R.id.ll_content)).check(matches(isDisplayed()))
-        Assert.assertNotEquals(msApi1, testViewModel?.msApi1?.value)
-    }
-
-    @Test
-    fun insertMsApi1WithDotBeforeLatitude_updateMessageEqualWithTheError() {
-        val msApi1 = MsApi1(1, ".123", "123", "3", "3", "2020")
-        var testViewModel: FragmentSettingViewModel? = null
-        launchFragmentInHiltContainer<SettingFragment>(fragmentFactory = fragmentFactory) {
-            testViewModel = viewModel
-            testViewModel?.updateMsApi1(msApi1)
-        }
-
-        onView(withId(R.id.ll_content)).check(matches(isDisplayed()))
-        Assert.assertNotEquals(msApi1, testViewModel?.msApi1?.value)
-    }
-
-    @Test
-    fun insertMsApi1WithDotAfterLatitude_updateMessageEqualWithTheError() {
-        val msApi1 = MsApi1(1, "123.", "123", "3", "3", "2020")
-        var testViewModel: FragmentSettingViewModel? = null
-        launchFragmentInHiltContainer<SettingFragment>(fragmentFactory = fragmentFactory) {
-            testViewModel = viewModel
-            testViewModel?.updateMsApi1(msApi1)
-        }
-
-        onView(withId(R.id.ll_content)).check(matches(isDisplayed()))
-        Assert.assertNotEquals(msApi1, testViewModel?.msApi1?.value)
-    }
-
-    @Test
-    fun insertMsApi1WithCorrectValue_insertDataComplete(){
-        val msApi1 = MsApi1(1, "123", "123", "3", "3", "2020")
-        var testViewModel: FragmentSettingViewModel? = null
-        launchFragmentInHiltContainer<SettingFragment>(fragmentFactory = fragmentFactory) {
-            testViewModel = viewModel
-            testViewModel?.updateMsApi1(msApi1)
-        }
-
-        onView(withId(R.id.ll_content)).check(matches(isDisplayed()))
-        Assert.assertEquals(msApi1, testViewModel?.msApi1?.value)
-    } */
 
 }

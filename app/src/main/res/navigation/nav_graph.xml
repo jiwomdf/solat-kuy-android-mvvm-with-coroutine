@@ -27,13 +27,6 @@
         android:label="fragment_quran"
         tools:layout="@layout/fragment_list_surah" >
         <action
-            android:id="@+id/action_quranFragment_to_favAyahFragment"
-            app:destination="@id/favAyahFragment"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
-            app:popEnterAnim="@anim/nav_default_enter_anim"
-            app:popExitAnim="@anim/nav_default_exit_anim"/>
-        <action
             android:id="@+id/action_quranFragment_to_readSurahActivity"
             app:destination="@id/readSurahActivity"
             app:enterAnim="@anim/nav_default_enter_anim"
@@ -41,11 +34,6 @@
             app:popEnterAnim="@anim/nav_default_enter_anim"
             app:popExitAnim="@anim/nav_default_exit_anim"/>
     </fragment>
-    <fragment
-        android:id="@+id/favAyahFragment"
-        android:name="com.programmergabut.solatkuy.ui.main.quran.favayah.FavAyahFragment"
-        android:label="fragment_fav_ayah"
-        tools:layout="@layout/fragment_fav_ayah" />
     <fragment
         android:id="@+id/readSurahActivity"
         android:name="com.programmergabut.solatkuy.ui.main.quran.readsurah.ReadSurahFragment"

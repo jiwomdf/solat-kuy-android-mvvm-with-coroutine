@@ -127,11 +127,10 @@ object DummyRetValueTest {
     /* Database */
     val surahID = 1
     val msfavSurah = MsFavSurah(1,"test","test")
-    val msFavAyah = MsFavAyah(1,1,"test","test","test")
     val msFavSurah = MsFavSurah(1,"test", "test")
     val msApi1: MsApi1 = MsApi1(1, EnumConfigTesting.START_LAT, EnumConfigTesting.START_LNG,
             EnumConfigTesting.START_METHOD, EnumConfigTesting.START_MONTH, EnumConfigTesting.START_YEAR)
-    val msSetting = MsSetting(1, true, isUsingDBQuotes = true)
+    val msSetting = MsSetting(1, true)
 
     fun getMapPrayer(): MutableMap<String, String> {
         val map = mutableMapOf<String, String>()
@@ -144,10 +143,6 @@ object DummyRetValueTest {
         map[Constant.SUNRISE] = "05:00"
 
         return map
-    }
-
-    fun getListMsFavAyah(): List<MsFavAyah> {
-        return mutableListOf(MsFavAyah(1, 2,"test","test","test"))
     }
 
 }

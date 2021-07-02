@@ -22,7 +22,4 @@ interface MsSettingDao {
     @Query("update ms_setting set isHasOpenApp = :isHasOpen where `no` = 1")
     suspend fun updateIsHasOpenApp(isHasOpen: Boolean)
 
-    @Query("update ms_setting set isUsingDBQuotes = :isUsingDBQuotes where `no` = 1")
-    suspend fun updateIsUsingDBQuotes(isUsingDBQuotes: Boolean)
-
 }

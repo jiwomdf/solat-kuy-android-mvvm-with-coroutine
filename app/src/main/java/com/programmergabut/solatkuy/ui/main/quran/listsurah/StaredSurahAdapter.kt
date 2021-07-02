@@ -8,15 +8,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.programmergabut.solatkuy.data.local.localentity.MsFavSurah
 import com.programmergabut.solatkuy.databinding.ListStaredSurahBinding
 
-class StaredSurahAdapter(
-    private val onClick: (surahID: String, surahName: String, surahTranslation: String ) -> Unit
-) : RecyclerView.Adapter<StaredSurahAdapter.StaredSurahViewHolder>() {
+class StaredSurahAdapter : RecyclerView.Adapter<StaredSurahAdapter.StaredSurahViewHolder>() {
 
     private val diffCallback = object: DiffUtil.ItemCallback<MsFavSurah>(){
         override fun areItemsTheSame(oldItem: MsFavSurah, newItem: MsFavSurah) = oldItem == newItem
         override fun areContentsTheSame(oldItem: MsFavSurah, newItem: MsFavSurah) = oldItem == newItem
     }
 
+    var onClick: ((surahID: String, surahName: String, surahTranslation: String ) -> Unit)? = null
     private val differ = AsyncListDiffer(this, diffCallback)
 
     var listData : List<MsFavSurah>
@@ -36,7 +35,7 @@ class StaredSurahAdapter(
         fun bind(data: MsFavSurah){
             binding.tvStaredAyah.text = data.surahName
             binding.cvStaredAyah.setOnClickListener {
-                onClick(
+                onClick?.invoke(
                     data.surahID.toString(),
                     data.surahName!!,
                     data.surahTranslation!!

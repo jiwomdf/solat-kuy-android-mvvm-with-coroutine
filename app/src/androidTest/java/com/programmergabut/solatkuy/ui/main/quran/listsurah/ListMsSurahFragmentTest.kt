@@ -57,7 +57,6 @@ class ListMsSurahFragmentTest{
 
         onView(withId(R.id.et_search)).check(matches(isDisplayed()))
         onView(withId(R.id.s_juzz)).check(matches(isDisplayed()))
-        onView(withId(R.id.cv_fav_ayah)).check(matches(isDisplayed()))
         onView(withId(R.id.cv_quran_content)).check(matches(isDisplayed()))
     }
 

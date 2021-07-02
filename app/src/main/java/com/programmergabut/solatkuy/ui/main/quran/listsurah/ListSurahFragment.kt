@@ -46,7 +46,6 @@ class ListSurahFragment(
     override fun setListener() {
         super.setListener()
         binding.slQuran.setOnRefreshListener(this)
-        binding.cvFavAyah.setOnClickListener(this)
         binding.cvLastReadAyah.setOnClickListener(this)
         binding.etSearch.addTextChangedListener(etSearchListener)
 
@@ -74,10 +73,6 @@ class ListSurahFragment(
 
     override fun onClick(v: View?) {
         when(v?.id){
-            R.id.cv_fav_ayah -> {
-                resetSpinnerAndSearchBarValue()
-                findNavController().navigate(ListSurahFragmentDirections.actionQuranFragmentToFavAyahFragment())
-            }
             R.id.cv_last_read_ayah -> {
                 viewModel.allSurah.value?.data?.let {
                     val selectedSurah = getLastReadSurah(it, sharedPrefUtil.getLastReadSurah())
@@ -176,25 +171,30 @@ class ListSurahFragment(
     }
 
     private fun initRvAllSurah() {
-        allSurahAdapter = AllSurahAdapter { number, englishName, englishNameTranslation ->
-            resetSpinnerAndSearchBarValue()
-            findNavController().navigate(
-                ListSurahFragmentDirections.actionQuranFragmentToReadSurahActivity(
-                    number,
-                    englishName,
-                    englishNameTranslation,
-                    false
-                )
-            )
-        }
+        allSurahAdapter = AllSurahAdapter()
         binding.rvQuranSurah.apply {
             adapter = allSurahAdapter
             layoutManager = LinearLayoutManager(this@ListSurahFragment.context)
         }
+        allSurahAdapter.onClick = { number, englishName, englishNameTranslation ->
+            resetSpinnerAndSearchBarValue()
+            findNavController().navigate(ListSurahFragmentDirections
+                .actionQuranFragmentToReadSurahActivity(
+                    number,
+                    englishName,
+                    englishNameTranslation,
+                    false
+            ))
+        }
     }
 
     private fun initRvStaredSurah() {
-        staredSurahAdapter = StaredSurahAdapter{ surahID, surahName, surahTranslation ->
+        staredSurahAdapter = StaredSurahAdapter()
+        binding.rvStaredAyah.apply {
+            adapter = staredSurahAdapter
+            layoutManager = LinearLayoutManager(this@ListSurahFragment.context, LinearLayoutManager.HORIZONTAL, false)
+        }
+        staredSurahAdapter.onClick = { surahID, surahName, surahTranslation ->
             resetSpinnerAndSearchBarValue()
             findNavController().navigate(ListSurahFragmentDirections.actionQuranFragmentToReadSurahActivity(
                 surahID,
@@ -202,10 +202,6 @@ class ListSurahFragment(
                 surahTranslation,
                 false
             ))
-        }
-        binding.rvStaredAyah.apply {
-            adapter = staredSurahAdapter
-            layoutManager = LinearLayoutManager(this@ListSurahFragment.context, LinearLayoutManager.HORIZONTAL, false)
         }
     }
 

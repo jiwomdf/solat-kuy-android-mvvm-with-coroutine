@@ -39,10 +39,6 @@ object DatabaseModule {
 
     @Singleton
     @Provides
-    fun provideMsFavAyahDao(db: SolatKuyRoom) = db.msFavAyahDao()
-
-    @Singleton
-    @Provides
     fun provideMsFavSurahDao(db: SolatKuyRoom) = db.msFavSurahDao()
 
     @Singleton

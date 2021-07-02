@@ -7,7 +7,6 @@ package com.programmergabut.solatkuy.data
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.liveData
-import com.programmergabut.solatkuy.data.local.localentity.MsFavAyah
 import com.programmergabut.solatkuy.data.local.localentity.MsFavSurah
 import com.programmergabut.solatkuy.data.remote.json.quranallsurahJson.AllSurahResponse
 import com.programmergabut.solatkuy.data.remote.json.readsurahJsonAr.ReadSurahArResponse
@@ -24,38 +23,12 @@ import kotlinx.coroutines.Dispatchers.IO
 @HiltAndroidTest
 class FakeQuranRepositoryAndroidTest : QuranRepository {
 
-    private var listMsFavAyah = DummyValueAndroidTest.getListMsFavAyah()
-    private val observableMsFavAyahs = MutableLiveData<List<MsFavAyah>>()
-    private fun refreshMsFavAyah() {
-        observableMsFavAyahs.postValue(listMsFavAyah)
-    }
-
     private var listMsFavSurah = DummyValueAndroidTest.getListMsFavSurah()
     private val observableMsFavSurahs = MutableLiveData<List<MsFavSurah>>()
     private val observableMsFavSurah = MutableLiveData<MsFavSurah>()
     private fun refreshMsFavSurah() {
         observableMsFavSurahs.postValue(listMsFavSurah)
         observableMsFavSurah.value = listMsFavSurah[0]
-    }
-
-    /* Room */
-    /* MsFavAyah */
-    override fun observeListFavAyah(): LiveData<List<MsFavAyah>> {
-        return observableMsFavAyahs
-    }
-
-    override suspend fun getListFavAyahBySurahID(surahID: Int): List<MsFavAyah>? {
-        return listMsFavAyah
-    }
-
-    override suspend fun insertFavAyah(msFavAyah: MsFavAyah) {
-        listMsFavAyah.add(msFavAyah)
-        refreshMsFavAyah()
-    }
-
-    override suspend fun deleteFavAyah(msFavAyah: MsFavAyah) {
-        listMsFavAyah.remove(msFavAyah)
-        refreshMsFavAyah()
     }
 
     /* MsFavSurah */
@@ -127,7 +100,7 @@ class FakeQuranRepositoryAndroidTest : QuranRepository {
         }
     }
 
-    override fun getSelectedSurah(surahID: Int): LiveData<Resource<List<MsAyah>>> {
+    override fun getAyahBySurahID(surahID: Int): LiveData<Resource<List<MsAyah>>> {
         val hashMapOfAyah = hashMapOf<Int, Ayah>()
         val arResponse = DummyValueAndroidTest.surahArID_1<FakeQuranRepositoryAndroidTest>()
         val enResponse = DummyValueAndroidTest.surahEnID_1<FakeQuranRepositoryAndroidTest>()

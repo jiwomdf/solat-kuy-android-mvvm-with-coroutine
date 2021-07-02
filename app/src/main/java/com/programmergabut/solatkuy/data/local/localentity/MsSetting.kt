@@ -5,5 +5,4 @@ import androidx.room.PrimaryKey
 
 @Entity(tableName = "ms_setting")
 class MsSetting(@PrimaryKey val no: Int = 1,
-                val isHasOpenApp: Boolean,
-                val isUsingDBQuotes: Boolean)
+                val isHasOpenApp: Boolean)

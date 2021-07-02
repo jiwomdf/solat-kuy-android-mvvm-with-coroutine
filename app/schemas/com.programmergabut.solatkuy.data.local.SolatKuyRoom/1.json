@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 1,
-    "identityHash": "9a6b457d2b047148531c842a06ba3d24",
+    "identityHash": "b5d60c4f0cb5b29d4e3e03ac38e8d041",
     "entities": [
       {
         "tableName": "ms_notified_prayer",
@@ -118,51 +118,6 @@
         "primaryKey": {
           "columnNames": [
             "no"
-          ],
-          "autoGenerate": false
-        },
-        "indices": [],
-        "foreignKeys": []
-      },
-      {
-        "tableName": "ms_fav_ayah",
-        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`surahID` INTEGER NOT NULL, `ayahID` INTEGER NOT NULL, `surahName` TEXT, `ayahAr` TEXT, `ayahEn` TEXT, PRIMARY KEY(`surahID`, `ayahID`))",
-        "fields": [
-          {
-            "fieldPath": "surahID",
-            "columnName": "surahID",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "ayahID",
-            "columnName": "ayahID",
-            "affinity": "INTEGER",
-            "notNull": true
-          },
-          {
-            "fieldPath": "surahName",
-            "columnName": "surahName",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "ayahAr",
-            "columnName": "ayahAr",
-            "affinity": "TEXT",
-            "notNull": false
-          },
-          {
-            "fieldPath": "ayahEn",
-            "columnName": "ayahEn",
-            "affinity": "TEXT",
-            "notNull": false
-          }
-        ],
-        "primaryKey": {
-          "columnNames": [
-            "surahID",
-            "ayahID"
           ],
           "autoGenerate": false
         },
@@ -415,7 +370,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '9a6b457d2b047148531c842a06ba3d24')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'b5d60c4f0cb5b29d4e3e03ac38e8d041')"
     ]
   }
 }

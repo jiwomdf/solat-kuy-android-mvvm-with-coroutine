@@ -12,8 +12,6 @@ import com.programmergabut.solatkuy.ui.main.quran.listsurah.ListSurahFragment
 import com.programmergabut.solatkuy.ui.main.quran.listsurah.ListSurahViewModel
 import com.programmergabut.solatkuy.ui.main.setting.SettingViewModel
 import com.programmergabut.solatkuy.ui.main.setting.SettingFragment
-import com.programmergabut.solatkuy.ui.main.quran.favayah.FavAyahFragment
-import com.programmergabut.solatkuy.ui.main.quran.favayah.FavAyahViewModel
 import com.programmergabut.solatkuy.ui.main.quran.readsurah.ReadSurahFragment
 import com.programmergabut.solatkuy.ui.main.quran.readsurah.ReadSurahViewModel
 import kotlinx.coroutines.ExperimentalCoroutinesApi
@@ -26,9 +24,6 @@ class SolatKuyFragmentFactoryAndroidTest @Inject constructor() : FragmentFactory
         return when(className){
             ReadSurahFragment::class.java.name -> ReadSurahFragment(
                 ReadSurahViewModel(FakeQuranRepositoryAndroidTest())
-            )
-            FavAyahFragment::class.java.name -> FavAyahFragment(
-                FavAyahViewModel(FakeQuranRepositoryAndroidTest())
             )
             CompassFragment::class.java.name -> CompassFragment(
                 CompassViewModel(FakePrayerRepositoryAndroidTest())

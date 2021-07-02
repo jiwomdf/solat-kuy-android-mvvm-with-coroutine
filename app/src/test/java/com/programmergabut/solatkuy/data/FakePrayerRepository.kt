@@ -59,8 +59,6 @@ class FakePrayerRepository constructor(
 
     /* MsSetting */
     override fun observeMsSetting(): LiveData<MsSetting> = msSettingDao.observeMsSetting()
-    override suspend fun updateIsUsingDBQuotes(isUsingDBQuotes: Boolean) =
-        msSettingDao.updateIsUsingDBQuotes(isUsingDBQuotes)
     override suspend fun updateMsApi1MonthAndYear(api1ID: Int, month: String, year:String) =
         msApi1Dao.updateMsApi1MonthAndYear(api1ID, month, year)
     override suspend fun updateIsHasOpenApp(isHasOpen: Boolean) =

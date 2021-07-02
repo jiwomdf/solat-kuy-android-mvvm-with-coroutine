@@ -11,7 +11,6 @@ import com.programmergabut.solatkuy.data.local.localentity.MsAyah
 import com.programmergabut.solatkuy.databinding.ListReadSurahBinding
 
 class ReadSurahAdapter(
-    //val onClickFavAyah: (MsAyah, ListReadSurahBinding) -> Unit,
     val setTheme: (ListReadSurahBinding) -> Unit,
     val isFav: Drawable,
     val isNotFav: Drawable,
@@ -44,17 +43,6 @@ class ReadSurahAdapter(
             binding.tvListFavEn.text = data.textEn
             binding.tvListFavNum.text = data.numberInSurah.toString()
             setTheme(binding)
-            if(data.isFav){
-                binding.ivListFavFav.setImageDrawable(isFav)
-            } else {
-                binding.ivListFavFav.setImageDrawable(isNotFav)
-            }
-            if(data.isLastRead){
-                binding.clVhReadSurah.setBackgroundColor(accentColor)
-            }
-            binding.ivListFavFav.setOnClickListener {
-                //onClickFavAyah(data, binding)
-            }
         }
     }
 

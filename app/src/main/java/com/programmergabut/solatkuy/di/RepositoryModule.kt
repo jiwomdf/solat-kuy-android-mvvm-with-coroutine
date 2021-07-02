@@ -37,7 +37,6 @@ object RepositoryModule {
     @Singleton
     @Provides
     fun provideQuranRepositoryImpl(
-        msFavAyahDao: MsFavAyahDao,
         msFavSurahDao: MsFavSurahDao,
         msSurahDao: MsSurahDao,
         msAyahDao: MsAyahDao,
@@ -46,7 +45,6 @@ object RepositoryModule {
         readSurahArService: ReadSurahArService,
         contextProviders: ContextProviders
     ) = QuranRepositoryImpl(
-        msFavAyahDao,
         msFavSurahDao,
         msSurahDao,
         msAyahDao,

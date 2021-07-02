@@ -94,16 +94,12 @@ object DummyValueAndroidTest {
         return MsApi1(0, "-7.5633548", "110.8041806", "11","7","2020")
     }
 
-    fun getListMsFavAyah(): MutableList<MsFavAyah> {
-        return mutableListOf()
-    }
-
     fun getListMsFavSurah(): MutableList<MsFavSurah> {
         return mutableListOf()
     }
 
     fun getMsSetting(): MsSetting {
-        return MsSetting(1, true, isUsingDBQuotes = true)
+        return MsSetting(1, true)
     }
 
     fun getMsCalculationMethods(): List<MsCalculationMethods> {

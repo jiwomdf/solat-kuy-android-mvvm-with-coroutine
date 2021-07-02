@@ -41,12 +41,6 @@
             android:layout_marginBottom="@dimen/small_margin">
 
             <ImageView
-                android:id="@+id/iv_quote_setting"
-                android:layout_width="15dp"
-                android:layout_height="15dp"
-                android:src="@drawable/ic_settings_24dp" />
-
-            <ImageView
                 android:id="@+id/iv_refresh"
                 android:layout_width="16dp"
                 android:layout_height="16dp"

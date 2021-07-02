@@ -148,34 +148,4 @@ class ReadMsSurahFragmentTest {
         )
     }
 
-    @Test
-    fun testLikeAllAnNaasAyah_allAnNaasAyahLiked(){
-        var testViewModel: ReadSurahViewModel? = null
-        val initData = DummyValueAndroidTest.fetchAllSurah<ReadMsSurahFragmentTest>().data.last()
-        val arg = Bundle()
-        arg.putString("selectedSurahId", initData.number.toString())
-        arg.putString("selectedSurahName", initData.englishName)
-        arg.putString("selectedTranslation", initData.englishNameTranslation)
-        arg.putBoolean("isAutoScroll", false)
-        launchFragmentInHiltContainer<ReadSurahFragment>(
-            fragmentArgs = arg,
-            fragmentFactory = fragmentFactory
-        ) {
-            testViewModel = viewModel
-        }
-
-        onView(withId(R.id.rv_read_surah)).check(matches(isDisplayed()))
-        for (i in testViewModel!!.selectedSurah.value!!.data!!.indices){
-            onView(withId(R.id.rv_read_surah)).perform(
-                RecyclerViewActions.actionOnItemAtPosition<StaredSurahAdapter.StaredSurahViewHolder>(
-                    i,
-                    MyViewAction.clickChildViewWithId(R.id.iv_listFav_fav)
-                )
-            )
-        }
-        testViewModel?.selectedSurah?.value?.data?.forEachIndexed { index, data ->
-            assertEquals(data.ayahID, (index + 1))
-        }
-    }
-
 }

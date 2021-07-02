@@ -89,16 +89,12 @@ class FakePrayerRepositoryAndroidTest : PrayerRepository {
     }
 
     /* MsSetting */
-    override suspend fun updateIsUsingDBQuotes(isUsingDBQuotes: Boolean){
-        msSetting = MsSetting(msSetting.no, msSetting.isHasOpenApp, isUsingDBQuotes)
-        refreshMsSetting()
-    }
     override suspend fun updateMsApi1MonthAndYear(api1ID: Int, month: String, year:String){
         msApi11 = MsApi1(api1ID, msApi11.latitude, msApi11.longitude, msApi11.method, month, year)
         refreshMsSetting()
     }
     override suspend fun updateIsHasOpenApp(isHasOpen: Boolean){
-        msSetting = MsSetting(msSetting.no, isHasOpen, msSetting.isUsingDBQuotes)
+        msSetting = MsSetting(msSetting.no, isHasOpen)
         refreshMsSetting()
     }
 

@@ -8,14 +8,14 @@ import androidx.recyclerview.widget.RecyclerView
 import com.programmergabut.solatkuy.data.local.localentity.MsSurah
 import com.programmergabut.solatkuy.databinding.ListAllSurahBinding
 
-class AllSurahAdapter(
-    private val onClick: (String, String, String) -> Unit
-) : RecyclerView.Adapter<AllSurahAdapter.AllSurahViewHolder>() {
+class AllSurahAdapter: RecyclerView.Adapter<AllSurahAdapter.AllSurahViewHolder>() {
 
     private val diffCallback = object: DiffUtil.ItemCallback<MsSurah>(){
         override fun areItemsTheSame(oldItem: MsSurah, newItem: MsSurah) = oldItem == newItem
         override fun areContentsTheSame(oldItem: MsSurah, newItem: MsSurah) = oldItem == newItem
     }
+
+    var onClick: ((String, String, String) -> Unit)? = null
 
     private val differ = AsyncListDiffer(this, diffCallback)
 
@@ -39,7 +39,7 @@ class AllSurahAdapter(
             binding.tvAllsurahEnMeaning.text = data.englishNameTranslation
             binding.tvAllsurahAr.text = data.name
             binding.ccAllsurah.setOnClickListener {
-                onClick(
+                onClick?.invoke(
                     data.number.toString(),
                     data.englishName,
                     data.englishNameTranslation

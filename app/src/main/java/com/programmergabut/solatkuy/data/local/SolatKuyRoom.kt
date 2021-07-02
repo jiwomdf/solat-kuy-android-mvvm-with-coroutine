@@ -15,16 +15,15 @@ import androidx.room.Room
  * Created by Katili Jiwo Adi Wiyono on 25/03/20.
  */
 
-@Database(version = 1, entities = [MsNotifiedPrayer::class, MsApi1::class, MsSetting::class, MsFavAyah::class, MsFavSurah::class, MsSurah::class, MsAyah::class, MsCalculationMethods::class])
+@Database(version = 3, entities = [MsNotifiedPrayer::class, MsApi1::class, MsSetting::class, MsFavSurah::class, MsSurah::class, MsAyah::class, MsCalculationMethods::class])
 abstract class SolatKuyRoom : RoomDatabase() {
 
     abstract fun notifiedPrayerDao(): MsNotifiedPrayerDao
     abstract fun msApi1Dao(): MsApi1Dao
     abstract fun msSettingDao(): MsSettingDao
-    abstract fun msFavAyahDao(): MsFavAyahDao
-    abstract fun msFavSurahDao(): MsFavSurahDao
     abstract fun msSurahDao(): MsSurahDao
     abstract fun msAyahDao(): MsAyahDao
+    abstract fun msFavSurahDao(): MsFavSurahDao
     abstract fun msCalculationMethodsDao(): MsCalculationMethodsDao
 
     companion object{
@@ -57,7 +56,7 @@ abstract class SolatKuyRoom : RoomDatabase() {
 
         private suspend fun populateMsSetting(msSettingDao: MsSettingDao){
             msSettingDao.deleteAll()
-            msSettingDao.insertMsSetting(MsSetting(1, false, isUsingDBQuotes = false))
+            msSettingDao.insertMsSetting(MsSetting(1, false))
         }
 
         private suspend fun populateMsApi1(msApi1Dao: MsApi1Dao) {

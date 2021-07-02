@@ -1,11 +1,10 @@
 package com.programmergabut.solatkuy.ui.main.home
 
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.*
 import com.programmergabut.solatkuy.data.PrayerRepository
 import com.programmergabut.solatkuy.data.QuranRepository
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
-import com.programmergabut.solatkuy.data.local.localentity.MsFavAyah
+import com.programmergabut.solatkuy.data.local.localentity.MsAyah
 import com.programmergabut.solatkuy.data.local.localentity.MsSetting
 import com.programmergabut.solatkuy.data.remote.json.prayerJson.PrayerResponse
 import com.programmergabut.solatkuy.data.remote.json.readsurahJsonEn.ReadSurahEnResponse
@@ -27,19 +26,6 @@ class HomeViewModel @Inject constructor(
 ): ViewModel() {
 
     val msApi1 = prayerRepository.observeMsApi1()
-
-    private var isFavAyahCalled = MutableLiveData(false)
-    val favAyah: LiveData<List<MsFavAyah>> = Transformations.switchMap(isFavAyahCalled) { isFirstLoad ->
-        if (!isFirstLoad) {
-            AbsentLiveData.create()
-        } else {
-            quranRepository.observeListFavAyah()
-        }
-    }
-    fun getMsFavAyah(value: Boolean = true) {
-        this.isFavAyahCalled.value = value
-    }
-
     private val _msApi1 = MutableLiveData<MsApi1>()
     val notifiedPrayer = Transformations.switchMap(_msApi1){
         if(_msApi1 == null){
@@ -103,9 +89,6 @@ class HomeViewModel @Inject constructor(
     }
     fun updatePrayerIsNotified(prayerName: String, isNotified: Boolean) = viewModelScope.launch {
         prayerRepository.updatePrayerIsNotified(prayerName, isNotified)
-    }
-    fun updateIsUsingDBQuotes(isUsingDBQuotes: Boolean) = viewModelScope.launch {
-        prayerRepository.updateIsUsingDBQuotes(isUsingDBQuotes)
     }
     fun updateMsApi1MonthAndYear(api1ID: Int, month: String, year:String) = viewModelScope.launch{
         prayerRepository.updateMsApi1MonthAndYear(api1ID, month, year)

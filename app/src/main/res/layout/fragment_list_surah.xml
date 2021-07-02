@@ -49,7 +49,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
             android:layout_marginEnd="@dimen/small_margin"
-            android:layout_toStartOf="@+id/cv_fav_ayah"
+            android:layout_alignParentEnd="true"
             app:cardBackgroundColor="@color/purple_700"
             app:cardCornerRadius="@dimen/medium_margin">
 
@@ -59,26 +59,6 @@
                 android:layout_height="24dp"
                 android:layout_margin="@dimen/smaller_margin"
                 android:src="@drawable/ic_menu_book_white" />
-
-        </androidx.cardview.widget.CardView>
-
-        <androidx.cardview.widget.CardView
-            android:id="@+id/cv_fav_ayah"
-            android:layout_width="wrap_content"
-            android:layout_height="wrap_content"
-            android:layout_alignParentTop="true"
-            android:layout_alignParentEnd="true"
-            android:layout_marginEnd="@dimen/medium_margin"
-            android:layout_marginBottom="@dimen/small_margin"
-            app:cardBackgroundColor="@color/purple_700"
-            app:cardCornerRadius="@dimen/medium_margin">
-
-            <androidx.appcompat.widget.AppCompatImageView
-                android:id="@+id/iv_fav_ayah"
-                android:layout_width="24dp"
-                android:layout_height="24dp"
-                android:layout_margin="@dimen/smaller_margin"
-                android:src="@drawable/ic_favorite_white" />
 
         </androidx.cardview.widget.CardView>
 

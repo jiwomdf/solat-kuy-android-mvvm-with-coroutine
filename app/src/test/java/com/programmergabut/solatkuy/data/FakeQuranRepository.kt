@@ -4,11 +4,9 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
 import com.programmergabut.solatkuy.base.BaseRepository
 import com.programmergabut.solatkuy.data.local.dao.MsAyahDao
-import com.programmergabut.solatkuy.data.local.dao.MsFavAyahDao
 import com.programmergabut.solatkuy.data.local.dao.MsFavSurahDao
 import com.programmergabut.solatkuy.data.local.dao.MsSurahDao
 import com.programmergabut.solatkuy.data.local.localentity.MsAyah
-import com.programmergabut.solatkuy.data.local.localentity.MsFavAyah
 import com.programmergabut.solatkuy.data.local.localentity.MsFavSurah
 import com.programmergabut.solatkuy.data.local.localentity.MsSurah
 import com.programmergabut.solatkuy.data.remote.ApiResponse
@@ -21,11 +19,9 @@ import com.programmergabut.solatkuy.data.remote.json.readsurahJsonEn.ReadSurahEn
 import com.programmergabut.solatkuy.util.ContextProviders
 import com.programmergabut.solatkuy.util.Resource
 import kotlinx.coroutines.*
-import retrofit2.await
 import java.util.*
 
 class FakeQuranRepository constructor(
-    private val msFavAyahDao: MsFavAyahDao,
     private val msFavSurahDao: MsFavSurahDao,
     private val msSurahDao: MsSurahDao,
     private val msAyahDao: MsAyahDao,
@@ -35,14 +31,8 @@ class FakeQuranRepository constructor(
     private val contextProviders: ContextProviders,
 ):BaseRepository(), QuranRepository {
 
-    /* MsFavAyah */
-    override fun observeListFavAyah(): LiveData<List<MsFavAyah>> = msFavAyahDao.observeListFavAyah()
-    override suspend fun getListFavAyahBySurahID(surahID: Int): List<MsFavAyah>? = msFavAyahDao.getListFavAyahBySurahID(surahID)
-    override suspend fun insertFavAyah(msFavAyah: MsFavAyah) = msFavAyahDao.insertMsAyah(msFavAyah)
-    override suspend fun deleteFavAyah(msFavAyah: MsFavAyah) = msFavAyahDao.deleteMsFavAyah(msFavAyah)
-
     /* MsFavSurah */
-    override fun observeListFavSurah() = msFavSurahDao.observeListFavSurah()
+    override fun observeListFavSurah() = msFavSurahDao.observeFavSurahs()
     override fun observeFavSurahBySurahID(surahID: Int) = msFavSurahDao.observeFavSurahBySurahID(surahID)
     override suspend fun insertFavSurah(msFavSurah: MsFavSurah) = msFavSurahDao.insertMsSurah(msFavSurah)
     override suspend fun deleteFavSurah(msFavSurah: MsFavSurah) = msFavSurahDao.deleteMsFavSurah(msFavSurah)
@@ -136,7 +126,7 @@ class FakeQuranRepository constructor(
         }
     }
 
-    override fun getSelectedSurah(surahID: Int): LiveData<Resource<List<MsAyah>>> {
+    override fun getAyahBySurahID(surahID: Int): LiveData<Resource<List<MsAyah>>> {
         TODO("Not yet implemented")
     }
 
