@@ -24,6 +24,7 @@ jobs:
       - run:
           name: Run Build
           command: ./gradlew build
+          no_output_timeout: 120m
       - store_artifacts: 
           path: app/build/reports
           destination: reports
