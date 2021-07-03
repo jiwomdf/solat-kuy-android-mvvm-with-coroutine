@@ -2,6 +2,7 @@ package com.programmergabut.solatkuy
 
 import com.programmergabut.solatkuy.data.local.localentity.*
 import com.programmergabut.solatkuy.data.remote.json.compassJson.CompassResponse
+import com.programmergabut.solatkuy.data.remote.json.methodJson.MethodResponse
 import com.programmergabut.solatkuy.data.remote.json.prayerJson.PrayerResponse
 import com.programmergabut.solatkuy.data.remote.json.quranallsurahJson.AllSurahResponse
 import com.programmergabut.solatkuy.data.remote.json.readsurahJsonAr.ReadSurahArResponse
@@ -16,7 +17,7 @@ object DummyValueAndroidTest {
     val QIBLA_API_SERVICE_JSON = "qiblaApiService.json"
     val READ_SURAH_EN_SERVICE_JSON = "readSurahEnService.json"
     val READ_SURAH_SERVICE_JSON = "readSurahService.json"
-
+    val METHOD_SERVICE_JSON = "methodService.json"
 
     /* Remote */
     fun getNotifiedPrayer(): List<MsNotifiedPrayer> {
@@ -89,6 +90,10 @@ object DummyValueAndroidTest {
         return JsonToPojoConverterAndroidTest.convertJson<BASE, AllSurahResponse>(ALL_SURAH_SERVICE_JSON)
     }
 
+    /*inline fun <reified BASE> fetchMethod(): MethodResponse{
+        return JsonToPojoConverterAndroidTest.convertJson<BASE, MethodResponse>(METHOD_SERVICE_JSON)
+    }*/
+
     /* Database */
     fun getMsApi1(): MsApi1 {
         return MsApi1(0, "-7.5633548", "110.8041806", "11","7","2020")
@@ -104,8 +109,19 @@ object DummyValueAndroidTest {
 
     fun getMsCalculationMethods(): List<MsCalculationMethods> {
         return listOf(
-            MsCalculationMethods(1, "Majlis Ugama Singapura", 11),
-            MsCalculationMethods(2, "Indonesia", 99)
+            MsCalculationMethods(1,"Muslim World League",1),
+            MsCalculationMethods(2,"Islamic Society of North America (ISNA)",2),
+            MsCalculationMethods(3,"Egyptian General Authority of Survey",3),
+            MsCalculationMethods(4,"Umm Al-Qura University, Makkah",4),
+            MsCalculationMethods(5,"University of Islamic Sciences, Karachi",5),
+            MsCalculationMethods(6,"Institute of Geophysics, University of Tehran",6),
+            MsCalculationMethods(7,"Shia Ithna-Ashari, Leva Institute, Qum",7),
+            MsCalculationMethods(8,"Gulf Region",8),
+            MsCalculationMethods(9,"Kuwait",9),
+            MsCalculationMethods(10,"Qatar",10),
+            MsCalculationMethods(11,"Majlis Ugama Islam Singapura, Singapore",11),
+            MsCalculationMethods(12,"Union Organization Islamic de France",12),
+            MsCalculationMethods(13,"Moonsighting Committee Worldwide (Moonsighting.com)", 13)
         )
     }
 
