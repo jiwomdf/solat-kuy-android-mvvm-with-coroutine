@@ -48,7 +48,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_alignParentTop="true"
-            android:layout_marginEnd="@dimen/small_margin"
+            android:layout_marginEnd="10dp"
             android:layout_alignParentEnd="true"
             app:cardBackgroundColor="@color/purple_700"
             app:cardCornerRadius="@dimen/medium_margin">

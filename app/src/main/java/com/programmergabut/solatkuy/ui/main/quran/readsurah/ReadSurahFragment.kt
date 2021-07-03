@@ -78,11 +78,18 @@ class ReadSurahFragment(
         viewModel.selectedSurah.observe(this, {
             when (it.status) {
                 EnumStatus.SUCCESS, EnumStatus.ERROR -> {
-                    it?.data?.let { ayahs ->
+                    if(it.data != null){
+                        checkLastSurahAndAyah(it.data)
+
                         setVisibility(it.status)
-                        setToolBarText(ayahs)
-                        readSurahAdapter.listAyah = ayahs
+                        setToolBarText(it.data)
+                        readSurahAdapter.listAyah = it.data
                         readSurahAdapter.notifyDataSetChanged()
+
+                        if (args.isAutoScroll) {
+                            (binding.rvReadSurah.layoutManager as LinearLayoutManager)
+                                .scrollToPositionWithOffset(sharedPrefUtil.getLastReadAyah() - 1, 0)
+                        }
                     }
                 }
                 EnumStatus.LOADING -> {
@@ -120,14 +127,12 @@ class ReadSurahFragment(
         }
     }
 
-    private fun checkLastSurahAndAyah(): Boolean {
+    private fun checkLastSurahAndAyah(data: List<MsAyah>) {
         val lastSurah = sharedPrefUtil.getLastReadSurah()
         val lastAyah = sharedPrefUtil.getLastReadAyah()
-        if (lastSurah == -1 && lastAyah == -1)
-            sharedPrefUtil.insertLastReadSharedPref(0, 0)
-        else if(lastSurah == -1 || lastAyah == -1)
-            return false
-        return true
+        if (lastSurah == args.selectedSurahId.toInt()){
+            data[lastAyah - 1].isLastRead = true
+        }
     }
 
     private fun setTheme(isBrightnessActive: Boolean){
@@ -196,7 +201,6 @@ class ReadSurahFragment(
         readSurahAdapter = ReadSurahAdapter(
             adapterTheme,
             ContextCompat.getDrawable(requireContext(), R.drawable.ic_favorite_red_24)!!,
-            ContextCompat.getDrawable(requireContext(), R.drawable.ic_favorite_24)!!,
             ContextCompat.getColor(requireContext(), R.color.purple_500)
         )
         binding.rvReadSurah.apply {
@@ -237,8 +241,7 @@ class ReadSurahFragment(
                 "Surah ${args.selectedSurahId} ayah ${item.numberInSurah} is now your last read",
                 Toasty.LENGTH_LONG
             ).show()
-            //viewModel.getLastReadAyah()
-            readSurahAdapter.notifyDataSetChanged()
+            viewModel.getSelectedSurah(args.selectedSurahId.toInt())
         }
 
         override fun onChildDraw(canvas: Canvas, recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder,
