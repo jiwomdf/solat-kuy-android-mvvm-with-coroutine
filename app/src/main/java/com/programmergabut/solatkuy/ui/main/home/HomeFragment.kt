@@ -28,6 +28,8 @@ import com.programmergabut.solatkuy.ui.LocationHelper
 import com.programmergabut.solatkuy.ui.main.SelectPrayerHelper
 import com.programmergabut.solatkuy.util.Constant
 import com.programmergabut.solatkuy.util.EnumStatus
+import com.programmergabut.solatkuy.worker.FireAlarmManagerWorker
+import com.programmergabut.solatkuy.worker.UpdateMonthAndYearWorker
 import dagger.hilt.android.AndroidEntryPoint
 import es.dmoral.toasty.Toasty
 import kotlinx.coroutines.*
@@ -36,6 +38,7 @@ import org.joda.time.LocalDate
 import org.joda.time.Period
 import java.text.SimpleDateFormat
 import java.util.*
+import java.util.concurrent.TimeUnit
 import kotlin.math.abs
 
 /*
@@ -80,7 +83,7 @@ class HomeFragment(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initRvDuaCollection()
-        //fireUpdateMonthYearWorker()
+        fireUpdateMonthYearWorker()
     }
 
     override fun setListener() {
@@ -131,7 +134,7 @@ class HomeFragment(
                         return@observe
 
                     bindCheckBox(retVal.data)
-                    //fireWorker()
+                    fireWorker()
                     val widget = createWidgetData(retVal.data)
                     bindWidget(widget)
                 }
@@ -481,7 +484,7 @@ class HomeFragment(
         }
     }
 
-    /* private fun fireWorker() {
+    private fun fireWorker() {
         val task = PeriodicWorkRequest.Builder(FireAlarmManagerWorker::class.java, 60, TimeUnit.MINUTES)
             .build()
         val workManager = WorkManager.getInstance(requireActivity().application)
@@ -493,6 +496,6 @@ class HomeFragment(
             .build()
         val workManager = WorkManager.getInstance(requireActivity().application)
         workManager.enqueueUniquePeriodicWork(UpdateMonthAndYearWorker.UNIQUE_KEY, ExistingPeriodicWorkPolicy.KEEP, task)
-    } */
+    }
 
 }
