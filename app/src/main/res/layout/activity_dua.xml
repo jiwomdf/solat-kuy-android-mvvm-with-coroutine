@@ -1,119 +1,114 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
+<ScrollView xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:tools="http://schemas.android.com/tools"
-    tools:context=".ui.fragmentprayer.DuaFragment">
+    android:layout_width="match_parent"
+    android:layout_height="match_parent"
+    android:orientation="vertical"
+    tools:context=".ui.dua.DuaActivity">
 
-    <ScrollView
+    <LinearLayout
         android:layout_width="match_parent"
-        android:layout_height="match_parent"
+        android:layout_height="wrap_content"
         android:orientation="vertical">
 
-        <LinearLayout
+        <TextView
+            android:id="@+id/tv_prayer_title"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:orientation="vertical">
+            android:layout_margin="@dimen/medium_margin"
+            android:gravity="center"
+            android:textColor="@color/purple_200"
+            android:textSize="@dimen/large2_text_size"
+            android:textStyle="bold"
+            tools:text="Dua After Adhan" />
 
-            <TextView
-                android:id="@+id/tv_prayer_title"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_margin="@dimen/medium_margin"
-                android:textColor="@color/purple_200"
-                android:textStyle="bold"
-                android:textSize="@dimen/large2_text_size"
-                android:gravity="center"
-                tools:text="Dua After Adhan" />
+        <TextView
+            android:id="@+id/tv_prayer_ar"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/medium_margin"
+            android:textColor="@color/white"
+            android:textSize="@dimen/large2_text_size"
+            tools:text="اَللهُمَّ رَبَّ هذِهِ الدَّعْوَةِ التَّآمَّةِ، وَالصَّلاَةِ الْقَآئِمَةِ، آتِ مُحَمَّدَانِ الْوَسِيْلَةَ وَالْفَضِيْلَةَ وَالشَّرَفَ وَالدَّرَجَةَ الْعَالِيَةَ الرَّفِيْعَةَ وَابْعَثْهُ مَقَامًامَحْمُوْدَانِ الَّذِىْ وَعَدْتَهُ اِنَّكَ لاَتُخْلِفُ الْمِيْعَادَ يَآاَرْحَمَ الرَّحِمِيْن" />
 
-            <TextView
-                android:id="@+id/tv_prayer_ar"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/white"
-                android:textSize="@dimen/large2_text_size"
-                tools:text="اَللهُمَّ رَبَّ هذِهِ الدَّعْوَةِ التَّآمَّةِ، وَالصَّلاَةِ الْقَآئِمَةِ، آتِ مُحَمَّدَانِ الْوَسِيْلَةَ وَالْفَضِيْلَةَ وَالشَّرَفَ وَالدَّرَجَةَ الْعَالِيَةَ الرَّفِيْعَةَ وَابْعَثْهُ مَقَامًامَحْمُوْدَانِ الَّذِىْ وَعَدْتَهُ اِنَّكَ لاَتُخْلِفُ الْمِيْعَادَ يَآاَرْحَمَ الرَّحِمِيْن"
-                android:layout_margin="@dimen/medium_margin"/>
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/medium_margin"
+            android:text="@string/latin"
+            android:textColor="@color/purple_200"
+            android:textSize="@dimen/medium_text_size"
+            android:textStyle="bold" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/medium_margin"
-                android:textColor="@color/purple_200"
-                android:textStyle="bold"
-                android:textSize="@dimen/medium_text_size"
-                android:text="@string/latin"/>
+        <TextView
+            android:id="@+id/tv_prayer_lt"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/medium_margin"
+            android:layout_marginEnd="@dimen/medium_margin"
+            android:textSize="@dimen/medium_text_size"
+            tools:text="Allahumma Rabba hadhihi-dda` watit-tammah, was-salatil qa’imah, ati Muhammadan al-wasilata wal-fadilah, wa b`ath-hu maqaman mahmudan-il-ladhi wa`adtahu’" />
 
-            <TextView
-                android:id="@+id/tv_prayer_lt"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/medium_text_size"
-                android:layout_marginStart="@dimen/medium_margin"
-                android:layout_marginEnd="@dimen/medium_margin"
-                tools:text="Allahumma Rabba hadhihi-dda` watit-tammah, was-salatil qa’imah, ati Muhammadan al-wasilata wal-fadilah, wa b`ath-hu maqaman mahmudan-il-ladhi wa`adtahu’" />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/medium_margin"
+            android:layout_marginTop="@dimen/medium_margin"
+            android:text="@string/english"
+            android:textColor="@color/purple_200"
+            android:textSize="@dimen/medium_text_size"
+            android:textStyle="bold" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/medium_margin"
-                android:layout_marginTop="@dimen/medium_margin"
-                android:textColor="@color/purple_200"
-                android:textStyle="bold"
-                android:textSize="@dimen/medium_text_size"
-                android:text="@string/english"/>
+        <TextView
+            android:id="@+id/tv_prayer_en"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/medium_margin"
+            android:layout_marginEnd="@dimen/medium_margin"
+            android:textSize="@dimen/medium_text_size"
+            tools:text="O Allah! Lord of this perfect call (perfect by not ascribing partners to You) and of the regular prayer which is going to be established, give Muhammad the right of intercession and illustriousness, and resurrect him to the best and the highest place in Paradise that You promised him (of)], then my intercession for him will be allowed on the Day of Resurrection." />
 
-            <TextView
-                android:id="@+id/tv_prayer_en"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textSize="@dimen/medium_text_size"
-                android:layout_marginStart="@dimen/medium_margin"
-                android:layout_marginEnd="@dimen/medium_margin"
-                tools:text="O Allah! Lord of this perfect call (perfect by not ascribing partners to You) and of the regular prayer which is going to be established, give Muhammad the right of intercession and illustriousness, and resurrect him to the best and the highest place in Paradise that You promised him (of)], then my intercession for him will be allowed on the Day of Resurrection." />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/medium_margin"
+            android:layout_marginTop="@dimen/medium_margin"
+            android:text="@string/indonesia"
+            android:textColor="@color/purple_200"
+            android:textSize="@dimen/medium_text_size"
+            android:textStyle="bold" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/medium_margin"
-                android:layout_marginTop="@dimen/medium_margin"
-                android:textColor="@color/purple_200"
-                android:textStyle="bold"
-                android:textSize="@dimen/medium_text_size"
-                android:text="@string/indonesia"/>
+        <TextView
+            android:id="@+id/tv_prayer_in"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/medium_margin"
+            android:layout_marginEnd="@dimen/medium_margin"
+            android:layout_marginBottom="@dimen/medium_margin"
+            android:textSize="@dimen/medium_text_size"
+            tools:text="Ya Allah Tuhan yang memiliki seruan yang sempurna dan shalat yang tetap didirikan, kurniailah Nabi Muhammad wasilah (tempat yang luhur) dan kelebihan serta kemuliaan dan derajat yang tinggi dan tempatkanlah dia pada kependudukan yang terpuji yang telah Engkaujanjikan, sesungguhnya Engkau tiada menyalahi janji, wahai dzat yang paling Penyayang." />
 
-            <TextView
-                android:id="@+id/tv_prayer_in"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginBottom="@dimen/medium_margin"
-                android:textSize="@dimen/medium_text_size"
-                android:layout_marginStart="@dimen/medium_margin"
-                android:layout_marginEnd="@dimen/medium_margin"
-                tools:text="Ya Allah Tuhan yang memiliki seruan yang sempurna dan shalat yang tetap didirikan, kurniailah Nabi Muhammad wasilah (tempat yang luhur) dan kelebihan serta kemuliaan dan derajat yang tinggi dan tempatkanlah dia pada kependudukan yang terpuji yang telah Engkaujanjikan, sesungguhnya Engkau tiada menyalahi janji, wahai dzat yang paling Penyayang." />
+        <TextView
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/medium_margin"
+            android:layout_marginTop="@dimen/medium_margin"
+            android:text="@string/reference"
+            android:textColor="@color/purple_200"
+            android:textSize="@dimen/medium_text_size"
+            android:textStyle="bold" />
 
-            <TextView
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/medium_margin"
-                android:layout_marginTop="@dimen/medium_margin"
-                android:textColor="@color/purple_200"
-                android:textStyle="bold"
-                android:textSize="@dimen/medium_text_size"
-                android:text="@string/reference"/>
+        <TextView
+            android:id="@+id/tv_prayer_ref"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="@dimen/medium_margin"
+            android:layout_marginEnd="@dimen/medium_margin"
+            android:layout_marginBottom="@dimen/medium_margin"
+            android:textColor="@color/teal_200"
+            android:textSize="@dimen/medium_text_size"
+            tools:text="www.google.com \nwww.yahoo.com" />
 
-            <TextView
-                android:id="@+id/tv_prayer_ref"
-                android:layout_width="match_parent"
-                android:layout_height="wrap_content"
-                android:textColor="@color/teal_200"
-                android:layout_marginBottom="@dimen/medium_margin"
-                android:textSize="@dimen/medium_text_size"
-                android:layout_marginStart="@dimen/medium_margin"
-                android:layout_marginEnd="@dimen/medium_margin"
-                tools:text="www.google.com \nwww.yahoo.com" />
-
-        </LinearLayout>
+    </LinearLayout>
 
 </ScrollView>
-
-</layout>

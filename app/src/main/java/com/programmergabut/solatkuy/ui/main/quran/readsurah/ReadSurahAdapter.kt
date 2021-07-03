@@ -3,38 +3,32 @@ package com.programmergabut.solatkuy.ui.main.quran.readsurah
 import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
 import android.view.ViewGroup
-import androidx.databinding.DataBindingUtil
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.programmergabut.solatkuy.R
-import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonAr.Ayah
+import com.programmergabut.solatkuy.data.local.localentity.MsAyah
 import com.programmergabut.solatkuy.databinding.ListReadSurahBinding
 
 class ReadSurahAdapter(
-    val onClickFavAyah: (Ayah, ListReadSurahBinding) -> Unit,
     val setTheme: (ListReadSurahBinding) -> Unit,
     val isFav: Drawable,
-    val isNotFav: Drawable,
     val accentColor: Int
 ) : RecyclerView.Adapter<ReadSurahAdapter.ReadSurahViewHolder>() {
 
-    private val diffCallback = object: DiffUtil.ItemCallback<Ayah>(){
-        override fun areItemsTheSame(oldItem: Ayah, newItem: Ayah) = oldItem == newItem
-        override fun areContentsTheSame(oldItem: Ayah, newItem: Ayah) = oldItem == newItem
+    private val diffCallback = object: DiffUtil.ItemCallback<MsAyah>(){
+        override fun areItemsTheSame(oldItem: MsAyah, newItem: MsAyah) = oldItem == newItem
+        override fun areContentsTheSame(oldItem: MsAyah, newItem: MsAyah) = oldItem == newItem
     }
 
     private val differ = AsyncListDiffer(this, diffCallback)
 
-    var listAyah : List<Ayah>
+    var listAyah : List<MsAyah>
         get() = differ.currentList
         set(value) = differ.submitList(value)
 
     override fun onCreateViewHolder(parent: ViewGroup, viewType: Int): ReadSurahViewHolder {
-        val binding = DataBindingUtil.inflate<ListReadSurahBinding>(
-            LayoutInflater.from(parent.context),
-            R.layout.list_read_surah, parent, false
-        )
+        val binding = ListReadSurahBinding.inflate(LayoutInflater.from(parent.context), parent, false)
         return ReadSurahViewHolder(binding)
     }
 
@@ -43,21 +37,14 @@ class ReadSurahAdapter(
     override fun onBindViewHolder(holder: ReadSurahViewHolder, position: Int) = holder.bind(listAyah[position])
 
     inner class ReadSurahViewHolder(private val binding: ListReadSurahBinding): RecyclerView.ViewHolder(binding.root) {
-        fun bind(data: Ayah){
+        fun bind(data: MsAyah){
             binding.tvListFavAr.text = data.text
             binding.tvListFavEn.text = data.textEn
             binding.tvListFavNum.text = data.numberInSurah.toString()
             setTheme(binding)
-            if(data.isFav){
-                binding.ivListFavFav.setImageDrawable(isFav)
-            } else {
-                binding.ivListFavFav.setImageDrawable(isNotFav)
-            }
+
             if(data.isLastRead){
                 binding.clVhReadSurah.setBackgroundColor(accentColor)
-            }
-            binding.ivListFavFav.setOnClickListener {
-                onClickFavAyah(data, binding)
             }
         }
     }

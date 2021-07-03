@@ -6,12 +6,10 @@ import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.MediumTest
 import com.programmergabut.solatkuy.*
-import com.programmergabut.solatkuy.data.local.localentity.MsApi1
 import com.programmergabut.solatkuy.ui.SolatKuyFragmentFactoryAndroidTest
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
-import org.junit.Assert
 import org.junit.Before
 import org.junit.Rule
 import org.junit.Test
@@ -38,7 +36,7 @@ class SettingFragmentTest{
 
     @Test
     fun testVisibilityAndData_componentDisplayedWithCorrectValue(){
-        var testViewModel: FragmentSettingViewModel? = null
+        var testViewModel: SettingViewModel? = null
         launchFragmentInHiltContainer<SettingFragment>(fragmentFactory = fragmentFactory) {
             testViewModel = viewModel
         }
@@ -69,56 +67,5 @@ class SettingFragmentTest{
         onView(withId(R.id.tv_changeLocation)).check(matches((withText("Change Location"))))
     }
 
-    /* @Test
-    fun insertMsApi1WithEmptyLatitude_updateMessageEqualWithTheError(){
-        val msApi1 = MsApi1(1, "", "123", "3", "3", "2020")
-        var testViewModel: FragmentSettingViewModel? = null
-        launchFragmentInHiltContainer<SettingFragment>(fragmentFactory = fragmentFactory) {
-            testViewModel = viewModel
-            testViewModel?.updateMsApi1(msApi1)
-        }
-
-        onView(withId(R.id.ll_content)).check(matches(isDisplayed()))
-        Assert.assertNotEquals(msApi1, testViewModel?.msApi1?.value)
-    }
-
-    @Test
-    fun insertMsApi1WithDotBeforeLatitude_updateMessageEqualWithTheError() {
-        val msApi1 = MsApi1(1, ".123", "123", "3", "3", "2020")
-        var testViewModel: FragmentSettingViewModel? = null
-        launchFragmentInHiltContainer<SettingFragment>(fragmentFactory = fragmentFactory) {
-            testViewModel = viewModel
-            testViewModel?.updateMsApi1(msApi1)
-        }
-
-        onView(withId(R.id.ll_content)).check(matches(isDisplayed()))
-        Assert.assertNotEquals(msApi1, testViewModel?.msApi1?.value)
-    }
-
-    @Test
-    fun insertMsApi1WithDotAfterLatitude_updateMessageEqualWithTheError() {
-        val msApi1 = MsApi1(1, "123.", "123", "3", "3", "2020")
-        var testViewModel: FragmentSettingViewModel? = null
-        launchFragmentInHiltContainer<SettingFragment>(fragmentFactory = fragmentFactory) {
-            testViewModel = viewModel
-            testViewModel?.updateMsApi1(msApi1)
-        }
-
-        onView(withId(R.id.ll_content)).check(matches(isDisplayed()))
-        Assert.assertNotEquals(msApi1, testViewModel?.msApi1?.value)
-    }
-
-    @Test
-    fun insertMsApi1WithCorrectValue_insertDataComplete(){
-        val msApi1 = MsApi1(1, "123", "123", "3", "3", "2020")
-        var testViewModel: FragmentSettingViewModel? = null
-        launchFragmentInHiltContainer<SettingFragment>(fragmentFactory = fragmentFactory) {
-            testViewModel = viewModel
-            testViewModel?.updateMsApi1(msApi1)
-        }
-
-        onView(withId(R.id.ll_content)).check(matches(isDisplayed()))
-        Assert.assertEquals(msApi1, testViewModel?.msApi1?.value)
-    } */
 
 }

@@ -5,7 +5,7 @@ import androidx.room.Database
 import androidx.room.RoomDatabase
 import com.programmergabut.solatkuy.data.local.dao.*
 import com.programmergabut.solatkuy.data.local.localentity.*
-import com.programmergabut.solatkuy.util.EnumConfig
+import com.programmergabut.solatkuy.util.Constant
 import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
@@ -15,19 +15,21 @@ import androidx.room.Room
  * Created by Katili Jiwo Adi Wiyono on 25/03/20.
  */
 
-@Database(version = 12, entities = [NotifiedPrayer::class, MsApi1::class, MsSetting::class, MsFavAyah::class, MsFavSurah::class])
-abstract class SolatKuyRoom: RoomDatabase() {
+@Database(version = 3, entities = [MsNotifiedPrayer::class, MsApi1::class, MsSetting::class, MsFavSurah::class, MsSurah::class, MsAyah::class, MsCalculationMethods::class])
+abstract class SolatKuyRoom : RoomDatabase() {
 
-    abstract fun notifiedPrayerDao(): NotifiedPrayerDao
+    abstract fun notifiedPrayerDao(): MsNotifiedPrayerDao
     abstract fun msApi1Dao(): MsApi1Dao
     abstract fun msSettingDao(): MsSettingDao
-    abstract fun msFavAyahDao(): MsFavAyahDao
+    abstract fun msSurahDao(): MsSurahDao
+    abstract fun msAyahDao(): MsAyahDao
     abstract fun msFavSurahDao(): MsFavSurahDao
+    abstract fun msCalculationMethodsDao(): MsCalculationMethodsDao
 
     companion object{
         @Volatile
         private var INSTANCE: SolatKuyRoom? = null
-        private const val dbName = EnumConfig.DATABASE_NAME
+        private const val dbName = Constant.DATABASE_NAME
 
         fun getDataBase(context: Context): SolatKuyRoom {
             val tempInstance = INSTANCE
@@ -35,6 +37,7 @@ abstract class SolatKuyRoom: RoomDatabase() {
                 return tempInstance
             synchronized(this) {
                 val instance = Room.databaseBuilder(context.applicationContext, SolatKuyRoom::class.java, dbName)
+                    .fallbackToDestructiveMigration()
                     .allowMainThreadQueries()
                     .build()
 
@@ -53,71 +56,58 @@ abstract class SolatKuyRoom: RoomDatabase() {
 
         private suspend fun populateMsSetting(msSettingDao: MsSettingDao){
             msSettingDao.deleteAll()
-            msSettingDao.insertMsSetting(
-                MsSetting(
-                    1,
-                    false,
-                    isUsingDBQuotes = false
-                )
-            )
+            msSettingDao.insertMsSetting(MsSetting(1, false))
         }
 
         private suspend fun populateMsApi1(msApi1Dao: MsApi1Dao) {
             msApi1Dao.deleteAll()
             msApi1Dao.insertMsApi1(
-                MsApi1(
-                    1,
-                    EnumConfig.START_LAT,
-                    EnumConfig.START_LNG,
-                    EnumConfig.START_METHOD,
-                    EnumConfig.START_MONTH,
-                    EnumConfig.START_YEAR
-                )
-            )
+                MsApi1(1, Constant.START_LAT, Constant.START_LNG,
+                    Constant.STARTED_METHOD, Constant.START_MONTH, Constant.START_YEAR))
         }
 
-        private suspend fun populateNotifiedPrayer(notifiedPrayerDao: NotifiedPrayerDao){
-            notifiedPrayerDao.deleteAll()
-            notifiedPrayerDao.insertNotifiedPrayer(
-                NotifiedPrayer(
-                    EnumConfig.FAJR,
+        private suspend fun populateNotifiedPrayer(msNotifiedPrayerDao: MsNotifiedPrayerDao){
+            msNotifiedPrayerDao.deleteAll()
+            msNotifiedPrayerDao.insertNotifiedPrayer(
+                MsNotifiedPrayer(
+                    Constant.FAJR,
                     true,
-                    EnumConfig.FAJR_TIME
+                    Constant.FAJR_TIME
                 )
             )
-            notifiedPrayerDao.insertNotifiedPrayer(
-                NotifiedPrayer(
-                    EnumConfig.DHUHR,
+            msNotifiedPrayerDao.insertNotifiedPrayer(
+                MsNotifiedPrayer(
+                    Constant.DHUHR,
                     true,
-                    EnumConfig.DHUHR_TIME
+                    Constant.DHUHR_TIME
                 )
             )
-            notifiedPrayerDao.insertNotifiedPrayer(
-                NotifiedPrayer(
-                    EnumConfig.ASR,
+            msNotifiedPrayerDao.insertNotifiedPrayer(
+                MsNotifiedPrayer(
+                    Constant.ASR,
                     true,
-                    EnumConfig.ASR_TIME
+                    Constant.ASR_TIME
                 )
             )
-            notifiedPrayerDao.insertNotifiedPrayer(
-                NotifiedPrayer(
-                    EnumConfig.MAGHRIB,
+            msNotifiedPrayerDao.insertNotifiedPrayer(
+                MsNotifiedPrayer(
+                    Constant.MAGHRIB,
                     true,
-                    EnumConfig.MAGHRIB_TIME
+                    Constant.MAGHRIB_TIME
                 )
             )
-            notifiedPrayerDao.insertNotifiedPrayer(
-                NotifiedPrayer(
-                    EnumConfig.ISHA,
+            msNotifiedPrayerDao.insertNotifiedPrayer(
+                MsNotifiedPrayer(
+                    Constant.ISHA,
                     true,
-                    EnumConfig.ISHA_TIME
+                    Constant.ISHA_TIME
                 )
             )
-            notifiedPrayerDao.insertNotifiedPrayer(
-                NotifiedPrayer(
-                    EnumConfig.SUNRISE,
+            msNotifiedPrayerDao.insertNotifiedPrayer(
+                MsNotifiedPrayer(
+                    Constant.SUNRISE,
                     true,
-                    EnumConfig.SUNRISE_TIME
+                    Constant.SUNRISE_TIME
                 )
             )
         }

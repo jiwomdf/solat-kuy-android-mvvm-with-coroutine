@@ -132,3 +132,8 @@
 ## disable on boot complete and push notificationHelper
 -keep class com.programmergabut.solatkuy.broadcaster.BootCompleteReceiver.* { *; }
 -keep class com.programmergabut.solatkuy.ui.PushNotificationHelper.* { *; }
+
+## disable on Worker
+-keepclassmembers class * extends androidx.work.Worker {
+    public <init>(android.content.Context,androidx.work.WorkerParameters);
+}

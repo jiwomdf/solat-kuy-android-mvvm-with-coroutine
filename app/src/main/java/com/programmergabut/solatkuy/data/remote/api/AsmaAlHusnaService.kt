@@ -1,6 +1,6 @@
 package com.programmergabut.solatkuy.data.remote.api
 
-import com.programmergabut.solatkuy.data.remote.remoteentity.asmaalhusnaJson.AsmaAlHusnaResponse
+import com.programmergabut.solatkuy.data.remote.json.asmaalhusnaJson.AsmaAlHusnaResponse
 import retrofit2.Call
 import retrofit2.http.GET
 

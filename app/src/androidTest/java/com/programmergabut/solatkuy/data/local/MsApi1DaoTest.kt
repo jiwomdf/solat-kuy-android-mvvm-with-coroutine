@@ -46,7 +46,7 @@ class MsApi1DaoTest {
 
     @Test
     fun observeMsApi1() = runBlockingTest {
-        val testData = MsApi1(1, "123" , "123", "3", "3", "2020")
+        val testData = MsApi1(1, "123" , "123", "11", "3", "2020")
         msAPi1Dao.insertMsApi1(testData)
         val msApi1 = msAPi1Dao.observeMsApi1().getOrAwaitValue()
         assertThat(msApi1.api1ID, `is`(testData.api1ID))
@@ -56,7 +56,7 @@ class MsApi1DaoTest {
 
     @Test
     fun getMsApi1() = runBlockingTest {
-        val testData = MsApi1(1, "123" , "123", "3", "3", "2020")
+        val testData = MsApi1(1, "123" , "123", "11", "3", "2020")
         msAPi1Dao.insertMsApi1(testData)
         val msApi1 = msAPi1Dao.getMsApi1()!!
         assertThat(msApi1.api1ID, `is`(testData.api1ID) )
@@ -66,7 +66,7 @@ class MsApi1DaoTest {
 
     @Test
     fun deleteAllMsApi1() = runBlockingTest {
-        val testData = MsApi1(1, "123" , "123", "3", "3", "2020")
+        val testData = MsApi1(1, "123" , "123", "11", "3", "2020")
         msAPi1Dao.insertMsApi1(testData)
         assertThat(msAPi1Dao.getMsApi1()!!.api1ID, `is`(testData.api1ID) )
         msAPi1Dao.deleteAll()
@@ -75,10 +75,10 @@ class MsApi1DaoTest {
 
     @Test
     fun updateMsApi1() = runBlockingTest {
-        val testData = MsApi1(1, "123" , "123", "3", "3", "2020")
+        val testData = MsApi1(1, "123" , "123", "11", "3", "2020")
         msAPi1Dao.insertMsApi1(testData)
         assertThat(msAPi1Dao.getMsApi1()!!.api1ID, `is`(testData.api1ID) )
-        val newData = MsApi1(1, "321" , "321", "3", "3", "2020")
+        val newData = MsApi1(1, "321" , "321", "11", "3", "2020")
         msAPi1Dao.updateMsApi1(newData.api1ID, newData.latitude, newData.longitude, newData.method, newData.month, newData.year)
         assertThat(msAPi1Dao.getMsApi1()!!.latitude, `is`(newData.latitude))
         assertThat(msAPi1Dao.getMsApi1()!!.longitude, `is`(newData.longitude))
@@ -86,7 +86,7 @@ class MsApi1DaoTest {
 
     @Test
     fun updateMsApi1MonthAndYear() = runBlockingTest {
-        val testData = MsApi1(1, "123" , "123", "3", "3", "2020")
+        val testData = MsApi1(1, "123" , "123", "11", "3", "2020")
         msAPi1Dao.insertMsApi1(testData)
         assertThat(msAPi1Dao.getMsApi1()!!.api1ID, `is`(testData.api1ID) )
 

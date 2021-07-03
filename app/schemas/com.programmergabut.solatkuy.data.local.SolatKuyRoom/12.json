@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 12,
-    "identityHash": "c19519c59f8be5a77b5b5933142fe73f",
+    "identityHash": "aab460902a55aae6cda331ce7ecc75e5",
     "entities": [
       {
         "tableName": "notified_prayer",
@@ -200,12 +200,68 @@
         },
         "indices": [],
         "foreignKeys": []
+      },
+      {
+        "tableName": "MsSurah",
+        "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`number` INTEGER NOT NULL, `englishName` TEXT NOT NULL, `englishNameLowerCase` TEXT, `englishNameTranslation` TEXT NOT NULL, `name` TEXT NOT NULL, `numberOfAyahs` INTEGER NOT NULL, `revelationType` TEXT NOT NULL, PRIMARY KEY(`number`))",
+        "fields": [
+          {
+            "fieldPath": "number",
+            "columnName": "number",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "englishName",
+            "columnName": "englishName",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "englishNameLowerCase",
+            "columnName": "englishNameLowerCase",
+            "affinity": "TEXT",
+            "notNull": false
+          },
+          {
+            "fieldPath": "englishNameTranslation",
+            "columnName": "englishNameTranslation",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "name",
+            "columnName": "name",
+            "affinity": "TEXT",
+            "notNull": true
+          },
+          {
+            "fieldPath": "numberOfAyahs",
+            "columnName": "numberOfAyahs",
+            "affinity": "INTEGER",
+            "notNull": true
+          },
+          {
+            "fieldPath": "revelationType",
+            "columnName": "revelationType",
+            "affinity": "TEXT",
+            "notNull": true
+          }
+        ],
+        "primaryKey": {
+          "columnNames": [
+            "number"
+          ],
+          "autoGenerate": false
+        },
+        "indices": [],
+        "foreignKeys": []
       }
     ],
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'c19519c59f8be5a77b5b5933142fe73f')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, 'aab460902a55aae6cda331ce7ecc75e5')"
     ]
   }
 }

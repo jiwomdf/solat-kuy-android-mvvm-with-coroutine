@@ -1,18 +1,21 @@
 package com.programmergabut.solatkuy.ui.main.home
 
+import android.util.Log
 import androidx.test.espresso.Espresso.onView
 import androidx.test.espresso.action.ViewActions.click
 import androidx.test.espresso.assertion.ViewAssertions.matches
 import androidx.test.espresso.matcher.ViewMatchers.*
 import androidx.test.ext.junit.runners.AndroidJUnit4
 import androidx.test.filters.MediumTest
+import androidx.test.platform.app.InstrumentationRegistry
+import androidx.work.Configuration
+import androidx.work.impl.utils.SynchronousExecutor
+import androidx.work.testing.WorkManagerTestInitHelper
 import com.programmergabut.solatkuy.*
-import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.Data
-import com.programmergabut.solatkuy.data.remote.remoteentity.prayerJson.PrayerResponse
+import com.programmergabut.solatkuy.data.remote.json.prayerJson.Result
+import com.programmergabut.solatkuy.data.remote.json.prayerJson.PrayerResponse
 import com.programmergabut.solatkuy.EnumConfigAndroidTesting
 import com.programmergabut.solatkuy.ui.SolatKuyFragmentFactoryAndroidTest
-import com.programmergabut.solatkuy.ui.main.home.FragmentMainViewModel
-import com.programmergabut.solatkuy.ui.main.home.HomeFragment
 import com.programmergabut.solatkuy.ui.nestedScrollTo
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -42,12 +45,19 @@ class HomeFragmentTest{
 
     @Before
     fun testSetUp() {
+        val context = InstrumentationRegistry.getInstrumentation().targetContext
+        val config = Configuration.Builder()
+            .setMinimumLoggingLevel(Log.DEBUG)
+            .setExecutor(SynchronousExecutor())
+            .build()
+        WorkManagerTestInitHelper.initializeTestWorkManager(context, config)
+
         hiltRule.inject()
     }
 
     @Test
     fun testComponentVisibilityAndData_componentDisplayedWithCorrectValue(){
-        var testViewModel: FragmentMainViewModel? = null
+        var testViewModel: HomeViewModel? = null
         launchFragmentInHiltContainer<HomeFragment>(fragmentFactory = fragmentFactory) {
             testViewModel = viewModel
         }
@@ -65,58 +75,8 @@ class HomeFragmentTest{
     }
 
     @Test
-    fun testVisibilityQuote_componentDisplayed(){
-        var testViewModel: FragmentMainViewModel? = null
-        launchFragmentInHiltContainer<HomeFragment>(fragmentFactory = fragmentFactory) {
-            testViewModel = viewModel
-        }
-        onView(withId(R.id.tv_quran_ayah_quote_click)).check(matches(isDisplayed()))
-        onView(withId(R.id.iv_quote_setting)).check(matches(isDisplayed()))
-        onView(withId(R.id.iv_refresh)).check(matches(isDisplayed()))
-    }
-
-
-    @Test
-    fun testVisibilityAndDataPrayer_componentDisplayedWithCorrectValue(){
-        var testViewModel: FragmentMainViewModel? = null
-        launchFragmentInHiltContainer<HomeFragment>(fragmentFactory = fragmentFactory) {
-            testViewModel = viewModel
-        }
-
-        onView(withId(R.id.include_prayer_time))
-            .perform(nestedScrollTo())
-
-        onView(withId(R.id.cb_fajr)).check(matches(isDisplayed()))
-        onView(withId(R.id.cb_dhuhr)).check(matches(isDisplayed()))
-        onView(withId(R.id.cb_asr)).check(matches(isDisplayed()))
-        onView(withId(R.id.cb_maghrib)).check(matches(isDisplayed()))
-        onView(withId(R.id.cb_isha)).check(matches(isDisplayed()))
-        val prayers = testViewModel?.notifiedPrayer?.value
-        prayers?.data?.forEach { prayer ->
-            when(prayer.prayerName){
-                EnumConfigAndroidTesting.FAJR -> {
-                    onView(withId(R.id.tv_fajr_time)).check(matches(withText(prayer.prayerTime)))
-                }
-                EnumConfigAndroidTesting.DHUHR -> {
-                    onView(withId(R.id.tv_dhuhr_time)).check(matches(withText(prayer.prayerTime)))
-                }
-                EnumConfigAndroidTesting.ASR -> {
-                    onView(withId(R.id.tv_asr_time)).check(matches(withText(prayer.prayerTime)))
-                }
-                EnumConfigAndroidTesting.MAGHRIB -> {
-                    onView(withId(R.id.tv_maghrib_time)).check(matches(withText(prayer.prayerTime)))
-                }
-                EnumConfigAndroidTesting.ISHA -> {
-                    onView(withId(R.id.tv_isha_time)).check(matches(withText(prayer.prayerTime)))
-                }
-                else -> {}
-            }
-        }
-    }
-
-    @Test
     fun testVisibilityAndDataInfo_componentDisplayedWithCorrectValue(){
-        var testViewModel: FragmentMainViewModel? = null
+        var testViewModel: HomeViewModel? = null
         launchFragmentInHiltContainer<HomeFragment>(fragmentFactory = fragmentFactory) {
             testViewModel = viewModel
         }
@@ -154,13 +114,13 @@ class HomeFragmentTest{
         onView(withId(R.id.tv_hijri_day)).check(matches(withText(hijriDate?.weekday?.en + " / " + hijriDate?.weekday?.ar)))
     }
 
-    private fun createTodayData(it: PrayerResponse?, currentDate: String): Data? {
+    private fun createTodayData(it: PrayerResponse?, currentDate: String): Result? {
         return it?.data?.find { obj -> obj.date.gregorian?.day == currentDate }
     }
 
     @Test
     fun testClickQuranQuote_componentVisibilityChangedFollowingTheClickAction() {
-        var testViewModel: FragmentMainViewModel? = null
+        var testViewModel: HomeViewModel? = null
         launchFragmentInHiltContainer<HomeFragment>(fragmentFactory = fragmentFactory) {
             testViewModel = viewModel
         }
@@ -176,7 +136,7 @@ class HomeFragmentTest{
 
     @Test
     fun testClickCbPrayer_allCbPrayerValueIsFalse(){
-        var testViewModel: FragmentMainViewModel? = null
+        var testViewModel: HomeViewModel? = null
         launchFragmentInHiltContainer<HomeFragment>(fragmentFactory = fragmentFactory) {
             testViewModel = viewModel
         }
@@ -195,6 +155,8 @@ class HomeFragmentTest{
         onView(withId(R.id.cb_maghrib)).perform(click())
         onView(withId(R.id.cb_isha)).perform(click())
 
+        Thread.sleep(1000)
+
         val prayers = testViewModel?.notifiedPrayer?.value
         prayers?.data?.forEach { prayer ->
             if(prayer.prayerName == EnumConfigAndroidTesting.SUNRISE)
@@ -205,7 +167,7 @@ class HomeFragmentTest{
 
     @Test
     fun testRefreshQuote(){
-        var testViewModel: FragmentMainViewModel? = null
+        var testViewModel: HomeViewModel? = null
         launchFragmentInHiltContainer<HomeFragment>(fragmentFactory = fragmentFactory) {
             testViewModel = viewModel
         }

@@ -10,8 +10,6 @@ import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.base.BaseActivity
 import com.programmergabut.solatkuy.databinding.ActivityMainBinding
 import com.programmergabut.solatkuy.ui.SolatKuyFragmentFactory
-import com.programmergabut.solatkuy.util.LogConfig
-import com.programmergabut.solatkuy.util.LogConfig.Companion.ERROR
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -19,13 +17,17 @@ import javax.inject.Inject
  * Created by Katili Jiwo Adi Wiyono on 25/03/20.
  */
 @AndroidEntryPoint
-class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>(
+class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
     R.layout.activity_main,
-    MainActivityViewModel::class.java
+    MainViewModel::class.java
 ) {
+
+    private val TAG = "MainActivity"
 
     @Inject
     lateinit var fragmentFactory: SolatKuyFragmentFactory
+
+    override fun getViewBinding() = ActivityMainBinding.inflate(layoutInflater)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -34,7 +36,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>(
     }
 
     override fun onDestroy() {
-        setIsHasOpenAnimation(false)
+        sharedPrefUtil.setIsHasOpenAnimation(false)
         super.onDestroy()
     }
 
@@ -58,7 +60,7 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainActivityViewModel>(
             binding.bottomNavigation.setOnNavigationItemReselectedListener {/* NO-OP */ }
         }
         catch (ex: Exception){
-            Log.d(ERROR, ex.message.toString())
+            Log.d(TAG, ex.message.toString())
         }
     }
 

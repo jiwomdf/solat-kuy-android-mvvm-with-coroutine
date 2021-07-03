@@ -7,12 +7,15 @@ import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.programmergabut.solatkuy.data.PrayerRepository
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
-import com.programmergabut.solatkuy.data.remote.remoteentity.compassJson.CompassResponse
+import com.programmergabut.solatkuy.data.remote.json.compassJson.CompassResponse
 import com.programmergabut.solatkuy.util.Resource
+import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.lang.Exception
+import javax.inject.Inject
 
-class CompassViewModel @ViewModelInject constructor(val prayerRepository: PrayerRepository): ViewModel() {
+@HiltViewModel
+class CompassViewModel @Inject constructor(val prayerRepository: PrayerRepository): ViewModel() {
 
     val msApi1 = prayerRepository.observeMsApi1()
 
@@ -22,11 +25,11 @@ class CompassViewModel @ViewModelInject constructor(val prayerRepository: Prayer
         viewModelScope.launch {
             _compass.postValue(Resource.loading(null))
             try {
-                val response = prayerRepository.fetchCompass(msApi1).await()
-                if(response.statusResponse == "1"){
+                val response = prayerRepository.fetchQibla(msApi1).await()
+                if(response.responseStatus == "1"){
                     _compass.postValue(Resource.success(response))
                 } else {
-                    _compass.postValue(Resource.error(null, response.messageResponse))
+                    _compass.postValue(Resource.error(null, response.message))
                 }
             }
             catch (ex: Exception){

@@ -6,96 +6,77 @@ import android.content.Context
 import android.content.ContextWrapper
 import android.content.Intent
 import android.os.Build
-import android.os.Bundle
 import com.programmergabut.solatkuy.broadcaster.PrayerBroadcastReceiver
-import com.programmergabut.solatkuy.data.local.localentity.NotifiedPrayer
-import com.programmergabut.solatkuy.service.ServiceBootComplete
-import com.programmergabut.solatkuy.service.ServiceUpdateMonthAndYear
-import com.programmergabut.solatkuy.util.EnumConfig
+import com.programmergabut.solatkuy.data.local.localentity.MsNotifiedPrayer
+import com.programmergabut.solatkuy.util.Constant
 import java.util.*
 
 /*
  * Created by Katili Jiwo Adi Wiyono on 02/04/20.
  */
 
-class PushNotificationHelper(context: Context, selectedList: List<NotifiedPrayer>, cityName: String): ContextWrapper(context) {
+class PushNotificationHelper(context: Context, prayerListMs: List<MsNotifiedPrayer>, cityName: String): ContextWrapper(context) {
 
     private var mCityName: String? = null
 
     init {
         this.mCityName = cityName
 
-        val intent = Intent(context, PrayerBroadcastReceiver::class.java)
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val listPrayerBundle = bundleCreator(selectedList)
-        val newList = selectedList.filter { x -> x.prayerName !=  EnumConfig.SUNRISE} //remove sunrise from list
-
+        val newList = prayerListMs.filter { x -> x.prayerName !=  Constant.SUNRISE} //remove sunrise from list
         newList.toMutableList().sortBy { x -> x.prayerID }
+
         newList.forEach { prayer ->
-            val arrPrayer = prayer.prayerTime.split(":")
-            val hour = arrPrayer[0].trim()
-            val minute = arrPrayer[1].split(" ")[0].trim()
-            val calendar = Calendar.getInstance()
 
-            calendar.apply {
-                set(Calendar.HOUR_OF_DAY, hour.toInt())
-                set(Calendar.MINUTE, minute.toInt())
-                set(Calendar.SECOND, 0)
-            }
-            intent.apply {
-                putExtra(PrayerBroadcastReceiver.PRAYER_ID, prayer.prayerID)
-                putExtra(PrayerBroadcastReceiver.PRAYER_NAME, prayer.prayerName)
-                putExtra(PrayerBroadcastReceiver.PRAYER_TIME, prayer.prayerTime)
-                putExtra(PrayerBroadcastReceiver.PRAYER_CITY, cityName)
-                putExtra(PrayerBroadcastReceiver.LIST_PRAYER_BUNDLE, listPrayerBundle)
-            }
-
-            val pendingIntent = PendingIntent.getBroadcast(context, prayer.prayerID, intent, 0)
+            val intent = createIntent(context, prayer)
+            val pendingIntent = PendingIntent.getBroadcast(context, prayer.prayerID, intent, PendingIntent.FLAG_CANCEL_CURRENT)
+            val calendar = createCalendar(prayer)
             if(calendar.before(Calendar.getInstance()))
                 calendar.add(Calendar.DATE, 1)
 
-            if(prayer.isNotified){
-                if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M)
-                    alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
-                else
-                    alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
+            fireAlarmManager(prayer, pendingIntent, alarmManager, calendar)
+        }
+    }
+
+    private fun createIntent(context: Context, prayerMs: MsNotifiedPrayer): Intent {
+        return Intent(context, PrayerBroadcastReceiver::class.java).also {
+            it.putExtra(PrayerBroadcastReceiver.prayerID, prayerMs.prayerID)
+            it.putExtra(PrayerBroadcastReceiver.prayerName, prayerMs.prayerName)
+            it.putExtra(PrayerBroadcastReceiver.prayerTime, prayerMs.prayerTime)
+            it.putExtra(PrayerBroadcastReceiver.prayerCity, mCityName)
+        }
+    }
+
+    private fun fireAlarmManager(
+        prayerMs: MsNotifiedPrayer,
+        pendingIntent: PendingIntent,
+        alarmManager: AlarmManager,
+        calendar: Calendar
+    ) {
+        if(prayerMs.isNotified){
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
+                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
             } else {
-                alarmManager.cancel(pendingIntent)
+                alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
             }
+        } else {
+            alarmManager.cancel(pendingIntent)
         }
-
-        startUpdateMonthYearService(context)
     }
 
-    private fun startUpdateMonthYearService(context: Context) {
-        val serviceIntent = Intent(context, ServiceUpdateMonthAndYear::class.java)
-        context.startService(serviceIntent)
-    }
+    private fun createCalendar(prayerMs: MsNotifiedPrayer): Calendar {
+        val arrPrayer = prayerMs.prayerTime.split(":")
+        val hour = arrPrayer[0].trim()
+        val minute = arrPrayer[1].split(" ")[0].trim()
+        val calendar = Calendar.getInstance()
 
-    private fun bundleCreator(selectedList: List<NotifiedPrayer>): Bundle {
-        val listPrayerID = arrayListOf<Int>()
-        val listPrayerName = arrayListOf<String>()
-        val listPrayerTime = arrayListOf<String>()
-        val listPrayerIsNotified = arrayListOf<Int>()
-        val listPrayerCity = arrayListOf<String>()
-
-        selectedList.forEach {
-            listPrayerID.add(it.prayerID)
-            listPrayerName.add(it.prayerName)
-            listPrayerTime.add(it.prayerTime)
-            if(it.isNotified) listPrayerIsNotified.add(1) else listPrayerIsNotified.add(0)
-            if(mCityName.isNullOrEmpty()) listPrayerCity.add("-") else listPrayerCity.add(mCityName!!)
+        calendar.apply {
+            set(Calendar.HOUR_OF_DAY, hour.toInt())
+            set(Calendar.MINUTE, minute.toInt())
+            set(Calendar.SECOND, 0)
         }
 
-        val bundle = Bundle()
-        bundle.apply {
-            putIntegerArrayList(PrayerBroadcastReceiver.LIST_PRAYER_ID, listPrayerID)
-            putStringArrayList(PrayerBroadcastReceiver.LIST_PRAYER_NAME, listPrayerName)
-            putStringArrayList(PrayerBroadcastReceiver.LIST_PRAYER_TIME, listPrayerTime)
-            putIntegerArrayList(PrayerBroadcastReceiver.LIST_PRAYER_IS_NOTIFIED, listPrayerIsNotified)
-            putStringArrayList(PrayerBroadcastReceiver.LIST_PRAYER_CITY, listPrayerCity)
-        }
-        return bundle
+        return calendar
     }
 
 }

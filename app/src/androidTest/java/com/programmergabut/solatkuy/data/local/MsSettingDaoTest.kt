@@ -49,17 +49,16 @@ class MsSettingDaoTest {
 
     @Test
     fun observeMsSetting() = runBlockingTest {
-        val testData = MsSetting(1, isHasOpenApp = false, isUsingDBQuotes = false)
+        val testData = MsSetting(1, isHasOpenApp = false)
         msSettingDao.insertMsSetting(testData)
         val listMsSetting = msSettingDao.observeMsSetting().getOrAwaitValue()
         assertThat(listMsSetting.no, `is`(1))
         assertThat(listMsSetting.isHasOpenApp, `is`(false))
-        assertThat(listMsSetting.isUsingDBQuotes, `is`(false))
     }
 
     @Test
     fun deleteAll() = runBlockingTest {
-        val testData = MsSetting(1, isHasOpenApp = false, isUsingDBQuotes = false)
+        val testData = MsSetting(1, isHasOpenApp = false)
         msSettingDao.insertMsSetting(testData)
         val listMsSetting = msSettingDao.observeMsSetting().getOrAwaitValue()
         assertThat(listMsSetting.no, `is`(1))
@@ -70,7 +69,7 @@ class MsSettingDaoTest {
 
     @Test
     fun insertMsSetting() = runBlockingTest {
-        val testData = MsSetting(1, isHasOpenApp = false, isUsingDBQuotes = false)
+        val testData = MsSetting(1, isHasOpenApp = false)
         msSettingDao.insertMsSetting(testData)
         val listMsSetting = msSettingDao.observeMsSetting().getOrAwaitValue()
         assertThat(listMsSetting.no, `is`(1))
@@ -78,7 +77,7 @@ class MsSettingDaoTest {
 
     @Test
     fun updateIsHasOpenApp() = runBlockingTest {
-        val testData = MsSetting(1, isHasOpenApp = false, isUsingDBQuotes = false)
+        val testData = MsSetting(1, isHasOpenApp = false)
         msSettingDao.insertMsSetting(testData)
         val msSetting = msSettingDao.observeMsSetting().getOrAwaitValue()
         assertThat(msSetting.no, `is`(1))
@@ -88,19 +87,5 @@ class MsSettingDaoTest {
         assertThat(newMsSetting.no, `is`(1))
         assertThat(newMsSetting.isHasOpenApp, `is`(true))
     }
-
-    @Test
-    fun updateIsUsingDBQuotes() = runBlockingTest {
-        val testData = MsSetting(1, isHasOpenApp = false, isUsingDBQuotes = false)
-        msSettingDao.insertMsSetting(testData)
-        val msSetting = msSettingDao.observeMsSetting().getOrAwaitValue()
-        assertThat(msSetting.no, `is`(1))
-
-        msSettingDao.updateIsUsingDBQuotes(true)
-        val newMsSetting = msSettingDao.observeMsSetting().getOrAwaitValue()
-        assertThat(newMsSetting.no, `is`(1))
-        assertThat(newMsSetting.isUsingDBQuotes, `is`(true))
-    }
-
 
 }

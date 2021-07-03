@@ -5,15 +5,14 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
+import androidx.lifecycle.ViewModelProvider
 import android.view.MotionEvent
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
-import androidx.databinding.DataBindingUtil
-import androidx.databinding.ViewDataBinding
 import androidx.lifecycle.ViewModel
-import androidx.lifecycle.ViewModelProvider
+import androidx.viewbinding.ViewBinding
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.data.local.SolatKuyRoom
@@ -21,7 +20,7 @@ import com.programmergabut.solatkuy.databinding.LayoutErrorBottomsheetBinding
 import com.programmergabut.solatkuy.util.SharedPrefUtil
 import javax.inject.Inject
 
-abstract class BaseActivity<DB: ViewDataBinding, VM: ViewModel>(
+abstract class BaseActivity<VB: ViewBinding, VM: ViewModel>(
     private val layout: Int,
     private val viewModelClass: Class<VM>?,
 ): AppCompatActivity() {
@@ -30,25 +29,36 @@ abstract class BaseActivity<DB: ViewDataBinding, VM: ViewModel>(
     lateinit var db : SolatKuyRoom
     @Inject
     lateinit var sharedPrefUtil: SharedPrefUtil
+
     protected val LOCATION_PERMISSIONS = 101
-    protected lateinit var binding : DB
     protected lateinit var viewModel: VM
-    private lateinit var root : ViewGroup
+
+    abstract fun getViewBinding(): VB
+    private var _binding: ViewBinding? = null
+    protected val binding: VB
+        get() = _binding as VB
+
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
-        binding = DataBindingUtil.setContentView(this, layout)
-        binding.lifecycleOwner = this
-        root = findViewById(android.R.id.content)
+        _binding = getViewBinding()
         viewModelClass?.let {
             viewModel = ViewModelProvider(this).get(it)
         }
+        inflateBinding()
         setListener()
+        setContentView(requireNotNull(_binding).root)
     }
 
-    protected open fun setListener(){
-
+    override fun onDestroy() {
+        super.onDestroy()
+        _binding = null
     }
+
+
+    protected open fun setListener(){}
+
+    protected open fun inflateBinding(){}
 
     protected fun isLocationPermissionGranted(): Boolean {
         return (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
@@ -82,9 +92,7 @@ abstract class BaseActivity<DB: ViewDataBinding, VM: ViewModel>(
         callback: (() -> Unit)? = null) {
 
         val dialog = BottomSheetDialog(this)
-        val dialogBinding = DataBindingUtil.inflate<LayoutErrorBottomsheetBinding>(
-            layoutInflater, R.layout.layout_error_bottomsheet, null, true
-        )
+        val dialogBinding = LayoutErrorBottomsheetBinding.inflate(layoutInflater)
         dialog.apply{
             window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
             setCancelable(isCancelable)
@@ -102,37 +110,4 @@ abstract class BaseActivity<DB: ViewDataBinding, VM: ViewModel>(
                 finish()
         }
     }
-
-    protected fun getDatabase(): SolatKuyRoom {
-        return db
-    }
-
-    protected fun insertLastReadSharedPref(selectedSurahId: Int, numberInSurah: Int) {
-        sharedPrefUtil.insertLastReadSharedPref(selectedSurahId, numberInSurah)
-    }
-
-    protected fun getLastReadSurah(): Int {
-        return sharedPrefUtil.getLastReadSurah()
-    }
-
-    protected fun getLastReadAyah(): Int {
-        return sharedPrefUtil.getLastReadAyah()
-    }
-
-    protected fun getIsNotHasOpenAnimation(): Boolean {
-        return sharedPrefUtil.getIsHasOpenAnimation()
-    }
-
-    protected fun setIsHasOpenAnimation(value: Boolean){
-        sharedPrefUtil.setIsHasOpenAnimation(value)
-    }
-
-    protected fun getIsBrightnessActive(): Boolean {
-        return sharedPrefUtil.getIsBrightnessActive()
-    }
-
-    protected fun setIsBrightnessActive(value: Boolean){
-        sharedPrefUtil.setIsBrightnessActive(value)
-    }
-
 }

@@ -7,13 +7,13 @@ import com.programmergabut.solatkuy.data.local.localentity.MsFavSurah
 @Dao
 interface MsFavSurahDao {
 
-    @Query("select * from MsFavSurah")
-    fun observeListFavSurah(): LiveData<List<MsFavSurah>>
+    @Query("select * from ms_fav_surah")
+    fun observeFavSurahs(): LiveData<List<MsFavSurah>>
 
-    @Query("select * from MsFavSurah where surahID like :surahID")
+    @Query("select * from ms_fav_surah where surahID like :surahID")
     fun observeFavSurahBySurahID(surahID: Int): LiveData<MsFavSurah?>
 
-    @Query("delete from MsFavSurah")
+    @Query("delete from ms_fav_surah")
     suspend fun deleteAll()
 
     @Delete

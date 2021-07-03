@@ -1,172 +1,169 @@
 <?xml version="1.0" encoding="utf-8"?>
-<layout
-    xmlns:android="http://schemas.android.com/apk/res/android"
-    xmlns:app="http://schemas.android.com/apk/res-auto">
+<androidx.cardview.widget.CardView xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:layout_width="match_parent"
+    android:layout_height="wrap_content"
+    android:orientation="vertical"
+    app:cardCornerRadius="@dimen/medium_margin">
 
-    <androidx.cardview.widget.CardView
+    <TableLayout
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        app:cardCornerRadius="@dimen/medium_margin"
-        android:orientation="vertical">
+        android:background="@color/dark_200"
+        android:stretchColumns="1">
 
-        <TableLayout
+        <TableRow
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:background="@color/dark_200"
-            android:stretchColumns="1">
+            android:paddingTop="@dimen/smaller_margin"
+            android:paddingBottom="@dimen/smaller_margin">
 
-            <TableRow
-                android:layout_width="match_parent"
+            <ImageView
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_gravity="start"
+                android:layout_marginStart="@dimen/smaller_margin"
+                android:contentDescription="@string/notification_icon"
+                android:src="@drawable/ic_notifications_active_24dp" />
+
+            <TextView
+                android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:paddingTop="@dimen/smaller_margin"
-                android:paddingBottom="@dimen/smaller_margin">
+                android:text="@string/prayer_name"
+                android:textStyle="bold" />
 
-                <ImageView
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:layout_gravity="start"
-                    android:layout_marginStart="@dimen/smaller_margin"
-                    android:src="@drawable/ic_notifications_active_24dp"
-                    android:contentDescription="@string/notification_icon" />
+            <TextView
+                android:id="@+id/tv_date_change"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_marginEnd="@dimen/medium_margin"
+                android:gravity="end"
+                android:text="@string/loading"
+                android:textStyle="bold" />
 
-                <TextView
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textStyle="bold"
-                    android:text="@string/prayer_name"/>
+        </TableRow>
 
-                <TextView
-                    android:id="@+id/tv_date_change"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:textStyle="bold"
-                    android:gravity="end"
-                    android:layout_marginEnd="@dimen/medium_margin"
-                    android:text="@string/loading"/>
+        <!--Fajr-->
+        <TableRow>
 
-            </TableRow>
+            <CheckBox android:id="@+id/cb_fajr" />
 
-            <!--Fajr-->
-            <TableRow>
-                <CheckBox
-                    android:id="@+id/cb_fajr"/>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="@dimen/smaller_margin"
+                android:gravity="start|center"
+                android:text="@string/fajr"
+                android:textStyle="bold" />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="start|center"
-                    android:layout_marginStart="@dimen/smaller_margin"
-                    android:text="@string/fajr"
-                    android:textStyle="bold"
-                    />
+            <TextView
+                android:id="@+id/tv_fajr_time"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="@dimen/small_margin"
+                android:gravity="end|center"
+                android:text="@string/loading"
+                android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/tv_fajr_time"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:text="@string/loading"
-                    android:gravity="end|center"
-                    android:layout_marginEnd="@dimen/small_margin"
-                    android:textStyle="bold" />
+        </TableRow>
 
-            </TableRow>
+        <!--Dhuhur-->
+        <TableRow>
 
-            <!--Dhuhur-->
-            <TableRow>
-                <CheckBox
-                    android:id="@+id/cb_dhuhr"
-                    android:layout_width="@dimen/list_width_size"
-                    android:layout_height="@dimen/list_width_size"/>
+            <CheckBox
+                android:id="@+id/cb_dhuhr"
+                android:layout_width="@dimen/list_width_size"
+                android:layout_height="@dimen/list_width_size" />
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="start|center"
-                    android:layout_marginStart="@dimen/smaller_margin"
-                    android:text="@string/dhuhr"
-                    android:textStyle="bold" />
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="@dimen/smaller_margin"
+                android:gravity="start|center"
+                android:text="@string/dhuhr"
+                android:textStyle="bold" />
 
-                <TextView
-                    android:id="@+id/tv_dhuhr_time"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:text="@string/loading"
-                    android:gravity="end|center"
-                    android:textStyle="bold"
-                    android:layout_marginEnd="@dimen/small_margin"/>
+            <TextView
+                android:id="@+id/tv_dhuhr_time"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="@dimen/small_margin"
+                android:gravity="end|center"
+                android:text="@string/loading"
+                android:textStyle="bold" />
 
-            </TableRow>
+        </TableRow>
 
-            <!--Asr-->
-            <TableRow>
-                <CheckBox
-                    android:id="@+id/cb_asr"
-                    android:layout_width="@dimen/list_width_size"
-                    android:layout_height="@dimen/list_width_size"/>
+        <!--Asr-->
+        <TableRow>
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="start|center"
-                    android:layout_marginStart="@dimen/smaller_margin"
-                    android:text="@string/asr"
-                    android:textStyle="bold" />
+            <CheckBox
+                android:id="@+id/cb_asr"
+                android:layout_width="@dimen/list_width_size"
+                android:layout_height="@dimen/list_width_size" />
 
-                <TextView
-                    android:id="@+id/tv_asr_time"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:text="@string/loading"
-                    android:gravity="end|center"
-                    android:textStyle="bold"
-                    android:layout_marginEnd="@dimen/small_margin"/>
-            </TableRow>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="@dimen/smaller_margin"
+                android:gravity="start|center"
+                android:text="@string/asr"
+                android:textStyle="bold" />
 
-            <!--Maghrib-->
-            <TableRow>
-                <CheckBox
-                    android:id="@+id/cb_maghrib"/>
+            <TextView
+                android:id="@+id/tv_asr_time"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="@dimen/small_margin"
+                android:gravity="end|center"
+                android:text="@string/loading"
+                android:textStyle="bold" />
+        </TableRow>
 
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="start|center"
-                    android:layout_marginStart="@dimen/smaller_margin"
-                    android:text="@string/maghrib"
-                    android:textStyle="bold"
-                    />
+        <!--Maghrib-->
+        <TableRow>
 
-                <TextView
-                    android:id="@+id/tv_maghrib_time"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:text="@string/loading"
-                    android:gravity="end|center"
-                    android:textStyle="bold"
-                    android:layout_marginEnd="@dimen/small_margin"/>
-            </TableRow>
+            <CheckBox android:id="@+id/cb_maghrib" />
 
-            <!--Isha-->
-            <TableRow>
-                <CheckBox
-                    android:id="@+id/cb_isha"/>
-                <TextView
-                    android:layout_width="match_parent"
-                    android:layout_height="match_parent"
-                    android:gravity="start|center"
-                    android:layout_marginStart="@dimen/smaller_margin"
-                    android:text="@string/isha"
-                    android:textStyle="bold" />
-                <TextView
-                    android:id="@+id/tv_isha_time"
-                    android:layout_width="wrap_content"
-                    android:layout_height="match_parent"
-                    android:text="@string/loading"
-                    android:gravity="end|center"
-                    android:textStyle="bold"
-                    android:layout_marginEnd="@dimen/small_margin"/>
-            </TableRow>
-        </TableLayout>
-    </androidx.cardview.widget.CardView>
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="@dimen/smaller_margin"
+                android:gravity="start|center"
+                android:text="@string/maghrib"
+                android:textStyle="bold" />
 
-</layout>
+            <TextView
+                android:id="@+id/tv_maghrib_time"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="@dimen/small_margin"
+                android:gravity="end|center"
+                android:text="@string/loading"
+                android:textStyle="bold" />
+        </TableRow>
+
+        <!--Isha-->
+        <TableRow>
+
+            <CheckBox android:id="@+id/cb_isha" />
+
+            <TextView
+                android:layout_width="match_parent"
+                android:layout_height="match_parent"
+                android:layout_marginStart="@dimen/smaller_margin"
+                android:gravity="start|center"
+                android:text="@string/isha"
+                android:textStyle="bold" />
+
+            <TextView
+                android:id="@+id/tv_isha_time"
+                android:layout_width="wrap_content"
+                android:layout_height="match_parent"
+                android:layout_marginEnd="@dimen/small_margin"
+                android:gravity="end|center"
+                android:text="@string/loading"
+                android:textStyle="bold" />
+        </TableRow>
+    </TableLayout>
+</androidx.cardview.widget.CardView>

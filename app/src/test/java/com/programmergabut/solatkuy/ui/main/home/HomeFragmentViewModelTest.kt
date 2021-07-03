@@ -6,13 +6,12 @@ import androidx.lifecycle.Observer
 import com.nhaarman.mockitokotlin2.mock
 import com.programmergabut.solatkuy.CoroutineTestUtil.Companion.toDeferred
 import com.programmergabut.solatkuy.CoroutinesTestRule
-import com.programmergabut.solatkuy.data.local.localentity.NotifiedPrayer
 import com.programmergabut.solatkuy.util.Resource
 import com.programmergabut.solatkuy.DummyRetValueTest
 import com.programmergabut.solatkuy.data.FakePrayerRepository
 import com.programmergabut.solatkuy.data.FakeQuranRepository
 import com.programmergabut.solatkuy.data.local.localentity.MsSetting
-import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonEn.ReadSurahEnResponse
+import com.programmergabut.solatkuy.data.remote.json.readsurahJsonEn.ReadSurahEnResponse
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Assert.assertEquals
@@ -30,7 +29,7 @@ import org.mockito.junit.MockitoJUnitRunner
 @RunWith(MockitoJUnitRunner::class)
 class HomeFragmentViewModelTest {
 
-    private lateinit var viewModel: FragmentMainViewModel
+    private lateinit var viewModel: HomeViewModel
     @get:Rule
     val instantExecutor = InstantTaskExecutorRule()
     @get:Rule
@@ -45,16 +44,16 @@ class HomeFragmentViewModelTest {
 
     @Before
     fun before(){
-        viewModel = FragmentMainViewModel(fakePrayerRepository, fakeQuranRepository)
+        viewModel = HomeViewModel(fakePrayerRepository, fakeQuranRepository)
         verify(fakePrayerRepository).observeMsApi1()
     }
 
-    @Test
+    /* @Test
     fun `getListNotifiedPrayer, observe notifiedPrayer`() = coroutinesTestRule.testDispatcher.runBlockingTest{
         val observer = mock<Observer<Resource<List<NotifiedPrayer>>>>()
         val dummyNotifiedPrayer = Resource.success(DummyRetValueTest.fetchPrayerApi<HomeFragmentViewModelTest>())
         val dummyPrayerResponse = Resource.success(DummyRetValueTest.getListNotifiedPrayer(), "Application Online")
-        dummyNotifiedPrayer.data?.statusResponse = "1"
+        dummyNotifiedPrayer.data?.responseStatus = "1"
         `when`(fakePrayerRepository.fetchPrayerApi(msApi1)).thenReturn(dummyNotifiedPrayer.data!!.toDeferred())
         `when`(fakePrayerRepository.getListNotifiedPrayer()).thenReturn(dummyPrayerResponse.data)
 
@@ -66,13 +65,13 @@ class HomeFragmentViewModelTest {
 
         viewModel.notifiedPrayer.observeForever(observer)
         verify(observer).onChanged(dummyPrayerResponse)
-    }
+    } */
 
     @Test
     fun `fetchReadSurahEn, observe readSurahEn`() = coroutinesTestRule.testDispatcher.runBlockingTest{
         val observer = mock<Observer<Resource<ReadSurahEnResponse>>>()
         val dummyQuranSurah = Resource.success(DummyRetValueTest.surahEnID_1<HomeFragmentViewModelTest>())
-        dummyQuranSurah.data?.statusResponse= "1"
+        dummyQuranSurah.data?.responseStatus= "1"
         `when`(fakeQuranRepository.fetchReadSurahEn(surahID)).thenReturn(dummyQuranSurah.data!!.toDeferred())
 
         viewModel.fetchReadSurahEn(surahID)
@@ -115,12 +114,6 @@ class HomeFragmentViewModelTest {
     fun `updatePrayerIsNotified, updatePrayerIsNotified() called`() = coroutinesTestRule.testDispatcher.runBlockingTest {
         viewModel.updatePrayerIsNotified(mapPrayer.keys.elementAt(0), true)
         verify(fakePrayerRepository).updatePrayerIsNotified(mapPrayer.keys.elementAt(0), true)
-    }
-
-    @Test
-    fun `updateIsUsingDBQuotes, updateIsUsingDBQuotes() called`() = coroutinesTestRule.testDispatcher.runBlockingTest {
-        viewModel.updateIsUsingDBQuotes(true)
-        verify(fakePrayerRepository).updateIsUsingDBQuotes(true)
     }
 
 }

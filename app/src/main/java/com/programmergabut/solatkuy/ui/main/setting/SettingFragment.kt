@@ -10,11 +10,11 @@ import android.content.pm.PackageManager
 import android.location.LocationManager
 import android.os.Bundle
 import android.os.Looper
-import android.view.LayoutInflater
 import android.view.View
+import android.widget.AdapterView
+import android.widget.ArrayAdapter
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
-import androidx.databinding.DataBindingUtil
 import com.google.android.gms.location.FusedLocationProviderClient
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
@@ -28,9 +28,10 @@ import com.programmergabut.solatkuy.databinding.FragmentSettingBinding
 import com.programmergabut.solatkuy.databinding.LayoutAboutAuthorBinding
 import com.programmergabut.solatkuy.databinding.LayoutBottomsheetBygpsBinding
 import com.programmergabut.solatkuy.databinding.LayoutBottomsheetBylatitudelongitudeBinding
-import com.programmergabut.solatkuy.util.EnumConfig
-import com.programmergabut.solatkuy.util.EnumStatus
+import com.programmergabut.solatkuy.data.local.localentity.MsCalculationMethods
 import com.programmergabut.solatkuy.ui.LocationHelper
+import com.programmergabut.solatkuy.util.Constant
+import com.programmergabut.solatkuy.util.EnumStatus
 import dagger.hilt.android.AndroidEntryPoint
 import es.dmoral.toasty.Toasty
 import org.joda.time.LocalDate
@@ -40,9 +41,10 @@ import org.joda.time.LocalDate
  */
 
 @AndroidEntryPoint
-class SettingFragment(viewModelTest: FragmentSettingViewModel? = null) : BaseFragment<FragmentSettingBinding, FragmentSettingViewModel>(
+class SettingFragment(viewModelTest: SettingViewModel? = null):
+BaseFragment<FragmentSettingBinding, SettingViewModel>(
     R.layout.fragment_setting,
-    FragmentSettingViewModel::class.java, viewModelTest
+    SettingViewModel::class.java, viewModelTest
 ), View.OnClickListener {
 
     private lateinit var aboutAuthorDialog: Dialog
@@ -51,7 +53,12 @@ class SettingFragment(viewModelTest: FragmentSettingViewModel? = null) : BaseFra
     private lateinit var dialogGpsBinding: LayoutBottomsheetBygpsBinding
     private lateinit var dialogLatLngBinding: LayoutBottomsheetBylatitudelongitudeBinding
     private lateinit var dialogAuthorBinding: LayoutAboutAuthorBinding
+
+    private var listMethods: MutableList<MsCalculationMethods>? = null
     private var isHasOpenSettingButton = false
+    private var bindSpinnerCounter = 0
+
+    override fun getViewBinding() = FragmentSettingBinding.inflate(layoutInflater)
 
     override fun onStart() {
         super.onStart()
@@ -65,44 +72,63 @@ class SettingFragment(viewModelTest: FragmentSettingViewModel? = null) : BaseFra
         super.onViewCreated(view, savedInstanceState)
         aboutAuthorDialog = Dialog(requireContext())
         bottomSheetDialog = BottomSheetDialog(requireContext())
+
+        viewModel.getMethods()
+        setupSpinner()
     }
 
     override fun setListener() {
         super.setListener()
 
-        inflateBinding()
         binding.btnByLatitudeLongitude.setOnClickListener(this)
         binding.btnByGps.setOnClickListener(this)
         binding.btnSeeAuthor.setOnClickListener(this)
         dialogGpsBinding.btnProceedByGps.setOnClickListener(this)
         dialogLatLngBinding.btnProceedByLL.setOnClickListener(this)
-        subscribeObserversDB()
-    }
 
-    private fun inflateBinding() {
-        dialogGpsBinding = DataBindingUtil.inflate(
-            LayoutInflater.from(requireContext()),
-            R.layout.layout_bottomsheet_bygps, null, false
-        )
-        dialogLatLngBinding = DataBindingUtil.inflate(
-            LayoutInflater.from(requireContext()),
-            R.layout.layout_bottomsheet_bylatitudelongitude, null, false
-        )
-        dialogAuthorBinding = DataBindingUtil.inflate(
-            LayoutInflater.from(requireContext()),
-            R.layout.layout_about_author, null, false
-        )
-    }
+        viewModel.methods.observe(viewLifecycleOwner, {
+            when(it.status){
+                EnumStatus.SUCCESS, EnumStatus.ERROR  -> {
+                    if(it?.data != null){
+                        binding.sMethods.adapter = ArrayAdapter(requireContext(),
+                            android.R.layout.simple_list_item_1, it.data.map { method -> method.name })
 
-    private fun subscribeObserversDB() {
+                        setMethode(it.data)
+                    }
+
+                    listMethods = it?.data?.toMutableList()
+                }
+                EnumStatus.LOADING -> { }
+            }
+        })
+
         viewModel.msApi1.observe(viewLifecycleOwner, { retVal ->
             if(retVal != null){
                 val city = LocationHelper.getCity(requireContext(), retVal.latitude.toDouble(), retVal.longitude.toDouble())
                 binding.tvViewLatitude.text = retVal.latitude + " °S"
                 binding.tvViewLongitude.text = retVal.longitude + " °E"
-                binding.tvViewCity.text = city ?: EnumConfig.CITY_NOT_FOUND
+                binding.tvViewCity.text = city ?: Constant.CITY_NOT_FOUND
             }
         })
+    }
+
+    private fun setMethode(datas: List<MsCalculationMethods>) {
+        val methodID = sharedPrefUtil.getSelectedMethod()
+        val method = datas.find { method -> method.method == methodID }
+
+        if(methodID < 0 || method == null){
+            binding.sMethods.setSelection(12)
+            binding.tvViewMethod.text = datas[12].name
+        } else {
+            binding.sMethods.setSelection(method.index)
+            binding.tvViewMethod.text = method.name
+        }
+    }
+
+    override fun inflateBinding() {
+        dialogGpsBinding = LayoutBottomsheetBygpsBinding.inflate(layoutInflater)
+        dialogLatLngBinding = LayoutBottomsheetBylatitudelongitudeBinding.inflate(layoutInflater)
+        dialogAuthorBinding = LayoutAboutAuthorBinding.inflate(layoutInflater)
     }
 
     override fun onClick(v: View?) {
@@ -140,48 +166,71 @@ class SettingFragment(viewModelTest: FragmentSettingViewModel? = null) : BaseFra
         }
     }
 
-    /* Database Transaction */
-    private fun insertLocationSettingToDb(latitude: String, longitude: String) {
-        val currDate = LocalDate()
-        val data = MsApi1(
-            1,
-            latitude,
-            longitude,
-            "3",
-            currDate.monthOfYear.toString(),
-            currDate.year.toString()
+    private fun setupSpinner(){
+        val adapter = ArrayAdapter<String>(
+            requireContext(),
+            android.R.layout.simple_list_item_1,
+            emptyArray()
         )
+        adapter.setDropDownViewResource(android.R.layout.simple_list_item_1)
+        binding.sMethods.adapter = adapter
+        binding.sMethods.onItemSelectedListener = object: AdapterView.OnItemSelectedListener {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
+                if(bindSpinnerCounter >= 1){
+                    val method = listMethods?.find { method -> method.index == position }
+                    if(method != null){
+                        sharedPrefUtil.insertSelectedMethod(method.method)
+                        viewModel.updateMsApi1Method(1 , method.method.toString())
+                        binding.tvViewMethod.text = method.name
+                    }
+                }
+                bindSpinnerCounter++
+            }
 
-        val result = updateMsApi1(data)
-        if(result[true] != null)
-            Toasty.success(requireContext(), result[true].toString(), Toasty.LENGTH_SHORT).show()
-        else
-            Toasty.error(requireContext(), result[false].toString(), Toasty.LENGTH_SHORT).show()
+            override fun onNothingSelected(parent: AdapterView<*>?) {}
+        }
     }
 
-    fun updateMsApi1(msApi1: MsApi1): Map<Boolean, String> {
+    private fun insertLocationSettingToDb(latitude: String, longitude: String) {
         val latitudeAndLongitudeCannotBeEmpty = "latitude and longitude cannot be empty"
         val latitudeAndLongitudeCannotBeEndedWithDot = "latitude and longitude cannot be ended with ."
         val latitudeAndLongitudeCannotBeStartedWithDot = "latitude and longitude cannot be started with ."
         val successChangeTheCoordinate = "Success change the coordinate"
 
+        val msApi1 = MsApi1(
+            1,
+            latitude,
+            longitude,
+            sharedPrefUtil.getSelectedMethod().toString(),
+            LocalDate().monthOfYear.toString(),
+            LocalDate().year.toString()
+        )
+
         if(msApi1.latitude.isEmpty() || msApi1.longitude.isEmpty() || msApi1.latitude == "." || msApi1.longitude == "."){
-            return mapOf(false to latitudeAndLongitudeCannotBeEmpty)
+            Toasty.error(requireContext(), latitudeAndLongitudeCannotBeEmpty, Toasty.LENGTH_SHORT).show()
+            return
         }
 
         val arrLatitude = msApi1.latitude.toCharArray()
         val arrLongitude = msApi1.longitude.toCharArray()
 
         if(arrLatitude[arrLatitude.size - 1] == '.' || arrLongitude[arrLongitude.size - 1] == '.'){
-            return mapOf(false to latitudeAndLongitudeCannotBeEndedWithDot)
+            Toasty.error(requireContext(), latitudeAndLongitudeCannotBeEndedWithDot, Toasty.LENGTH_SHORT).show()
+            return
         }
 
         if(arrLatitude[0] == '.' || arrLongitude[0] == '.'){
-            return mapOf(false to latitudeAndLongitudeCannotBeStartedWithDot)
+            Toasty.error(requireContext(), latitudeAndLongitudeCannotBeStartedWithDot, Toasty.LENGTH_SHORT).show()
+            return
         }
 
         viewModel.updateMsApi1(msApi1)
-        return mapOf(true to successChangeTheCoordinate)
+        Toasty.success(requireContext(), successChangeTheCoordinate, Toasty.LENGTH_SHORT).show()
     }
 
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
@@ -212,8 +261,6 @@ class SettingFragment(viewModelTest: FragmentSettingViewModel? = null) : BaseFra
             .show()
     }
 
-
-    /* supporting function */
     private fun getGPSLocation(){
         if (isLocationPermissionGranted()) {
             mFusedLocationClient = getFusedLocationProviderClient(requireContext())

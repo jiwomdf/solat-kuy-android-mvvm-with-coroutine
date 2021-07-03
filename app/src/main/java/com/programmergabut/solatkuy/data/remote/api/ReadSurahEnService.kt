@@ -1,8 +1,7 @@
 package com.programmergabut.solatkuy.data.remote.api
 
-import com.programmergabut.solatkuy.data.remote.remoteentity.readsurahJsonEn.ReadSurahEnResponse
+import com.programmergabut.solatkuy.data.remote.json.readsurahJsonEn.ReadSurahEnResponse
 import retrofit2.Call
-import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
 
@@ -14,6 +13,6 @@ interface ReadSurahEnService {
 
     //http://api.alquran.cloud/v1/surah/110/en.asad
 
-    @GET("surah/{nInSurah}/en.asad")
-    fun fetchReadSurahEn(@Path("nInSurah") nInSurah: Int): Call<ReadSurahEnResponse>
+    @GET("surah/{surahID}/en.asad")
+    fun fetchReadSurahEn(@Path("surahID") surahID: Int): Call<ReadSurahEnResponse>
 }

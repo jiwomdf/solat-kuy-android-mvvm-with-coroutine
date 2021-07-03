@@ -6,7 +6,6 @@ import com.programmergabut.solatkuy.data.FakePrayerRepository
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
-import org.junit.Assert.assertEquals
 import org.junit.Before
 import org.junit.Test
 
@@ -20,7 +19,7 @@ import org.mockito.junit.MockitoJUnitRunner
 @RunWith(MockitoJUnitRunner::class)
 class SettingFragmentViewModelTest {
 
-    private lateinit var viewModel: FragmentSettingViewModel
+    private lateinit var viewModel: SettingViewModel
     @get:Rule
     val instantExecutor = InstantTaskExecutorRule()
     @get:Rule
@@ -30,7 +29,7 @@ class SettingFragmentViewModelTest {
 
     @Before
     fun setUp() {
-        viewModel = FragmentSettingViewModel(prayerRepository)
+        viewModel = SettingViewModel(prayerRepository)
         verify(prayerRepository).observeMsApi1()
     }
 

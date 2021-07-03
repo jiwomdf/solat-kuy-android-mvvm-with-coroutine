@@ -5,8 +5,6 @@ import android.content.Intent
 import android.os.IBinder
 import android.util.Log
 import com.programmergabut.solatkuy.data.local.SolatKuyRoom
-import com.programmergabut.solatkuy.util.LogConfig.Companion.ERROR
-import com.programmergabut.solatkuy.util.LogConfig.Companion.SERVICE_BOOT_COMPLETE
 import com.programmergabut.solatkuy.ui.PushNotificationHelper
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -20,6 +18,8 @@ import java.lang.NullPointerException
 
 class ServiceBootComplete: Service() {
 
+    private val TAG = "ServiceBootComplete"
+
     override fun onStartCommand(intent: Intent?, flags: Int, startId: Int): Int {
         super.onStartCommand(intent, flags, startId)
         CoroutineScope(Dispatchers.IO).launch {
@@ -27,13 +27,13 @@ class ServiceBootComplete: Service() {
                 val db = SolatKuyRoom.getDataBase(this@ServiceBootComplete)
                 val data = db.notifiedPrayerDao().getListNotifiedPrayer()
                 if(data != null){
-                    PushNotificationHelper(this@ServiceBootComplete, data.toMutableList(), "-")
+                    PushNotificationHelper(this@ServiceBootComplete, data.value!!.toMutableList(), "-")
                 } else {
                     throw NullPointerException("ServiceBootComplete onStartCommand data == null")
                 }
             }
             catch(ex: Exception){
-                Log.d(ERROR, ex.message.toString())
+                Log.d(TAG, ex.message.toString())
             }
         }
         return START_REDELIVER_INTENT
@@ -43,6 +43,6 @@ class ServiceBootComplete: Service() {
 
     override fun onDestroy() {
         super.onDestroy()
-        Log.d(SERVICE_BOOT_COMPLETE,"Service Destroyed")
+        Log.d(TAG,"Service Destroyed")
     }
 }

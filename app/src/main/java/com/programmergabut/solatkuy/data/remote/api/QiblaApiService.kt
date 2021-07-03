@@ -1,8 +1,7 @@
 package com.programmergabut.solatkuy.data.remote.api
 
-import com.programmergabut.solatkuy.data.remote.remoteentity.compassJson.CompassResponse
+import com.programmergabut.solatkuy.data.remote.json.compassJson.CompassResponse
 import retrofit2.Call
-import retrofit2.Response
 import retrofit2.http.GET
 import retrofit2.http.Path
 
