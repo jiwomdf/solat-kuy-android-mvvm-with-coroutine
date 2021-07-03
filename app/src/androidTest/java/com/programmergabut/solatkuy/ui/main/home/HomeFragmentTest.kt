@@ -74,56 +74,6 @@ class HomeFragmentTest{
         onView(withId(R.id.tv_view_longitude)).check(matches(withText("${data?.longitude} °W")))
     }
 
-    /* @Test
-    fun testVisibilityQuote_componentDisplayed(){
-        var testViewModel: HomeViewModel? = null
-        launchFragmentInHiltContainer<HomeFragment>(fragmentFactory = fragmentFactory) {
-            testViewModel = viewModel
-        }
-        onView(withId(R.id.tv_quran_ayah_quote_click)).check(matches(isDisplayed()))
-        onView(withId(R.id.iv_quote_setting)).check(matches(isDisplayed()))
-        onView(withId(R.id.iv_refresh)).check(matches(isDisplayed()))
-    } */
-
-
-    /*@Test
-    fun testVisibilityAndDataPrayer_componentDisplayedWithCorrectValue(){
-        var testViewModel: HomeViewModel? = null
-        launchFragmentInHiltContainer<HomeFragment>(fragmentFactory = fragmentFactory) {
-            testViewModel = viewModel
-        }
-
-        onView(withId(R.id.include_prayer_time))
-            .perform(nestedScrollTo())
-
-        onView(withId(R.id.cb_fajr)).check(matches(isDisplayed()))
-        onView(withId(R.id.cb_dhuhr)).check(matches(isDisplayed()))
-        onView(withId(R.id.cb_asr)).check(matches(isDisplayed()))
-        onView(withId(R.id.cb_maghrib)).check(matches(isDisplayed()))
-        onView(withId(R.id.cb_isha)).check(matches(isDisplayed()))
-        val prayers = testViewModel?.notifiedPrayer?.value
-        prayers?.data?.forEach { prayer ->
-            when(prayer.prayerName){
-                EnumConfigAndroidTesting.FAJR -> {
-                    onView(withId(R.id.tv_fajr_time)).check(matches(withText(prayer.prayerTime)))
-                }
-                EnumConfigAndroidTesting.DHUHR -> {
-                    onView(withId(R.id.tv_dhuhr_time)).check(matches(withText(prayer.prayerTime)))
-                }
-                EnumConfigAndroidTesting.ASR -> {
-                    onView(withId(R.id.tv_asr_time)).check(matches(withText(prayer.prayerTime)))
-                }
-                EnumConfigAndroidTesting.MAGHRIB -> {
-                    onView(withId(R.id.tv_maghrib_time)).check(matches(withText(prayer.prayerTime)))
-                }
-                EnumConfigAndroidTesting.ISHA -> {
-                    onView(withId(R.id.tv_isha_time)).check(matches(withText(prayer.prayerTime)))
-                }
-                else -> {}
-            }
-        }
-    } */
-
     @Test
     fun testVisibilityAndDataInfo_componentDisplayedWithCorrectValue(){
         var testViewModel: HomeViewModel? = null
