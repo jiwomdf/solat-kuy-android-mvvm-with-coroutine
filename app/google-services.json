@@ -1,0 +1,39 @@
+{
+  "project_info": {
+    "project_number": "256464980487",
+    "project_id": "solatkuy-be2e7",
+    "storage_bucket": "solatkuy-be2e7.appspot.com"
+  },
+  "client": [
+    {
+      "client_info": {
+        "mobilesdk_app_id": "1:256464980487:android:326dc56d27f95327cdf8a2",
+        "android_client_info": {
+          "package_name": "com.programmergabut.solatkuy"
+        }
+      },
+      "oauth_client": [
+        {
+          "client_id": "256464980487-05j22f9nhffhl017l2hm2e0pop344sg2.apps.googleusercontent.com",
+          "client_type": 3
+        }
+      ],
+      "api_key": [
+        {
+          "current_key": "AIzaSyCDMgWvlM2m8QdmZCX7fcjjLM_Q4G2LehA"
+        }
+      ],
+      "services": {
+        "appinvite_service": {
+          "other_platform_oauth_client": [
+            {
+              "client_id": "256464980487-05j22f9nhffhl017l2hm2e0pop344sg2.apps.googleusercontent.com",
+              "client_type": 3
+            }
+          ]
+        }
+      }
+    }
+  ],
+  "configuration_version": "1"
+}

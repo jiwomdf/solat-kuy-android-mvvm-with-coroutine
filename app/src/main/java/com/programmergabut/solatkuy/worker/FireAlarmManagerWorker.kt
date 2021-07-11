@@ -4,6 +4,7 @@ import android.content.Context
 import android.util.Log
 import androidx.work.Worker
 import androidx.work.WorkerParameters
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.programmergabut.solatkuy.data.local.dao.MsApi1Dao
 import com.programmergabut.solatkuy.data.local.dao.MsNotifiedPrayerDao
 import com.programmergabut.solatkuy.ui.LocationHelper
@@ -39,6 +40,7 @@ class FireAlarmManagerWorker(
 
             Result.success()
         }catch (ex: Exception){
+            FirebaseCrashlytics.getInstance().setCustomKey("doWork FireAlarmManagerWorker", ex.message.toString())
             Log.e(TAG, ex.message.toString())
             Result.failure()
         }

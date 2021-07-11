@@ -5,6 +5,7 @@ import android.app.PendingIntent
 import android.content.BroadcastReceiver
 import android.content.Context
 import android.content.Intent
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.programmergabut.solatkuy.ui.dua.DuaActivity
 import com.programmergabut.solatkuy.util.Constant
 import com.programmergabut.solatkuy.ui.NotificationHelper
@@ -27,6 +28,7 @@ class PrayerBroadcastReceiver: BroadcastReceiver() {
 
     override fun onReceive(context: Context?, intent: Intent?) {
         if(context == null || intent == null){
+            FirebaseCrashlytics.getInstance().setCustomKey("onReceive PrayerBroadcastReceiver", "context == null || intent == null")
             throw NullPointerException()
         }
 
@@ -34,6 +36,7 @@ class PrayerBroadcastReceiver: BroadcastReceiver() {
         val prayerData = setIntent(intent)
 
         if(prayerData.prayerName.isNullOrEmpty() || prayerData.prayerTime.isNullOrEmpty()){
+            FirebaseCrashlytics.getInstance().setCustomKey("onReceive PrayerBroadcastReceiver", "prayerData.prayerName.isNullOrEmpty() || prayerData.prayerTime.isNullOrEmpty()")
             throw NullPointerException()
         }
 

@@ -7,6 +7,7 @@ import android.util.Log
 import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequest
 import androidx.work.WorkManager
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.programmergabut.solatkuy.service.ServiceUpdateMonthAndYear
 import com.programmergabut.solatkuy.worker.FireAlarmManagerWorker
 import com.programmergabut.solatkuy.worker.UpdateMonthAndYearWorker
@@ -31,6 +32,7 @@ class BootCompleteReceiver: BroadcastReceiver() {
                     throw Exception()
                 }
             }catch (ex: Exception){
+                FirebaseCrashlytics.getInstance().setCustomKey("onReceive BootCompleteReceiver", ex.message.toString())
                 Log.e(TAG, ex.message.toString())
                 throw Exception(ex.message)
             }

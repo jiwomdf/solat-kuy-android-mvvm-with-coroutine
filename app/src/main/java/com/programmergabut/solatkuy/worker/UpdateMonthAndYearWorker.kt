@@ -4,13 +4,14 @@ import android.content.Context
 import android.util.Log
 import androidx.work.Worker
 import androidx.work.WorkerParameters
+import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.programmergabut.solatkuy.data.local.dao.MsApi1Dao
 import kotlinx.coroutines.runBlocking
 import org.joda.time.LocalDate
 import java.lang.Exception
 
 class UpdateMonthAndYearWorker(
-    private val context: Context,
+    context: Context,
     workerParameters: WorkerParameters,
     private val msApi1Dao: MsApi1Dao
 ): Worker(context, workerParameters) {
@@ -28,6 +29,7 @@ class UpdateMonthAndYearWorker(
             Log.e(TAG, "Result.success()")
             Result.success()
         }catch (ex: Exception){
+            FirebaseCrashlytics.getInstance().setCustomKey("doWork UpdateMonthAndYearWorker", ex.message.toString())
             Log.e(TAG, ex.message.toString())
             Result.failure()
         }
