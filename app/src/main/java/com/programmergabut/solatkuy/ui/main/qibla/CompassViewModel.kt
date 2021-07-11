@@ -1,6 +1,5 @@
 package com.programmergabut.solatkuy.ui.main.qibla
 
-import androidx.hilt.lifecycle.ViewModelInject
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.ViewModel
@@ -11,7 +10,6 @@ import com.programmergabut.solatkuy.data.remote.json.compassJson.CompassResponse
 import com.programmergabut.solatkuy.util.Resource
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import java.lang.Exception
 import javax.inject.Inject
 
 @HiltViewModel
