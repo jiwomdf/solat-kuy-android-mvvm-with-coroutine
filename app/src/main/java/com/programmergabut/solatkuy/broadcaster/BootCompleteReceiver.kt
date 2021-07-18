@@ -8,7 +8,6 @@ import androidx.work.ExistingPeriodicWorkPolicy
 import androidx.work.PeriodicWorkRequest
 import androidx.work.WorkManager
 import com.google.firebase.crashlytics.FirebaseCrashlytics
-import com.programmergabut.solatkuy.service.ServiceUpdateMonthAndYear
 import com.programmergabut.solatkuy.worker.FireAlarmManagerWorker
 import com.programmergabut.solatkuy.worker.UpdateMonthAndYearWorker
 import java.util.concurrent.TimeUnit
@@ -27,7 +26,6 @@ class BootCompleteReceiver: BroadcastReceiver() {
                 if(context != null) {
                     fireAlarmManagerWorker(context)
                     fireUpdateMonthYearWorker(context)
-                    startUpdateMonthYearService(context)
                 } else {
                     throw Exception()
                 }
@@ -51,10 +49,5 @@ class BootCompleteReceiver: BroadcastReceiver() {
             .build()
         val workManager = WorkManager.getInstance(context)
         workManager.enqueueUniquePeriodicWork(UpdateMonthAndYearWorker.UNIQUE_KEY, ExistingPeriodicWorkPolicy.KEEP, task)
-    }
-
-    private fun startUpdateMonthYearService(context: Context) {
-        val serviceIntent = Intent(context, ServiceUpdateMonthAndYear::class.java)
-        context.startService(serviceIntent)
     }
 }

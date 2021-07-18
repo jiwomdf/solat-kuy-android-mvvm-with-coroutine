@@ -46,9 +46,6 @@
             tools:node="remove" />
 
 
-        <service android:name=".service.ServiceBootComplete" />
-        <service android:name=".service.ServiceUpdateMonthAndYear" />
-
         <receiver android:name=".broadcaster.PrayerBroadcastReceiver" />
         <receiver android:name=".broadcaster.BootCompleteReceiver">
             <intent-filter>
