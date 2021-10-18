@@ -1,7 +1,5 @@
 package com.programmergabut.solatkuy
 
 import androidx.appcompat.app.AppCompatActivity
-import dagger.hilt.android.AndroidEntryPoint
 
-@AndroidEntryPoint
-class HiltTestActivity: AppCompatActivity()
+class TestActivity: AppCompatActivity()
