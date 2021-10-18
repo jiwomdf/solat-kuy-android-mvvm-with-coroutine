@@ -15,7 +15,11 @@ import java.util.*
  * Created by Katili Jiwo Adi Wiyono on 02/04/20.
  */
 
-class PushNotificationHelper(context: Context, prayerListMs: List<MsNotifiedPrayer>, cityName: String): ContextWrapper(context) {
+class PushNotificationHelper(
+    context: Context,
+    prayerListMs: List<MsNotifiedPrayer>,
+    cityName: String
+) : ContextWrapper(context) {
 
     private var mCityName: String? = null
 
@@ -23,15 +27,21 @@ class PushNotificationHelper(context: Context, prayerListMs: List<MsNotifiedPray
         this.mCityName = cityName
 
         val alarmManager = context.getSystemService(Context.ALARM_SERVICE) as AlarmManager
-        val newList = prayerListMs.filter { x -> x.prayerName !=  Constant.SUNRISE} //remove sunrise from list
+        val newList =
+            prayerListMs.filter { x -> x.prayerName != Constant.SUNRISE } //remove sunrise from list
         newList.toMutableList().sortBy { x -> x.prayerID }
 
         newList.forEach { prayer ->
 
             val intent = createIntent(context, prayer)
-            val pendingIntent = PendingIntent.getBroadcast(context, prayer.prayerID, intent, PendingIntent.FLAG_CANCEL_CURRENT)
+            val pendingIntent = PendingIntent.getBroadcast(
+                context,
+                prayer.prayerID,
+                intent,
+                PendingIntent.FLAG_CANCEL_CURRENT
+            )
             val calendar = createCalendar(prayer)
-            if(calendar.before(Calendar.getInstance()))
+            if (calendar.before(Calendar.getInstance()))
                 calendar.add(Calendar.DATE, 1)
 
             fireAlarmManager(prayer, pendingIntent, alarmManager, calendar)
@@ -53,9 +63,13 @@ class PushNotificationHelper(context: Context, prayerListMs: List<MsNotifiedPray
         alarmManager: AlarmManager,
         calendar: Calendar
     ) {
-        if(prayerMs.isNotified){
-            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M){
-                alarmManager.setExactAndAllowWhileIdle(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
+        if (prayerMs.isNotified) {
+            if (Build.VERSION.SDK_INT >= Build.VERSION_CODES.M) {
+                alarmManager.setExactAndAllowWhileIdle(
+                    AlarmManager.RTC_WAKEUP,
+                    calendar.timeInMillis,
+                    pendingIntent
+                )
             } else {
                 alarmManager.setExact(AlarmManager.RTC_WAKEUP, calendar.timeInMillis, pendingIntent)
             }

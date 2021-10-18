@@ -9,7 +9,7 @@ import java.lang.Exception
 import java.lang.NullPointerException
 
 class DuaActivity : BaseActivity<ActivityDuaBinding, DuaViewModel>(
-    R.layout.activity_dua, DuaViewModel::class.java
+    R.layout.activity_dua, DuaViewModel::class
 ) {
 
     companion object{

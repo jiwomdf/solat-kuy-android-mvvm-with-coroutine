@@ -5,28 +5,29 @@ import com.programmergabut.solatkuy.data.PrayerRepository
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
 import com.programmergabut.solatkuy.data.local.localentity.MsCalculationMethods
 import com.programmergabut.solatkuy.util.Resource
+import com.programmergabut.solatkuy.util.SharedPrefUtil
 import com.programmergabut.solatkuy.util.livedata.AbsentLiveData
-import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
-import javax.inject.Inject
 
-/*
- * Created by Katili Jiwo Adi Wiyono on 25/03/20.
- */
 
-@HiltViewModel
-class SettingViewModel @Inject constructor(private val prayerRepository: PrayerRepository): ViewModel() {
+class SettingViewModel(
+    private val prayerRepository: PrayerRepository,
+    val sharedPrefUtil: SharedPrefUtil
+) :
+    ViewModel() {
 
     val msApi1 = prayerRepository.observeMsApi1()
 
     private var _methods = MutableLiveData(false)
-    val methods: LiveData<Resource<List<MsCalculationMethods>>> = Transformations.switchMap(_methods) { isFirstLoad ->
-        if (!isFirstLoad) {
-            AbsentLiveData.create()
-        } else {
-            prayerRepository.getMethods()
+    val methods: LiveData<Resource<List<MsCalculationMethods>>> =
+        Transformations.switchMap(_methods) { isFirstLoad ->
+            if (!isFirstLoad) {
+                AbsentLiveData.create()
+            } else {
+                prayerRepository.getMethods()
+            }
         }
-    }
+
     fun getMethods(value: Boolean = true) {
         this._methods.value = value
     }

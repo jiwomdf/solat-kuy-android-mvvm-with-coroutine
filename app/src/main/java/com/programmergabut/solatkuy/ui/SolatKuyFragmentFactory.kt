@@ -12,23 +12,25 @@ import com.programmergabut.solatkuy.ui.main.quran.listsurah.ListSurahFragment
 import com.programmergabut.solatkuy.ui.main.quran.listsurah.ListSurahViewModel
 import com.programmergabut.solatkuy.ui.main.setting.SettingViewModel
 import com.programmergabut.solatkuy.ui.main.setting.SettingFragment
+import com.programmergabut.solatkuy.util.SharedPrefUtil
 import javax.inject.Inject
 
-class SolatKuyFragmentFactory @Inject constructor(
+class SolatKuyFragmentFactory(
     private val prayerRepositoryImpl: PrayerRepositoryImpl,
-    private val quranRepositoryImpl: QuranRepositoryImpl
+    private val quranRepositoryImpl: QuranRepositoryImpl,
+    private val sharedPrefUtil: SharedPrefUtil,
 ): FragmentFactory() {
 
     override fun instantiate(classLoader: ClassLoader, className: String): Fragment {
         return when(className){
             CompassFragment::class.java.name -> CompassFragment(
-                CompassViewModel(prayerRepositoryImpl)
+                CompassViewModel(prayerRepositoryImpl,sharedPrefUtil)
             )
             ListSurahFragment::class.java.name -> ListSurahFragment(
-                ListSurahViewModel(quranRepositoryImpl)
+                ListSurahViewModel(quranRepositoryImpl,sharedPrefUtil)
             )
             SettingFragment::class.java.name -> SettingFragment(
-                SettingViewModel(prayerRepositoryImpl)
+                SettingViewModel(prayerRepositoryImpl,sharedPrefUtil)
             )
             HomeFragment::class.java.name -> HomeFragment(
                 HomeViewModel(prayerRepositoryImpl,quranRepositoryImpl)

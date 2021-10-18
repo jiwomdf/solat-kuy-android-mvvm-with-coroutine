@@ -10,29 +10,23 @@ import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.base.BaseActivity
 import com.programmergabut.solatkuy.databinding.ActivityMainBinding
 import com.programmergabut.solatkuy.ui.SolatKuyFragmentFactory
-import dagger.hilt.android.AndroidEntryPoint
+import org.koin.androidx.fragment.android.setupKoinFragmentFactory
 import javax.inject.Inject
 
-/*
- * Created by Katili Jiwo Adi Wiyono on 25/03/20.
- */
-@AndroidEntryPoint
+
 class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
     R.layout.activity_main,
-    MainViewModel::class.java
+    MainViewModel::class
 ) {
 
     private val TAG = "MainActivity"
-
-    @Inject
-    lateinit var fragmentFactory: SolatKuyFragmentFactory
 
     override fun getViewBinding() = ActivityMainBinding.inflate(layoutInflater)
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         initBottomNav()
-        supportFragmentManager.fragmentFactory = fragmentFactory
+        setupKoinFragmentFactory()
     }
 
     override fun onDestroy() {
@@ -41,25 +35,25 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
     }
 
     private fun initBottomNav() {
-        try{
-            val navHostFragment = supportFragmentManager.findFragmentById(R.id.navHostFragment) as NavHostFragment
+        try {
+            val navHostFragment =
+                supportFragmentManager.findFragmentById(R.id.navHostFragment) as NavHostFragment
             val navController = navHostFragment.navController
             binding.bottomNavigation.setupWithNavController(navController)
             navHostFragment.findNavController()
                 .addOnDestinationChangedListener { _, destination, _ ->
-                    when(destination.id){
+                    when (destination.id) {
                         R.id.fragmentHome,
                         R.id.fragmentCompass,
                         R.id.fragmentQuran,
                         R.id.fragmentSetting
-                            -> binding.bottomNavigation.visibility = View.VISIBLE
+                        -> binding.bottomNavigation.visibility = View.VISIBLE
                         else
-                            -> binding.bottomNavigation.visibility = View.GONE
+                        -> binding.bottomNavigation.visibility = View.GONE
                     }
                 }
             binding.bottomNavigation.setOnNavigationItemReselectedListener {/* NO-OP */ }
-        }
-        catch (ex: Exception){
+        } catch (ex: Exception) {
             Log.d(TAG, ex.message.toString())
         }
     }

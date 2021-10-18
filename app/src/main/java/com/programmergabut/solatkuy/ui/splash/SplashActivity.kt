@@ -8,15 +8,14 @@ import com.programmergabut.solatkuy.data.local.SolatKuyRoom
 import com.programmergabut.solatkuy.databinding.ActivitySplashBinding
 import com.programmergabut.solatkuy.ui.boarding.BoardingActivity
 import com.programmergabut.solatkuy.ui.main.MainActivity
-import dagger.hilt.android.AndroidEntryPoint
 
-@AndroidEntryPoint
+
 class SplashActivity : BaseActivity<ActivitySplashBinding, SplashViewModel>(
     R.layout.activity_splash,
-    SplashViewModel::class.java
+    SplashViewModel::class
 ) {
 
-    private val splashDelay : Long = 1000
+    private val splashDelay: Long = 1000
 
     override fun getViewBinding() = ActivitySplashBinding.inflate(layoutInflater)
 
@@ -25,17 +24,17 @@ class SplashActivity : BaseActivity<ActivitySplashBinding, SplashViewModel>(
         observeDb()
     }
 
-    private fun observeDb(){
+    private fun observeDb() {
         viewModel.msSetting.observe(this, {
-            if(it != null){
-                if(it.isHasOpenApp){
+            if (it != null) {
+                if (it.isHasOpenApp) {
                     gotoMainActivity()
-                } else {
+                } else
                     gotoBoardingActivity()
-                }
-            } else {
-                SolatKuyRoom.populateDatabase(db)
-            }
+
+            } else
+                SolatKuyRoom.populateDatabase(viewModel.solatKuyRoom)
+
         })
     }
 
@@ -46,7 +45,7 @@ class SplashActivity : BaseActivity<ActivitySplashBinding, SplashViewModel>(
         }, splashDelay)
     }
 
-    private fun gotoBoardingActivity(){
+    private fun gotoBoardingActivity() {
         Handler(Looper.getMainLooper()).postDelayed({
             gotoIntent(BoardingActivity::class.java, null, true)
             overridePendingTransition(android.R.anim.fade_in, android.R.anim.fade_out)

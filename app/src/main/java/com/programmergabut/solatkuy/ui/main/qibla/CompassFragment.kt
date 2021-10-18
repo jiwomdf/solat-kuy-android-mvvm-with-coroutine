@@ -19,18 +19,12 @@ import com.programmergabut.solatkuy.data.remote.json.compassJson.Result
 import com.programmergabut.solatkuy.databinding.FragmentCompassBinding
 import com.programmergabut.solatkuy.databinding.LayoutPhoneTiltBinding
 import com.programmergabut.solatkuy.util.EnumStatus
-import dagger.hilt.android.AndroidEntryPoint
 
-/*
- * Created by Katili Jiwo Adi Wiyono on 31/03/20.
- */
-
-@AndroidEntryPoint
 class CompassFragment constructor(
     viewModelTest: CompassViewModel? = null
 ) : BaseFragment<FragmentCompassBinding, CompassViewModel>(
     R.layout.fragment_compass,
-    CompassViewModel::class.java,
+    CompassViewModel::class,
     viewModelTest
 ), SensorEventListener, SwipeRefreshLayout.OnRefreshListener {
 
@@ -73,8 +67,8 @@ class CompassFragment constructor(
     }
 
     private fun openLottieAnimation() {
-        val isHasOpenAnimation = sharedPrefUtil.getIsHasOpenAnimation()
-        if(!isHasOpenAnimation)
+        val isHasOpenAnimation = viewModel.sharedPrefUtil.getIsHasOpenAnimation()
+        if (!isHasOpenAnimation)
             createLottieAnimation()
     }
 
@@ -113,13 +107,13 @@ class CompassFragment constructor(
 
     override fun onSensorChanged(event: SensorEvent?) {
         val alpha = 0.97f
-        synchronized(this){
-            if(event?.sensor?.type == Sensor.TYPE_ACCELEROMETER){
+        synchronized(this) {
+            if (event?.sensor?.type == Sensor.TYPE_ACCELEROMETER) {
                 mGravity[0] = alpha * mGravity[0] + (1 - alpha) * event.values[0]
                 mGravity[1] = alpha * mGravity[1] + (1 - alpha) * event.values[1]
                 mGravity[2] = alpha * mGravity[2] + (1 - alpha) * event.values[2]
             }
-            if(event?.sensor?.type == Sensor.TYPE_MAGNETIC_FIELD){
+            if (event?.sensor?.type == Sensor.TYPE_MAGNETIC_FIELD) {
                 mGeomagnetic[0] = alpha * mGeomagnetic[0] + (1 - alpha) * event.values[0]
                 mGeomagnetic[1] = alpha * mGeomagnetic[1] + (1 - alpha) * event.values[1]
                 mGeomagnetic[2] = alpha * mGeomagnetic[2] + (1 - alpha) * event.values[2]
@@ -127,7 +121,7 @@ class CompassFragment constructor(
             val R = FloatArray(9)
             val I = FloatArray(9)
             val isSuccess = SensorManager.getRotationMatrix(R, I, mGravity, mGeomagnetic)
-            if(isSuccess){
+            if (isSuccess) {
                 val orientation = FloatArray(3)
                 SensorManager.getOrientation(R, orientation)
                 azimuth = Math.toDegrees(orientation[0].toDouble()).toFloat()
@@ -149,32 +143,52 @@ class CompassFragment constructor(
         when (accuracy) {
             0 -> {
                 binding.tvQiblaAccuracy.text = getString(R.string.unreliable)
-                binding.tvQiblaAccuracy.setTextColor(ContextCompat.getColor(requireContext(), R.color.red_700))
+                binding.tvQiblaAccuracy.setTextColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.red_700
+                    )
+                )
             }
             1 -> {
                 binding.tvQiblaAccuracy.text = getString(R.string.lowAccuracy)
-                binding.tvQiblaAccuracy.setTextColor(ContextCompat.getColor(requireContext(), R.color.red_200))
+                binding.tvQiblaAccuracy.setTextColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.red_200
+                    )
+                )
             }
             2 -> {
                 binding.tvQiblaAccuracy.text = getString(R.string.mediumAccuracy)
-                binding.tvQiblaAccuracy.setTextColor(ContextCompat.getColor(requireContext(), R.color.blue_500))
+                binding.tvQiblaAccuracy.setTextColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.blue_500
+                    )
+                )
             }
             3 -> {
                 binding.tvQiblaAccuracy.text = getString(R.string.highAccuracy)
-                binding.tvQiblaAccuracy.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+                binding.tvQiblaAccuracy.setTextColor(
+                    ContextCompat.getColor(
+                        requireContext(),
+                        R.color.white
+                    )
+                )
             }
         }
     }
 
     override fun onRefresh() {
-        if(viewModel.msApi1.value == null)
+        if (viewModel.msApi1.value == null)
             return
         viewModel.fetchCompassApi(viewModel.msApi1.value!!)
         binding.slCompass.isRefreshing = false
     }
 
     private fun createLottieAnimation() {
-        val dialog =  Dialog(requireContext())
+        val dialog = Dialog(requireContext())
         val dialogBinding = LayoutPhoneTiltBinding.inflate(layoutInflater)
         dialog.apply {
             window?.setLayout(
@@ -186,7 +200,7 @@ class CompassFragment constructor(
             show()
         }
         dialogBinding.btnHideAnimation.setOnClickListener {
-            sharedPrefUtil.setIsHasOpenAnimation(true)
+            viewModel.sharedPrefUtil.setIsHasOpenAnimation(true)
             dialog.hide()
         }
     }

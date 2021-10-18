@@ -5,7 +5,6 @@ import android.content.Context
 import android.content.Intent
 import android.content.pm.PackageManager
 import android.os.Bundle
-import androidx.lifecycle.ViewModelProvider
 import android.view.MotionEvent
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
@@ -18,20 +17,22 @@ import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.data.local.SolatKuyRoom
 import com.programmergabut.solatkuy.databinding.LayoutErrorBottomsheetBinding
 import com.programmergabut.solatkuy.util.SharedPrefUtil
+import org.koin.androidx.viewmodel.ext.android.viewModel
 import javax.inject.Inject
+import kotlin.reflect.KClass
 
-abstract class BaseActivity<VB: ViewBinding, VM: ViewModel>(
+
+abstract class BaseActivity<out VB : ViewBinding, ViewModelType : ViewModel>(
     private val layout: Int,
-    private val viewModelClass: Class<VM>?,
-): AppCompatActivity() {
+    private val clazz: KClass<ViewModelType>,
+) : AppCompatActivity() {
 
-    @Inject
-    lateinit var db : SolatKuyRoom
-    @Inject
+    lateinit var db: SolatKuyRoom
+
     lateinit var sharedPrefUtil: SharedPrefUtil
 
     protected val LOCATION_PERMISSIONS = 101
-    protected lateinit var viewModel: VM
+    val viewModel by viewModel(null,clazz)
 
     abstract fun getViewBinding(): VB
     private var _binding: ViewBinding? = null
@@ -42,9 +43,6 @@ abstract class BaseActivity<VB: ViewBinding, VM: ViewModel>(
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
         _binding = getViewBinding()
-        viewModelClass?.let {
-            viewModel = ViewModelProvider(this).get(it)
-        }
         inflateBinding()
         setListener()
         setContentView(requireNotNull(_binding).root)
@@ -56,49 +54,63 @@ abstract class BaseActivity<VB: ViewBinding, VM: ViewModel>(
     }
 
 
-    protected open fun setListener(){}
+    protected open fun setListener() {}
 
-    protected open fun inflateBinding(){}
+    protected open fun inflateBinding() {}
 
     protected fun isLocationPermissionGranted(): Boolean {
-        return (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
-                ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED)
+        return (ActivityCompat.checkSelfPermission(
+            this,
+            Manifest.permission.ACCESS_FINE_LOCATION
+        ) == PackageManager.PERMISSION_GRANTED &&
+                ActivityCompat.checkSelfPermission(
+                    this,
+                    Manifest.permission.ACCESS_COARSE_LOCATION
+                ) == PackageManager.PERMISSION_GRANTED)
     }
 
     protected fun listLocationPermission(): Array<String> {
-        return arrayOf(Manifest.permission.ACCESS_FINE_LOCATION, Manifest.permission.ACCESS_COARSE_LOCATION)
+        return arrayOf(
+            Manifest.permission.ACCESS_FINE_LOCATION,
+            Manifest.permission.ACCESS_COARSE_LOCATION
+        )
     }
 
     override fun dispatchTouchEvent(ev: MotionEvent?): Boolean {
-        val inputMethodManager = getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
+        val inputMethodManager =
+            getSystemService(Context.INPUT_METHOD_SERVICE) as InputMethodManager
         inputMethodManager.hideSoftInputFromWindow(currentFocus?.windowToken, 0)
         return super.dispatchTouchEvent(ev)
     }
 
-    protected fun <T : Any> gotoIntent(classIntent : Class<T>, bundle : Bundle?, isFinish : Boolean){
+    protected fun <T : Any> gotoIntent(classIntent: Class<T>, bundle: Bundle?, isFinish: Boolean) {
         val intent = Intent(this, classIntent)
-        if(bundle != null)
+        if (bundle != null)
             intent.putExtras(bundle)
         startActivity(intent)
-        if(isFinish)
+        if (isFinish)
             finish()
     }
 
     protected fun showBottomSheet(
-        title : String = resources.getString(R.string.text_error_title),
+        title: String = resources.getString(R.string.text_error_title),
         description: String = resources.getString(R.string.text_error_dsc),
         isCancelable: Boolean = true,
         isFinish: Boolean = false,
-        callback: (() -> Unit)? = null) {
+        callback: (() -> Unit)? = null
+    ) {
 
         val dialog = BottomSheetDialog(this)
         val dialogBinding = LayoutErrorBottomsheetBinding.inflate(layoutInflater)
-        dialog.apply{
-            window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
+        dialog.apply {
+            window?.setLayout(
+                ViewGroup.LayoutParams.MATCH_PARENT,
+                ViewGroup.LayoutParams.WRAP_CONTENT
+            )
             setCancelable(isCancelable)
             setContentView(dialogBinding.root)
         }
-        dialogBinding.apply{
+        dialogBinding.apply {
             tvTitle.text = title
             tvDesc.text = description
         }
@@ -106,7 +118,7 @@ abstract class BaseActivity<VB: ViewBinding, VM: ViewModel>(
         dialogBinding.btnOk.setOnClickListener {
             dialog.hide()
             callback?.invoke()
-            if(isFinish)
+            if (isFinish)
                 finish()
         }
     }

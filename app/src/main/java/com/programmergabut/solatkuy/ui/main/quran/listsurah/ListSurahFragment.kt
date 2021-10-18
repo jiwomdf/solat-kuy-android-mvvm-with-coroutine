@@ -14,18 +14,14 @@ import com.programmergabut.solatkuy.base.BaseFragment
 import com.programmergabut.solatkuy.data.local.localentity.MsSurah
 import com.programmergabut.solatkuy.databinding.FragmentListSurahBinding
 import com.programmergabut.solatkuy.util.EnumStatus
-import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 
-/*
- * Created by Katili Jiwo Adi Wiyono on 25/06/20.
- */
-@AndroidEntryPoint
+
 class ListSurahFragment(
     viewModelTest: ListSurahViewModel? = null
 ) : BaseFragment<FragmentListSurahBinding, ListSurahViewModel>(
     R.layout.fragment_list_surah,
-    ListSurahViewModel::class.java,
+    ListSurahViewModel::class,
     viewModelTest
 ), SwipeRefreshLayout.OnRefreshListener, View.OnClickListener {
 
@@ -50,9 +46,9 @@ class ListSurahFragment(
         binding.etSearch.addTextChangedListener(etSearchListener)
 
         viewModel.allSurah.observe(viewLifecycleOwner, {
-            when(it.status){
+            when (it.status) {
                 EnumStatus.SUCCESS, EnumStatus.ERROR -> {
-                    if(it.data == null){
+                    if (it.data == null) {
                         setVisibility(it.status, null)
                         return@observe
                     }
@@ -72,12 +68,15 @@ class ListSurahFragment(
     }
 
     override fun onClick(v: View?) {
-        when(v?.id){
+        when (v?.id) {
             R.id.cv_last_read_ayah -> {
                 viewModel.allSurah.value?.data?.let {
-                    val selectedSurah = getLastReadSurah(it, sharedPrefUtil.getLastReadSurah())
-                    if(selectedSurah == null){
-                        showBottomSheet(getString(R.string.last_read_ayah_not_found_title), getString(R.string.last_read_ayah_not_found_dsc))
+                    val selectedSurah = getLastReadSurah(it, viewModel.sharedPrefUtil.getLastReadSurah())
+                    if (selectedSurah == null) {
+                        showBottomSheet(
+                            getString(R.string.last_read_ayah_not_found_title),
+                            getString(R.string.last_read_ayah_not_found_dsc)
+                        )
                         return
                     }
                     resetSpinnerAndSearchBarValue()
@@ -102,11 +101,11 @@ class ListSurahFragment(
         }
     }
 
-    private val etSearchListener = object: TextWatcher{
+    private val etSearchListener = object : TextWatcher {
         override fun afterTextChanged(s: Editable?) {}
         override fun beforeTextChanged(s: CharSequence?, start: Int, count: Int, after: Int) {}
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
-            if(s.isNullOrEmpty() && binding.sJuzz.selectedItemPosition != 0)
+            if (s.isNullOrEmpty() && binding.sJuzz.selectedItemPosition != 0)
                 return
             val list = getSurahBySeachString(s.toString())
             allSurahAdapter.listSurah = list
@@ -116,8 +115,9 @@ class ListSurahFragment(
     }
 
     fun getSurahBySeachString(stringName: String): List<MsSurah> {
-        viewModel.allSurah?.value?.data?.let{
-            val lowerCaseString = if(stringName.isNotEmpty()) stringName.lowercase(Locale.ROOT).trim() else ""
+        viewModel.allSurah?.value?.data?.let {
+            val lowerCaseString =
+                if (stringName.isNotEmpty()) stringName.lowercase(Locale.ROOT).trim() else ""
             val list = it.filter { surah ->
                 surah.englishNameLowerCase!!.contains(lowerCaseString)
             }
@@ -127,15 +127,15 @@ class ListSurahFragment(
         }
     }
 
-    private fun updateListSurahAdapter(datas: List<MsSurah>){
+    private fun updateListSurahAdapter(datas: List<MsSurah>) {
         allSurahAdapter.listSurah = datas
         allSurahAdapter.notifyDataSetChanged()
     }
 
-    private fun setVisibility(status: EnumStatus, data: List<MsSurah>?){
-        when(status){
+    private fun setVisibility(status: EnumStatus, data: List<MsSurah>?) {
+        when (status) {
             EnumStatus.SUCCESS, EnumStatus.ERROR -> {
-                if(data == null || data.isEmpty()){
+                if (data == null || data.isEmpty()) {
                     binding.tvLoadingAllSurah.visibility = View.VISIBLE
                     binding.tvLoadingAllSurah.text = getString(R.string.text_there_is_no_data)
                 } else {
@@ -161,7 +161,12 @@ class ListSurahFragment(
         binding.sJuzz.adapter = ArrayAdapter(requireContext(), R.layout.spinner_item, arrJuzz)
         binding.sJuzz.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
             override fun onNothingSelected(parent: AdapterView<*>?) {}
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+            override fun onItemSelected(
+                parent: AdapterView<*>?,
+                view: View?,
+                position: Int,
+                id: Long
+            ) {
                 if (position == 0 && binding.etSearch.text.toString() != "")
                     return
                 juzzSurahFilter(binding.sJuzz.selectedItem.toString())
@@ -178,13 +183,15 @@ class ListSurahFragment(
         }
         allSurahAdapter.onClick = { number, englishName, englishNameTranslation ->
             resetSpinnerAndSearchBarValue()
-            findNavController().navigate(ListSurahFragmentDirections
-                .actionQuranFragmentToReadSurahActivity(
-                    number,
-                    englishName,
-                    englishNameTranslation,
-                    false
-            ))
+            findNavController().navigate(
+                ListSurahFragmentDirections
+                    .actionQuranFragmentToReadSurahActivity(
+                        number,
+                        englishName,
+                        englishNameTranslation,
+                        false
+                    )
+            )
         }
     }
 
@@ -192,30 +199,36 @@ class ListSurahFragment(
         staredSurahAdapter = StaredSurahAdapter()
         binding.rvStaredAyah.apply {
             adapter = staredSurahAdapter
-            layoutManager = LinearLayoutManager(this@ListSurahFragment.context, LinearLayoutManager.HORIZONTAL, false)
+            layoutManager = LinearLayoutManager(
+                this@ListSurahFragment.context,
+                LinearLayoutManager.HORIZONTAL,
+                false
+            )
         }
         staredSurahAdapter.onClick = { surahID, surahName, surahTranslation ->
             resetSpinnerAndSearchBarValue()
-            findNavController().navigate(ListSurahFragmentDirections.actionQuranFragmentToReadSurahActivity(
-                surahID,
-                surahName,
-                surahTranslation,
-                false
-            ))
+            findNavController().navigate(
+                ListSurahFragmentDirections.actionQuranFragmentToReadSurahActivity(
+                    surahID,
+                    surahName,
+                    surahTranslation,
+                    false
+                )
+            )
         }
     }
 
-    private fun juzzSurahFilter(juzz: String){
-        if(juzz == ALL_JUZZ){
+    private fun juzzSurahFilter(juzz: String) {
+        if (juzz == ALL_JUZZ) {
             updateListSurahAdapter(getSurahByJuzz(0))
-        } else{
+        } else {
             updateListSurahAdapter(getSurahByJuzz(juzz.toInt()))
         }
     }
 
     private fun getSurahByJuzz(juzz: Int): List<MsSurah> {
         viewModel.allSurah.value?.data?.let { allSurah ->
-            return when(juzz){
+            return when (juzz) {
                 0 -> allSurah
                 1 -> allSurah.filter { x -> x.number in 1..2 }
                 2 -> allSurah.filter { x -> x.number == 2 }
@@ -252,7 +265,7 @@ class ListSurahFragment(
         } ?: return emptyList()
     }
 
-    private fun resetSpinnerAndSearchBarValue(){
+    private fun resetSpinnerAndSearchBarValue() {
         binding.sJuzz.onItemSelectedListener = null
         binding.etSearch.removeTextChangedListener(etSearchListener)
         binding.etSearch.setText("")
