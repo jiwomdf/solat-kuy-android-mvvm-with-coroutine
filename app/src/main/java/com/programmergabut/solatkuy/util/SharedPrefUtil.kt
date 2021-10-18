@@ -1,9 +1,8 @@
 package com.programmergabut.solatkuy.util
 
 import android.content.SharedPreferences
-import javax.inject.Inject
 
-class SharedPrefUtil @Inject constructor() {
+class SharedPrefUtil(private val sharedPref: SharedPreferences) {
 
     companion object {
         const val LAST_READ_SURAH = "lastReadSurah"
@@ -11,8 +10,6 @@ class SharedPrefUtil @Inject constructor() {
         const val SELECTED_METHOD = "selected_method"
     }
 
-    @Inject
-    lateinit var sharedPref: SharedPreferences
 
     fun getLastReadSurah(): Int {
         return sharedPref.getInt(LAST_READ_SURAH, -1)
@@ -22,8 +19,8 @@ class SharedPrefUtil @Inject constructor() {
         return sharedPref.getBoolean("isHasOpenAnimation", true)
     }
 
-    fun setIsHasOpenAnimation(value: Boolean){
-        sharedPref.edit()?.apply{
+    fun setIsHasOpenAnimation(value: Boolean) {
+        sharedPref.edit()?.apply {
             putBoolean("isHasOpenAnimation", value)
             apply()
         }
@@ -37,15 +34,15 @@ class SharedPrefUtil @Inject constructor() {
         return sharedPref.getBoolean("isBrightnessActive", false)
     }
 
-    fun setIsBrightnessActive(value: Boolean){
-        sharedPref.edit()?.apply{
+    fun setIsBrightnessActive(value: Boolean) {
+        sharedPref.edit()?.apply {
             putBoolean("isBrightnessActive", value)
             apply()
         }
     }
 
     fun insertLastReadSharedPref(selectedSurahId: Int, numberInSurah: Int) {
-        sharedPref.edit()?.apply{
+        sharedPref.edit()?.apply {
             putInt(LAST_READ_SURAH, selectedSurahId)
             putInt(LAST_READ_AYAH, numberInSurah)
             apply()
@@ -57,7 +54,7 @@ class SharedPrefUtil @Inject constructor() {
     }
 
     fun insertSelectedMethod(selectedMethod: Int) {
-        sharedPref.edit()?.apply{
+        sharedPref.edit()?.apply {
             putInt(SELECTED_METHOD, selectedMethod)
             apply()
         }
