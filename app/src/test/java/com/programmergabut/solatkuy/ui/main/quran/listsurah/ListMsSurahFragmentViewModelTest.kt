@@ -12,6 +12,7 @@ import com.programmergabut.solatkuy.data.QuranRepositoryImplTest
 import com.programmergabut.solatkuy.data.local.localentity.MsSurah
 import com.programmergabut.solatkuy.data.remote.json.quranallsurahJson.Result
 import com.programmergabut.solatkuy.util.Resource
+import com.programmergabut.solatkuy.util.SharedPrefUtil
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before
@@ -35,9 +36,12 @@ class ListMsSurahFragmentViewModelTest {
     val coroutinesTestRule: CoroutinesTestRule = CoroutinesTestRule()
     @Mock
     private lateinit var fakeQuranRepository: FakeQuranRepository
+    @Mock
+    private lateinit var sharedPrefUtil: SharedPrefUtil
+
     @Before
     fun setUp(){
-        viewModel = ListSurahViewModel(fakeQuranRepository)
+        viewModel = ListSurahViewModel(fakeQuranRepository,sharedPrefUtil)
         verify(fakeQuranRepository).observeListFavSurah()
     }
 

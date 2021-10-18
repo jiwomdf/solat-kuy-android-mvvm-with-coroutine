@@ -4,12 +4,12 @@ import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.programmergabut.solatkuy.CoroutinesTestRule
 import com.programmergabut.solatkuy.data.FakePrayerRepository
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
+import com.programmergabut.solatkuy.util.SharedPrefUtil
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before
-import org.junit.Test
-
 import org.junit.Rule
+import org.junit.Test
 import org.junit.runner.RunWith
 import org.mockito.Mock
 import org.mockito.Mockito.verify
@@ -20,26 +20,33 @@ import org.mockito.junit.MockitoJUnitRunner
 class SettingFragmentViewModelTest {
 
     private lateinit var viewModel: SettingViewModel
+
     @get:Rule
     val instantExecutor = InstantTaskExecutorRule()
+
     @get:Rule
     val coroutinesTestRule: CoroutinesTestRule = CoroutinesTestRule()
+
     @Mock
     private lateinit var prayerRepository: FakePrayerRepository
 
+    @Mock
+    private lateinit var sharedPrefUtil: SharedPrefUtil
+
     @Before
     fun setUp() {
-        viewModel = SettingViewModel(prayerRepository)
+        viewModel = SettingViewModel(prayerRepository, sharedPrefUtil)
         verify(prayerRepository).observeMsApi1()
     }
 
     @Test
-    fun `update MsApi1 with correct parameter, message return success`() = coroutinesTestRule.testDispatcher.runBlockingTest{
-        val msApi1 = MsApi1(1,"123","123","3","3","2020")
-        val successChangeTheCoordinate = "Success change the coordinate"
-        viewModel.updateMsApi1(msApi1)
-        verify(prayerRepository).updateMsApi1(msApi1)
-    }
+    fun `update MsApi1 with correct parameter, message return success`() =
+        coroutinesTestRule.testDispatcher.runBlockingTest {
+            val msApi1 = MsApi1(1, "123", "123", "3", "3", "2020")
+            val successChangeTheCoordinate = "Success change the coordinate"
+            viewModel.updateMsApi1(msApi1)
+            verify(prayerRepository).updateMsApi1(msApi1)
+        }
 
     /* @Test
     fun `update MsApi1 with incorrect format, message return error`() = coroutinesTestRule.testDispatcher.runBlockingTest{

@@ -10,6 +10,7 @@ import com.programmergabut.solatkuy.data.FakePrayerRepository
 import com.programmergabut.solatkuy.data.remote.json.compassJson.CompassResponse
 import com.programmergabut.solatkuy.ui.main.qibla.CompassViewModel
 import com.programmergabut.solatkuy.util.Resource
+import com.programmergabut.solatkuy.util.SharedPrefUtil
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Assert
@@ -33,11 +34,13 @@ class CompassFragmentViewModelTest {
     val coroutinesTestRule: CoroutinesTestRule = CoroutinesTestRule()
     @Mock
     private lateinit var prayerRepository: FakePrayerRepository
+    @Mock
+    private lateinit var sharedPrefUtil: SharedPrefUtil
     private val msApi1 = DummyRetValueTest.msApi1
 
     @Before
     fun before(){
-        viewModel = CompassViewModel(prayerRepository)
+        viewModel = CompassViewModel(prayerRepository,sharedPrefUtil)
         Mockito.verify(prayerRepository).observeMsApi1()
     }
 
