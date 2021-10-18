@@ -10,21 +10,19 @@ import kotlinx.coroutines.Dispatchers
 import kotlinx.coroutines.GlobalScope
 import kotlinx.coroutines.launch
 import androidx.room.Room
+import kotlinx.coroutines.DelicateCoroutinesApi
 
-/*
- * Created by Katili Jiwo Adi Wiyono on 25/03/20.
- */
 
 @Database(version = 3, entities = [MsNotifiedPrayer::class, MsApi1::class, MsSetting::class, MsFavSurah::class, MsSurah::class, MsAyah::class, MsCalculationMethods::class])
 abstract class SolatKuyRoom : RoomDatabase() {
 
-    abstract fun notifiedPrayerDao(): MsNotifiedPrayerDao
-    abstract fun msApi1Dao(): MsApi1Dao
-    abstract fun msSettingDao(): MsSettingDao
-    abstract fun msSurahDao(): MsSurahDao
-    abstract fun msAyahDao(): MsAyahDao
-    abstract fun msFavSurahDao(): MsFavSurahDao
-    abstract fun msCalculationMethodsDao(): MsCalculationMethodsDao
+    abstract val notifiedPrayerDao: MsNotifiedPrayerDao
+    abstract val msApi1Dao: MsApi1Dao
+    abstract val msSettingDao: MsSettingDao
+    abstract val msSurahDao: MsSurahDao
+    abstract val msAyahDao: MsAyahDao
+    abstract val msFavSurahDao: MsFavSurahDao
+    abstract val msCalculationMethodsDao: MsCalculationMethodsDao
 
     companion object{
         @Volatile
@@ -46,11 +44,12 @@ abstract class SolatKuyRoom : RoomDatabase() {
             }
         }
 
+        @DelicateCoroutinesApi
         fun populateDatabase(instance: SolatKuyRoom){
             GlobalScope.launch(Dispatchers.IO) {
-                populateMsSetting(instance.msSettingDao())
-                populateNotifiedPrayer(instance.notifiedPrayerDao())
-                populateMsApi1(instance.msApi1Dao())
+                populateMsSetting(instance.msSettingDao)
+                populateNotifiedPrayer(instance.notifiedPrayerDao)
+                populateMsApi1(instance.msApi1Dao)
             }
         }
 
