@@ -1,55 +1,63 @@
 package com.programmergabut.solatkuy.di
 
-import android.content.Context
+import android.app.Application
 import androidx.room.Room
 import com.programmergabut.solatkuy.data.local.SolatKuyRoom
+import com.programmergabut.solatkuy.data.local.dao.*
 import com.programmergabut.solatkuy.util.Constant
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.android.qualifiers.ApplicationContext
-import dagger.hilt.components.SingletonComponent
-import javax.inject.Singleton
+import org.koin.android.ext.koin.androidApplication
+import org.koin.dsl.module
 
-@Module
-@InstallIn(SingletonComponent::class)
-object DatabaseModule {
 
-    @Singleton
-    @Provides
-    fun provideSolatKuyDatabase(
-        @ApplicationContext context: Context
-    ) = Room.databaseBuilder(context, SolatKuyRoom::class.java, Constant.DATABASE_NAME)
-        .fallbackToDestructiveMigration()
-        .allowMainThreadQueries()
-        .build()
+val databaseModule = module {
 
-    /* DAO */
-    @Singleton
-    @Provides
-    fun provideNotifiedPrayerDao(db: SolatKuyRoom) = db.notifiedPrayerDao()
+    fun provideDatabase(application: Application): SolatKuyRoom {
+        return Room.databaseBuilder(application, SolatKuyRoom::class.java, Constant.DATABASE_NAME)
+            .fallbackToDestructiveMigration()
+            .build()
+    }
 
-    @Singleton
-    @Provides
-    fun provideMsApi1Dao(db: SolatKuyRoom) = db.msApi1Dao()
+    fun provideNotifiedPrayerDao(database: SolatKuyRoom): MsNotifiedPrayerDao {
+        return database.notifiedPrayerDao
+    }
 
-    @Singleton
-    @Provides
-    fun provideMsSettingDao(db: SolatKuyRoom) = db.msSettingDao()
+    fun provideMsApi1Dao(database: SolatKuyRoom): MsApi1Dao {
+        return database.msApi1Dao
+    }
 
-    @Singleton
-    @Provides
-    fun provideMsFavSurahDao(db: SolatKuyRoom) = db.msFavSurahDao()
+    fun provideMsSettingDao(database: SolatKuyRoom): MsSettingDao {
+        return database.msSettingDao
+    }
 
-    @Singleton
-    @Provides
-    fun provideMsSurahDao(db: SolatKuyRoom) = db.msSurahDao()
+    fun provideMsFavSurahDao(database: SolatKuyRoom): MsFavSurahDao {
+        return database.msFavSurahDao
+    }
 
-    @Singleton
-    @Provides
-    fun provideMsAyahDao(db: SolatKuyRoom) = db.msAyahDao()
+    fun provideMsSurahDao(database: SolatKuyRoom): MsSurahDao {
+        return database.msSurahDao
+    }
 
-    @Singleton
-    @Provides
-    fun provideMsCalculationMethodsDao(db: SolatKuyRoom) = db.msCalculationMethodsDao()
+    fun provideMsAyahDao(database: SolatKuyRoom): MsAyahDao {
+        return database.msAyahDao
+    }
+
+    fun provideMsCalculationMethodsDao(database: SolatKuyRoom): MsCalculationMethodsDao {
+        return database.msCalculationMethodsDao
+    }
+
+    single { provideDatabase(androidApplication()) }
+
+    single { provideNotifiedPrayerDao(get()) }
+    single { provideMsApi1Dao(get()) }
+    single { provideMsSettingDao(get()) }
+    single { provideMsFavSurahDao(get()) }
+    single { provideMsSurahDao(get()) }
+    single { provideMsAyahDao(get()) }
+    single { provideMsCalculationMethodsDao(get()) }
+
+
 }
+
+
+
+
