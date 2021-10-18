@@ -7,22 +7,15 @@ import com.programmergabut.solatkuy.data.QuranRepositoryImpl
 import com.programmergabut.solatkuy.data.local.dao.*
 import com.programmergabut.solatkuy.data.remote.api.*
 import com.programmergabut.solatkuy.util.ContextProviders
-import dagger.Module
-import dagger.Provides
-import dagger.hilt.InstallIn
-import dagger.hilt.components.SingletonComponent
-import javax.inject.Singleton
+import org.koin.dsl.module
 
-@Module
-@InstallIn(SingletonComponent::class)
-object RepositoryModule {
 
-    @Singleton
-    @Provides
+val repositoryModule = module {
+
+
     fun provideContextProvider(): ContextProviders = ContextProviders.getInstance()
 
-    @Singleton
-    @Provides
+
     fun providePrayerRepositoryImpl(
         msNotifiedPrayerDao: MsNotifiedPrayerDao,
         msApi1Dao: MsApi1Dao,
@@ -31,11 +24,17 @@ object RepositoryModule {
         contextProviders: ContextProviders,
         qiblaApiService: QiblaApiService,
         prayerApiService: PrayerApiService
-    ) = PrayerRepositoryImpl(msNotifiedPrayerDao,
-        msApi1Dao, msSettingDao, msCalculationMethodsDao, contextProviders, qiblaApiService, prayerApiService) as PrayerRepository
+    ) = PrayerRepositoryImpl(
+        msNotifiedPrayerDao,
+        msApi1Dao,
+        msSettingDao,
+        msCalculationMethodsDao,
+        contextProviders,
+        qiblaApiService,
+        prayerApiService
+    ) as PrayerRepository
 
-    @Singleton
-    @Provides
+
     fun provideQuranRepositoryImpl(
         msFavSurahDao: MsFavSurahDao,
         msSurahDao: MsSurahDao,
@@ -54,5 +53,7 @@ object RepositoryModule {
         contextProviders,
     ) as QuranRepository
 
-
+    single { provideContextProvider() }
+    single { providePrayerRepositoryImpl(get(), get(), get(), get(), get(), get(), get()) }
+    single { provideQuranRepositoryImpl(get(), get(), get(), get(), get(), get(), get()) }
 }
