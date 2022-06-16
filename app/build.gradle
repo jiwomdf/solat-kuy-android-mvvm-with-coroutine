@@ -9,7 +9,6 @@ apply plugin: 'com.google.firebase.crashlytics'
 
 android {
     compileSdkVersion 30
-    buildToolsVersion "29.0.3"
 
     defaultConfig {
         applicationId "com.programmergabut.solatkuy"
@@ -46,7 +45,7 @@ android {
     }
 
     buildFeatures {
-         viewBinding = true
+         viewBinding true
     }
     testOptions {
         unitTests.returnDefaultValues = true
