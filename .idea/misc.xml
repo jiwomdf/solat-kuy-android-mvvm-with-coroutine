@@ -4,6 +4,7 @@
     <option name="filePathToZoomLevelMap">
       <map>
         <entry key="..\:/Users/User/StudioProjects/solat-kuy-android-mvvm-with-coroutine/app/src/main/res/drawable/bg_blue_light_rounded.xml" value="0.2255" />
+        <entry key="..\:/Users/User/StudioProjects/solat-kuy-android-mvvm-with-coroutine/app/src/main/res/drawable/bg_border_light_with_radius.xml" value="0.2255" />
         <entry key="..\:/Users/User/StudioProjects/solat-kuy-android-mvvm-with-coroutine/app/src/main/res/drawable/btn_border_light.xml" value="0.2255" />
         <entry key="..\:/Users/User/StudioProjects/solat-kuy-android-mvvm-with-coroutine/app/src/main/res/drawable/btn_border_light_with_radius.xml" value="0.2255" />
         <entry key="..\:/Users/User/StudioProjects/solat-kuy-android-mvvm-with-coroutine/app/src/main/res/drawable/ic_access_time_24.xml" value="0.2255" />
@@ -16,6 +17,11 @@
         <entry key="..\:/Users/User/StudioProjects/solat-kuy-android-mvvm-with-coroutine/app/src/main/res/layout/fragment_list_surah.xml" value="0.25" />
         <entry key="..\:/Users/User/StudioProjects/solat-kuy-android-mvvm-with-coroutine/app/src/main/res/layout/fragment_setting.xml" value="0.264" />
         <entry key="..\:/Users/User/StudioProjects/solat-kuy-android-mvvm-with-coroutine/app/src/main/res/layout/layout_bottomsheet_bylatitudelongitude.xml" value="0.25" />
+        <entry key="..\:/Users/User/StudioProjects/solat-kuy-android-mvvm-with-coroutine/app/src/main/res/layout/layout_info.xml" value="0.2359375" />
+        <entry key="..\:/Users/User/StudioProjects/solat-kuy-android-mvvm-with-coroutine/app/src/main/res/layout/layout_prayer_time.xml" value="0.264" />
+        <entry key="..\:/Users/User/StudioProjects/solat-kuy-android-mvvm-with-coroutine/app/src/main/res/layout/layout_quran_quote.xml" value="0.25" />
+        <entry key="..\:/Users/User/StudioProjects/solat-kuy-android-mvvm-with-coroutine/app/src/main/res/layout/list_dua.xml" value="0.10885416666666667" />
+        <entry key="..\:/Users/User/StudioProjects/solat-kuy-android-mvvm-with-coroutine/app/src/main/res/layout/list_fav_ayah.xml" value="0.25" />
       </map>
     </option>
   </component>

@@ -12,7 +12,7 @@
         <item name="colorSecondaryVariant">@color/purple_700</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor" tools:targetApi="l">?attr/colorPrimaryVariant</item>
+        <item name="android:statusBarColor" >@color/dark_700</item>
 
         <item name="android:textColor">#ffffffff</item>
     </style>
@@ -49,7 +49,7 @@
     <style name="ButtonBorderLight">
         <item name="paddingStart">4dp</item>
         <item name="paddingEnd">4dp</item>
-        <item name="android:textSize">17sp</item>
+        <item name="android:textSize">14sp</item>
         <item name="android:foreground">?attr/selectableItemBackground</item>
         <item name="android:background">@drawable/btn_border_light</item>
         <item name="android:textColor">@color/white</item>
@@ -66,6 +66,13 @@
     <style name="BottomSheetTransparent" parent="Widget.Design.BottomSheet.Modal">
         <item name="android:background">@android:color/transparent</item>
     </style>
+
+    <style name="ImageView.Corner" parent="">
+        <item name="cornerSizeBottomLeft">8dp</item>
+        <item name="cornerSizeBottomRight">8dp</item>
+        <item name="cornerFamily">rounded</item>
+    </style>
+
 
 
 </resources>

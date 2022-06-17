@@ -94,6 +94,7 @@
                     android:layout_marginTop="16dp"
                     android:elevation="8dp"
                     app:cardCornerRadius="30dp"
+                    app:cardBackgroundColor="@color/white"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/cv_qibla_degrees">

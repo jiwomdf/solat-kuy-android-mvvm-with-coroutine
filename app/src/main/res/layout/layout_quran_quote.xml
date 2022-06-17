@@ -4,7 +4,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    app:cardCornerRadius="@dimen/dp12">
+    app:cardCornerRadius="@dimen/dp16">
 
     <LinearLayout
         android:layout_width="match_parent"
@@ -17,9 +17,9 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
             android:layout_gravity="center"
-            android:layout_marginStart="@dimen/dp12"
-            android:layout_marginTop="@dimen/dp12"
-            android:layout_marginEnd="@dimen/dp12"
+            android:layout_marginStart="@dimen/dp16"
+            android:layout_marginTop="@dimen/dp16"
+            android:layout_marginEnd="@dimen/dp16"
             android:layout_marginBottom="@dimen/dp24"
             tools:text="Extol thy Sustainer's limitless glory, and praise Him, and seek His forgiveness" />
 
@@ -27,9 +27,9 @@
             android:id="@+id/tv_quran_ayah_quote"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginStart="@dimen/dp12"
-            android:layout_marginTop="@dimen/dp12"
-            android:layout_marginEnd="@dimen/dp12"
+            android:layout_marginStart="@dimen/dp16"
+            android:layout_marginTop="@dimen/dp16"
+            android:layout_marginEnd="@dimen/dp16"
             android:layout_marginBottom="@dimen/dp8"
             tools:text="Extol thy Sustainer's limitless glory, and praise Him, and seek His forgiveness: for, behold, He is ever an acceptor of repentance. - QS An-nasr ayat 3" />
 

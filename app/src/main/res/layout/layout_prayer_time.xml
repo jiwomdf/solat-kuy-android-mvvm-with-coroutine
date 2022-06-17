@@ -54,7 +54,7 @@
                 android:layout_marginStart="@dimen/dp4"
                 android:gravity="start|center"
                 android:text="@string/fajr"
-                android:textStyle="bold" />
+                android:fontFamily="@font/sourcesanspro_bold" />
 
             <TextView
                 android:id="@+id/tv_fajr_time"

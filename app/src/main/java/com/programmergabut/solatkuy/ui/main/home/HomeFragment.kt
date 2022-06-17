@@ -6,6 +6,7 @@ import android.view.View
 import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.lifecycle.lifecycleScope
+import androidx.recyclerview.widget.GridLayoutManager
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.work.*
 import com.bumptech.glide.Glide
@@ -117,7 +118,7 @@ class HomeFragment(
         duaCollectionAdapter.setData(DuaData.getListDua())
         binding.includeInfo.rvDuaCollection.apply {
             adapter = duaCollectionAdapter
-            layoutManager = LinearLayoutManager(this@HomeFragment.context)
+            layoutManager = GridLayoutManager(this@HomeFragment.context, 2)
             setHasFixedSize(true)
         }
     }

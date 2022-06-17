@@ -15,15 +15,7 @@ class DuaData {
             "-")
             )
             listDua.add(
-                Dua(2, "Dua Saved from Hell & World",
-                "اَللهُمَّ اِنَّا نَسْئَلُكَ سَلاَمَةً فِى الدِّيْنِ وَعَافِيَةً فِى الْجَسَدِ وَزِيَادَةً فِى الْعِلْمِ وَبَرَكَةً فِى الرِّزْقِ وَتَوْبَةً قَبْلَ الْمَوْتِ وَرَحْمَةً عِنْدَ الْمَوْتِ وَمَغْفِرَةً بَعْدَ الْمَوْتِ. اَللهُمَّ هَوِّنْ عَلَيْنَا فِىْ سَكَرَاتِ الْمَوْتِ وَالنَّجَاةَ مِنَ النَّارِ وَالْعَفْوَ عِنْدَ الْحِسَابِ",
-                "Allaahumma innaa nas aluka salaamatan fid diin, wa 'aafiyatan fil jasad, wa ziyadatan fil 'ilmi, wabarokatan dir rizqi, wa taubatan qoblal maut, warohmatan indal maut, wa maghfirotan ba'dal maut. Allaahumma hawwin 'alainaa fii sakarootil maut, wan najaata minan naar, wal 'afwa indal hisaab",
-                "-",
-                "Ya Allah, sesungguhnya kami memohon kepada-Mu keselamatan ketika beragama, kesehatan badan, limpahan ilmu, keberkahan rezeki, taubat sebelum datangnya maut, rahmat pada saat datangnya maut, dan ampunan setelah datangnya maut. Ya Allah, mudahkanlah kami dalam menghadapi sakaratul maut, berikanlah kami keselamatan dari api neraka, dan ampunan pada saat hisab.",
-                "-")
-            )
-            listDua.add(
-                Dua(3, "Ayatul Kursi",
+                Dua(2, "Ayatul Kursi",
                 "اللَّهُ لَا إِلَٰهَ إِلَّا هُوَ الْحَيُّ الْقَيُّومُ ۚ لَا تَأْخُذُهُ سِنَةٌ وَلَا نَوْمٌ ۚ لَهُ مَا فِي السَّمَاوَاتِ وَمَا فِي الْأَرْضِ ۗ مَنْ ذَا الَّذِي يَشْفَعُ عِنْدَهُ إِلَّا بِإِذْنِهِ ۚ يَعْلَمُ مَا بَيْنَ أَيْدِيهِمْ وَمَا خَلْفَهُمْ ۖ وَلَا يُحِيطُونَ بِشَيْءٍ مِنْ عِلْمِهِ إِلَّا بِمَا شَاءَ ۚ وَسِعَ كُرْسِيُّهُ السَّمَاوَاتِ وَالْأَرْضَ ۖ وَلَا يَئُودُهُ حِفْظُهُمَا ۚ وَهُوَ الْعَلِيُّ الْعَظِيمُ",
                 "Alloohu laa ilaaha illaa huwal hayyul qoyyuum, laa ta’khudzuhuu sinatuw walaa naum. Lahuu maa fissamaawaati wa maa fil ardli man dzal ladzii yasyfa’u ‘indahuu illaa biidznih, ya’lamu maa baina aidiihim wamaa kholfahum wa laa yuhiithuuna bisyai’im min ‘ilmihii illaa bimaa syaa’ wasi’a kursiyyuhus samaawaati wal ardlo walaa ya’uuduhuu hifdhuhumaa wahuwal ‘aliyyul ‘adhiim.",
                 "Allah! There is no god but He - the Living, the Self-subsisting, Eternal. No slumber can seize Him nor Sleep. His are all things in the heavens and on earth. Who is there can intercede in His presence except as he permitteth? He knoweth what (appeareth to His creatures As) Before or After or Behind them. Nor shall they compass aught of His knowledge except as He willeth. His throne doth extend over the heavens and on earth, and He feeleth no fatigue in guarding and preserving them, For He is the Most High, the Supreme (in glory).",
@@ -31,6 +23,14 @@ class DuaData {
                         "Sesungguhnya Allah maha mengetahui apa yang ada di hadapan mereka dan di belakang mereka. Dan mereka tidak mengetahui apa-apa dari ilmu Allah melainkan apa yang dikehendaki-Nya.\n" +
                         "Kursi Allah meliputi langit dan bumi. Dan Allah tidak merasa berat memelihara keduanya, dan Allah Maha tinggi lagi maha besar.",
                 "https://www.quran411.com/ayatul-kursi \nhttps://qazwa.id/blog/ayat-kursi/")
+            )
+            listDua.add(
+                Dua(3, "Dua Saved from Hell & World",
+                    "اَللهُمَّ اِنَّا نَسْئَلُكَ سَلاَمَةً فِى الدِّيْنِ وَعَافِيَةً فِى الْجَسَدِ وَزِيَادَةً فِى الْعِلْمِ وَبَرَكَةً فِى الرِّزْقِ وَتَوْبَةً قَبْلَ الْمَوْتِ وَرَحْمَةً عِنْدَ الْمَوْتِ وَمَغْفِرَةً بَعْدَ الْمَوْتِ. اَللهُمَّ هَوِّنْ عَلَيْنَا فِىْ سَكَرَاتِ الْمَوْتِ وَالنَّجَاةَ مِنَ النَّارِ وَالْعَفْوَ عِنْدَ الْحِسَابِ",
+                    "Allaahumma innaa nas aluka salaamatan fid diin, wa 'aafiyatan fil jasad, wa ziyadatan fil 'ilmi, wabarokatan dir rizqi, wa taubatan qoblal maut, warohmatan indal maut, wa maghfirotan ba'dal maut. Allaahumma hawwin 'alainaa fii sakarootil maut, wan najaata minan naar, wal 'afwa indal hisaab",
+                    "-",
+                    "Ya Allah, sesungguhnya kami memohon kepada-Mu keselamatan ketika beragama, kesehatan badan, limpahan ilmu, keberkahan rezeki, taubat sebelum datangnya maut, rahmat pada saat datangnya maut, dan ampunan setelah datangnya maut. Ya Allah, mudahkanlah kami dalam menghadapi sakaratul maut, berikanlah kami keselamatan dari api neraka, dan ampunan pada saat hisab.",
+                    "-")
             )
             return listDua
         }
