@@ -5,17 +5,17 @@
     android:layout_width="match_parent"
     android:layout_height="match_parent"
     android:background="@drawable/img_moon"
-    android:paddingLeft="@dimen/larger_margin"
-    android:paddingTop="@dimen/medium_margin"
-    android:paddingRight="@dimen/larger_margin"
-    android:paddingBottom="@dimen/medium_margin"
+    android:paddingLeft="@dimen/dp48"
+    android:paddingTop="@dimen/dp12"
+    android:paddingRight="@dimen/dp48"
+    android:paddingBottom="@dimen/dp12"
     tools:context=".ui.boarding.BoardingActivity">
 
     <ImageView
         android:id="@+id/iv_location_logo"
         android:layout_width="50dp"
         android:layout_height="50dp"
-        android:layout_marginTop="@dimen/large_margin"
+        android:layout_marginTop="@dimen/dp24"
         android:contentDescription="@string/solatkuyicon"
         android:src="@mipmap/ic_launcher"
         app:layout_constraintEnd_toEndOf="parent"
@@ -29,7 +29,7 @@
         android:layout_marginTop="8dp"
         android:gravity="center"
         android:text="@string/welcome_dialog"
-        android:textSize="@dimen/medium_text_size"
+        android:textSize="@dimen/sp16"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@+id/iv_location_logo" />
@@ -48,20 +48,20 @@
             android:id="@+id/btn_by_latitude_longitude"
             android:layout_width="wrap_content"
             android:layout_height="match_parent"
-            android:layout_marginTop="@dimen/small_margin"
+            android:layout_marginTop="@dimen/dp8"
             android:backgroundTint="@color/white"
             android:text="@string/by_latitude_amp_longitude"
             android:textColor="@color/black"
-            android:textSize="@dimen/small_text_size" />
+            android:textSize="@dimen/sp12" />
 
         <Button
             android:id="@+id/btn_by_gps"
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/small_margin"
+            android:layout_marginTop="@dimen/dp8"
             android:backgroundTint="@color/white"
             android:text="@string/by_gps"
             android:textColor="@color/black"
-            android:textSize="@dimen/small_text_size" />
+            android:textSize="@dimen/sp12" />
     </LinearLayout>
 </androidx.constraintlayout.widget.ConstraintLayout>

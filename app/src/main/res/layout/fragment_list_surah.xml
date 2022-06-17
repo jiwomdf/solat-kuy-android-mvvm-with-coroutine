@@ -12,9 +12,9 @@
         android:id="@+id/et_search"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/small_margin"
-        android:layout_marginTop="@dimen/small_margin"
-        android:layout_marginEnd="@dimen/small_margin"
+        android:layout_marginStart="@dimen/dp8"
+        android:layout_marginTop="@dimen/dp8"
+        android:layout_marginEnd="@dimen/dp8"
         android:drawableEnd="@drawable/ic_search_24"
         android:hint="@string/search_surah_name"
         android:inputType="text"
@@ -29,7 +29,7 @@
         android:id="@+id/rl_quran"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/small_margin"
+        android:layout_marginTop="@dimen/dp8"
         android:orientation="horizontal"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -41,7 +41,7 @@
             android:layout_height="wrap_content"
             android:layout_alignParentStart="true"
             android:layout_alignParentTop="true"
-            android:layout_margin="@dimen/small_margin" />
+            android:layout_margin="@dimen/dp8" />
 
         <androidx.cardview.widget.CardView
             android:id="@+id/cv_last_read_ayah"
@@ -51,13 +51,13 @@
             android:layout_marginEnd="10dp"
             android:layout_alignParentEnd="true"
             app:cardBackgroundColor="@color/purple_700"
-            app:cardCornerRadius="@dimen/medium_margin">
+            app:cardCornerRadius="@dimen/dp12">
 
             <androidx.appcompat.widget.AppCompatImageView
                 android:id="@+id/iv_last_read_ayah"
                 android:layout_width="24dp"
                 android:layout_height="24dp"
-                android:layout_margin="@dimen/smaller_margin"
+                android:layout_margin="@dimen/dp4"
                 android:src="@drawable/ic_menu_book_white" />
 
         </androidx.cardview.widget.CardView>
@@ -79,9 +79,9 @@
         android:id="@+id/cv_quran_content"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/small_margin"
+        android:layout_margin="@dimen/dp8"
         app:cardBackgroundColor="@color/dark_200"
-        app:cardCornerRadius="@dimen/medium_margin"
+        app:cardCornerRadius="@dimen/dp12"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toBottomOf="@id/rv_stared_ayah">
@@ -99,7 +99,7 @@
                 android:layout_gravity="center"
                 android:gravity="center"
                 android:text="@string/loading"
-                android:textSize="@dimen/large_text_size"
+                android:textSize="@dimen/sp20"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"

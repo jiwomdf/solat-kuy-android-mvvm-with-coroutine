@@ -133,6 +133,6 @@
     <string name="solat_kuy">Solat Kuy</string>
     <string name="oke">Oke</string>
     <string name="solat_kuy_exclamation">Solat Kuy!</string>
-    <string name="change_prayer_calculation_method">Change Prayer Calculation Method</string>
+    <string name="prayer_calculation_method">Prayer Calculation Method</string>
 
 </resources>

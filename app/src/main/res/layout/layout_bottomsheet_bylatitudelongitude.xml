@@ -12,7 +12,7 @@
         android:layout_marginStart="16dp"
         android:layout_marginTop="16dp"
         android:text="@string/by_latitude_amp_longitude"
-        android:textSize="@dimen/medium_text_size"
+        android:textSize="@dimen/sp16"
         android:textStyle="bold"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -53,7 +53,7 @@
             android:id="@+id/et_llDialog_longitude"
             android:layout_width="@dimen/editText_size"
             android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/medium_margin"
+            android:layout_marginBottom="@dimen/dp12"
             android:hint="@string/longitude"
             android:importantForAutofill="no"
             android:inputType="numberDecimal" />
@@ -63,8 +63,8 @@
         android:id="@+id/btn_proceedByLL"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/medium_margin"
-        android:layout_marginBottom="@dimen/medium_margin"
+        android:layout_marginEnd="@dimen/dp12"
+        android:layout_marginBottom="@dimen/dp12"
         android:backgroundTint="@color/purple_700"
         android:text="@string/proceeded"
         app:layout_constraintBottom_toBottomOf="parent"

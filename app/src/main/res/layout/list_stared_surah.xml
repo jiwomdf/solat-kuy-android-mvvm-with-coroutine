@@ -5,15 +5,15 @@
     android:id="@+id/cv_stared_ayah"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_marginStart="@dimen/small_margin"
+    android:layout_marginStart="@dimen/dp8"
     app:cardBackgroundColor="@color/dark_200"
-    app:cardCornerRadius="@dimen/medium_margin">
+    app:cardCornerRadius="@dimen/dp12">
 
     <TextView
         android:id="@+id/tv_stared_ayah"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/small_margin"
+        android:layout_margin="@dimen/dp8"
         android:gravity="center"
         android:textStyle="bold"
         tools:text="Al-Faatiha" />

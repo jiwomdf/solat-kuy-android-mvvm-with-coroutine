@@ -4,7 +4,7 @@
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
     android:orientation="vertical"
-    app:cardCornerRadius="@dimen/medium_margin">
+    app:cardCornerRadius="@dimen/dp12">
 
     <TableLayout
         android:layout_width="match_parent"
@@ -15,14 +15,14 @@
         <TableRow
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:paddingTop="@dimen/smaller_margin"
-            android:paddingBottom="@dimen/smaller_margin">
+            android:paddingTop="@dimen/dp4"
+            android:paddingBottom="@dimen/dp4">
 
             <ImageView
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
                 android:layout_gravity="start"
-                android:layout_marginStart="@dimen/smaller_margin"
+                android:layout_marginStart="@dimen/dp4"
                 android:contentDescription="@string/notification_icon"
                 android:src="@drawable/ic_notifications_active_24dp" />
 
@@ -36,7 +36,7 @@
                 android:id="@+id/tv_date_change"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/medium_margin"
+                android:layout_marginEnd="@dimen/dp12"
                 android:gravity="end"
                 android:text="@string/loading"
                 android:textStyle="bold" />
@@ -51,7 +51,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginStart="@dimen/smaller_margin"
+                android:layout_marginStart="@dimen/dp4"
                 android:gravity="start|center"
                 android:text="@string/fajr"
                 android:textStyle="bold" />
@@ -60,7 +60,7 @@
                 android:id="@+id/tv_fajr_time"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginEnd="@dimen/small_margin"
+                android:layout_marginEnd="@dimen/dp8"
                 android:gravity="end|center"
                 android:text="@string/loading"
                 android:textStyle="bold" />
@@ -78,7 +78,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginStart="@dimen/smaller_margin"
+                android:layout_marginStart="@dimen/dp4"
                 android:gravity="start|center"
                 android:text="@string/dhuhr"
                 android:textStyle="bold" />
@@ -87,7 +87,7 @@
                 android:id="@+id/tv_dhuhr_time"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginEnd="@dimen/small_margin"
+                android:layout_marginEnd="@dimen/dp8"
                 android:gravity="end|center"
                 android:text="@string/loading"
                 android:textStyle="bold" />
@@ -105,7 +105,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginStart="@dimen/smaller_margin"
+                android:layout_marginStart="@dimen/dp4"
                 android:gravity="start|center"
                 android:text="@string/asr"
                 android:textStyle="bold" />
@@ -114,7 +114,7 @@
                 android:id="@+id/tv_asr_time"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginEnd="@dimen/small_margin"
+                android:layout_marginEnd="@dimen/dp8"
                 android:gravity="end|center"
                 android:text="@string/loading"
                 android:textStyle="bold" />
@@ -128,7 +128,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginStart="@dimen/smaller_margin"
+                android:layout_marginStart="@dimen/dp4"
                 android:gravity="start|center"
                 android:text="@string/maghrib"
                 android:textStyle="bold" />
@@ -137,7 +137,7 @@
                 android:id="@+id/tv_maghrib_time"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginEnd="@dimen/small_margin"
+                android:layout_marginEnd="@dimen/dp8"
                 android:gravity="end|center"
                 android:text="@string/loading"
                 android:textStyle="bold" />
@@ -151,7 +151,7 @@
             <TextView
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginStart="@dimen/smaller_margin"
+                android:layout_marginStart="@dimen/dp4"
                 android:gravity="start|center"
                 android:text="@string/isha"
                 android:textStyle="bold" />
@@ -160,7 +160,7 @@
                 android:id="@+id/tv_isha_time"
                 android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginEnd="@dimen/small_margin"
+                android:layout_marginEnd="@dimen/dp8"
                 android:gravity="end|center"
                 android:text="@string/loading"
                 android:textStyle="bold" />

@@ -57,7 +57,7 @@
             android:gravity="center"
             android:text="@string/please_wait_for_a_while"
             android:textColor="@color/dark_700"
-            android:textSize="@dimen/large_text_size"
+            android:textSize="@dimen/sp20"
             android:textStyle="bold"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
@@ -72,7 +72,7 @@
         android:id="@+id/fab_brightness"
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/medium_margin"
+        android:layout_margin="@dimen/dp12"
         android:src="@drawable/ic_baseline_brightness_4_24"
         app:layout_anchor="@+id/cc_readQuran_loading"
         app:layout_anchorGravity="end|bottom" />
