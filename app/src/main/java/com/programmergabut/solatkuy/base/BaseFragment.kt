@@ -49,15 +49,6 @@ abstract class BaseFragment<VB: ViewBinding, VM: ViewModel>(
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        inflateBinding()
-        setListener()
-    }
-
-    protected open fun setListener(){}
-    protected open fun inflateBinding(){}
-
     protected fun isLocationPermissionGranted(): Boolean {
         return (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED)

@@ -13,7 +13,7 @@ import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.base.BaseFragment
 import com.programmergabut.solatkuy.data.local.localentity.MsSurah
 import com.programmergabut.solatkuy.databinding.FragmentListSurahBinding
-import com.programmergabut.solatkuy.util.EnumStatus
+import com.programmergabut.solatkuy.util.Status
 import dagger.hilt.android.AndroidEntryPoint
 import java.util.*
 
@@ -40,35 +40,37 @@ class ListSurahFragment(
         initRvAllSurah()
         initRvStaredSurah()
         initJuzzSpinner()
+        setListener()
         viewModel.getAllSurah()
     }
 
-    override fun setListener() {
-        super.setListener()
-        binding.slQuran.setOnRefreshListener(this)
-        binding.cvLastReadAyah.setOnClickListener(this)
-        binding.etSearch.addTextChangedListener(etSearchListener)
+    private fun setListener() {
+        binding.apply {
+            slQuran.setOnRefreshListener(this@ListSurahFragment)
+            cvLastReadAyah.setOnClickListener(this@ListSurahFragment)
+            etSearch.addTextChangedListener(etSearchListener)
 
-        viewModel.allSurah.observe(viewLifecycleOwner, {
-            when(it.status){
-                EnumStatus.SUCCESS, EnumStatus.ERROR -> {
-                    if(it.data == null){
-                        setVisibility(it.status, null)
-                        return@observe
+            viewModel.allSurah.observe(viewLifecycleOwner) {
+                when (it.status) {
+                    Status.SUCCESS, Status.ERROR -> {
+                        if (it.data == null) {
+                            setVisibility(it.status, null)
+                            return@observe
+                        }
+                        updateListSurahAdapter(it.data)
+                        setVisibility(it.status, it.data)
                     }
-                    updateListSurahAdapter(it.data)
-                    setVisibility(it.status, it.data)
-                }
-                EnumStatus.LOADING -> {
-                    setVisibility(it.status, null)
+                    Status.LOADING -> {
+                        setVisibility(it.status, null)
+                    }
                 }
             }
-        })
 
-        viewModel.staredSurah.observe(viewLifecycleOwner, {
-            staredSurahAdapter.listData = it
-            staredSurahAdapter.notifyDataSetChanged()
-        })
+            viewModel.staredSurah.observe(viewLifecycleOwner) {
+                staredSurahAdapter.listData = it
+                staredSurahAdapter.notifyDataSetChanged()
+            }
+        }
     }
 
     override fun onClick(v: View?) {
@@ -77,7 +79,10 @@ class ListSurahFragment(
                 viewModel.allSurah.value?.data?.let {
                     val selectedSurah = getLastReadSurah(it, sharedPrefUtil.getLastReadSurah())
                     if(selectedSurah == null){
-                        showBottomSheet(getString(R.string.last_read_ayah_not_found_title), getString(R.string.last_read_ayah_not_found_dsc))
+                        showBottomSheet(
+                            getString(R.string.last_read_ayah_not_found_title),
+                            getString(R.string.last_read_ayah_not_found_dsc)
+                        )
                         return
                     }
                     resetSpinnerAndSearchBarValue()
@@ -108,15 +113,15 @@ class ListSurahFragment(
         override fun onTextChanged(s: CharSequence?, start: Int, before: Int, count: Int) {
             if(s.isNullOrEmpty() && binding.sJuzz.selectedItemPosition != 0)
                 return
-            val list = getSurahBySeachString(s.toString())
+            val list = searchSurah(s.toString())
             allSurahAdapter.listSurah = list
             allSurahAdapter.notifyDataSetChanged()
             binding.sJuzz.setSelection(0, true)
         }
     }
 
-    fun getSurahBySeachString(stringName: String): List<MsSurah> {
-        viewModel.allSurah?.value?.data?.let{
+    private fun searchSurah(stringName: String): List<MsSurah> {
+        viewModel.allSurah.value?.data?.let{
             val lowerCaseString = if(stringName.isNotEmpty()) stringName.lowercase(Locale.ROOT).trim() else ""
             val list = it.filter { surah ->
                 surah.englishNameLowerCase!!.contains(lowerCaseString)
@@ -132,40 +137,48 @@ class ListSurahFragment(
         allSurahAdapter.notifyDataSetChanged()
     }
 
-    private fun setVisibility(status: EnumStatus, data: List<MsSurah>?){
-        when(status){
-            EnumStatus.SUCCESS, EnumStatus.ERROR -> {
-                if(data == null || data.isEmpty()){
-                    binding.tvLoadingAllSurah.visibility = View.VISIBLE
-                    binding.tvLoadingAllSurah.text = getString(R.string.text_there_is_no_data)
-                } else {
-                    binding.tvLoadingAllSurah.visibility = View.GONE
-                    binding.rvQuranSurah.visibility = View.VISIBLE
+    private fun setVisibility(status: Status, data: List<MsSurah>?){
+        binding.apply {
+            when(status){
+                Status.SUCCESS, Status.ERROR -> {
+                    if(data == null || data.isEmpty()){
+                        tvLoadingAllSurah.visibility = View.VISIBLE
+                        tvLoadingAllSurah.text = getString(R.string.text_there_is_no_data)
+                    } else {
+                        tvLoadingAllSurah.visibility = View.GONE
+                        rvQuranSurah.visibility = View.VISIBLE
+                    }
+                    slQuran.isRefreshing = false
                 }
-                binding.slQuran.isRefreshing = false
-            }
-            EnumStatus.LOADING -> {
-                binding.tvLoadingAllSurah.visibility = View.VISIBLE
-                binding.tvLoadingAllSurah.text = getString(R.string.loading)
-                binding.rvQuranSurah.visibility = View.GONE
+                Status.LOADING -> {
+                    tvLoadingAllSurah.visibility = View.VISIBLE
+                    tvLoadingAllSurah.text = getString(R.string.loading)
+                    rvQuranSurah.visibility = View.GONE
+                }
             }
         }
     }
 
     private fun initJuzzSpinner() {
-        val arrJuzz = mutableListOf<String>()
-        arrJuzz.add(ALL_JUZZ)
-        for (i in 1..30) {
-            arrJuzz.add(i.toString())
-        }
-        binding.sJuzz.adapter = ArrayAdapter(requireContext(), R.layout.spinner_item, arrJuzz)
-        binding.sJuzz.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
-            override fun onNothingSelected(parent: AdapterView<*>?) {}
-            override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
-                if (position == 0 && binding.etSearch.text.toString() != "")
-                    return
-                juzzSurahFilter(binding.sJuzz.selectedItem.toString())
-                binding.etSearch.setText("")
+        binding.apply {
+            val arrJuzz = mutableListOf<String>()
+            arrJuzz.add(ALL_JUZZ)
+            for (i in 1..30) {
+                arrJuzz.add(i.toString())
+            }
+            sJuzz.adapter = ArrayAdapter(requireContext(), R.layout.spinner_item, arrJuzz)
+            sJuzz.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
+                override fun onNothingSelected(parent: AdapterView<*>?) {}
+                override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {
+                    if (position == 0 && etSearch.text.toString() != "")
+                        return
+                    if(sJuzz.selectedItem.toString() == ALL_JUZZ){
+                        updateListSurahAdapter(getSurahByJuzz(0))
+                    } else{
+                        updateListSurahAdapter(getSurahByJuzz(sJuzz.selectedItem.toString().toInt()))
+                    }
+                    binding.etSearch.setText("")
+                }
             }
         }
     }
@@ -202,14 +215,6 @@ class ListSurahFragment(
                 surahTranslation,
                 false
             ))
-        }
-    }
-
-    private fun juzzSurahFilter(juzz: String){
-        if(juzz == ALL_JUZZ){
-            updateListSurahAdapter(getSurahByJuzz(0))
-        } else{
-            updateListSurahAdapter(getSurahByJuzz(juzz.toInt()))
         }
     }
 
@@ -253,16 +258,20 @@ class ListSurahFragment(
     }
 
     private fun resetSpinnerAndSearchBarValue(){
-        binding.sJuzz.onItemSelectedListener = null
-        binding.etSearch.removeTextChangedListener(etSearchListener)
-        binding.etSearch.setText("")
-        binding.sJuzz.setSelection(0)
+        binding.apply {
+            sJuzz.onItemSelectedListener = null
+            etSearch.removeTextChangedListener(etSearchListener)
+            etSearch.setText("")
+            sJuzz.setSelection(0)
+        }
     }
 
     override fun onRefresh() {
-        viewModel.getAllSurah()
-        binding.sJuzz.setSelection(0)
-        binding.etSearch.setText("")
+        binding.apply {
+            viewModel.getAllSurah()
+            sJuzz.setSelection(0)
+            etSearch.setText("")
+        }
     }
 
 }

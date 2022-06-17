@@ -11,7 +11,7 @@
         please select your location
     </string>
 
-    <!--PRAYER NAME-->
+    <!--Prayer Name-->
     <string name="fajr">Fajr</string>
     <string name="dhuhr">Dhuhr</string>
     <string name="asr">Asr</string>
@@ -29,7 +29,7 @@
     <!--Toolbar-->
     <string name="ayahs_you_have_been_like">Ayahs you have been liked</string>
 
-    <!--LOCATION-->
+    <!--Location-->
     <string name="changelocation">Change Location</string>
     <string name="by_latitude_amp_longitude"><![CDATA[By Latitude & Longitude]]></string>
     <string name="by_gps">By GPS</string>
@@ -38,8 +38,13 @@
     <string name="current_location">Current Location</string>
     <string name="city">City</string>
     <string name="calculation_method">Calculation Method</string>
+    <string name="latitude_and_longitude_cannot_be_empty">latitude and longitude cannot be empty</string>
+    <string name="latitude_and_longitude_cannot_be_ended_with_dot">latitude and longitude cannot be ended with.</string>
+    <string name="latitude_and_longitude_cannot_be_started_with_dot">latitude and longitude cannot be started with.</string>
+    <string name="success_change_the_coordinate">Success change the coordinate</string>
 
-    <!--QIBLA COMPASS-->
+
+    <!--Qibla Compass-->
     <string name="compass_art">Compass Art:</string>
     <string name="qibla_degree">Qibla degrees:</string>
     <string name="compass_accuracy">Compass accuracy:</string>
@@ -50,7 +55,7 @@
     <string name="mediumAccuracy">Medium Accuracy</string>
     <string name="highAccuracy">High Accuracy</string>
 
-    <!--ABOUT-->
+    <!--About-->
     <string name="see_author_and_credit">see author and credit</string>
     <string name="about_developer">Solat Kuy is an open source reminder prayer \n time app, created to remind us to pray 🌙 \n\n feel free to see and contribute </string>
     <string name="github_link">https://github.com/jiwomdf/Solat-Kuy-Android-MVVM-with-Coroutine</string>
@@ -63,7 +68,7 @@
     <string name="images">Images: </string>
     <string name="api">Api: </string>
 
-    <!--GREGORIAN TO HIJRI-->
+    <!--Gregorian ti Hijri-->
     <string name="imsak_info">Imsak Info</string>
     <string name="gregorian_to_hijri">Gregorian to Hijri</string>
     <string name="type">Type</string>
@@ -72,7 +77,7 @@
     <string name="date">Date</string>
     <string name="month">Month</string>
 
-    <!--MESSAGE-->
+    <!--Message-->
     <string name="fetch_failed">fetching data failed</string>
     <string name="fetch_failed_na">N/A</string>
     <string name="read_data_failed">read data failed</string>
@@ -84,14 +89,16 @@
     <string name="text_there_is_no_data">There is no data</string>
     <string name="last_surah_and_ayah_not_found_dsc">Last surah and ayah not found</string>
 
-    <!--PERMISSION-->
+    <!--Permission-->
     <string name="location_needed">Location Permission Needed</string>
     <string name="permission_is_needed_to_run_the_gps">Permission is needed to run the Gps</string>
 
+    <!-- Quran -->
     <string name="swipe_left_to_save_your_last_read_ayah">Swipe left to save your last read ayah</string>
     <string name="saving_ayah">Saving Ayah</string>
     <string name="unsaving_ayah">Unsaving Ayah</string>
 
+    <!-- Common -->
     <string name="open_setting">Open Setting</string>
     <string name="proceed">Proceed</string>
     <string name="syncdata">Syncing data..</string>

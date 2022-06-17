@@ -1,6 +1,5 @@
 package com.programmergabut.solatkuy.ui.main.home
 
-import android.app.Dialog
 import android.graphics.drawable.Drawable
 import android.os.Bundle
 import android.view.View
@@ -17,7 +16,6 @@ import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.base.BaseFragment
 import com.programmergabut.solatkuy.data.hardcodedata.DuaData
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
-import com.programmergabut.solatkuy.data.local.localentity.MsAyah
 import com.programmergabut.solatkuy.model.Timings
 import com.programmergabut.solatkuy.data.local.localentity.MsNotifiedPrayer
 import com.programmergabut.solatkuy.data.remote.json.prayerJson.Result
@@ -27,7 +25,7 @@ import com.programmergabut.solatkuy.databinding.*
 import com.programmergabut.solatkuy.ui.LocationHelper
 import com.programmergabut.solatkuy.ui.main.SelectPrayerHelper
 import com.programmergabut.solatkuy.util.Constant
-import com.programmergabut.solatkuy.util.EnumStatus
+import com.programmergabut.solatkuy.util.Status
 import com.programmergabut.solatkuy.worker.FireAlarmManagerWorker
 import com.programmergabut.solatkuy.worker.UpdateMonthAndYearWorker
 import dagger.hilt.android.AndroidEntryPoint
@@ -53,8 +51,6 @@ class HomeFragment(
     HomeViewModel::class.java, viewModelTestFragment
 ), View.OnClickListener{
 
-    private val TAG = "HomeFragment"
-
     private var isTimerHasBanded = false
     private var coroutineTimerJob: Job? = null
     private lateinit var duaCollectionAdapter: DuaCollectionAdapter
@@ -69,14 +65,16 @@ class HomeFragment(
 
     override fun onStart() {
         super.onStart()
-        binding.tvWidgetPrayerCountdown.text = getString(R.string.loading)
-        binding.includeQuranQuote?.tvQuranAyahQuote.visibility = View.GONE
-        binding.includeQuranQuote?.tvQuranAyahQuoteClick.visibility = View.VISIBLE
+        binding.apply {
+            tvWidgetPrayerCountdown.text = getString(R.string.loading)
+            includeQuranQuote?.tvQuranAyahQuote.visibility = View.GONE
+            includeQuranQuote?.tvQuranAyahQuoteClick.visibility = View.VISIBLE
 
-        viewModel.notifiedPrayer.value?.data?.let {
-            val timing = createWidgetData(it)
-            val selectedPrayer = SelectPrayerHelper.selectNextPrayer(timing)
-            selectNextPrayerTime(selectedPrayer, timing)
+            viewModel.notifiedPrayer.value?.data?.let {
+                val timing = createWidgetData(it)
+                val selectedPrayer = SelectPrayerHelper.selectNextPrayer(timing)
+                selectNextPrayerTime(selectedPrayer, timing)
+            }
         }
     }
 
@@ -84,16 +82,18 @@ class HomeFragment(
         super.onViewCreated(view, savedInstanceState)
         initRvDuaCollection()
         fireUpdateMonthYearWorker()
+        setListener()
     }
 
-    override fun setListener() {
-        super.setListener()
-        cbClickListener()
-        binding.includeQuranQuote.tvQuranAyahQuoteClick.setOnClickListener(this)
-        binding.includeQuranQuote.tvQuranAyahQuote.setOnClickListener(this)
-        binding.includeQuranQuote.ivRefresh.setOnClickListener(this)
-        subscribeObserversDB()
-        subscribeObserversAPI()
+    private fun setListener() {
+        binding.includeQuranQuote.apply {
+            cbClickListener()
+            tvQuranAyahQuoteClick.setOnClickListener(this@HomeFragment)
+            tvQuranAyahQuote.setOnClickListener(this@HomeFragment)
+            ivRefresh.setOnClickListener(this@HomeFragment)
+            subscribeObserversDB()
+            subscribeObserversAPI()
+        }
     }
 
     override fun onClick(v: View?) {
@@ -113,7 +113,7 @@ class HomeFragment(
     }
 
     private fun initRvDuaCollection() {
-        duaCollectionAdapter = DuaCollectionAdapter(requireContext())
+        duaCollectionAdapter = DuaCollectionAdapter()
         duaCollectionAdapter.setData(DuaData.getListDua())
         binding.includeInfo.rvDuaCollection.apply {
             adapter = duaCollectionAdapter
@@ -123,14 +123,14 @@ class HomeFragment(
     }
 
     private fun subscribeObserversAPI() {
-        viewModel.notifiedPrayer.observe(viewLifecycleOwner, { retVal ->
-            when(retVal.status){
-                EnumStatus.SUCCESS, EnumStatus.ERROR -> {
-                    if(retVal.data == null){
+        viewModel.notifiedPrayer.observe(viewLifecycleOwner) { retVal ->
+            when (retVal.status) {
+                Status.SUCCESS, Status.ERROR -> {
+                    if (retVal.data == null) {
                         showBottomSheet(isCancelable = false, isFinish = true)
                         return@observe
                     }
-                    if(retVal.data.isEmpty())
+                    if (retVal.data.isEmpty())
                         return@observe
 
                     bindCheckBox(retVal.data)
@@ -138,83 +138,95 @@ class HomeFragment(
                     val widget = createWidgetData(retVal.data)
                     bindWidget(widget)
                 }
-                EnumStatus.LOADING -> {
-                    Toast.makeText(requireContext(), getString(R.string.syncdata), Toast.LENGTH_SHORT).show()
+                Status.LOADING -> {
+                    Toast.makeText(
+                        requireContext(),
+                        getString(R.string.syncdata),
+                        Toast.LENGTH_SHORT
+                    ).show()
                     bindPrayerText(null)
                 }
             }
-        })
+        }
 
-        viewModel.prayer.observe(viewLifecycleOwner, {
-            when(it.status){
-                EnumStatus.SUCCESS -> {
-                    val data = createTodayData(it.data)
-                    val date = data?.date
-                    val hijriDate = date?.hijri
-                    val gregorianDate = date?.gregorian
+        viewModel.prayer.observe(viewLifecycleOwner) {
+            when (it.status) {
+                Status.SUCCESS -> {
+                    binding.includeInfo.apply {
+                        val data = createTodayData(it.data)
+                        val date = data?.date
+                        val hijriDate = date?.hijri
+                        val gregorianDate = date?.gregorian
 
-                    binding.includeInfo.tvImsakDate.text = date?.readable
-                    binding.includeInfo.tvImsakTime.text = data?.timings?.imsak
-                    binding.includeInfo.tvGregorianDate.text = gregorianDate?.date
-                    binding.includeInfo.tvHijriDate.text = hijriDate?.date
-                    binding.includeInfo.tvGregorianMonth.text = gregorianDate?.month?.en
-                    binding.includeInfo.tvHijriMonth.text = hijriDate?.month?.en + " / " + hijriDate?.month?.ar
-                    binding.includeInfo.tvGregorianDay.text = gregorianDate?.weekday?.en
-                    binding.includeInfo.tvHijriDay.text = hijriDate?.weekday?.en + " / " + hijriDate?.weekday?.ar
+                        tvImsakDate.text = date?.readable
+                        tvImsakTime.text = data?.timings?.imsak
+                        tvGregorianDate.text = gregorianDate?.date
+                        tvHijriDate.text = hijriDate?.date
+                        tvGregorianMonth.text = gregorianDate?.month?.en
+                        tvHijriMonth.text = "${hijriDate?.month?.en} / ${hijriDate?.month?.ar}"
+                        tvGregorianDay.text = gregorianDate?.weekday?.en
+                        tvHijriDay.text = "${hijriDate?.weekday?.en} / ${hijriDate?.weekday?.ar}"
+                    }
                 }
-                EnumStatus.LOADING -> setState(it.status)
-                EnumStatus.ERROR -> setState(it.status)
+                Status.LOADING -> setState(it.status)
+                Status.ERROR -> setState(it.status)
             }
-        })
+        }
 
-        viewModel.readSurahEn.observe(viewLifecycleOwner, { apiQuotes ->
-            when(apiQuotes.status){
-                EnumStatus.SUCCESS -> {
-                    if(apiQuotes.data == null)
-                        return@observe
-
+        viewModel.readSurahEn.observe(viewLifecycleOwner) { apiQuotes ->
+            when (apiQuotes.status) {
+                Status.SUCCESS -> {
+                    if (apiQuotes.data == null) return@observe
                     bindQuranQuoteApiOnline(apiQuotes.data)
                 }
-                EnumStatus.LOADING -> {
-                    binding.includeQuranQuote.tvQuranAyahQuote.text = getString(R.string.loading)
-                    binding.includeQuranQuote.tvQuranAyahQuoteClick.text = getString(R.string.loading)
+                Status.LOADING -> {
+                    binding.includeQuranQuote.apply {
+                        tvQuranAyahQuote.text = getString(R.string.loading)
+                        tvQuranAyahQuoteClick.text = getString(R.string.loading)
+                    }
                 }
-                EnumStatus.ERROR -> {
-                    binding.includeQuranQuote.tvQuranAyahQuote.text = getString(R.string.fetch_failed)
-                    binding.includeQuranQuote.tvQuranAyahQuoteClick.text = getString(R.string.fetch_failed)
+                Status.ERROR -> {
+                    binding.includeQuranQuote.apply {
+                        tvQuranAyahQuote.text = getString(R.string.fetch_failed)
+                        tvQuranAyahQuoteClick.text = getString(R.string.fetch_failed)
+                    }
                 }
             }
-        })
+        }
     }
 
     private fun subscribeObserversDB() {
-        viewModel.msApi1.observe(viewLifecycleOwner,  { api1 ->
-            if(api1 == null )
+        viewModel.msApi1.observe(viewLifecycleOwner) { api1 ->
+            if (api1 == null)
                 return@observe
 
             bindWidgetLocation(api1)
             updateMonthAndYearMsApi1(api1)
             viewModel.getListNotifiedPrayer(api1)
 
-            val city = LocationHelper.getCity(requireContext(), api1.latitude.toDouble(), api1.longitude.toDouble())
+            val city = LocationHelper.getCity(
+                requireContext(),
+                api1.latitude.toDouble(),
+                api1.longitude.toDouble()
+            )
             binding.includeInfo.tvCity.text = city ?: Constant.CITY_NOT_FOUND
             viewModel.fetchPrayerApi(api1)
-        })
+        }
 
-        viewModel.msSetting.observe(viewLifecycleOwner, { setting ->
-            if(setting == null){
+        viewModel.msSetting.observe(viewLifecycleOwner) { setting ->
+            if (setting == null) {
                 viewModel.fetchReadSurahEn((Constant.STARTED_SURAH..Constant.ENDED_SURAH).random())
                 return@observe
             }
 
             viewModel.fetchReadSurahEn((Constant.STARTED_SURAH..Constant.ENDED_SURAH).random())
-        })
+        }
     }
 
-    private fun setState(status: EnumStatus){
+    private fun setState(status: Status){
         when(status){
-            EnumStatus.SUCCESS -> {/*NO-OP*/}
-            EnumStatus.LOADING -> {
+            Status.SUCCESS -> {/*NO-OP*/}
+            Status.LOADING -> {
                 binding.includeInfo.apply {
                     tvImsakDate.text = getString(R.string.loading)
                     tvImsakTime.text = getString(R.string.loading)
@@ -226,7 +238,7 @@ class HomeFragment(
                     tvHijriDay.text = getString(R.string.loading)
                 }
             }
-            EnumStatus.ERROR ->{
+            Status.ERROR ->{
                 binding.includeInfo.apply {
                     tvImsakDate.text = getString(R.string.fetch_failed)
                     tvImsakTime.text = getString(R.string.fetch_failed_na)
@@ -275,35 +287,37 @@ class HomeFragment(
 
     /* Widget */
     private fun cbClickListener() {
-        binding.includePrayerTime.cbFajr.setOnClickListener {
-            if(binding.includePrayerTime.cbFajr.isChecked)
-                updatePrayerIsNotified(getString(R.string.fajr), true)
-            else
-                updatePrayerIsNotified(getString(R.string.fajr), false)
-        }
-        binding.includePrayerTime.cbDhuhr.setOnClickListener {
-            if(binding.includePrayerTime.cbDhuhr.isChecked)
-                updatePrayerIsNotified(getString(R.string.dhuhr), true)
-            else
-                updatePrayerIsNotified(getString(R.string.dhuhr), false)
-        }
-        binding.includePrayerTime.cbAsr.setOnClickListener {
-            if(binding.includePrayerTime.cbAsr.isChecked)
-                updatePrayerIsNotified(getString(R.string.asr), true)
-            else
-                updatePrayerIsNotified(getString(R.string.asr), false)
-        }
-        binding.includePrayerTime.cbMaghrib.setOnClickListener {
-            if(binding.includePrayerTime.cbMaghrib.isChecked)
-                updatePrayerIsNotified(getString(R.string.maghrib), true)
-            else
-                updatePrayerIsNotified(getString(R.string.maghrib), false)
-        }
-        binding.includePrayerTime.cbIsha.setOnClickListener {
-            if(binding.includePrayerTime.cbIsha.isChecked)
-                updatePrayerIsNotified(getString(R.string.isha), true)
-            else
-                updatePrayerIsNotified(getString(R.string.isha), false)
+        binding.includePrayerTime.apply {
+            cbFajr.setOnClickListener {
+                if(cbFajr.isChecked)
+                    updatePrayerIsNotified(getString(R.string.fajr), true)
+                else
+                    updatePrayerIsNotified(getString(R.string.fajr), false)
+            }
+            cbDhuhr.setOnClickListener {
+                if(cbDhuhr.isChecked)
+                    updatePrayerIsNotified(getString(R.string.dhuhr), true)
+                else
+                    updatePrayerIsNotified(getString(R.string.dhuhr), false)
+            }
+            cbAsr.setOnClickListener {
+                if(cbAsr.isChecked)
+                    updatePrayerIsNotified(getString(R.string.asr), true)
+                else
+                    updatePrayerIsNotified(getString(R.string.asr), false)
+            }
+            cbMaghrib.setOnClickListener {
+                if(cbMaghrib.isChecked)
+                    updatePrayerIsNotified(getString(R.string.maghrib), true)
+                else
+                    updatePrayerIsNotified(getString(R.string.maghrib), false)
+            }
+            cbIsha.setOnClickListener {
+                if(cbIsha.isChecked)
+                    updatePrayerIsNotified(getString(R.string.isha), true)
+                else
+                    updatePrayerIsNotified(getString(R.string.isha), false)
+            }
         }
     }
 
@@ -386,27 +400,28 @@ class HomeFragment(
     }
 
     private fun selectWidgetTitle(selectedPrayer: Int) {
-        when(selectedPrayer){
-            -1 -> binding.tvWidgetPrayerName.text = getString(R.string.next_prayer_is_dhuhr)
-            1 -> binding.tvWidgetPrayerName.text = getString(R.string.fajr)
-            2 -> binding.tvWidgetPrayerName.text = getString(R.string.dhuhr)
-            3 -> binding.tvWidgetPrayerName.text = getString(R.string.asr)
-            4 -> binding.tvWidgetPrayerName.text = getString(R.string.maghrib)
-            5 -> binding.tvWidgetPrayerName.text = getString(R.string.isha)
-            6 -> binding.tvWidgetPrayerName.text = getString(R.string.isha)
+        binding.tvWidgetPrayerName.text = when(selectedPrayer){
+            -1 -> getString(R.string.next_prayer_is_dhuhr)
+            1 -> getString(R.string.fajr)
+            2 -> getString(R.string.dhuhr)
+            3 -> getString(R.string.asr)
+            4 -> getString(R.string.maghrib)
+            5 -> getString(R.string.isha)
+            6 -> getString(R.string.isha)
+            else -> "-"
         }
     }
 
     private fun selectWidgetPic(selectedPrayer: Int) {
-        var widgetDrawable: Drawable? = null
-        when(selectedPrayer){
-            -1 -> widgetDrawable = getDrawable(context?.applicationContext!!,R.drawable.img_sunrise)
-            1 -> widgetDrawable = getDrawable(context?.applicationContext!!,R.drawable.img_fajr)
-            2 -> widgetDrawable = getDrawable(context?.applicationContext!!,R.drawable.img_dhuhr)
-            3 -> widgetDrawable = getDrawable(context?.applicationContext!!,R.drawable.img_asr)
-            4 -> widgetDrawable = getDrawable(context?.applicationContext!!,R.drawable.img_maghrib)
-            5 -> widgetDrawable = getDrawable(context?.applicationContext!!,R.drawable.img_isha)
-            6 -> widgetDrawable = getDrawable(context?.applicationContext!!,R.drawable.img_isha)
+        val widgetDrawable: Drawable? = when(selectedPrayer){
+            -1 -> getDrawable(requireContext(), R.drawable.img_sunrise)
+            1 ->  getDrawable(requireContext(), R.drawable.img_fajr)
+            2 ->  getDrawable(requireContext(), R.drawable.img_dhuhr)
+            3 ->  getDrawable(requireContext(), R.drawable.img_asr)
+            4 ->  getDrawable(requireContext(), R.drawable.img_maghrib)
+            5 ->  getDrawable(requireContext(), R.drawable.img_isha)
+            6 ->  getDrawable(requireContext(), R.drawable.img_isha)
+            else -> getDrawable(requireContext(), R.drawable.img_sunrise)
         }
 
         if(widgetDrawable != null){
@@ -421,12 +436,14 @@ class HomeFragment(
         }
     }
 
-    private fun bindQuranQuoteApiOnline(retVal: ReadSurahEnResponse) {
-        val returnValue = retVal.data
+    private fun bindQuranQuoteApiOnline(apiQuotes: ReadSurahEnResponse) {
+        val returnValue = apiQuotes.data
         val randAyah = (returnValue.ayahs.indices).random()
         val ayah = returnValue.ayahs[randAyah].text + " - QS " + returnValue.englishName + " Ayah " + returnValue.numberOfAyahs
-        binding.includeQuranQuote.tvQuranAyahQuote.text = if(ayah.length > 100) ayah.substring(0, 100) + "..." else ayah
-        binding.includeQuranQuote.tvQuranAyahQuoteClick.text = ayah
+        binding.includeQuranQuote.apply {
+            tvQuranAyahQuote.text = if(ayah.length > 100) ayah.substring(0, 100) + "..." else ayah
+            tvQuranAyahQuoteClick.text = ayah
+        }
     }
 
     /* Coroutine Timer */
@@ -485,14 +502,16 @@ class HomeFragment(
     }
 
     private fun fireWorker() {
-        val task = PeriodicWorkRequest.Builder(FireAlarmManagerWorker::class.java, 60, TimeUnit.MINUTES)
+        val task = PeriodicWorkRequest
+            .Builder(FireAlarmManagerWorker::class.java, 60, TimeUnit.MINUTES)
             .build()
         val workManager = WorkManager.getInstance(requireActivity().application)
         workManager.enqueueUniquePeriodicWork(FireAlarmManagerWorker.UNIQUE_KEY, ExistingPeriodicWorkPolicy.KEEP, task)
     }
 
     private fun fireUpdateMonthYearWorker() {
-        val task = PeriodicWorkRequest.Builder(UpdateMonthAndYearWorker::class.java, 720, TimeUnit.MINUTES)
+        val task = PeriodicWorkRequest
+            .Builder(UpdateMonthAndYearWorker::class.java, 720, TimeUnit.MINUTES)
             .build()
         val workManager = WorkManager.getInstance(requireActivity().application)
         workManager.enqueueUniquePeriodicWork(UpdateMonthAndYearWorker.UNIQUE_KEY, ExistingPeriodicWorkPolicy.KEEP, task)

@@ -27,25 +27,6 @@ abstract class SolatKuyRoom : RoomDatabase() {
     abstract fun msCalculationMethodsDao(): MsCalculationMethodsDao
 
     companion object{
-        @Volatile
-        private var INSTANCE: SolatKuyRoom? = null
-        private const val dbName = Constant.DATABASE_NAME
-
-        fun getDataBase(context: Context): SolatKuyRoom {
-            val tempInstance = INSTANCE
-            if(tempInstance != null)
-                return tempInstance
-            synchronized(this) {
-                val instance = Room.databaseBuilder(context.applicationContext, SolatKuyRoom::class.java, dbName)
-                    .fallbackToDestructiveMigration()
-                    .allowMainThreadQueries()
-                    .build()
-
-                INSTANCE = instance
-                return instance
-            }
-        }
-
         fun populateDatabase(instance: SolatKuyRoom){
             GlobalScope.launch(Dispatchers.IO) {
                 populateMsSetting(instance.msSettingDao())

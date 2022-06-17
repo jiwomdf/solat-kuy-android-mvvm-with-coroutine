@@ -8,7 +8,6 @@ import java.util.*
 
 object SelectPrayerHelper {
     fun selectNextPrayer(timings: Timings): Int {
-
         //prayer time
         val fajr = parseTimingToDateTime(timings.fajr)
         val dhuhr = parseTimingToDateTime(timings.dhuhr)

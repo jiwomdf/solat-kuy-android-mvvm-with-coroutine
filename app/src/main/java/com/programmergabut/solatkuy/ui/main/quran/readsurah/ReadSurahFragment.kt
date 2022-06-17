@@ -17,7 +17,7 @@ import com.programmergabut.solatkuy.data.local.localentity.MsAyah
 import com.programmergabut.solatkuy.data.local.localentity.MsFavSurah
 import com.programmergabut.solatkuy.databinding.FragmentReadSurahBinding
 import com.programmergabut.solatkuy.databinding.ListReadSurahBinding
-import com.programmergabut.solatkuy.util.EnumStatus
+import com.programmergabut.solatkuy.util.Status
 import dagger.hilt.android.AndroidEntryPoint
 import es.dmoral.toasty.Toasty
 
@@ -49,11 +49,12 @@ class ReadSurahFragment(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        setFirstView()
+        setupView()
+        setListener()
         viewModel.getSelectedSurah(args.selectedSurahId.toInt())
     }
 
-    private fun setFirstView() {
+    private fun setupView() {
         setupToolbar()
         initRVReadSurah()
         setTheme(sharedPrefUtil.getIsBrightnessActive())
@@ -67,49 +68,43 @@ class ReadSurahFragment(
         }
     }
 
-    override fun setListener() {
-        super.setListener()
-        binding.fabBrightness.setOnClickListener(this)
-        observeApi()
-        observeDB()
-    }
+    private fun setListener() {
+        binding.apply {
+            fabBrightness.setOnClickListener(this@ReadSurahFragment)
 
-    private fun observeApi(){
-        viewModel.selectedSurah.observe(this, {
-            when (it.status) {
-                EnumStatus.SUCCESS, EnumStatus.ERROR -> {
-                    if(it.data != null){
-                        checkLastSurahAndAyah(it.data)
+            viewModel.selectedSurah.observe(viewLifecycleOwner) {
+                when (it.status) {
+                    Status.SUCCESS, Status.ERROR -> {
+                        if (it.data != null) {
+                            checkLastSurahAndAyah(it.data)
+                            setVisibility(it.status)
+                            setToolBarText(it.data)
+                            readSurahAdapter.listAyah = it.data
+                            readSurahAdapter.notifyDataSetChanged()
 
-                        setVisibility(it.status)
-                        setToolBarText(it.data)
-                        readSurahAdapter.listAyah = it.data
-                        readSurahAdapter.notifyDataSetChanged()
-
-                        if (args.isAutoScroll) {
-                            (binding.rvReadSurah.layoutManager as LinearLayoutManager)
-                                .scrollToPositionWithOffset(sharedPrefUtil.getLastReadAyah() - 1, 0)
+                            if (args.isAutoScroll) {
+                                (rvReadSurah.layoutManager as LinearLayoutManager)
+                                    .scrollToPositionWithOffset(sharedPrefUtil.getLastReadAyah() - 1, 0)
+                            }
                         }
                     }
-                }
-                EnumStatus.LOADING -> {
-                    setVisibility(it.status)
-                    binding.tbReadSurah.title = ""
+                    Status.LOADING -> {
+                        setVisibility(it.status)
+                        tbReadSurah.title = ""
+                    }
                 }
             }
-        })
-    }
 
-    private fun observeDB(){
-        viewModel.favSurahBySurahID.observe(this, {
-            if (it == null){
-                menu?.findItem(R.id.i_star_surah)?.icon =
-                    ContextCompat.getDrawable(requireContext(), R.drawable.ic_star_24)
-            } else {
-                menu?.findItem(R.id.i_star_surah)?.icon =
-                    ContextCompat.getDrawable(requireContext(), R.drawable.ic_star_purple_24)
+            viewModel.favSurahBySurahID.observe(viewLifecycleOwner) {
+                if (it == null) {
+                    menu?.findItem(R.id.i_star_surah)?.icon =
+                        ContextCompat.getDrawable(requireContext(), R.drawable.ic_star_24)
+                } else {
+                    menu?.findItem(R.id.i_star_surah)?.icon =
+                        ContextCompat.getDrawable(requireContext(), R.drawable.ic_star_purple_24)
+                }
             }
-        })
+        }
     }
 
     override fun onClick(v: View?) {
@@ -136,37 +131,43 @@ class ReadSurahFragment(
     }
 
     private fun setTheme(isBrightnessActive: Boolean){
-        if(isBrightnessActive){
-            binding.tbReadSurah.setTitleTextColor(ContextCompat.getColor(requireContext(), R.color.black))
-            binding.tbReadSurah.setSubtitleTextColor(ContextCompat.getColor(requireContext(), R.color.black))
-            binding.tbReadSurah.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
-            binding.clSurah.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
-        } else {
-            binding.tbReadSurah.setTitleTextColor(ContextCompat.getColor(requireContext(), R.color.white))
-            binding.tbReadSurah.setSubtitleTextColor(ContextCompat.getColor(requireContext(), R.color.white))
-            binding.tbReadSurah.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.dark_200))
-            binding.clSurah.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.dark_700))
+        binding.apply {
+            if(isBrightnessActive){
+                tbReadSurah.setTitleTextColor(ContextCompat.getColor(requireContext(), R.color.black))
+                tbReadSurah.setSubtitleTextColor(ContextCompat.getColor(requireContext(), R.color.black))
+                tbReadSurah.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
+                clSurah.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
+            } else {
+                tbReadSurah.setTitleTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+                tbReadSurah.setSubtitleTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+                tbReadSurah.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.dark_200))
+                clSurah.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.dark_700))
+            }
         }
     }
 
     private fun setToolBarText(data: List<MsAyah>) {
-        binding.tbReadSurah.title = data.first().englishName
-        binding.tbReadSurah.subtitle = data.first().revelationType + " - " + data.first().numberOfAyahs + " Ayahs"
+        binding.tbReadSurah.apply {
+            title = data.first().englishName
+            subtitle = "${data.first().revelationType} - ${data.first().numberOfAyahs} Ayahs"
+        }
     }
 
-    private fun setVisibility(status: EnumStatus){
-        when(status){
-            EnumStatus.SUCCESS, EnumStatus.ERROR -> {
-                binding.rvReadSurah.visibility = View.VISIBLE
-                binding.abReadQuran.visibility = View.VISIBLE
-                binding.ccReadQuranLoading.visibility = View.GONE
-                binding.fabBrightness.visibility = View.VISIBLE
-            }
-            EnumStatus.LOADING -> {
-                if (isFirstLoad) binding.ccReadQuranLoading.visibility = View.VISIBLE
-                binding.abReadQuran.visibility = View.INVISIBLE
-                binding.rvReadSurah.visibility = View.INVISIBLE
-                binding.fabBrightness.visibility = View.GONE
+    private fun setVisibility(status: Status){
+        binding.apply {
+            when(status){
+                Status.SUCCESS, Status.ERROR -> {
+                    rvReadSurah.visibility = View.VISIBLE
+                    abReadQuran.visibility = View.VISIBLE
+                    ccReadQuranLoading.visibility = View.GONE
+                    fabBrightness.visibility = View.VISIBLE
+                }
+                Status.LOADING -> {
+                    if (isFirstLoad) ccReadQuranLoading.visibility = View.VISIBLE
+                    abReadQuran.visibility = View.INVISIBLE
+                    rvReadSurah.visibility = View.INVISIBLE
+                    fabBrightness.visibility = View.GONE
+                }
             }
         }
     }
@@ -212,17 +213,19 @@ class ReadSurahFragment(
 
 
     private val adapterTheme = fun(vhBinding: ListReadSurahBinding){
-        if(sharedPrefUtil.getIsBrightnessActive()){
-            vhBinding.tvListFavAr.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
-            vhBinding.tvListFavEn.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
-            vhBinding.tvListFavNum.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
-            vhBinding.clVhReadSurah.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
-        }
-        else {
-            vhBinding.tvListFavAr.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
-            vhBinding.tvListFavEn.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
-            vhBinding.tvListFavNum.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
-            vhBinding.clVhReadSurah.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.dark_500))
+        vhBinding.apply {
+            if(sharedPrefUtil.getIsBrightnessActive()){
+                tvListFavAr.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
+                tvListFavEn.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
+                tvListFavNum.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
+                clVhReadSurah.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
+            }
+            else {
+                tvListFavAr.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+                tvListFavEn.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+                tvListFavNum.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+                clVhReadSurah.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.dark_500))
+            }
         }
     }
 

@@ -34,6 +34,7 @@ abstract class BaseActivity<VB: ViewBinding, VM: ViewModel>(
     protected lateinit var viewModel: VM
 
     abstract fun getViewBinding(): VB
+
     private var _binding: ViewBinding? = null
     protected val binding: VB
         get() = _binding as VB
@@ -45,8 +46,6 @@ abstract class BaseActivity<VB: ViewBinding, VM: ViewModel>(
         viewModelClass?.let {
             viewModel = ViewModelProvider(this).get(it)
         }
-        inflateBinding()
-        setListener()
         setContentView(requireNotNull(_binding).root)
     }
 
@@ -54,11 +53,6 @@ abstract class BaseActivity<VB: ViewBinding, VM: ViewModel>(
         super.onDestroy()
         _binding = null
     }
-
-
-    protected open fun setListener(){}
-
-    protected open fun inflateBinding(){}
 
     protected fun isLocationPermissionGranted(): Boolean {
         return (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&

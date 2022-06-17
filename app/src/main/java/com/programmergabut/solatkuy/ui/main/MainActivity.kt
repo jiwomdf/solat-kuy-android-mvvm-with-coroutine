@@ -3,6 +3,7 @@ package com.programmergabut.solatkuy.ui.main
 import android.os.Bundle
 import android.util.Log
 import android.view.View
+import androidx.lifecycle.ViewModel
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
@@ -17,9 +18,9 @@ import javax.inject.Inject
  * Created by Katili Jiwo Adi Wiyono on 25/03/20.
  */
 @AndroidEntryPoint
-class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
+class MainActivity : BaseActivity<ActivityMainBinding, ViewModel>(
     R.layout.activity_main,
-    MainViewModel::class.java
+    null
 ) {
 
     private val TAG = "MainActivity"
@@ -42,22 +43,24 @@ class MainActivity : BaseActivity<ActivityMainBinding, MainViewModel>(
 
     private fun initBottomNav() {
         try{
-            val navHostFragment = supportFragmentManager.findFragmentById(R.id.navHostFragment) as NavHostFragment
-            val navController = navHostFragment.navController
-            binding.bottomNavigation.setupWithNavController(navController)
-            navHostFragment.findNavController()
-                .addOnDestinationChangedListener { _, destination, _ ->
-                    when(destination.id){
-                        R.id.fragmentHome,
-                        R.id.fragmentCompass,
-                        R.id.fragmentQuran,
-                        R.id.fragmentSetting
-                            -> binding.bottomNavigation.visibility = View.VISIBLE
-                        else
-                            -> binding.bottomNavigation.visibility = View.GONE
+            binding.apply {
+                val navHostFragment = supportFragmentManager.findFragmentById(R.id.navHostFragment) as NavHostFragment
+                val navController = navHostFragment.navController
+                bottomNavigation.setupWithNavController(navController)
+                navHostFragment.findNavController()
+                    .addOnDestinationChangedListener { _, destination, _ ->
+                        when(destination.id){
+                            R.id.fragmentHome,
+                            R.id.fragmentCompass,
+                            R.id.fragmentQuran,
+                            R.id.fragmentSetting
+                            -> bottomNavigation.visibility = View.VISIBLE
+                            else
+                            -> bottomNavigation.visibility = View.GONE
+                        }
                     }
-                }
-            binding.bottomNavigation.setOnNavigationItemReselectedListener {/* NO-OP */ }
+                bottomNavigation.setOnNavigationItemReselectedListener {/* NO-OP */ }
+            }
         }
         catch (ex: Exception){
             Log.d(TAG, ex.message.toString())

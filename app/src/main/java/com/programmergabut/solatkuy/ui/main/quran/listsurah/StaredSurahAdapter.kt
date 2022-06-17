@@ -33,13 +33,15 @@ class StaredSurahAdapter : RecyclerView.Adapter<StaredSurahAdapter.StaredSurahVi
 
     inner class StaredSurahViewHolder(private val binding: ListStaredSurahBinding): RecyclerView.ViewHolder(binding.root){
         fun bind(data: MsFavSurah){
-            binding.tvStaredAyah.text = data.surahName
-            binding.cvStaredAyah.setOnClickListener {
-                onClick?.invoke(
-                    data.surahID.toString(),
-                    data.surahName!!,
-                    data.surahTranslation!!
-                )
+            binding.apply {
+                tvStaredAyah.text = data.surahName
+                cvStaredAyah.setOnClickListener {
+                    onClick?.invoke(
+                        data.surahID.toString(),
+                        data.surahName!!,
+                        data.surahTranslation!!
+                    )
+                }
             }
         }
     }
