@@ -6,13 +6,13 @@
         <item name="colorPrimary">@color/dark_500</item>
         <item name="colorPrimaryVariant">@color/dark_200</item>
         <item name="colorOnPrimary">@color/white</item>
-        <item name="android:colorBackground">@color/dark_700</item>
+        <item name="android:colorBackground">@color/black</item>
         <!-- Secondary brand color. -->
         <item name="colorSecondary">@color/purple_200</item>
         <item name="colorSecondaryVariant">@color/purple_700</item>
         <item name="colorOnSecondary">@color/black</item>
         <!-- Status bar color. -->
-        <item name="android:statusBarColor" >@color/dark_700</item>
+        <item name="android:statusBarColor">@color/black</item>
 
         <item name="android:textColor">#ffffffff</item>
     </style>
@@ -68,11 +68,12 @@
     </style>
 
     <style name="ImageView.Corner" parent="">
-        <item name="cornerSizeBottomLeft">8dp</item>
-        <item name="cornerSizeBottomRight">8dp</item>
+        <item name="cornerSizeBottomLeft">16dp</item>
+        <item name="cornerSizeTopLeft">16dp</item>
+        <item name="cornerSizeTopRight">16dp</item>
+        <item name="cornerSizeBottomRight">16dp</item>
         <item name="cornerFamily">rounded</item>
     </style>
-
 
 
 </resources>

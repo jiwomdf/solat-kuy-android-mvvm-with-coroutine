@@ -50,23 +50,20 @@ class ReadSurahFragment(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupView()
+        initRVReadSurah()
         setListener()
         viewModel.getSelectedSurah(args.selectedSurahId.toInt())
     }
 
     private fun setupView() {
-        setupToolbar()
-        initRVReadSurah()
-        setTheme(sharedPrefUtil.getIsBrightnessActive())
-    }
-
-    private fun setupToolbar() {
         (activity as AppCompatActivity).setSupportActionBar(binding.tbReadSurah)
         (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
         binding.tbReadSurah.setNavigationOnClickListener {
             requireActivity().onBackPressed()
         }
+        setTheme(sharedPrefUtil.getIsBrightnessActive())
     }
+
 
     private fun setListener() {
         binding.apply {
@@ -140,16 +137,17 @@ class ReadSurahFragment(
             } else {
                 tbReadSurah.setTitleTextColor(ContextCompat.getColor(requireContext(), R.color.white))
                 tbReadSurah.setSubtitleTextColor(ContextCompat.getColor(requireContext(), R.color.white))
-                tbReadSurah.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.dark_200))
+                tbReadSurah.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.dark_700))
                 clSurah.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.dark_700))
             }
         }
     }
 
     private fun setToolBarText(data: List<MsAyah>) {
+        val selectedData = data.first()
         binding.tbReadSurah.apply {
-            title = data.first().englishName
-            subtitle = "${data.first().revelationType} - ${data.first().numberOfAyahs} Ayahs"
+            title = selectedData.englishName
+            subtitle = "${selectedData.revelationType} - ${selectedData.numberOfAyahs} Ayahs"
         }
     }
 
@@ -224,7 +222,7 @@ class ReadSurahFragment(
                 tvListFavAr.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
                 tvListFavEn.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
                 tvListFavNum.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
-                clVhReadSurah.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.dark_500))
+                clVhReadSurah.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.black))
             }
         }
     }

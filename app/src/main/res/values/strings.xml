@@ -46,7 +46,8 @@
 
     <!--Qibla Compass-->
     <string name="compass_art">Compass Art:</string>
-    <string name="qibla_degree">Qibla degrees:</string>
+    <string name="qibla_degree_">Qibla degrees:</string>
+    <string name="qibla_degree">Qibla Degrees</string>
     <string name="compass_accuracy">Compass accuracy:</string>
     <string name="please_tilt_your_phone_until_the_image_is_balanced">Please calibrate your phone compass until the compass accuracy is high</string>
     <string name="please_do_this_move_before_using_the_compass_to_calibrate_the_compass">Please do this move before using the compass, in order to calibrate the compass</string>

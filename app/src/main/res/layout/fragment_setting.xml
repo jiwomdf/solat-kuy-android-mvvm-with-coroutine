@@ -24,10 +24,10 @@
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp16"
             android:layout_marginStart="@dimen/dp16"
+            android:layout_marginTop="@dimen/dp16"
             android:layout_marginEnd="@dimen/dp16"
-            app:cardBackgroundColor="@color/dark_200"
+            app:cardBackgroundColor="@color/dark_700"
             app:cardCornerRadius="@dimen/dp12">
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -59,6 +59,7 @@
                     android:layout_width="@dimen/info_width_size"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
+                    android:fontFamily="@font/sourcesanspro_bold"
                     android:text="@string/latitude"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tv_cur_loc" />
@@ -79,6 +80,7 @@
                     android:layout_width="@dimen/info_width_size"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
+                    android:fontFamily="@font/sourcesanspro_bold"
                     android:text="@string/longitude"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tv_text_latitude" />
@@ -99,6 +101,7 @@
                     android:layout_width="@dimen/info_width_size"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
+                    android:fontFamily="@font/sourcesanspro_bold"
                     android:text="@string/city"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tv_text_longitude" />
@@ -119,6 +122,7 @@
                     android:layout_width="@dimen/info_width_size"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
+                    android:fontFamily="@font/sourcesanspro_bold"
                     android:text="@string/calculation_method"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -146,18 +150,18 @@
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp16"
             android:layout_marginStart="@dimen/dp16"
+            android:layout_marginTop="@dimen/dp16"
             android:layout_marginEnd="@dimen/dp16"
-            app:cardBackgroundColor="@color/dark_200"
+            app:cardBackgroundColor="@color/dark_700"
             app:cardCornerRadius="@dimen/dp12">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
                 android:layout_marginStart="@dimen/dp8"
-                android:layout_marginEnd="@dimen/dp8"
                 android:layout_marginTop="@dimen/dp12"
+                android:layout_marginEnd="@dimen/dp8"
                 android:layout_marginBottom="@dimen/dp12">
 
                 <ImageView
@@ -222,10 +226,10 @@
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp16"
             android:layout_marginStart="@dimen/dp16"
+            android:layout_marginTop="@dimen/dp16"
             android:layout_marginEnd="@dimen/dp16"
-            app:cardBackgroundColor="@color/dark_200"
+            app:cardBackgroundColor="@color/dark_700"
             app:cardCornerRadius="@dimen/dp12">
 
             <androidx.constraintlayout.widget.ConstraintLayout
@@ -289,10 +293,11 @@
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_marginTop="@dimen/dp16"
             android:layout_marginStart="@dimen/dp16"
+            android:layout_marginTop="@dimen/dp16"
             android:layout_marginEnd="@dimen/dp16"
-            app:cardBackgroundColor="@color/dark_200"
+            android:layout_marginBottom="@dimen/dp16"
+            app:cardBackgroundColor="@color/dark_700"
             app:cardCornerRadius="@dimen/dp12">
 
             <androidx.constraintlayout.widget.ConstraintLayout

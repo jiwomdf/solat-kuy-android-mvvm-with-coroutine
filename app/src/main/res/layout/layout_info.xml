@@ -15,7 +15,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/black"
+            android:background="@color/dark_700"
             android:scaleType="centerCrop"
             android:orientation="vertical">
 
@@ -79,7 +79,7 @@
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/dark_200"
+            android:background="@color/dark_700"
             android:orientation="vertical">
 
             <LinearLayout
@@ -238,7 +238,7 @@
         android:layout_height="wrap_content"
         android:layout_marginTop="@dimen/dp16"
         app:cardCornerRadius="@dimen/dp16"
-        app:cardBackgroundColor="@color/dark_200">
+        app:cardBackgroundColor="@color/dark_700">
 
         <LinearLayout
             android:layout_width="match_parent"

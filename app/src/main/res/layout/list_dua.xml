@@ -13,6 +13,7 @@
         android:paddingEnd="@dimen/dp8"
         android:layout_marginStart="@dimen/dp8"
         android:layout_marginTop="@dimen/dp8"
+        android:layout_marginBottom="@dimen/dp8"
         tools:text="Dua Save From Hell And World" />
 
 </LinearLayout>

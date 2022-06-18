@@ -15,21 +15,60 @@
             android:layout_width="match_parent"
             android:layout_height="wrap_content">
 
+            <TextView
+                android:id="@+id/title"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_margin="@dimen/dp16"
+                android:fontFamily="@font/sourcesanspro_semibold"
+                android:text="@string/qibla_degree"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent"
+                android:textSize="@dimen/sp30" />
+
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:id="@+id/ll_compass_container"
                 android:layout_width="match_parent"
+                android:layout_marginTop="@dimen/dp16"
+                app:layout_constraintTop_toBottomOf="@+id/title"
                 android:layout_height="match_parent">
+
+                <androidx.cardview.widget.CardView
+                    android:id="@+id/cv_compass"
+                    android:layout_width="wrap_content"
+                    android:layout_height="wrap_content"
+                    android:layout_marginTop="16dp"
+                    android:elevation="8dp"
+                    app:cardCornerRadius="30dp"
+                    app:cardBackgroundColor="@color/white"
+                    app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toTopOf="parent">
+
+                    <ImageView
+                        android:id="@+id/iv_compass"
+                        android:layout_width="@dimen/compassSize"
+                        android:layout_height="@dimen/compassSize"
+                        android:layout_centerInParent="true"
+                        android:background="@color/white"
+                        android:contentDescription="@string/compass"
+                        android:src="@drawable/img_degree"
+                        app:layout_constraintEnd_toEndOf="parent"
+                        app:layout_constraintStart_toStartOf="parent"
+                        app:layout_constraintTop_toBottomOf="@+id/cv_qibla_degrees" />
+
+                </androidx.cardview.widget.CardView>
 
                 <androidx.cardview.widget.CardView
                     android:id="@+id/cv_qibla_degrees"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="@dimen/dp12"
-                    app:cardBackgroundColor="@color/dark_200"
+                    android:layout_marginTop="@dimen/dp16"
+                    app:cardBackgroundColor="@color/dark_700"
                     app:cardCornerRadius="@dimen/dp12"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toTopOf="parent">
+                    app:layout_constraintTop_toBottomOf="@id/cv_compass">
 
                     <androidx.constraintlayout.widget.ConstraintLayout
                         android:layout_width="match_parent"
@@ -46,7 +85,7 @@
                             android:layout_marginEnd="@dimen/dp4"
                             android:layout_marginBottom="@dimen/dp4"
                             android:gravity="center"
-                            android:text="@string/qibla_degree"
+                            android:text="@string/qibla_degree_"
                             android:textStyle="bold"
                             app:layout_constraintStart_toStartOf="parent"
                             app:layout_constraintTop_toTopOf="parent" />
@@ -87,46 +126,20 @@
                     </androidx.constraintlayout.widget.ConstraintLayout>
                 </androidx.cardview.widget.CardView>
 
-                <androidx.cardview.widget.CardView
-                    android:id="@+id/cv_compass"
-                    android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:elevation="8dp"
-                    app:cardCornerRadius="30dp"
-                    app:cardBackgroundColor="@color/white"
-                    app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/cv_qibla_degrees">
-
-                    <ImageView
-                        android:id="@+id/iv_compass"
-                        android:layout_width="@dimen/compassSize"
-                        android:layout_height="@dimen/compassSize"
-                        android:layout_centerInParent="true"
-                        android:background="@color/white"
-                        android:contentDescription="@string/compass"
-                        android:src="@drawable/img_degree"
-                        app:layout_constraintEnd_toEndOf="parent"
-                        app:layout_constraintStart_toStartOf="parent"
-                        app:layout_constraintTop_toBottomOf="@+id/cv_qibla_degrees" />
-
-                </androidx.cardview.widget.CardView>
-
                 <TextView
                     android:id="@+id/tv_compass_cuation"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginTop="16dp"
-                    android:layout_marginBottom="32dp"
                     android:gravity="center"
                     android:text="@string/please_tilt_your_phone_until_the_image_is_balanced"
                     android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="parent"
+                    android:layout_marginTop="@dimen/dp16"
+                    android:layout_marginBottom="@dimen/dp16"
                     app:layout_constraintEnd_toEndOf="parent"
                     app:layout_constraintHorizontal_bias="0.461"
                     app:layout_constraintStart_toStartOf="parent"
-                    app:layout_constraintTop_toBottomOf="@+id/cv_compass"
-                    app:layout_constraintVertical_bias="0.0" />
+                    app:layout_constraintTop_toBottomOf="@+id/cv_qibla_degrees" />
 
             </androidx.constraintlayout.widget.ConstraintLayout>
 
