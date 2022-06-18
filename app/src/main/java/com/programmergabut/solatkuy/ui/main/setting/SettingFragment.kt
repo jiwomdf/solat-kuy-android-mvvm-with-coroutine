@@ -13,6 +13,7 @@ import android.os.Looper
 import android.view.View
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
+import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
 import com.google.android.gms.location.FusedLocationProviderClient
@@ -141,6 +142,12 @@ BaseFragment<FragmentSettingBinding, SettingViewModel>(
         when(v?.id){
             R.id.btn_by_latitude_longitude -> {
                 bottomSheetDialog.setContentView(dialogLatLngBinding.root)
+                bottomSheetDialog.setOnShowListener { dia ->
+                    val bottomSheetDialog = dia as BottomSheetDialog
+                    val bottomSheetInternal: FrameLayout =
+                        bottomSheetDialog.findViewById(com.google.android.material.R.id.design_bottom_sheet)!!
+                    bottomSheetInternal.setBackgroundResource(R.drawable.bg_dark_rounded_top)
+                }
                 bottomSheetDialog.show()
             }
             R.id.btn_proceedByLL -> {
@@ -150,6 +157,12 @@ BaseFragment<FragmentSettingBinding, SettingViewModel>(
             }
             R.id.btn_by_gps -> {
                 bottomSheetDialog.setContentView(dialogGpsBinding.root)
+                bottomSheetDialog.setOnShowListener { dia ->
+                    val bottomSheetDialog = dia as BottomSheetDialog
+                    val bottomSheetInternal: FrameLayout =
+                        bottomSheetDialog.findViewById(com.google.android.material.R.id.design_bottom_sheet)!!
+                    bottomSheetInternal.setBackgroundResource(R.drawable.bg_dark_rounded_top)
+                }
                 bottomSheetDialog.show()
                 getGPSLocation()
             }

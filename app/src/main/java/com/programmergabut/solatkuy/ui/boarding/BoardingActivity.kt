@@ -11,9 +11,16 @@ import android.location.LocationManager
 import android.os.Bundle
 import android.os.Looper
 import android.provider.Settings
+import android.util.Log
 import android.view.View
+import android.widget.FrameLayout
 import android.widget.Toast
 import androidx.core.app.ActivityCompat
+import androidx.lifecycle.lifecycleScope
+import com.bumptech.glide.Glide
+import com.bumptech.glide.load.engine.DiskCacheStrategy
+import com.bumptech.glide.load.resource.drawable.DrawableTransitionOptions
+import com.bumptech.glide.request.transition.DrawableCrossFadeFactory
 import com.google.android.gms.location.LocationCallback
 import com.google.android.gms.location.LocationRequest
 import com.google.android.gms.location.LocationResult
@@ -30,6 +37,7 @@ import com.programmergabut.solatkuy.util.Constant
 import com.programmergabut.solatkuy.util.Status
 import dagger.hilt.android.AndroidEntryPoint
 import es.dmoral.toasty.Toasty
+import kotlinx.coroutines.*
 import org.joda.time.LocalDate
 
 @AndroidEntryPoint
@@ -42,8 +50,23 @@ class BoardingActivity : BaseActivity<ActivityBoardingBinding, BoardingViewModel
     private lateinit var bsLatLngBinding: LayoutBottomsheetBylatitudelongitudeBinding
     private lateinit var bottomSheetDialog: Dialog
     private var isHasOpenSettingButton = false
+    private var sliderJob: Job? = null
 
     override fun getViewBinding(): ActivityBoardingBinding = ActivityBoardingBinding.inflate(layoutInflater)
+
+    override fun onPause() {
+        sliderJob?.cancel()
+        super.onPause()
+    }
+
+    override fun onStart() {
+        super.onStart()
+        setupSlideShowImg()
+        if(isHasOpenSettingButton){
+            getGPSLocation()
+            isHasOpenSettingButton = false
+        }
+    }
 
     override fun onCreate(savedInstanceState: Bundle?) {
         super.onCreate(savedInstanceState)
@@ -53,11 +76,29 @@ class BoardingActivity : BaseActivity<ActivityBoardingBinding, BoardingViewModel
         setListener()
     }
 
-    override fun onStart() {
-        super.onStart()
-        if(isHasOpenSettingButton){
-            getGPSLocation()
-            isHasOpenSettingButton = false
+    private fun setupSlideShowImg() {
+        sliderJob = lifecycleScope.launch {
+            val list = listOf(
+                R.drawable.img_fajr,
+                R.drawable.img_dhuhr,
+                R.drawable.img_asr,
+                R.drawable.img_maghrib,
+                R.drawable.img_isha
+            )
+            val crossFadeFactory = DrawableCrossFadeFactory.Builder().setCrossFadeEnabled(true).build()
+            var idx = 1
+            while(true){
+                if(idx >= list.size) idx = 0
+                delay(6000)
+                Glide.with(this@BoardingActivity)
+                    .load(getDrawable(list[idx]))
+                    .centerCrop()
+                    .diskCacheStrategy(DiskCacheStrategy.NONE)
+                    .skipMemoryCache(true)
+                    .transition(DrawableTransitionOptions.withCrossFade(crossFadeFactory))
+                    .into(binding.ivSlideShow)
+                idx++
+            }
         }
     }
 
@@ -81,6 +122,12 @@ class BoardingActivity : BaseActivity<ActivityBoardingBinding, BoardingViewModel
         when(v?.id){
             R.id.btn_by_latitude_longitude -> {
                 bottomSheetDialog.setContentView(bsLatLngBinding.root)
+                bottomSheetDialog.setOnShowListener { dia ->
+                    val bottomSheetDialog = dia as BottomSheetDialog
+                    val bottomSheetInternal: FrameLayout =
+                        bottomSheetDialog.findViewById(com.google.android.material.R.id.design_bottom_sheet)!!
+                    bottomSheetInternal.setBackgroundResource(R.drawable.bg_dark_rounded_top)
+                }
                 bottomSheetDialog.show()
             }
             R.id.btn_proceedByLL -> {
@@ -90,6 +137,12 @@ class BoardingActivity : BaseActivity<ActivityBoardingBinding, BoardingViewModel
             }
             R.id.btn_by_gps -> {
                 bottomSheetDialog.setContentView(bsGpsBinding.root)
+                bottomSheetDialog.setOnShowListener { dia ->
+                    val bottomSheetDialog = dia as BottomSheetDialog
+                    val bottomSheetInternal: FrameLayout =
+                        bottomSheetDialog.findViewById(com.google.android.material.R.id.design_bottom_sheet)!!
+                    bottomSheetInternal.setBackgroundResource(R.drawable.bg_dark_rounded_top)
+                }
                 bottomSheetDialog.show()
                 getGPSLocation()
             }

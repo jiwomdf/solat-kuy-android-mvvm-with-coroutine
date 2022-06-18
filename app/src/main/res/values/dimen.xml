@@ -7,6 +7,7 @@
     <dimen name="dp12">12dp</dimen>
     <dimen name="dp16">16dp</dimen>
     <dimen name="dp24">24dp</dimen>
+    <dimen name="dp32">32dp</dimen>
     <dimen name="dp48">48dp</dimen>
 
     <dimen name="sp12">12sp</dimen>
@@ -24,7 +25,7 @@
 
     <dimen name="editText_size">200dp</dimen>
 
-    <dimen name="bottomSheet_size">200dp</dimen>
+    <dimen name="bottomSheet_size">250dp</dimen>
 
     <dimen name="progressBar_size">170dp</dimen>
 </resources>
