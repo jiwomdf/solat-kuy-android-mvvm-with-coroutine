@@ -24,11 +24,14 @@ created with:
 
 Feel free to see and contribute
 
+**Update**  
+For the new UI please checkout the branch "2.0", but the unit test & multi module is still under development, thanks!
+
 ![](https://firebasestorage.googleapis.com/v0/b/personalwebsite-cbad4.appspot.com/o/Solat%20Kuy%20SS%2FScreenshot_20220618-171148_Solat%20Kuy.jpg?alt=media&token=91044e21-9f9e-4bb5-9806-9d6d35796f06)
 ![](https://firebasestorage.googleapis.com/v0/b/personalwebsite-cbad4.appspot.com/o/Solat%20Kuy%20SS%2FScreenshot_20220618-171156_Solat%20Kuy.jpg?alt=media&token=da9faec4-0dfd-4df8-8c73-111bb3664917)
 ![](https://firebasestorage.googleapis.com/v0/b/personalwebsite-cbad4.appspot.com/o/Solat%20Kuy%20SS%2FScreenshot_20220618-171207_Solat%20Kuy.jpg?alt=media&token=6c6da23d-dc62-4632-a873-58d74d2de4ae)
 ![](https://firebasestorage.googleapis.com/v0/b/personalwebsite-cbad4.appspot.com/o/Solat%20Kuy%20SS%2FScreenshot_20220618-171212_Solat%20Kuy.jpg?alt=media&token=234348aa-fb5e-4f0a-a781-1ac0494c4078)
-![](https://firebasestorage.googleapis.com/v0/b/personalwebsite-cbad4.appspot.com/o/Solat%20Kuy%20SS%2FScreenshot_20220618-171247_Solat%20Kuy.jpg?alt=media&token=1ce260f3-3bc6-493f-a3a6-f5cc7f61b858)
+![](https://firebasestorage.googleapis.com/v0/b/personalwebsite-cbad4.appspot.com/o/Solat%20Kuy%20SS%2FScreenshot_20220618-205612_Solat%20Kuy.jpg?alt=media&token=0be996b0-0af1-4973-acb3-146f135dd316)
 
 
 
