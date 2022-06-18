@@ -22,6 +22,10 @@
         <item name="android:textStyle">bold</item>
     </style>
 
+    <style name="ToolbarTheme" parent="@style/ThemeOverlay.AppCompat.ActionBar">
+        <item name="colorControlNormal">@color/grey</item>
+    </style>
+
     <style name="TextStyle" parent="android:Widget.TextView">
         <item name="fontFamily">@font/sourcesanspro_regular</item>
     </style>

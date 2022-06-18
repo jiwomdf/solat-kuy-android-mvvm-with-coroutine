@@ -11,6 +11,7 @@
         android:id="@+id/ab_readQuran"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
+        tools:visibility="visible"
         android:visibility="invisible">
 
         <androidx.appcompat.widget.Toolbar
@@ -18,6 +19,7 @@
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/dark_700"
+            app:theme="@style/ToolbarTheme"
             app:layout_scrollFlags="scroll|enterAlways"
             app:subtitleTextColor="@color/white"
             app:titleTextColor="@color/white" />
