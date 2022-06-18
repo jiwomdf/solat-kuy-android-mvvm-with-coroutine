@@ -69,32 +69,29 @@ class PrayerRepositoryImpl @Inject constructor(
     override suspend fun updateIsHasOpenApp(isHasOpen: Boolean) = msSettingDao.updateIsHasOpenApp(isHasOpen)
 
     /* Remote */
-    override suspend fun fetchQibla(msApi1: MsApi1): Deferred<CompassResponse> {
+    override suspend fun fetchQibla(msApi1: MsApi1): Deferred<Resource<CompassResponse>> {
       return CoroutineScope(IO).async {
-          lateinit var response: CompassResponse
+          lateinit var response: Resource<CompassResponse>
           try {
-              response = execute(qiblaApiService.fetchQibla(msApi1.latitude, msApi1.longitude))
-              response.responseStatus = "1"
-          }
-          catch (ex: Exception){
-              response = CompassResponse()
-              response.responseStatus = "-1"
+              val result = execute(qiblaApiService.fetchQibla(msApi1.latitude, msApi1.longitude))
+              response = Resource.success(result)
+          } catch (ex: Exception){
+              response = Resource.error(CompassResponse())
               response.message = ex.message.toString()
           }
           response
       }
     }
-    override suspend fun fetchPrayerApi(msApi1: MsApi1): Deferred<PrayerResponse> {
+
+    override suspend fun fetchPrayerApi(msApi1: MsApi1): Deferred<Resource<PrayerResponse>> {
         return CoroutineScope(IO).async {
-            lateinit var response: PrayerResponse
+            lateinit var response: Resource<PrayerResponse>
             try {
-                response = execute(prayerApiService.fetchPrayer(msApi1.latitude, msApi1.longitude,
+                val result = execute(prayerApiService.fetchPrayer(msApi1.latitude, msApi1.longitude,
                     msApi1.method, msApi1.month, msApi1.year))
-                response.responseStatus = "1"
-            }
-            catch (ex: Exception){
-                response = PrayerResponse()
-                response.responseStatus = "-1"
+                response = Resource.success(result)
+            } catch (ex: Exception){
+                response = Resource.error(PrayerResponse())
                 response.message = ex.message.toString()
             }
             response
@@ -198,17 +195,6 @@ class PrayerRepositoryImpl @Inject constructor(
         prayerMap[Constant.MAGHRIB] = timings.maghrib
         prayerMap[Constant.ISHA] = timings.isha
         prayerMap[Constant.SUNRISE] = timings.sunrise
-        return prayerMap
-    }
-
-    private fun createDummyPrayerMap(timings: Timings): MutableMap<String, String> {
-        val prayerMap = mutableMapOf<String, String>()
-        prayerMap[Constant.FAJR] = "04:45 (WIB)"
-        prayerMap[Constant.DHUHR] = "10:14 (WIB)"
-        prayerMap[Constant.ASR] = "10:28 (WIB)"
-        prayerMap[Constant.MAGHRIB] = "14:18 (WIB)"
-        prayerMap[Constant.ISHA] = "16:05 (WIB)"
-        prayerMap[Constant.SUNRISE] = "16:07 (WIB)"
         return prayerMap
     }
 

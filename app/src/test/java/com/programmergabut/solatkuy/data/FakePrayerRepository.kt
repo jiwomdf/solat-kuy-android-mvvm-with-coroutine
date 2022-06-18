@@ -65,33 +65,29 @@ class FakePrayerRepository constructor(
         msSettingDao.updateIsHasOpenApp(isHasOpen)
 
     /* Remote */
-    override suspend fun fetchQibla(msApi1: MsApi1): Deferred<CompassResponse> {
+    override suspend fun fetchQibla(msApi1: MsApi1): Deferred<Resource<CompassResponse>> {
         return CoroutineScope(Dispatchers.IO).async {
-            lateinit var response: CompassResponse
+            lateinit var response: Resource<CompassResponse>
             try {
-                response = execute(qiblaApiService.fetchQibla(msApi1.latitude, msApi1.longitude))
-                response.status = "1"
-            }
-            catch (ex: Exception){
-                response = CompassResponse()
-                response.status = "-1"
+                val result = execute(qiblaApiService.fetchQibla(msApi1.latitude, msApi1.longitude))
+                response = Resource.success(result)
+            } catch (ex: Exception){
+                response = Resource.error(CompassResponse())
                 response.message = ex.message.toString()
             }
             response
         }
     }
 
-    override suspend fun fetchPrayerApi(msApi1: MsApi1): Deferred<PrayerResponse> {
+    override suspend fun fetchPrayerApi(msApi1: MsApi1): Deferred<Resource<PrayerResponse>> {
         return CoroutineScope(Dispatchers.IO).async {
-            lateinit var response: PrayerResponse
+            lateinit var response: Resource<PrayerResponse>
             try {
-                response = execute(prayerApiService.fetchPrayer(msApi1.latitude, msApi1.longitude,
+                val result = execute(prayerApiService.fetchPrayer(msApi1.latitude, msApi1.longitude,
                     msApi1.method, msApi1.month, msApi1.year))
-                response.status= "1"
-            }
-            catch (ex: Exception){
-                response = PrayerResponse()
-                response.status= "-1"
+                response = Resource.success(result)
+            } catch (ex: Exception){
+                response = Resource.error(PrayerResponse())
                 response.message = ex.message.toString()
             }
             response

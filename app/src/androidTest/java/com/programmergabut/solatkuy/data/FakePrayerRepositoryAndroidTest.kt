@@ -99,20 +99,18 @@ class FakePrayerRepositoryAndroidTest : PrayerRepository {
     }
 
     /* Retrofit */
-    override suspend fun fetchQibla(msApi1: MsApi1): Deferred<CompassResponse> {
+    override suspend fun fetchQibla(msApi1: MsApi1): Deferred<Resource<CompassResponse>> {
         return CoroutineScope(IO).async {
             val data = DummyValueAndroidTest.fetchCompassApi<FakePrayerRepositoryAndroidTest>()
-            data.responseStatus = "1"
             data.message = "testing"
-            data
+            Resource.success(data)
         }
     }
-    override suspend fun fetchPrayerApi(msApi1: MsApi1): Deferred<PrayerResponse> {
+    override suspend fun fetchPrayerApi(msApi1: MsApi1): Deferred<Resource<PrayerResponse>> {
         return CoroutineScope(IO).async {
             val data = DummyValueAndroidTest.fetchPrayerApi<FakePrayerRepositoryAndroidTest>()
-            data.responseStatus = "1"
             data.message = "testing"
-            data
+            Resource.success(data)
         }
     }
 

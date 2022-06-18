@@ -93,7 +93,7 @@ BaseFragment<FragmentSettingBinding, SettingViewModel>(
 
         viewModel.methods.observe(viewLifecycleOwner) {
             when (it.status) {
-                Status.SUCCESS, Status.ERROR -> {
+                Status.Success, Status.Error -> {
                     if (it?.data != null) {
                         binding.sMethods.adapter = ArrayAdapter(requireContext(),
                             android.R.layout.simple_list_item_1,
@@ -103,7 +103,7 @@ BaseFragment<FragmentSettingBinding, SettingViewModel>(
                     }
                     listMethods = it?.data?.toMutableList()
                 }
-                Status.LOADING -> {}
+                Status.Loading -> {}
             }
         }
 
@@ -289,9 +289,9 @@ BaseFragment<FragmentSettingBinding, SettingViewModel>(
         } catch (ex: java.lang.Exception) { }
 
         if (!gpsEnabled && !networkEnabled)
-            setGpsComponentState(Status.ERROR)
+            setGpsComponentState(Status.Error)
         else
-            setGpsComponentState(Status.LOADING)
+            setGpsComponentState(Status.Loading)
     }
 
     @SuppressLint("MissingPermission")
@@ -308,7 +308,7 @@ BaseFragment<FragmentSettingBinding, SettingViewModel>(
         getFusedLocationProviderClient(requireContext()).requestLocationUpdates(mLocationRequest, object : LocationCallback() {
             override fun onLocationResult(locationResult: LocationResult) {
                 val location = locationResult.lastLocation ?: return
-                setGpsComponentState(Status.SUCCESS)
+                setGpsComponentState(Status.Success)
                 dialogGpsBinding.apply {
                     tvGpsDialogLatitude.text = location.latitude.toString()
                     tvGpsDialogLongitude.text= location.longitude.toString()
@@ -320,7 +320,7 @@ BaseFragment<FragmentSettingBinding, SettingViewModel>(
     private fun setGpsComponentState(status: Status){
         dialogGpsBinding.apply {
             when(status){
-                Status.SUCCESS -> {
+                Status.Success -> {
                     tvViewLatitude.visibility = View.VISIBLE
                     tvViewLongitude.visibility = View.VISIBLE
                     tvGpsDialogLongitude.visibility = View.VISIBLE
@@ -330,7 +330,7 @@ BaseFragment<FragmentSettingBinding, SettingViewModel>(
                     btnProceedByGps.visibility = View.VISIBLE
                     btnProceedByGps.text = getString(R.string.proceed)
                 }
-                Status.LOADING -> {
+                Status.Loading -> {
                     ivWarning.visibility = View.VISIBLE
                     tvWarning.visibility = View.VISIBLE
                     tvWarning.text = getString(R.string.loading)
@@ -340,7 +340,7 @@ BaseFragment<FragmentSettingBinding, SettingViewModel>(
                     tvGpsDialogLatitude.visibility = View.INVISIBLE
                     btnProceedByGps.visibility = View.INVISIBLE
                 }
-                Status.ERROR -> {
+                Status.Error -> {
                     ivWarning.visibility = View.VISIBLE
                     tvWarning.visibility = View.VISIBLE
                     tvWarning.text = getString(R.string.please_enable_your_location)

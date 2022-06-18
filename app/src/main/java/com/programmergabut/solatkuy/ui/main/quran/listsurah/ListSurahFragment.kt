@@ -52,7 +52,7 @@ class ListSurahFragment(
 
             viewModel.allSurah.observe(viewLifecycleOwner) {
                 when (it.status) {
-                    Status.SUCCESS, Status.ERROR -> {
+                    Status.Success, Status.Error -> {
                         if (it.data == null) {
                             setVisibility(it.status, null)
                             return@observe
@@ -60,7 +60,7 @@ class ListSurahFragment(
                         updateListSurahAdapter(it.data)
                         setVisibility(it.status, it.data)
                     }
-                    Status.LOADING -> {
+                    Status.Loading -> {
                         setVisibility(it.status, null)
                     }
                 }
@@ -140,7 +140,7 @@ class ListSurahFragment(
     private fun setVisibility(status: Status, data: List<MsSurah>?){
         binding.apply {
             when(status){
-                Status.SUCCESS, Status.ERROR -> {
+                Status.Success, Status.Error -> {
                     if(data == null || data.isEmpty()){
                         tvLoadingAllSurah.visibility = View.VISIBLE
                         tvLoadingAllSurah.text = getString(R.string.text_there_is_no_data)
@@ -150,7 +150,7 @@ class ListSurahFragment(
                     }
                     slQuran.isRefreshing = false
                 }
-                Status.LOADING -> {
+                Status.Loading -> {
                     tvLoadingAllSurah.visibility = View.VISIBLE
                     tvLoadingAllSurah.text = getString(R.string.loading)
                     rvQuranSurah.visibility = View.GONE

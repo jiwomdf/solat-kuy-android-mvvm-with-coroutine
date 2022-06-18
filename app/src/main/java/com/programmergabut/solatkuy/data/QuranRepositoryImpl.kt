@@ -44,32 +44,30 @@ class QuranRepositoryImpl @Inject constructor(
     override suspend fun deleteFavSurah(msFavSurah: MsFavSurah) = msFavSurahDao.deleteMsFavSurah(msFavSurah)
 
     /* Remote */
-    override suspend fun fetchReadSurahEn(surahID: Int): Deferred<ReadSurahEnResponse> {
+    override suspend fun fetchReadSurahEn(surahID: Int): Deferred<Resource<ReadSurahEnResponse>> {
         return CoroutineScope(contextProviders.IO).async {
-            lateinit var response: ReadSurahEnResponse
+            lateinit var response: Resource<ReadSurahEnResponse>
             try {
-                response = execute(readSurahEnService.fetchReadSurahEn(surahID))
-                response.responseStatus = "1"
+                val result = execute(readSurahEnService.fetchReadSurahEn(surahID))
+                response = Resource.success(result)
             }
             catch (ex: Exception){
-                response = ReadSurahEnResponse()
-                response.responseStatus = "-1"
+                response = Resource.error(ReadSurahEnResponse())
                 response.message = ex.message.toString()
             }
             response
         }
     }
 
-    override suspend fun fetchAllSurah(): Deferred<AllSurahResponse> {
+    override suspend fun fetchAllSurah(): Deferred<Resource<AllSurahResponse>> {
         return CoroutineScope(contextProviders.IO).async {
-            lateinit var response: AllSurahResponse
+            lateinit var response: Resource<AllSurahResponse>
             try {
-                response = execute(allSurahService.fetchAllSurah())
-                response.responseStatus = "1"
+                val result = execute(allSurahService.fetchAllSurah())
+                response = Resource.success(result)
             }
             catch (ex: Exception){
-                response = AllSurahResponse()
-                response.responseStatus = "-1"
+                response = Resource.error(AllSurahResponse())
                 response.message = ex.message.toString()
             }
             response
@@ -117,16 +115,15 @@ class QuranRepositoryImpl @Inject constructor(
         }.asLiveData()
     }
 
-    override suspend fun fetchReadSurahAr(surahID: Int): Deferred<ReadSurahArResponse> {
+    override suspend fun fetchReadSurahAr(surahID: Int): Deferred<Resource<ReadSurahArResponse>> {
         return CoroutineScope(contextProviders.IO).async {
-            lateinit var response : ReadSurahArResponse
+            lateinit var response : Resource<ReadSurahArResponse>
             try {
-                response = execute(readSurahArService.fetchReadSurahAr(surahID))
-                response.responseStatus = "1"
+                val result = execute(readSurahArService.fetchReadSurahAr(surahID))
+                response = Resource.success(result)
             }
             catch (ex: Exception){
-                response = ReadSurahArResponse()
-                response.responseStatus = "-1"
+                response = Resource.error(ReadSurahArResponse())
                 response.message = ex.message.toString()
             }
             response
@@ -194,7 +191,7 @@ class QuranRepositoryImpl @Inject constructor(
                     }
                 }
 
-                ayahs?.first()?.let {
+                ayahs.first().let {
                     msAyahDao.deleteAyahsBySurahID(it.number)
                     msAyahDao.insertAyahs(ayahs)
                 }

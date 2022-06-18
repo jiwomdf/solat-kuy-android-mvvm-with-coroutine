@@ -71,7 +71,7 @@ class ReadSurahFragment(
 
             viewModel.selectedSurah.observe(viewLifecycleOwner) {
                 when (it.status) {
-                    Status.SUCCESS, Status.ERROR -> {
+                    Status.Success, Status.Error -> {
                         if (it.data != null) {
                             checkLastSurahAndAyah(it.data)
                             setVisibility(it.status)
@@ -85,7 +85,7 @@ class ReadSurahFragment(
                             }
                         }
                     }
-                    Status.LOADING -> {
+                    Status.Loading -> {
                         setVisibility(it.status)
                         tbReadSurah.title = ""
                     }
@@ -154,13 +154,13 @@ class ReadSurahFragment(
     private fun setVisibility(status: Status){
         binding.apply {
             when(status){
-                Status.SUCCESS, Status.ERROR -> {
+                Status.Success, Status.Error -> {
                     rvReadSurah.visibility = View.VISIBLE
                     abReadQuran.visibility = View.VISIBLE
                     ccReadQuranLoading.visibility = View.GONE
                     fabBrightness.visibility = View.VISIBLE
                 }
-                Status.LOADING -> {
+                Status.Loading -> {
                     if (isFirstLoad) ccReadQuranLoading.visibility = View.VISIBLE
                     abReadQuran.visibility = View.INVISIBLE
                     rvReadSurah.visibility = View.INVISIBLE

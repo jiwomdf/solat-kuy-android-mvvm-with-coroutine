@@ -14,9 +14,9 @@ interface QuranRepository {
     fun observeFavSurahBySurahID(surahID: Int): LiveData<MsFavSurah?>
     suspend fun insertFavSurah(msFavSurah: MsFavSurah)
     suspend fun deleteFavSurah(msFavSurah: MsFavSurah)
-    suspend fun fetchReadSurahEn(surahID: Int): Deferred<ReadSurahEnResponse>
-    suspend fun fetchAllSurah(): Deferred<AllSurahResponse>
+    suspend fun fetchReadSurahEn(surahID: Int): Deferred<Resource<ReadSurahEnResponse>>
+    suspend fun fetchAllSurah(): Deferred<Resource<AllSurahResponse>>
     fun getAllSurah(): LiveData<Resource<List<MsSurah>>>
-    suspend fun fetchReadSurahAr(surahID: Int): Deferred<ReadSurahArResponse>
+    suspend fun fetchReadSurahAr(surahID: Int): Deferred<Resource<ReadSurahArResponse>>
     fun getAyahBySurahID(surahID: Int): LiveData<Resource<List<MsAyah>>>
 }

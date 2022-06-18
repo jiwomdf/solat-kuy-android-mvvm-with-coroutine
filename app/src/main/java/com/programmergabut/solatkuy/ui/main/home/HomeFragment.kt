@@ -7,7 +7,6 @@ import android.widget.Toast
 import androidx.appcompat.content.res.AppCompatResources.getDrawable
 import androidx.lifecycle.lifecycleScope
 import androidx.recyclerview.widget.GridLayoutManager
-import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.work.*
 import com.bumptech.glide.Glide
 import com.bumptech.glide.load.engine.DiskCacheStrategy
@@ -126,7 +125,7 @@ class HomeFragment(
     private fun subscribeObserversAPI() {
         viewModel.notifiedPrayer.observe(viewLifecycleOwner) { retVal ->
             when (retVal.status) {
-                Status.SUCCESS, Status.ERROR -> {
+                Status.Success, Status.Error -> {
                     if (retVal.data == null) {
                         showBottomSheet(isCancelable = false, isFinish = true)
                         return@observe
@@ -139,7 +138,7 @@ class HomeFragment(
                     val widget = createWidgetData(retVal.data)
                     bindWidget(widget)
                 }
-                Status.LOADING -> {
+                Status.Loading -> {
                     Toast.makeText(
                         requireContext(),
                         getString(R.string.syncdata),
@@ -152,7 +151,7 @@ class HomeFragment(
 
         viewModel.prayer.observe(viewLifecycleOwner) {
             when (it.status) {
-                Status.SUCCESS -> {
+                Status.Success -> {
                     binding.includeInfo.apply {
                         val data = createTodayData(it.data)
                         val date = data?.date
@@ -169,24 +168,24 @@ class HomeFragment(
                         tvHijriDay.text = "${hijriDate?.weekday?.en} / ${hijriDate?.weekday?.ar}"
                     }
                 }
-                Status.LOADING -> setState(it.status)
-                Status.ERROR -> setState(it.status)
+                Status.Loading -> setState(it.status)
+                Status.Error -> setState(it.status)
             }
         }
 
         viewModel.readSurahEn.observe(viewLifecycleOwner) { apiQuotes ->
             when (apiQuotes.status) {
-                Status.SUCCESS -> {
+                Status.Success -> {
                     if (apiQuotes.data == null) return@observe
                     bindQuranQuoteApiOnline(apiQuotes.data)
                 }
-                Status.LOADING -> {
+                Status.Loading -> {
                     binding.includeQuranQuote.apply {
                         tvQuranAyahQuote.text = getString(R.string.loading)
                         tvQuranAyahQuoteClick.text = getString(R.string.loading)
                     }
                 }
-                Status.ERROR -> {
+                Status.Error -> {
                     binding.includeQuranQuote.apply {
                         tvQuranAyahQuote.text = getString(R.string.fetch_failed)
                         tvQuranAyahQuoteClick.text = getString(R.string.fetch_failed)
@@ -226,8 +225,8 @@ class HomeFragment(
 
     private fun setState(status: Status){
         when(status){
-            Status.SUCCESS -> {/*NO-OP*/}
-            Status.LOADING -> {
+            Status.Success -> {/*NO-OP*/}
+            Status.Loading -> {
                 binding.includeInfo.apply {
                     tvImsakDate.text = getString(R.string.loading)
                     tvImsakTime.text = getString(R.string.loading)
@@ -239,7 +238,7 @@ class HomeFragment(
                     tvHijriDay.text = getString(R.string.loading)
                 }
             }
-            Status.ERROR ->{
+            Status.Error ->{
                 binding.includeInfo.apply {
                     tvImsakDate.text = getString(R.string.fetch_failed)
                     tvImsakTime.text = getString(R.string.fetch_failed_na)

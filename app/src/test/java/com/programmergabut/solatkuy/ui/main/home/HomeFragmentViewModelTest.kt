@@ -71,8 +71,7 @@ class HomeFragmentViewModelTest {
     fun `fetchReadSurahEn, observe readSurahEn`() = coroutinesTestRule.testDispatcher.runBlockingTest{
         val observer = mock<Observer<Resource<ReadSurahEnResponse>>>()
         val dummyQuranSurah = Resource.success(DummyRetValueTest.surahEnID_1<HomeFragmentViewModelTest>())
-        dummyQuranSurah.data?.responseStatus= "1"
-        `when`(fakeQuranRepository.fetchReadSurahEn(surahID)).thenReturn(dummyQuranSurah.data!!.toDeferred())
+        `when`(fakeQuranRepository.fetchReadSurahEn(surahID)).thenReturn(Resource.success(dummyQuranSurah.data).toDeferred())
 
         viewModel.fetchReadSurahEn(surahID)
         val result = viewModel.readSurahEn.value

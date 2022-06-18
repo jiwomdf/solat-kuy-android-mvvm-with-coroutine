@@ -38,32 +38,30 @@ class FakeQuranRepository constructor(
     override suspend fun deleteFavSurah(msFavSurah: MsFavSurah) = msFavSurahDao.deleteMsFavSurah(msFavSurah)
 
     /* Remote */
-    override suspend fun fetchReadSurahEn(surahID: Int): Deferred<ReadSurahEnResponse> {
-        return CoroutineScope(Dispatchers.IO).async {
-            lateinit var response: ReadSurahEnResponse
+    override suspend fun fetchReadSurahEn(surahID: Int): Deferred<Resource<ReadSurahEnResponse>> {
+        return CoroutineScope(contextProviders.IO).async {
+            lateinit var response: Resource<ReadSurahEnResponse>
             try {
-                response = execute(readSurahEnService.fetchReadSurahEn(surahID))
-                response.status = "1"
+                val result = execute(readSurahEnService.fetchReadSurahEn(surahID))
+                response = Resource.success(result)
             }
             catch (ex: Exception){
-                response = ReadSurahEnResponse()
-                response.status = "-1"
+                response = Resource.error(ReadSurahEnResponse())
                 response.message = ex.message.toString()
             }
             response
         }
     }
 
-    override suspend fun fetchAllSurah(): Deferred<AllSurahResponse> {
-        return CoroutineScope(Dispatchers.IO).async {
-            lateinit var response: AllSurahResponse
+    override suspend fun fetchAllSurah(): Deferred<Resource<AllSurahResponse>> {
+        return CoroutineScope(contextProviders.IO).async {
+            lateinit var response: Resource<AllSurahResponse>
             try {
-                response = execute(allSurahService.fetchAllSurah())
-                response.status = "1"
+                val result = execute(allSurahService.fetchAllSurah())
+                response = Resource.success(result)
             }
             catch (ex: Exception){
-                response = AllSurahResponse()
-                response.status = "-1"
+                response = Resource.error(AllSurahResponse())
                 response.message = ex.message.toString()
             }
             response
@@ -110,16 +108,15 @@ class FakeQuranRepository constructor(
         }.asLiveData()
     }
 
-    override suspend fun fetchReadSurahAr(surahID: Int): Deferred<ReadSurahArResponse> {
-        return CoroutineScope(Dispatchers.IO).async {
-            lateinit var response : ReadSurahArResponse
+    override suspend fun fetchReadSurahAr(surahID: Int): Deferred<Resource<ReadSurahArResponse>> {
+        return CoroutineScope(contextProviders.IO).async {
+            lateinit var response : Resource<ReadSurahArResponse>
             try {
-                response = execute(readSurahArService.fetchReadSurahAr(surahID))
-                response.status = "1"
+                val result = execute(readSurahArService.fetchReadSurahAr(surahID))
+                response = Resource.success(result)
             }
             catch (ex: Exception){
-                response = ReadSurahArResponse()
-                response.status = "-1"
+                response = Resource.error(ReadSurahArResponse())
                 response.message = ex.message.toString()
             }
             response

@@ -194,9 +194,9 @@ class BoardingActivity : BaseActivity<ActivityBoardingBinding, BoardingViewModel
             networkEnabled = lm.isProviderEnabled(LocationManager.NETWORK_PROVIDER)
         } catch (ex: java.lang.Exception) { }
         if (!gpsEnabled && !networkEnabled)
-            setGpsComponentState(Status.ERROR)
+            setGpsComponentState(Status.Error)
         else
-            setGpsComponentState(Status.LOADING)
+            setGpsComponentState(Status.Loading)
     }
 
     @SuppressLint("MissingPermission")
@@ -217,7 +217,7 @@ class BoardingActivity : BaseActivity<ActivityBoardingBinding, BoardingViewModel
                 override fun onLocationResult(locationResult: LocationResult) {
                     bsGpsBinding.apply {
                         val location = locationResult.lastLocation ?: return
-                        setGpsComponentState(Status.SUCCESS)
+                        setGpsComponentState(Status.Success)
                         tvGpsDialogLatitude.text = location.latitude.toString()
                         tvGpsDialogLongitude.text= location.longitude.toString()
                     }
@@ -228,7 +228,7 @@ class BoardingActivity : BaseActivity<ActivityBoardingBinding, BoardingViewModel
     private fun setGpsComponentState(status: Status){
         bsGpsBinding.apply {
             when(status){
-                Status.SUCCESS -> {
+                Status.Success -> {
                     tvViewLatitude.visibility = View.VISIBLE
                     tvViewLongitude.visibility = View.VISIBLE
                     tvGpsDialogLongitude.visibility = View.VISIBLE
@@ -239,7 +239,7 @@ class BoardingActivity : BaseActivity<ActivityBoardingBinding, BoardingViewModel
                     btnProceedByGps.visibility = View.VISIBLE
                     btnProceedByGps.text = getString(R.string.proceed)
                 }
-                Status.LOADING -> {
+                Status.Loading -> {
                     ivWarning.visibility = View.VISIBLE
                     tvWarning.visibility = View.VISIBLE
                     tvWarning.text = getString(R.string.loading)
@@ -249,7 +249,7 @@ class BoardingActivity : BaseActivity<ActivityBoardingBinding, BoardingViewModel
                     tvGpsDialogLatitude.visibility = View.INVISIBLE
                     btnProceedByGps.visibility = View.INVISIBLE
                 }
-                Status.ERROR -> {
+                Status.Error -> {
                     ivWarning.visibility = View.VISIBLE
                     tvWarning.visibility = View.VISIBLE
                     tvWarning.text = getString(R.string.please_enable_your_location)

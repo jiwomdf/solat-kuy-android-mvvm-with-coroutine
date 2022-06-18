@@ -4,12 +4,12 @@ import androidx.lifecycle.*
 import com.programmergabut.solatkuy.data.PrayerRepository
 import com.programmergabut.solatkuy.data.QuranRepository
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
-import com.programmergabut.solatkuy.data.local.localentity.MsAyah
 import com.programmergabut.solatkuy.data.local.localentity.MsSetting
 import com.programmergabut.solatkuy.data.remote.json.prayerJson.PrayerResponse
 import com.programmergabut.solatkuy.data.remote.json.readsurahJsonEn.ReadSurahEnResponse
 import com.programmergabut.solatkuy.util.livedata.AbsentLiveData
 import com.programmergabut.solatkuy.util.Resource
+import com.programmergabut.solatkuy.util.Status
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import java.lang.Exception
@@ -44,8 +44,8 @@ class HomeViewModel @Inject constructor(
         _readSurahEn.postValue(Resource.loading(null))
         try {
             val response = quranRepository.fetchReadSurahEn(nInSurah).await()
-            if(response.responseStatus == "1"){
-                _readSurahEn.postValue(Resource.success(response))
+            if(response.status == Status.Success){
+                _readSurahEn.postValue(Resource.success(response.data))
             } else {
                 _readSurahEn.postValue(Resource.error(null, response.message))
             }
@@ -61,8 +61,8 @@ class HomeViewModel @Inject constructor(
         _prayer.postValue(Resource.loading(null))
         try{
             val response  = prayerRepository.fetchPrayerApi(msApi1).await()
-            if(response.responseStatus == "1"){
-                _prayer.postValue(Resource.success(response))
+            if(response.status == Status.Success){
+                _prayer.postValue(Resource.success(response.data))
             } else {
                 _prayer.postValue(Resource.error(null, response.message))
             }

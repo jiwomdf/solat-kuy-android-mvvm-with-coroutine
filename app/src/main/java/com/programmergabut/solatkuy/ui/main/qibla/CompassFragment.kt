@@ -79,15 +79,15 @@ class CompassFragment constructor(
 
             viewModel.compass.observe(viewLifecycleOwner) { data ->
                 tvQiblaDir.text = when (data.status) {
-                    Status.SUCCESS -> {
+                    Status.Success -> {
                         if (data.data == null) {
                             showBottomSheet()
                             return@observe
                         }
                         shortenTextDegree(data.data.data)
                     }
-                    Status.LOADING -> getString(R.string.loading)
-                    Status.ERROR -> getString(R.string.fetch_failed)
+                    Status.Loading -> getString(R.string.loading)
+                    Status.Error -> getString(R.string.fetch_failed)
                 }
             }
         }

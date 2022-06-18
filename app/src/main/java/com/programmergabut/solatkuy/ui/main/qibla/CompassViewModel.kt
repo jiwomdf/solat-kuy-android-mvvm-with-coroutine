@@ -8,6 +8,7 @@ import com.programmergabut.solatkuy.data.PrayerRepository
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
 import com.programmergabut.solatkuy.data.remote.json.compassJson.CompassResponse
 import com.programmergabut.solatkuy.util.Resource
+import com.programmergabut.solatkuy.util.Status
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -24,8 +25,8 @@ class CompassViewModel @Inject constructor(val prayerRepository: PrayerRepositor
             _compass.postValue(Resource.loading(null))
             try {
                 val response = prayerRepository.fetchQibla(msApi1).await()
-                if(response.responseStatus == "1"){
-                    _compass.postValue(Resource.success(response))
+                if(response.status == Status.Success){
+                    _compass.postValue(Resource.success(response.data))
                 } else {
                     _compass.postValue(Resource.error(null, response.message))
                 }
