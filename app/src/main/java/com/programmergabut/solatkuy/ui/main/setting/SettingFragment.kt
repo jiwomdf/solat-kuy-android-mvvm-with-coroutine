@@ -48,7 +48,7 @@ BaseFragment<FragmentSettingBinding, SettingViewModel>(
     SettingViewModel::class.java, viewModelTest
 ), View.OnClickListener {
 
-    private lateinit var aboutDialog: Dialog
+    private lateinit var aboutDialog: BottomSheetDialog
     private lateinit var bottomSheetDialog: BottomSheetDialog
     private lateinit var mFusedLocationClient: FusedLocationProviderClient
     private lateinit var dialogGpsBinding: LayoutBottomsheetBygpsBinding
@@ -71,7 +71,7 @@ BaseFragment<FragmentSettingBinding, SettingViewModel>(
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
-        aboutDialog = Dialog(requireContext())
+        aboutDialog = BottomSheetDialog(requireContext())
         bottomSheetDialog = BottomSheetDialog(requireContext())
         dialogGpsBinding = LayoutBottomsheetBygpsBinding.inflate(layoutInflater)
         dialogLatLngBinding = LayoutBottomsheetBylatitudelongitudeBinding.inflate(layoutInflater)
@@ -87,29 +87,27 @@ BaseFragment<FragmentSettingBinding, SettingViewModel>(
             btnByLatitudeLongitude.setOnClickListener(this@SettingFragment)
             btnByGps.setOnClickListener(this@SettingFragment)
             btnSeeAuthor.setOnClickListener(this@SettingFragment)
-        }
 
-        dialogGpsBinding.btnProceedByGps.setOnClickListener(this)
-        dialogLatLngBinding.btnProceedByLL.setOnClickListener(this)
+            dialogGpsBinding.btnProceedByGps.setOnClickListener(this@SettingFragment)
+            dialogLatLngBinding.btnProceedByLL.setOnClickListener(this@SettingFragment)
 
-        viewModel.methods.observe(viewLifecycleOwner) {
-            when (it.status) {
-                Status.Success, Status.Error -> {
-                    if (it?.data != null) {
-                        binding.sMethods.adapter = ArrayAdapter(requireContext(),
-                            android.R.layout.simple_list_item_1,
-                            it.data.map { method -> method.name }
-                        )
-                        setMethode(it.data)
+            viewModel.methods.observe(viewLifecycleOwner) {
+                when (it.status) {
+                    Status.Success, Status.Error -> {
+                        if (it?.data != null) {
+                            sMethods.adapter = ArrayAdapter(requireContext(),
+                                android.R.layout.simple_list_item_1,
+                                it.data.map { method -> method.name }
+                            )
+                            setMethode(it.data)
+                        }
+                        listMethods = it?.data?.toMutableList()
                     }
-                    listMethods = it?.data?.toMutableList()
+                    Status.Loading -> {}
                 }
-                Status.Loading -> {}
             }
-        }
 
-        viewModel.msApi1.observe(viewLifecycleOwner) { retVal ->
-            binding.apply {
+            viewModel.msApi1.observe(viewLifecycleOwner) { retVal ->
                 if (retVal != null) {
                     val city = LocationHelper.getCity(
                         requireContext(),
@@ -141,14 +139,16 @@ BaseFragment<FragmentSettingBinding, SettingViewModel>(
     override fun onClick(v: View?) {
         when(v?.id){
             R.id.btn_by_latitude_longitude -> {
-                bottomSheetDialog.setContentView(dialogLatLngBinding.root)
-                bottomSheetDialog.setOnShowListener { dia ->
-                    val bottomSheetDialog = dia as BottomSheetDialog
-                    val bottomSheetInternal: FrameLayout =
-                        bottomSheetDialog.findViewById(R.id.design_bottom_sheet)!!
-                    bottomSheetInternal.setBackgroundResource(R.drawable.bg_dark_rounded_top)
+                bottomSheetDialog.apply {
+                    setContentView(dialogLatLngBinding.root)
+                    setOnShowListener { dia ->
+                        val bottomSheetDialog = dia as BottomSheetDialog
+                        val bottomSheetInternal: FrameLayout =
+                            bottomSheetDialog.findViewById(R.id.design_bottom_sheet)!!
+                        bottomSheetInternal.setBackgroundResource(R.drawable.bg_dark_rounded_top)
+                    }
+                    show()
                 }
-                bottomSheetDialog.show()
             }
             R.id.btn_proceedByLL -> {
                 val latitude = dialogLatLngBinding.etLlDialogLatitude.text.toString().trim()
@@ -156,14 +156,16 @@ BaseFragment<FragmentSettingBinding, SettingViewModel>(
                 insertLocationSettingToDb(latitude, longitude)
             }
             R.id.btn_by_gps -> {
-                bottomSheetDialog.setContentView(dialogGpsBinding.root)
-                bottomSheetDialog.setOnShowListener { dia ->
-                    val bottomSheetDialog = dia as BottomSheetDialog
-                    val bottomSheetInternal: FrameLayout =
-                        bottomSheetDialog.findViewById(R.id.design_bottom_sheet)!!
-                    bottomSheetInternal.setBackgroundResource(R.drawable.bg_dark_rounded_top)
+                bottomSheetDialog.apply {
+                    setContentView(dialogGpsBinding.root)
+                    setOnShowListener { dia ->
+                        val bottomSheetDialog = dia as BottomSheetDialog
+                        val bottomSheetInternal: FrameLayout =
+                            bottomSheetDialog.findViewById(R.id.design_bottom_sheet)!!
+                        bottomSheetInternal.setBackgroundResource(R.drawable.bg_dark_rounded_top)
+                    }
+                    show()
                 }
-                bottomSheetDialog.show()
                 getGPSLocation()
             }
             R.id.btn_proceedByGps -> {
@@ -179,8 +181,16 @@ BaseFragment<FragmentSettingBinding, SettingViewModel>(
                 }
             }
             R.id.btn_seeAuthor -> {
-                aboutDialog.setContentView(dialogAuthorBinding.root)
-                aboutDialog.show()
+                aboutDialog.apply {
+                    setContentView(dialogAuthorBinding.root)
+                    setOnShowListener { dia ->
+                        val bottomSheetDialog = dia as BottomSheetDialog
+                        val bottomSheetInternal: FrameLayout =
+                            bottomSheetDialog.findViewById(R.id.design_bottom_sheet)!!
+                        bottomSheetInternal.setBackgroundResource(R.drawable.bg_dark_rounded_top)
+                    }
+                    show()
+                }
             }
         }
     }

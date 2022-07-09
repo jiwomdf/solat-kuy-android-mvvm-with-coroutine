@@ -20,6 +20,7 @@
     <color name="teal_700">#FF018786</color>
     <color name="black">#FF000000</color>
     <color name="grey">#737373</color>
+    <color name="grey_200">#7E7E7E</color>
     <color name="white">#FFFFFFFF</color>
 
     <color name="halfTransparentBackground">#aacccccc</color>

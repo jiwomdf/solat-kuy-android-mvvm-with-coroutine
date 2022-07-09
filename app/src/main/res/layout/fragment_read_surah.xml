@@ -5,14 +5,13 @@
     android:id="@+id/cl_surah"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
+    android:background="@color/black"
     tools:context=".ui.main.quran.readsurah.ReadSurahFragment">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/ab_readQuran"
         android:layout_width="match_parent"
-        android:layout_height="wrap_content"
-        android:visibility="invisible"
-        tools:visibility="visible">
+        android:layout_height="wrap_content">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/tb_readSurah"
@@ -32,45 +31,9 @@
         app:layout_behavior="com.google.android.material.appbar.AppBarLayout$ScrollingViewBehavior"
         tools:listitem="@layout/list_read_surah" />
 
-    <androidx.constraintlayout.widget.ConstraintLayout
-        android:id="@+id/cc_readQuran_loading"
-        android:layout_width="match_parent"
-        android:layout_height="match_parent"
-        tools:visibility="invisible">
-
-        <com.airbnb.lottie.LottieAnimationView
-            android:id="@+id/lottieAnimationView"
-            android:layout_width="match_parent"
-            android:layout_height="match_parent"
-            android:layout_marginTop="40dp"
-            android:animateLayoutChanges="true"
-            android:background="@color/white"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="parent"
-            app:lottie_autoPlay="true"
-            app:lottie_fileName="23486-reading-a-book.json"
-            app:lottie_loop="true"
-            app:lottie_speed="10" />
-
-        <TextView
-            android:id="@+id/tv_readQuran_loading"
-            android:layout_width="match_parent"
-            android:layout_height="wrap_content"
-            android:gravity="center"
-            android:text="@string/please_wait_for_a_while"
-            android:textColor="@color/dark_700"
-            android:textSize="@dimen/sp20"
-            android:textStyle="bold"
-            app:layout_constraintBottom_toBottomOf="parent"
-            app:layout_constraintEnd_toEndOf="parent"
-            app:layout_constraintHorizontal_bias="0.0"
-            app:layout_constraintStart_toStartOf="parent"
-            app:layout_constraintTop_toTopOf="@+id/lottieAnimationView"
-            app:layout_constraintVertical_bias="0.800" />
-
-    </androidx.constraintlayout.widget.ConstraintLayout>
+    <include
+        android:id="@+id/i_loading_read_surah"
+        layout="@layout/layout_read_surah_loading" />
 
     <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
@@ -83,8 +46,8 @@
             android:id="@+id/rl_ar_size"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="invisible"
             android:layout_marginBottom="8dp"
+            android:visibility="invisible"
             app:layout_constraintBottom_toTopOf="@id/rl_show_content"
             app:layout_constraintEnd_toEndOf="parent"
             tools:visibility="visible">
@@ -102,9 +65,9 @@
                 android:layout_height="wrap_content"
                 android:layout_centerInParent="true"
                 android:text="A"
-                android:textStyle="bold"
                 android:textColor="@color/black"
                 android:textSize="16sp"
+                android:textStyle="bold"
                 android:translationZ="99dp" />
 
         </RelativeLayout>
@@ -113,8 +76,8 @@
             android:id="@+id/rl_show_content"
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
-            android:visibility="invisible"
             android:layout_marginBottom="8dp"
+            android:visibility="invisible"
             app:layout_constraintBottom_toTopOf="@id/fab_brightness"
             app:layout_constraintEnd_toEndOf="parent"
             tools:visibility="visible">
@@ -157,8 +120,8 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:elevation="0dp"
-            app:elevation="0dp"
             android:src="@drawable/ic_add_24"
+            app:elevation="0dp"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent" />
 

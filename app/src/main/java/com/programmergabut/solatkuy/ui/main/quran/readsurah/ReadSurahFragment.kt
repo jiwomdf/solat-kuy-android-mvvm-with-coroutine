@@ -38,7 +38,6 @@ class ReadSurahFragment(
 
     private val args: ReadSurahFragmentArgs by navArgs()
     private lateinit var readSurahAdapter: ReadSurahAdapter
-    private var isFirstLoad = true
     private var menu: Menu? = null
     private var isMoreFabClick = false
 
@@ -199,7 +198,7 @@ class ReadSurahFragment(
                 tbReadSurah.setTitleTextColor(ContextCompat.getColor(requireContext(), R.color.white))
                 tbReadSurah.setSubtitleTextColor(ContextCompat.getColor(requireContext(), R.color.white))
                 tbReadSurah.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.dark_700))
-                clSurah.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.dark_700))
+                clSurah.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.black))
             }
         }
     }
@@ -217,16 +216,29 @@ class ReadSurahFragment(
             when(status){
                 Status.Success, Status.Error -> {
                     rvReadSurah.visibility = View.VISIBLE
-                    abReadQuran.visibility = View.VISIBLE
-                    ccReadQuranLoading.visibility = View.GONE
                     fabMore.visibility = View.VISIBLE
+                    iLoadingReadSurah.ccReadQuranLoading.visibility = View.GONE
+                    setReadSurahAnimation(isLoading = false)
                 }
                 Status.Loading -> {
-                    if (isFirstLoad) ccReadQuranLoading.visibility = View.VISIBLE
-                    abReadQuran.visibility = View.INVISIBLE
                     rvReadSurah.visibility = View.INVISIBLE
                     fabMore.visibility = View.GONE
+                    iLoadingReadSurah.ccReadQuranLoading.visibility = View.VISIBLE
+                    setReadSurahAnimation(isLoading = true)
                 }
+            }
+        }
+    }
+
+    private fun setReadSurahAnimation(isLoading: Boolean) {
+        binding.iLoadingReadSurah.apply {
+            clLoading1.isVisible = isLoading
+            clLoading2.isVisible = isLoading
+            clLoading3.isVisible = isLoading
+            if(isLoading){
+                shimmerViewContainer.startShimmer()
+            } else {
+                shimmerViewContainer.stopShimmer()
             }
         }
     }
