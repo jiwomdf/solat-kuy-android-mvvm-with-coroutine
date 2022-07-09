@@ -11,8 +11,10 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.RotateAnimation
+import android.widget.FrameLayout
 import androidx.core.content.ContextCompat
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.base.BaseFragment
 import com.programmergabut.solatkuy.data.remote.json.compassJson.Result
@@ -165,13 +167,19 @@ class CompassFragment constructor(
     }
 
     private fun createLottieAnimation() {
-        val dialog =  Dialog(requireContext())
+        val dialog =  BottomSheetDialog(requireContext())
         val dialogBinding = LayoutPhoneTiltBinding.inflate(layoutInflater)
         dialog.apply {
             window?.setLayout(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
             )
+            setOnShowListener { dia ->
+                val bottomSheetDialog = dia as BottomSheetDialog
+                val bottomSheetInternal: FrameLayout =
+                    bottomSheetDialog.findViewById(R.id.design_bottom_sheet)!!
+                bottomSheetInternal.setBackgroundResource(R.drawable.bg_dark_rounded_top)
+            }
             setCancelable(false)
             setContentView(dialogBinding.root)
             show()

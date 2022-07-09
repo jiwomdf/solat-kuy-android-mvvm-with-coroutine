@@ -11,17 +11,17 @@
         android:id="@+id/ab_readQuran"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        tools:visibility="visible"
-        android:visibility="invisible">
+        android:visibility="invisible"
+        tools:visibility="visible">
 
         <androidx.appcompat.widget.Toolbar
             android:id="@+id/tb_readSurah"
             android:layout_width="match_parent"
             android:layout_height="?attr/actionBarSize"
             android:background="@color/dark_700"
-            app:theme="@style/ToolbarTheme"
             app:layout_scrollFlags="scroll|enterAlways"
             app:subtitleTextColor="@color/white"
+            app:theme="@style/ToolbarTheme"
             app:titleTextColor="@color/white" />
     </com.google.android.material.appbar.AppBarLayout>
 
@@ -72,13 +72,97 @@
 
     </androidx.constraintlayout.widget.ConstraintLayout>
 
-    <com.google.android.material.floatingactionbutton.FloatingActionButton
-        android:id="@+id/fab_brightness"
+    <androidx.constraintlayout.widget.ConstraintLayout
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_margin="@dimen/dp12"
-        android:src="@drawable/ic_baseline_brightness_4_24"
         app:layout_anchor="@+id/cc_readQuran_loading"
-        app:layout_anchorGravity="end|bottom" />
+        app:layout_anchorGravity="end|bottom">
+
+        <RelativeLayout
+            android:id="@+id/rl_ar_size"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toTopOf="@id/rl_show_content"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:visibility="visible">
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fab_ar_size"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/blue_200"
+                android:elevation="0dp" />
+
+            <TextView
+                android:id="@+id/tv_ar_size"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="A"
+                android:textStyle="bold"
+                android:textColor="@color/black"
+                android:textSize="16sp"
+                android:translationZ="99dp" />
+
+        </RelativeLayout>
+
+        <RelativeLayout
+            android:id="@+id/rl_show_content"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:visibility="invisible"
+            android:layout_marginBottom="8dp"
+            app:layout_constraintBottom_toTopOf="@id/fab_brightness"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:visibility="visible">
+
+            <com.google.android.material.floatingactionbutton.FloatingActionButton
+                android:id="@+id/fab_show_content"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:backgroundTint="@color/blue_200"
+                android:elevation="0dp" />
+
+            <TextView
+                android:id="@+id/tv_font_type"
+                android:layout_width="wrap_content"
+                android:layout_height="wrap_content"
+                android:layout_centerInParent="true"
+                android:text="ا"
+                android:textColor="@color/black"
+                android:textSize="24sp"
+                android:textStyle="bold"
+                android:translationZ="99dp" />
+
+        </RelativeLayout>
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_brightness"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginBottom="8dp"
+            android:backgroundTint="@color/blue_200"
+            android:elevation="0dp"
+            android:src="@drawable/ic_brightness_24"
+            android:visibility="invisible"
+            app:layout_constraintBottom_toTopOf="@id/fab_more"
+            app:layout_constraintEnd_toEndOf="parent"
+            tools:visibility="visible" />
+
+        <com.google.android.material.floatingactionbutton.FloatingActionButton
+            android:id="@+id/fab_more"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:elevation="0dp"
+            app:elevation="0dp"
+            android:src="@drawable/ic_add_24"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent" />
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
 
 </androidx.coordinatorlayout.widget.CoordinatorLayout>

@@ -51,7 +51,7 @@
             android:layout_width="wrap_content"
             android:layout_height="wrap_content"
             android:layout_marginBottom="24dp"
-            android:orientation="vertical"
+            android:orientation="horizontal"
             app:layout_constraintBottom_toBottomOf="parent"
             app:layout_constraintEnd_toEndOf="parent"
             app:layout_constraintStart_toStartOf="parent">
@@ -59,9 +59,9 @@
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_by_latitude_longitude"
                 style="@style/ButtonBorderLightWithRadius"
-                android:layout_width="wrap_content"
+                android:layout_width="150dp"
                 android:layout_height="@dimen/button_height"
-                android:layout_marginTop="@dimen/dp8"
+                android:layout_marginEnd="@dimen/dp8"
                 android:paddingStart="6dp"
                 android:paddingEnd="6dp"
                 android:text="@string/by_latitude_amp_longitude"
@@ -70,9 +70,9 @@
             <androidx.appcompat.widget.AppCompatButton
                 android:id="@+id/btn_by_gps"
                 style="@style/ButtonBorderLight"
-                android:layout_width="match_parent"
+                android:layout_width="150dp"
                 android:layout_height="@dimen/button_height"
-                android:layout_marginTop="@dimen/dp8"
+                android:layout_marginEnd="@dimen/dp8"
                 android:text="@string/by_gps"
                 android:textSize="@dimen/sp12" />
         </LinearLayout>

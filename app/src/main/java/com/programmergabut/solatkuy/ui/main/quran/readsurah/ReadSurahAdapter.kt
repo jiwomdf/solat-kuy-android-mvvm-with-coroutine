@@ -12,6 +12,8 @@ import com.programmergabut.solatkuy.databinding.ListReadSurahBinding
 
 class ReadSurahAdapter(
     val setTheme: (ListReadSurahBinding) -> Unit,
+    val setContent: (ListReadSurahBinding) -> Unit,
+    val textSize: (ListReadSurahBinding) -> Unit,
     val isFav: Drawable,
     val accentColor: Int
 ) : RecyclerView.Adapter<ReadSurahAdapter.ReadSurahViewHolder>() {
@@ -42,11 +44,14 @@ class ReadSurahAdapter(
                 tvListFavAr.text = data.text
                 tvListFavEn.text = data.textEn
                 tvListFavNum.text = data.numberInSurah.toString()
-                setTheme(binding)
+                setTheme(this)
+                setContent(this)
+                textSize(this)
 
                 if(data.isLastRead){
                     clVhReadSurah.setBackgroundColor(accentColor)
                 }
+
             }
         }
     }

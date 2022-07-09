@@ -3,9 +3,14 @@ package com.programmergabut.solatkuy.ui.main.quran.readsurah
 import android.graphics.Canvas
 import android.graphics.drawable.ColorDrawable
 import android.os.Bundle
+import android.util.TypedValue
 import android.view.*
+import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AppCompatActivity
+import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
+import androidx.core.view.isVisible
+import androidx.core.view.updateLayoutParams
 import androidx.navigation.fragment.navArgs
 import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ItemTouchHelper.LEFT
@@ -35,6 +40,12 @@ class ReadSurahFragment(
     private lateinit var readSurahAdapter: ReadSurahAdapter
     private var isFirstLoad = true
     private var menu: Menu? = null
+    private var isMoreFabClick = false
+
+    private val rotateOpenAnimation by lazy { AnimationUtils.loadAnimation(requireContext(), R.anim.fab_rotate_open_animation)}
+    private val rotateCloseAnimation by lazy { AnimationUtils.loadAnimation(requireContext(), R.anim.fab_rotate_close_animation)}
+    private val fromBottomAnimation by lazy { AnimationUtils.loadAnimation(requireContext(), R.anim.fab_from_bottom_animation)}
+    private val toBottomAnimation by lazy { AnimationUtils.loadAnimation(requireContext(), R.anim.fab_to_bottom_animation)}
 
     override fun getViewBinding() = FragmentReadSurahBinding.inflate(layoutInflater)
 
@@ -58,9 +69,6 @@ class ReadSurahFragment(
     private fun setupView() {
         (activity as AppCompatActivity).setSupportActionBar(binding.tbReadSurah)
         (activity as AppCompatActivity).supportActionBar?.setDisplayHomeAsUpEnabled(true)
-        binding.tbReadSurah.setNavigationOnClickListener {
-            requireActivity().onBackPressed()
-        }
         setTheme(sharedPrefUtil.getIsBrightnessActive())
     }
 
@@ -68,6 +76,13 @@ class ReadSurahFragment(
     private fun setListener() {
         binding.apply {
             fabBrightness.setOnClickListener(this@ReadSurahFragment)
+            fabMore.setOnClickListener(this@ReadSurahFragment)
+            fabShowContent.setOnClickListener(this@ReadSurahFragment)
+            fabArSize.setOnClickListener(this@ReadSurahFragment)
+
+            tbReadSurah.setNavigationOnClickListener {
+                requireActivity().onBackPressed()
+            }
 
             viewModel.selectedSurah.observe(viewLifecycleOwner) {
                 when (it.status) {
@@ -106,6 +121,11 @@ class ReadSurahFragment(
 
     override fun onClick(v: View?) {
         when(v?.id){
+            R.id.fab_more -> {
+                setFabVisibility(isMoreFabClick)
+                setFabAnimation(isMoreFabClick)
+                isMoreFabClick = !isMoreFabClick
+            }
             R.id.fab_brightness -> {
                 if (!sharedPrefUtil.getIsBrightnessActive()) {
                     sharedPrefUtil.setIsBrightnessActive(true)
@@ -115,6 +135,47 @@ class ReadSurahFragment(
                     setTheme(false)
                 }
                 readSurahAdapter.notifyDataSetChanged()
+            }
+            R.id.fab_show_content -> {
+                binding.apply {
+                    when(sharedPrefUtil.getReadSurahContentType()){
+                        1 -> {
+                            tvFontType.text = "ا"
+                            fabArSize.isVisible = true
+                            sharedPrefUtil.setReadSurahContentType(2)
+                        }
+                        2 -> {
+                            tvFontType.text = "A"
+                            fabArSize.isVisible = false
+                            sharedPrefUtil.setReadSurahContentType(3)
+                        }
+                        3 -> {
+                            tvFontType.text = "Aا"
+                            fabArSize.isVisible = true
+                            sharedPrefUtil.setReadSurahContentType(1)
+                        }
+                    }
+                    readSurahAdapter.notifyDataSetChanged()
+                }
+            }
+            R.id.fab_ar_size -> {
+                binding.apply {
+                    when(sharedPrefUtil.getReadSurahArTextSize()){
+                        1 -> {
+                            tvArSize.setTextSize(TypedValue.COMPLEX_UNIT_SP, 24F)
+                            sharedPrefUtil.setReadSurahArTextSize(2)
+                        }
+                        2 -> {
+                            tvArSize.setTextSize(TypedValue.COMPLEX_UNIT_SP, 32F)
+                            sharedPrefUtil.setReadSurahArTextSize(3)
+                        }
+                        3 -> {
+                            tvArSize.setTextSize(TypedValue.COMPLEX_UNIT_SP, 16F)
+                            sharedPrefUtil.setReadSurahArTextSize(1)
+                        }
+                    }
+                    readSurahAdapter.notifyDataSetChanged()
+                }
             }
         }
     }
@@ -158,14 +219,50 @@ class ReadSurahFragment(
                     rvReadSurah.visibility = View.VISIBLE
                     abReadQuran.visibility = View.VISIBLE
                     ccReadQuranLoading.visibility = View.GONE
-                    fabBrightness.visibility = View.VISIBLE
+                    fabMore.visibility = View.VISIBLE
                 }
                 Status.Loading -> {
                     if (isFirstLoad) ccReadQuranLoading.visibility = View.VISIBLE
                     abReadQuran.visibility = View.INVISIBLE
                     rvReadSurah.visibility = View.INVISIBLE
-                    fabBrightness.visibility = View.GONE
+                    fabMore.visibility = View.GONE
                 }
+            }
+        }
+    }
+
+    private fun setFabVisibility(buttonClicked: Boolean) {
+        binding.apply {
+            if (!buttonClicked){
+                fabBrightness.visibility = View.VISIBLE
+                rlShowContent.visibility = View.VISIBLE
+                rlArSize.visibility = View.VISIBLE
+                fabBrightness.isClickable = true
+                fabShowContent.isClickable = true
+                fabArSize.isClickable = true
+            }else{
+                fabBrightness.visibility = View.INVISIBLE
+                rlShowContent.visibility = View.INVISIBLE
+                rlArSize.visibility = View.INVISIBLE
+                fabBrightness.isClickable = false
+                fabShowContent.isClickable = false
+                fabArSize.isClickable = false
+            }
+        }
+    }
+
+    private fun setFabAnimation(buttonClicked: Boolean) {
+        binding.apply {
+            if (!buttonClicked){
+                fabBrightness.startAnimation(fromBottomAnimation)
+                fabShowContent.startAnimation(fromBottomAnimation)
+                fabArSize.startAnimation(fromBottomAnimation)
+                fabMore.startAnimation(rotateOpenAnimation)
+            }else{
+                fabBrightness.startAnimation(toBottomAnimation)
+                fabShowContent.startAnimation(toBottomAnimation)
+                fabArSize.startAnimation(toBottomAnimation)
+                fabMore.startAnimation(rotateCloseAnimation)
             }
         }
     }
@@ -199,6 +296,8 @@ class ReadSurahFragment(
     private fun initRVReadSurah() {
         readSurahAdapter = ReadSurahAdapter(
             adapterTheme,
+            adapterContent,
+            adapterArTextSize,
             ContextCompat.getDrawable(requireContext(), R.drawable.ic_favorite_red_24)!!,
             ContextCompat.getColor(requireContext(), R.color.purple_500)
         )
@@ -223,6 +322,44 @@ class ReadSurahFragment(
                 tvListFavEn.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
                 tvListFavNum.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
                 clVhReadSurah.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.black))
+            }
+        }
+    }
+
+    private val adapterContent = fun(vhBinding: ListReadSurahBinding){
+        vhBinding.apply {
+            when(sharedPrefUtil.getReadSurahContentType()){
+                1 -> {
+                    tvListFavAr.isVisible = true
+                    tvListFavEn.isVisible = true
+                    tvListFavNum.updateLayoutParams<ConstraintLayout.LayoutParams> { horizontalBias = 1.0F }
+                }
+                2 -> {
+                    tvListFavAr.isVisible = true
+                    tvListFavEn.isVisible = false
+                    tvListFavNum.updateLayoutParams<ConstraintLayout.LayoutParams> { horizontalBias = 0.0F }
+                }
+                3 -> {
+                    tvListFavAr.isVisible = false
+                    tvListFavEn.isVisible = true
+                    tvListFavNum.updateLayoutParams<ConstraintLayout.LayoutParams> { horizontalBias = 1.0F }
+                }
+            }
+        }
+    }
+
+    private val adapterArTextSize = fun(vhBinding: ListReadSurahBinding){
+        vhBinding.apply {
+            when(sharedPrefUtil.getReadSurahArTextSize()){
+                1 -> {
+                    tvListFavAr.setTextSize(TypedValue.COMPLEX_UNIT_SP, 30F)
+                }
+                2 -> {
+                    tvListFavAr.setTextSize(TypedValue.COMPLEX_UNIT_SP, 38F)
+                }
+                3 -> {
+                    tvListFavAr.setTextSize(TypedValue.COMPLEX_UNIT_SP, 46F)
+                }
             }
         }
     }

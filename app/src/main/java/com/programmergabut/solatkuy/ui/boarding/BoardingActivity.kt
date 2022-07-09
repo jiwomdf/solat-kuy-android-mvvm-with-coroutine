@@ -125,7 +125,7 @@ class BoardingActivity : BaseActivity<ActivityBoardingBinding, BoardingViewModel
                 bottomSheetDialog.setOnShowListener { dia ->
                     val bottomSheetDialog = dia as BottomSheetDialog
                     val bottomSheetInternal: FrameLayout =
-                        bottomSheetDialog.findViewById(com.google.android.material.R.id.design_bottom_sheet)!!
+                        bottomSheetDialog.findViewById(R.id.design_bottom_sheet)!!
                     bottomSheetInternal.setBackgroundResource(R.drawable.bg_dark_rounded_top)
                 }
                 bottomSheetDialog.show()
@@ -140,7 +140,7 @@ class BoardingActivity : BaseActivity<ActivityBoardingBinding, BoardingViewModel
                 bottomSheetDialog.setOnShowListener { dia ->
                     val bottomSheetDialog = dia as BottomSheetDialog
                     val bottomSheetInternal: FrameLayout =
-                        bottomSheetDialog.findViewById(com.google.android.material.R.id.design_bottom_sheet)!!
+                        bottomSheetDialog.findViewById(R.id.design_bottom_sheet)!!
                     bottomSheetInternal.setBackgroundResource(R.drawable.bg_dark_rounded_top)
                 }
                 bottomSheetDialog.show()
@@ -212,7 +212,7 @@ class BoardingActivity : BaseActivity<ActivityBoardingBinding, BoardingViewModel
     }
 
     private fun showPermissionDialog(){
-        AlertDialog.Builder(this)
+        AlertDialog.Builder(this, R.style.AlertDialogTheme)
             .setTitle(getString(R.string.location_needed))
             .setMessage(getString(R.string.permission_is_needed_to_run_the_gps))
             .setCancelable(false)

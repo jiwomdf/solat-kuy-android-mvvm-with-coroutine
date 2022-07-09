@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import android.view.MotionEvent
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.ViewModel
@@ -91,6 +92,12 @@ abstract class BaseActivity<VB: ViewBinding, VM: ViewModel>(
             window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
             setCancelable(isCancelable)
             setContentView(dialogBinding.root)
+            setOnShowListener { dia ->
+                val bottomSheetDialog = dia as BottomSheetDialog
+                val bottomSheetInternal: FrameLayout =
+                    bottomSheetDialog.findViewById(R.id.design_bottom_sheet)!!
+                bottomSheetInternal.setBackgroundResource(R.drawable.bg_dark_rounded_top)
+            }
         }
         dialogBinding.apply{
             tvTitle.text = title
