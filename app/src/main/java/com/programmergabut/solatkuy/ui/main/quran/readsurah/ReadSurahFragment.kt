@@ -7,6 +7,7 @@ import android.util.TypedValue
 import android.view.*
 import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AppCompatActivity
+import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
@@ -293,12 +294,11 @@ class ReadSurahFragment(
             }
             R.id.i_star_surah -> {
                 val data = MsFavSurah(args.selectedSurahId.toInt(), args.selectedSurahName, args.selectedTranslation)
-                if (menu?.findItem(R.id.i_star_surah)?.icon?.constantState ==
-                    ContextCompat.getDrawable(requireContext(), R.drawable.ic_star_24)?.constantState
-                )
+                if (viewModel.favSurahBySurahID.value == null){
                     viewModel.insertFavSurah(data)
-                else
+                } else {
                     viewModel.deleteFavSurah(data)
+                }
                 true
             }
             else -> super.onOptionsItemSelected(item)

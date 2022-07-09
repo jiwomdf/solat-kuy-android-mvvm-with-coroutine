@@ -6,7 +6,7 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
     android:layout_marginStart="@dimen/dp8"
-    app:cardBackgroundColor="@color/dark_700"
+    app:cardBackgroundColor="@color/purple_900"
     app:cardCornerRadius="@dimen/dp12">
 
     <TextView
