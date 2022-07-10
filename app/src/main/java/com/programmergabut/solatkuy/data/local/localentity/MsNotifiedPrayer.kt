@@ -1,6 +1,7 @@
 package com.programmergabut.solatkuy.data.local.localentity
 
 import androidx.room.Entity
+import androidx.room.Ignore
 import androidx.room.PrimaryKey
 
 /*
@@ -9,7 +10,7 @@ import androidx.room.PrimaryKey
 
 
 @Entity(tableName = "ms_notified_prayer")
-class MsNotifiedPrayer (
+class MsNotifiedPrayer @Ignore constructor(
     var prayerName: String,
     var isNotified: Boolean,
     var prayerTime: String){

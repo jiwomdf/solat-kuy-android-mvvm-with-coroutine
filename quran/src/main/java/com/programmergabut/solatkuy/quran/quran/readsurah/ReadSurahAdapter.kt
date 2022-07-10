@@ -1,4 +1,4 @@
-package com.programmergabut.solatkuy.ui.main.quran.readsurah
+package com.programmergabut.solatkuy.quran.quran.readsurah
 
 import android.graphics.drawable.Drawable
 import android.view.LayoutInflater

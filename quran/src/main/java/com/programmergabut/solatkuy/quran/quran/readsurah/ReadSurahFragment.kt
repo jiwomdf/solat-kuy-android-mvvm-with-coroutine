@@ -1,4 +1,4 @@
-package com.programmergabut.solatkuy.ui.main.quran.readsurah
+package com.programmergabut.solatkuy.quran.quran.readsurah
 
 import android.graphics.Canvas
 import android.graphics.drawable.ColorDrawable
@@ -88,10 +88,10 @@ class ReadSurahFragment(
                 when (it.status) {
                     Status.Success, Status.Error -> {
                         if (it.data != null) {
-                            checkLastSurahAndAyah(it.data)
+                            checkLastSurahAndAyah(it.data ?: emptyList())
                             setVisibility(it.status)
-                            setToolBarText(it.data)
-                            readSurahAdapter.listAyah = it.data
+                            setToolBarText(it.data ?: emptyList())
+                            readSurahAdapter.listAyah = it.data ?: emptyList()
                             readSurahAdapter.notifyDataSetChanged()
 
                             if (args.isAutoScroll) {

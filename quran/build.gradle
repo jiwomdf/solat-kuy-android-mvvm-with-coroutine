@@ -1,0 +1,49 @@
+plugins {
+    id 'com.android.dynamic-feature'
+    id 'org.jetbrains.kotlin.android'
+    id 'kotlin-kapt'
+    id 'dagger.hilt.android.plugin'
+    id 'androidx.navigation.safeargs.kotlin'
+    id 'kotlin-android-extensions'
+    id 'com.google.gms.google-services'
+    id 'com.google.firebase.crashlytics'
+}
+android {
+    compileSdkVersion 30
+
+    defaultConfig {
+        minSdkVersion 21
+        testInstrumentationRunner "com.programmergabut.solatkuy.HiltTestRunner"
+    }
+
+    compileOptions {
+        sourceCompatibility JavaVersion.VERSION_1_8
+        targetCompatibility JavaVersion.VERSION_1_8
+    }
+
+    kotlinOptions {
+        jvmTarget = JavaVersion.VERSION_1_8.toString()
+    }
+
+    buildTypes {
+        release {
+            minifyEnabled false
+            proguardFiles getDefaultProguardFile('proguard-android-optimize.txt'), 'proguard-rules.pro'
+        }
+    }
+
+    packagingOptions {
+        exclude 'META-INF/AL2.0'
+        exclude 'META-INF/LGPL2.1'
+    }
+}
+
+dependencies {
+    implementation project(":app")
+
+    // Dagger - Hilt
+    implementation "com.google.dagger:hilt-android:2.35.1"
+    kapt "com.google.dagger:hilt-android-compiler:2.35.1"
+    kapt "androidx.hilt:hilt-compiler:1.0.0"
+
+}

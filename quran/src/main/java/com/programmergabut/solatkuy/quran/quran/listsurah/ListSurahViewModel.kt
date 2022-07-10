@@ -1,4 +1,4 @@
-package com.programmergabut.solatkuy.ui.main.quran.listsurah
+package com.programmergabut.solatkuy.quran.quran.listsurah
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData

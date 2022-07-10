@@ -17,7 +17,7 @@ import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.launchFragmentInHiltContainer
 import com.programmergabut.solatkuy.ui.MyViewAction
 import com.programmergabut.solatkuy.ui.SolatKuyFragmentFactoryAndroidTest
-import com.programmergabut.solatkuy.ui.main.quran.listsurah.StaredSurahAdapter
+import com.programmergabut.solatkuy.quran.quran.listsurah.StaredSurahAdapter
 import com.programmergabut.solatkuy.util.idlingresource.EspressoIdlingResource
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
@@ -55,14 +55,14 @@ class ReadMsSurahFragmentTest {
 
     @Test
     fun testVisibilityAndData_componentDisplayedWithCorrectValue(){
-        var testViewModel: ReadSurahViewModel? = null
+        var testViewModel: com.programmergabut.solatkuy.quran.quran.readsurah.ReadSurahViewModel? = null
         val initData = DummyValueAndroidTest.fetchAllSurah<ReadMsSurahFragmentTest>().data.last()
         val arg = Bundle()
         arg.putString("selectedSurahId", initData.number.toString())
         arg.putString("selectedSurahName", initData.englishName)
         arg.putString("selectedTranslation", initData.englishNameTranslation)
         arg.putBoolean("isAutoScroll", false)
-        launchFragmentInHiltContainer<ReadSurahFragment>(
+        launchFragmentInHiltContainer<com.programmergabut.solatkuy.quran.quran.readsurah.ReadSurahFragment>(
             fragmentArgs = arg,
             fragmentFactory = fragmentFactory
         ) {
@@ -78,14 +78,14 @@ class ReadMsSurahFragmentTest {
 
     @Test
     fun testScrollToTheLastAyah_successfullyScrollToLastAyah(){
-        var testViewModel: ReadSurahViewModel? = null
+        var testViewModel: com.programmergabut.solatkuy.quran.quran.readsurah.ReadSurahViewModel? = null
         val initData = DummyValueAndroidTest.fetchAllSurah<ReadMsSurahFragmentTest>().data.last()
         val arg = Bundle()
         arg.putString("selectedSurahId", initData.number.toString())
         arg.putString("selectedSurahName", initData.englishName)
         arg.putString("selectedTranslation", initData.englishNameTranslation)
         arg.putBoolean("isAutoScroll", false)
-        launchFragmentInHiltContainer<ReadSurahFragment>(
+        launchFragmentInHiltContainer<com.programmergabut.solatkuy.quran.quran.readsurah.ReadSurahFragment>(
             fragmentArgs = arg,
             fragmentFactory = fragmentFactory
         ){
@@ -104,14 +104,14 @@ class ReadMsSurahFragmentTest {
 
     @Test
     fun testOpenFirstSurahThenClickFavorite_favSurahHasSaved(){
-        var testViewModel: ReadSurahViewModel? = null
+        var testViewModel: com.programmergabut.solatkuy.quran.quran.readsurah.ReadSurahViewModel? = null
         val initData = DummyValueAndroidTest.fetchAllSurah<ReadMsSurahFragmentTest>().data.last()
         val arg = Bundle()
         arg.putString("selectedSurahId", initData.number.toString())
         arg.putString("selectedSurahName", initData.englishName)
         arg.putString("selectedTranslation", initData.englishNameTranslation)
         arg.putBoolean("isAutoScroll", false)
-        launchFragmentInHiltContainer<ReadSurahFragment>(
+        launchFragmentInHiltContainer<com.programmergabut.solatkuy.quran.quran.readsurah.ReadSurahFragment>(
             fragmentArgs = arg,
             fragmentFactory = fragmentFactory
         ){
@@ -126,14 +126,14 @@ class ReadMsSurahFragmentTest {
 
     @Test
     fun testOpenLastSurahThanSwipeLeftFirstAyah(){
-        var testViewModel: ReadSurahViewModel? = null
+        var testViewModel: com.programmergabut.solatkuy.quran.quran.readsurah.ReadSurahViewModel? = null
         val initData = DummyValueAndroidTest.fetchAllSurah<ReadMsSurahFragmentTest>().data.last()
         val arg = Bundle()
         arg.putString("selectedSurahId", initData.number.toString())
         arg.putString("selectedSurahName", initData.englishName)
         arg.putString("selectedTranslation", initData.englishNameTranslation)
         arg.putBoolean("isAutoScroll", false)
-        launchFragmentInHiltContainer<ReadSurahFragment>(
+        launchFragmentInHiltContainer<com.programmergabut.solatkuy.quran.quran.readsurah.ReadSurahFragment>(
             fragmentArgs = arg,
             fragmentFactory = fragmentFactory
         ) {

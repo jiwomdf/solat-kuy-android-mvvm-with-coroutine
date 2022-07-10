@@ -15,7 +15,7 @@ import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.TaskExecutorWithIdlingResourceRule
 import com.programmergabut.solatkuy.launchFragmentInHiltContainer
 import com.programmergabut.solatkuy.ui.SolatKuyFragmentFactoryAndroidTest
-import com.programmergabut.solatkuy.ui.main.quran.readsurah.ReadSurahAdapter
+import com.programmergabut.solatkuy.quran.quran.readsurah.ReadSurahAdapter
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest
 import junit.framework.Assert.assertEquals
@@ -50,8 +50,8 @@ class ListMsSurahFragmentTest{
 
     @Test
     fun testVisibility(){
-        var testViewModel: ListSurahViewModel? = null
-        launchFragmentInHiltContainer<ListSurahFragment>(fragmentFactory = fragmentFactory) {
+        var testViewModel: com.programmergabut.solatkuy.quran.quran.listsurah.ListSurahViewModel? = null
+        launchFragmentInHiltContainer<com.programmergabut.solatkuy.quran.quran.listsurah.ListSurahFragment>(fragmentFactory = fragmentFactory) {
             testViewModel = viewModel
         }
 
@@ -62,8 +62,8 @@ class ListMsSurahFragmentTest{
 
     @Test
     fun testScrollRvQuran(){
-        var testViewModel: ListSurahViewModel? = null
-        launchFragmentInHiltContainer<ListSurahFragment>(fragmentFactory = fragmentFactory) {
+        var testViewModel: com.programmergabut.solatkuy.quran.quran.listsurah.ListSurahViewModel? = null
+        launchFragmentInHiltContainer<com.programmergabut.solatkuy.quran.quran.listsurah.ListSurahFragment>(fragmentFactory = fragmentFactory) {
             testViewModel = viewModel
         }
         onView(withId(R.id.rv_quran_surah)).perform(
@@ -75,14 +75,14 @@ class ListMsSurahFragmentTest{
     @Test
     fun testOpenFirstSurah_thenNNavigateToReadSurahFragment(){
         val navController = mock(NavController::class.java)
-        var testViewModel: ListSurahViewModel? = null
-        launchFragmentInHiltContainer<ListSurahFragment>(fragmentFactory = fragmentFactory) {
+        var testViewModel: com.programmergabut.solatkuy.quran.quran.listsurah.ListSurahViewModel? = null
+        launchFragmentInHiltContainer<com.programmergabut.solatkuy.quran.quran.listsurah.ListSurahFragment>(fragmentFactory = fragmentFactory) {
             Navigation.setViewNavController(requireView(), navController)
             testViewModel = viewModel
         }
         onView(withId(R.id.rv_quran_surah)).perform(
             RecyclerViewActions
-                .actionOnItemAtPosition<ReadSurahAdapter.ReadSurahViewHolder>(113, click())
+                .actionOnItemAtPosition<com.programmergabut.solatkuy.quran.quran.readsurah.ReadSurahAdapter.ReadSurahViewHolder>(113, click())
         )
 
         val data = testViewModel?.allSurah?.value?.data?.last()!!
@@ -94,8 +94,8 @@ class ListMsSurahFragmentTest{
 
     @Test
     fun testChangeJuzz(){
-        var testViewModel: ListSurahViewModel? = null
-        launchFragmentInHiltContainer<ListSurahFragment>(fragmentFactory = fragmentFactory) {
+        var testViewModel: com.programmergabut.solatkuy.quran.quran.listsurah.ListSurahViewModel? = null
+        launchFragmentInHiltContainer<com.programmergabut.solatkuy.quran.quran.listsurah.ListSurahFragment>(fragmentFactory = fragmentFactory) {
             testViewModel = viewModel
         }
 
@@ -114,8 +114,8 @@ class ListMsSurahFragmentTest{
 
     @Test
     fun testSearchSurah_recyclerViewChangeAndDataIsSameWithSearchString(){
-        var testViewModel: ListSurahViewModel? = null
-        launchFragmentInHiltContainer<ListSurahFragment>(fragmentFactory = fragmentFactory) {
+        var testViewModel: com.programmergabut.solatkuy.quran.quran.listsurah.ListSurahViewModel? = null
+        launchFragmentInHiltContainer<com.programmergabut.solatkuy.quran.quran.listsurah.ListSurahFragment>(fragmentFactory = fragmentFactory) {
             testViewModel = viewModel
         }
 

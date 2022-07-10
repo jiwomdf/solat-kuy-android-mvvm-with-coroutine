@@ -1,4 +1,4 @@
-package com.programmergabut.solatkuy.ui.main.quran.listsurah
+package com.programmergabut.solatkuy.quran.quran.listsurah
 
 import android.os.Bundle
 import android.text.Editable
@@ -57,7 +57,7 @@ class ListSurahFragment(
                             setVisibility(it.status, null)
                             return@observe
                         }
-                        updateListSurahAdapter(it.data)
+                        updateListSurahAdapter(it.data ?: emptyList())
                         setVisibility(it.status, it.data)
                     }
                     Status.Loading -> {

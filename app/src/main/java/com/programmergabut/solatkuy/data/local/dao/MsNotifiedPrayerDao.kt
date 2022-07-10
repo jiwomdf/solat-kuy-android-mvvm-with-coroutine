@@ -21,7 +21,7 @@ interface MsNotifiedPrayerDao {
     fun getListNotifiedPrayer(): LiveData<List<MsNotifiedPrayer>>
 
     @Query("delete from ms_notified_prayer")
-    suspend fun deleteAll()
+    suspend fun deleteAll(): Int
 
     @Insert(onConflict = OnConflictStrategy.IGNORE)
     suspend fun insertNotifiedPrayer(MsNotifiedPrayer: MsNotifiedPrayer)

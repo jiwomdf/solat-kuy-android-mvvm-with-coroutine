@@ -28,7 +28,7 @@ import org.mockito.junit.MockitoJUnitRunner
 @RunWith(MockitoJUnitRunner::class)
 class ListMsSurahFragmentViewModelTest {
 
-    private lateinit var viewModel: ListSurahViewModel
+    private lateinit var viewModel: com.programmergabut.solatkuy.quran.quran.listsurah.ListSurahViewModel
     @get:Rule
     val instantExecutor = InstantTaskExecutorRule()
     @get:Rule
@@ -37,7 +37,9 @@ class ListMsSurahFragmentViewModelTest {
     private lateinit var fakeQuranRepository: FakeQuranRepository
     @Before
     fun setUp(){
-        viewModel = ListSurahViewModel(fakeQuranRepository)
+        viewModel = com.programmergabut.solatkuy.quran.quran.listsurah.ListSurahViewModel(
+            fakeQuranRepository
+        )
         verify(fakeQuranRepository).observeListFavSurah()
     }
 

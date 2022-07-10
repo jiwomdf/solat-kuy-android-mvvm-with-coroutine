@@ -1,4 +1,4 @@
-package com.programmergabut.solatkuy.ui.main.quran.listsurah
+package com.programmergabut.solatkuy.quran.quran.listsurah
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
