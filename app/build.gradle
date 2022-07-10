@@ -78,7 +78,7 @@ android {
         exclude 'META-INF/AL2.0'
         exclude 'META-INF/LGPL2.1'
     }
-    //dynamicFeatures = [':quran']
+    dynamicFeatures = [':quran']
 
 }
 
@@ -106,7 +106,7 @@ dependencies {
     //Lottie
     implementation 'com.airbnb.android:lottie:3.6.0'
     implementation 'androidx.cardview:cardview:1.0.0'
-    implementation 'androidx.lifecycle:lifecycle-livedata-ktx:2.3.1'
+
 
     // Glide
     kapt 'com.github.bumptech.glide:compiler:4.11.0'
@@ -133,6 +133,7 @@ dependencies {
     /* ViewModel Kotlin support */
     api "androidx.lifecycle:lifecycle-viewmodel-ktx:2.3.1"
     api "androidx.lifecycle:lifecycle-runtime-ktx:2.3.1"
+    api 'androidx.lifecycle:lifecycle-livedata-ktx:2.3.1'
 
     // Lifecycle
     api "androidx.recyclerview:recyclerview:1.2.1"

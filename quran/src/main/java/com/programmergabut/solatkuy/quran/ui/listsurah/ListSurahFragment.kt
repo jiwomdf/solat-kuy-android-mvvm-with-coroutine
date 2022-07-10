@@ -1,4 +1,4 @@
-package com.programmergabut.solatkuy.quran.quran.listsurah
+package com.programmergabut.solatkuy.quran.ui.listsurah
 
 import android.os.Bundle
 import android.text.Editable
@@ -9,18 +9,22 @@ import android.widget.ArrayAdapter
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.base.BaseFragment
 import com.programmergabut.solatkuy.data.local.localentity.MsSurah
-import com.programmergabut.solatkuy.databinding.FragmentListSurahBinding
+import com.programmergabut.solatkuy.di.SubModuleDependencies
+import com.programmergabut.solatkuy.quran.R
+import com.programmergabut.solatkuy.quran.databinding.FragmentListSurahBinding
+import com.programmergabut.solatkuy.quran.di.DaggerQuranViewModelComponent
+import com.programmergabut.solatkuy.quran.di.QuranViewModelComponent
 import com.programmergabut.solatkuy.util.Status
-import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.EntryPointAccessors
 import java.util.*
+import com.programmergabut.solatkuy.R as superappR
 
 /*
  * Created by Katili Jiwo Adi Wiyono on 25/06/20.
  */
-@AndroidEntryPoint
+
 class ListSurahFragment(
     viewModelTest: ListSurahViewModel? = null
 ) : BaseFragment<FragmentListSurahBinding, ListSurahViewModel>(
@@ -30,18 +34,35 @@ class ListSurahFragment(
 ), SwipeRefreshLayout.OnRefreshListener, View.OnClickListener {
 
     private val ALL_JUZZ = "All Juzz"
+    private var component: QuranViewModelComponent? = null
     private lateinit var allSurahAdapter: AllSurahAdapter
     private lateinit var staredSurahAdapter: StaredSurahAdapter
 
     override fun getViewBinding() = FragmentListSurahBinding.inflate(layoutInflater)
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        getActivityComponent()?.inject(this)
         super.onViewCreated(view, savedInstanceState)
         initRvAllSurah()
         initRvStaredSurah()
         initJuzzSpinner()
         setListener()
         viewModel.getAllSurah()
+    }
+
+    private fun getActivityComponent(): QuranViewModelComponent? {
+        if (component == null) {
+            component = DaggerQuranViewModelComponent.builder()
+                .context(requireContext().applicationContext)
+                .dependencies(
+                    EntryPointAccessors.fromApplication(
+                        requireContext().applicationContext,
+                        SubModuleDependencies::class.java
+                    )
+                )
+                .build()
+        }
+        return component
     }
 
     private fun setListener() {
@@ -131,7 +152,7 @@ class ListSurahFragment(
                 Status.Success, Status.Error -> {
                     if(data == null || data.isEmpty()){
                         tvLoadingAllSurah.visibility = View.VISIBLE
-                        tvLoadingAllSurah.text = getString(R.string.text_there_is_no_data)
+                        tvLoadingAllSurah.text = getString(superappR.string.text_there_is_no_data)
                     } else {
                         tvLoadingAllSurah.visibility = View.GONE
                         rvQuranSurah.visibility = View.VISIBLE
@@ -140,7 +161,7 @@ class ListSurahFragment(
                 }
                 Status.Loading -> {
                     tvLoadingAllSurah.visibility = View.VISIBLE
-                    tvLoadingAllSurah.text = getString(R.string.loading)
+                    tvLoadingAllSurah.text = getString(superappR.string.loading)
                     rvQuranSurah.visibility = View.GONE
                 }
             }
@@ -154,7 +175,7 @@ class ListSurahFragment(
             for (i in 1..30) {
                 arrJuzz.add(i.toString())
             }
-            sJuzz.adapter = ArrayAdapter(requireContext(), R.layout.spinner_item, arrJuzz)
+            sJuzz.adapter = ArrayAdapter(requireContext(), superappR.layout.spinner_item, arrJuzz)
             sJuzz.onItemSelectedListener = object : AdapterView.OnItemSelectedListener {
                 override fun onNothingSelected(parent: AdapterView<*>?) {}
                 override fun onItemSelected(parent: AdapterView<*>?, view: View?, position: Int, id: Long) {

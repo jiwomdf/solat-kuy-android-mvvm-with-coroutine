@@ -1,4 +1,4 @@
-package com.programmergabut.solatkuy.quran.quran.listsurah
+package com.programmergabut.solatkuy.quran.ui.listsurah
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
@@ -8,11 +8,9 @@ import com.programmergabut.solatkuy.data.QuranRepository
 import com.programmergabut.solatkuy.data.local.localentity.MsSurah
 import com.programmergabut.solatkuy.util.Resource
 import com.programmergabut.solatkuy.util.livedata.AbsentLiveData
-import dagger.hilt.android.lifecycle.HiltViewModel
 import java.util.*
 import javax.inject.Inject
 
-@HiltViewModel
 class ListSurahViewModel @Inject constructor(private val quranRepository: QuranRepository): ViewModel() {
 
     val staredSurah = quranRepository.observeListFavSurah()

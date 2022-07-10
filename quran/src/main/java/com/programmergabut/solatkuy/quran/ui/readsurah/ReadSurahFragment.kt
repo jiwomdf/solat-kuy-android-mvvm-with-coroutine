@@ -1,4 +1,4 @@
-package com.programmergabut.solatkuy.quran.quran.readsurah
+package com.programmergabut.solatkuy.quran.ui.readsurah
 
 import android.graphics.Canvas
 import android.graphics.drawable.ColorDrawable
@@ -17,16 +17,20 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ItemTouchHelper.LEFT
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.base.BaseFragment
 import com.programmergabut.solatkuy.data.local.localentity.MsAyah
 import com.programmergabut.solatkuy.data.local.localentity.MsFavSurah
-import com.programmergabut.solatkuy.databinding.FragmentReadSurahBinding
-import com.programmergabut.solatkuy.databinding.ListReadSurahBinding
+import com.programmergabut.solatkuy.di.SubModuleDependencies
+import com.programmergabut.solatkuy.quran.R
+import com.programmergabut.solatkuy.quran.databinding.FragmentReadSurahBinding
+import com.programmergabut.solatkuy.quran.databinding.ListReadSurahBinding
+import com.programmergabut.solatkuy.quran.di.DaggerQuranViewModelComponent
+import com.programmergabut.solatkuy.quran.di.QuranViewModelComponent
 import com.programmergabut.solatkuy.util.Status
 import dagger.hilt.android.AndroidEntryPoint
+import dagger.hilt.android.EntryPointAccessors
 import es.dmoral.toasty.Toasty
-
+import com.programmergabut.solatkuy.R as superappR
 
 @AndroidEntryPoint
 class ReadSurahFragment(
@@ -38,14 +42,15 @@ class ReadSurahFragment(
 ), View.OnClickListener {
 
     private val args: ReadSurahFragmentArgs by navArgs()
+    private var component: QuranViewModelComponent? = null
     private lateinit var readSurahAdapter: ReadSurahAdapter
     private var menu: Menu? = null
     private var isMoreFabClick = false
 
-    private val rotateOpenAnimation by lazy { AnimationUtils.loadAnimation(requireContext(), R.anim.fab_rotate_open_animation)}
-    private val rotateCloseAnimation by lazy { AnimationUtils.loadAnimation(requireContext(), R.anim.fab_rotate_close_animation)}
-    private val fromBottomAnimation by lazy { AnimationUtils.loadAnimation(requireContext(), R.anim.fab_from_bottom_animation)}
-    private val toBottomAnimation by lazy { AnimationUtils.loadAnimation(requireContext(), R.anim.fab_to_bottom_animation)}
+    private val rotateOpenAnimation by lazy { AnimationUtils.loadAnimation(requireContext(), superappR.anim.fab_rotate_open_animation)}
+    private val rotateCloseAnimation by lazy { AnimationUtils.loadAnimation(requireContext(), superappR.anim.fab_rotate_close_animation)}
+    private val fromBottomAnimation by lazy { AnimationUtils.loadAnimation(requireContext(), superappR.anim.fab_from_bottom_animation)}
+    private val toBottomAnimation by lazy { AnimationUtils.loadAnimation(requireContext(), superappR.anim.fab_to_bottom_animation)}
 
     override fun getViewBinding() = FragmentReadSurahBinding.inflate(layoutInflater)
 
@@ -59,11 +64,27 @@ class ReadSurahFragment(
     }
 
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+        getActivityComponent()?.inject(this)
         super.onViewCreated(view, savedInstanceState)
         setupView()
         initRVReadSurah()
         setListener()
         viewModel.getSelectedSurah(args.selectedSurahId.toInt())
+    }
+
+    private fun getActivityComponent(): QuranViewModelComponent? {
+        if (component == null) {
+            component = DaggerQuranViewModelComponent.builder()
+                .context(requireContext().applicationContext)
+                .dependencies(
+                    EntryPointAccessors.fromApplication(
+                        requireContext().applicationContext,
+                        SubModuleDependencies::class.java
+                    )
+                )
+                .build()
+        }
+        return component
     }
 
     private fun setupView() {
@@ -109,11 +130,11 @@ class ReadSurahFragment(
 
             viewModel.favSurahBySurahID.observe(viewLifecycleOwner) {
                 if (it == null) {
-                    menu?.findItem(R.id.i_star_surah)?.icon =
-                        ContextCompat.getDrawable(requireContext(), R.drawable.ic_star_24)
+                    menu?.findItem(superappR.id.i_star_surah)?.icon =
+                        ContextCompat.getDrawable(requireContext(), superappR.drawable.ic_star_24)
                 } else {
-                    menu?.findItem(R.id.i_star_surah)?.icon =
-                        ContextCompat.getDrawable(requireContext(), R.drawable.ic_star_purple_24)
+                    menu?.findItem(superappR.id.i_star_surah)?.icon =
+                        ContextCompat.getDrawable(requireContext(), superappR.drawable.ic_star_purple_24)
                 }
             }
         }
@@ -191,15 +212,15 @@ class ReadSurahFragment(
     private fun setTheme(isBrightnessActive: Boolean){
         binding.apply {
             if(isBrightnessActive){
-                tbReadSurah.setTitleTextColor(ContextCompat.getColor(requireContext(), R.color.black))
-                tbReadSurah.setSubtitleTextColor(ContextCompat.getColor(requireContext(), R.color.black))
-                tbReadSurah.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
-                clSurah.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
+                tbReadSurah.setTitleTextColor(ContextCompat.getColor(requireContext(), superappR.color.black))
+                tbReadSurah.setSubtitleTextColor(ContextCompat.getColor(requireContext(), superappR.color.black))
+                tbReadSurah.setBackgroundColor(ContextCompat.getColor(requireContext(), superappR.color.white))
+                clSurah.setBackgroundColor(ContextCompat.getColor(requireContext(), superappR.color.white))
             } else {
-                tbReadSurah.setTitleTextColor(ContextCompat.getColor(requireContext(), R.color.white))
-                tbReadSurah.setSubtitleTextColor(ContextCompat.getColor(requireContext(), R.color.white))
-                tbReadSurah.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.dark_700))
-                clSurah.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.black))
+                tbReadSurah.setTitleTextColor(ContextCompat.getColor(requireContext(), superappR.color.white))
+                tbReadSurah.setSubtitleTextColor(ContextCompat.getColor(requireContext(), superappR.color.white))
+                tbReadSurah.setBackgroundColor(ContextCompat.getColor(requireContext(), superappR.color.dark_700))
+                clSurah.setBackgroundColor(ContextCompat.getColor(requireContext(), superappR.color.black))
             }
         }
     }
@@ -282,7 +303,7 @@ class ReadSurahFragment(
 
     override fun onCreateOptionsMenu(menu: Menu, inflater: MenuInflater) {
         this.menu = menu
-        inflater.inflate(R.menu.read_surah_menu, menu)
+        inflater.inflate(superappR.menu.read_surah_menu, menu)
         return super.onCreateOptionsMenu(menu, inflater)
     }
 
@@ -292,7 +313,7 @@ class ReadSurahFragment(
                 activity?.finish()
                 true
             }
-            R.id.i_star_surah -> {
+            superappR.id.i_star_surah -> {
                 val data = MsFavSurah(args.selectedSurahId.toInt(), args.selectedSurahName, args.selectedTranslation)
                 if (viewModel.favSurahBySurahID.value == null){
                     viewModel.insertFavSurah(data)
@@ -310,8 +331,8 @@ class ReadSurahFragment(
             adapterTheme,
             adapterContent,
             adapterArTextSize,
-            ContextCompat.getDrawable(requireContext(), R.drawable.ic_favorite_red_24)!!,
-            ContextCompat.getColor(requireContext(), R.color.purple_500)
+            ContextCompat.getDrawable(requireContext(), superappR.drawable.ic_favorite_red_24)!!,
+            ContextCompat.getColor(requireContext(), superappR.color.purple_500)
         )
         binding.rvReadSurah.apply {
             adapter = readSurahAdapter
@@ -324,16 +345,16 @@ class ReadSurahFragment(
     private val adapterTheme = fun(vhBinding: ListReadSurahBinding){
         vhBinding.apply {
             if(sharedPrefUtil.getIsBrightnessActive()){
-                tvListFavAr.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
-                tvListFavEn.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
-                tvListFavNum.setTextColor(ContextCompat.getColor(requireContext(), R.color.black))
-                clVhReadSurah.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.white))
+                tvListFavAr.setTextColor(ContextCompat.getColor(requireContext(), superappR.color.black))
+                tvListFavEn.setTextColor(ContextCompat.getColor(requireContext(), superappR.color.black))
+                tvListFavNum.setTextColor(ContextCompat.getColor(requireContext(), superappR.color.black))
+                clVhReadSurah.setBackgroundColor(ContextCompat.getColor(requireContext(), superappR.color.white))
             }
             else {
-                tvListFavAr.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
-                tvListFavEn.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
-                tvListFavNum.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
-                clVhReadSurah.setBackgroundColor(ContextCompat.getColor(requireContext(), R.color.black))
+                tvListFavAr.setTextColor(ContextCompat.getColor(requireContext(), superappR.color.white))
+                tvListFavEn.setTextColor(ContextCompat.getColor(requireContext(), superappR.color.white))
+                tvListFavNum.setTextColor(ContextCompat.getColor(requireContext(), superappR.color.white))
+                clVhReadSurah.setBackgroundColor(ContextCompat.getColor(requireContext(), superappR.color.black))
             }
         }
     }
@@ -397,7 +418,7 @@ class ReadSurahFragment(
         override fun onChildDraw(canvas: Canvas, recyclerView: RecyclerView, viewHolder: RecyclerView.ViewHolder,
                                  dX: Float, dY: Float, actionState: Int, isCurrentlyActive: Boolean) {
             super.onChildDraw(canvas, recyclerView, viewHolder, dX, dY, actionState, isCurrentlyActive)
-            val background =  ColorDrawable(ContextCompat.getColor(requireContext(), R.color.purple_500))
+            val background =  ColorDrawable(ContextCompat.getColor(requireContext(), superappR.color.purple_500))
             background.apply {
                 setBounds(
                     viewHolder.itemView.right, viewHolder.itemView.top,
@@ -405,7 +426,7 @@ class ReadSurahFragment(
                 )
                 draw(canvas)
             }
-            val icon = ContextCompat.getDrawable(requireContext(), R.drawable.ic_baseline_check_24) ?: return
+            val icon = ContextCompat.getDrawable(requireContext(), superappR.drawable.ic_baseline_check_24) ?: return
             val iconMargin = 50
             val iconTop = viewHolder.itemView.top + (viewHolder.itemView.height - icon.intrinsicHeight) / 2
             val iconBottom: Int = iconTop + icon.intrinsicHeight

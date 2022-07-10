@@ -1,4 +1,4 @@
-package com.programmergabut.solatkuy.quran.quran.listsurah
+package com.programmergabut.solatkuy.quran.ui.listsurah
 
 import android.view.LayoutInflater
 import android.view.ViewGroup
@@ -6,7 +6,7 @@ import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
 import com.programmergabut.solatkuy.data.local.localentity.MsFavSurah
-import com.programmergabut.solatkuy.databinding.ListStaredSurahBinding
+import com.programmergabut.solatkuy.quran.databinding.ListStaredSurahBinding
 
 class StaredSurahAdapter : RecyclerView.Adapter<StaredSurahAdapter.StaredSurahViewHolder>() {
 

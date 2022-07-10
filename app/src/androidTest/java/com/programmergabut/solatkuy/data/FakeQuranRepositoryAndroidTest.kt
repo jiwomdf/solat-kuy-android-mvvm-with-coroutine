@@ -21,7 +21,7 @@ import kotlinx.coroutines.*
 import kotlinx.coroutines.Dispatchers.IO
 
 @HiltAndroidTest
-class FakeQuranRepositoryAndroidTest : QuranRepository {
+class FakeQuranRepositoryAndroidTest : com.programmergabut.solatkuy.quran.data.QuranRepository {
 
     private var listMsFavSurah = DummyValueAndroidTest.getListMsFavSurah()
     private val observableMsFavSurahs = MutableLiveData<List<MsFavSurah>>()

@@ -21,39 +21,5 @@
         android:name="com.programmergabut.solatkuy.ui.main.setting.SettingFragment"
         android:label="fragment_setting"
         tools:layout="@layout/fragment_setting" />
-    <fragment
-        android:id="@+id/fragmentQuran"
-        android:name="com.programmergabut.solatkuy.quran.quran.listsurah.ListSurahFragment"
-        android:label="fragment_quran"
-        tools:layout="@layout/fragment_list_surah" >
-        <action
-            android:id="@+id/action_quranFragment_to_readSurahActivity"
-            app:destination="@id/readSurahActivity"
-            app:enterAnim="@anim/nav_default_enter_anim"
-            app:exitAnim="@anim/nav_default_exit_anim"
-            app:popEnterAnim="@anim/nav_default_enter_anim"
-            app:popExitAnim="@anim/nav_default_exit_anim"/>
-    </fragment>
-    <fragment
-        android:id="@+id/readSurahActivity"
-        android:name="com.programmergabut.solatkuy.quran.quran.readsurah.ReadSurahFragment"
-        android:label="activity_read_surah"
-        tools:layout="@layout/fragment_read_surah" >
-        <argument
-            android:name="selectedSurahId"
-            android:defaultValue="-1"
-            app:argType="string" />
-        <argument
-            android:name="selectedSurahName"
-            android:defaultValue=""
-            app:argType="string" />
-        <argument
-            android:name="selectedTranslation"
-            android:defaultValue=""
-            app:argType="string" />
-        <argument
-            android:name="isAutoScroll"
-            android:defaultValue="false"
-            app:argType="boolean" />
-    </fragment>
+
 </navigation>

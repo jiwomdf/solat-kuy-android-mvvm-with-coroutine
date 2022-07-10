@@ -1,4 +1,4 @@
-package com.programmergabut.solatkuy.quran.quran.readsurah
+package com.programmergabut.solatkuy.quran.ui.readsurah
 
 import androidx.lifecycle.*
 import com.programmergabut.solatkuy.data.QuranRepository

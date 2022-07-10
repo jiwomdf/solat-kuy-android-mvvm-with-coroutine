@@ -5,7 +5,7 @@
     android:id="@+id/cl_surah"
     android:layout_width="match_parent"
     android:layout_height="match_parent"
-    tools:context=".quran.quran.readsurah.ReadSurahFragment">
+    tools:context=".ui.readsurah.ReadSurahFragment">
 
     <com.google.android.material.appbar.AppBarLayout
         android:id="@+id/ab_readQuran"

@@ -1,0 +1,8 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+
+    <!--Message-->
+    <string name="last_read_ayah_not_found_title">Last read ayah not found</string>
+    <string name="last_read_ayah_not_found_dsc">You can save the last read ayah by swipe left the ayah when reading a surah</string>
+
+</resources>

@@ -1,3 +1,3 @@
 rootProject.name='Solat Kuy'
 include ':app'
-//include ':quran'
+include ':quran'

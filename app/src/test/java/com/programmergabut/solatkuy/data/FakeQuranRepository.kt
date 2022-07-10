@@ -29,7 +29,7 @@ class FakeQuranRepository constructor(
     private val allSurahService: AllSurahService,
     private val readSurahArService: ReadSurahArService,
     private val contextProviders: ContextProviders,
-):BaseRepository(), QuranRepository {
+):BaseRepository(), com.programmergabut.solatkuy.quran.data.QuranRepository {
 
     /* MsFavSurah */
     override fun observeListFavSurah() = msFavSurahDao.observeFavSurahs()

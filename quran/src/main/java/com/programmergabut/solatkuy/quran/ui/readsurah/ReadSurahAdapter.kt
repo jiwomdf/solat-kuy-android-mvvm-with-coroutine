@@ -1,4 +1,4 @@
-package com.programmergabut.solatkuy.quran.quran.readsurah
+package com.programmergabut.solatkuy.quran.ui.readsurah
 
 import android.graphics.drawable.Drawable
 import android.view.LayoutInflater
@@ -6,9 +6,8 @@ import android.view.ViewGroup
 import androidx.recyclerview.widget.AsyncListDiffer
 import androidx.recyclerview.widget.DiffUtil
 import androidx.recyclerview.widget.RecyclerView
-import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.data.local.localentity.MsAyah
-import com.programmergabut.solatkuy.databinding.ListReadSurahBinding
+import com.programmergabut.solatkuy.quran.databinding.ListReadSurahBinding
 
 class ReadSurahAdapter(
     val setTheme: (ListReadSurahBinding) -> Unit,
