@@ -10,6 +10,7 @@
         android:name="com.programmergabut.solatkuy.quran.ui.listsurah.ListSurahFragment"
         android:label="fragment_quran"
         tools:layout="@layout/fragment_list_surah" >
+        <deepLink app:uri="App://fragmentQuran" />
         <action
             android:id="@+id/action_quranFragment_to_readSurahActivity"
             app:destination="@id/readSurahFragment"

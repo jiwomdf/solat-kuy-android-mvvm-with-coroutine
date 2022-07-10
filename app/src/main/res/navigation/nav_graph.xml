@@ -21,5 +21,11 @@
         android:name="com.programmergabut.solatkuy.ui.main.setting.SettingFragment"
         android:label="fragment_setting"
         tools:layout="@layout/fragment_setting" />
+    <fragment
+        android:id="@+id/fragmentQuran"
+        android:name="com.programmergabut.solatkuy.quran.ui.listsurah.ListSurahFragment"
+        android:label="fragment_quran"
+        tools:layout="@layout/fragment_list_surah" >
+    </fragment>
 
 </navigation>

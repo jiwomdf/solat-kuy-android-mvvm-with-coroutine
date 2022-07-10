@@ -1,9 +1,11 @@
 package com.programmergabut.solatkuy.ui.main
 
+import android.net.Uri
 import android.os.Bundle
 import android.util.Log
 import android.view.View
 import androidx.lifecycle.ViewModel
+import androidx.navigation.findNavController
 import androidx.navigation.fragment.NavHostFragment
 import androidx.navigation.fragment.findNavController
 import androidx.navigation.ui.setupWithNavController
@@ -11,6 +13,7 @@ import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.base.BaseActivity
 import com.programmergabut.solatkuy.databinding.ActivityMainBinding
 import com.programmergabut.solatkuy.ui.SolatKuyFragmentFactory
+import com.programmergabut.solatkuy.util.packageutil.Quran
 import dagger.hilt.android.AndroidEntryPoint
 import javax.inject.Inject
 
@@ -50,9 +53,9 @@ class MainActivity : BaseActivity<ActivityMainBinding, ViewModel>(
                 navHostFragment.findNavController()
                     .addOnDestinationChangedListener { _, destination, _ ->
                         when(destination.id){
+                            R.id.fragmentQuran,
                             R.id.fragmentHome,
                             R.id.fragmentCompass,
-                            R.id.fragmentQuran,
                             R.id.fragmentSetting
                             -> bottomNavigation.visibility = View.VISIBLE
                             else

@@ -8,7 +8,6 @@ import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
 
-@HiltViewModel
 class ReadSurahViewModel @Inject constructor(val quranRepository: QuranRepository): ViewModel() {
 
     private var surahID = MutableLiveData<Int>()

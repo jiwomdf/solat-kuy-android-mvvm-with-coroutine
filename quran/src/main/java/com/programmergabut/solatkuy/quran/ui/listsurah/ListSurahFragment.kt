@@ -40,8 +40,12 @@ class ListSurahFragment(
 
     override fun getViewBinding() = FragmentListSurahBinding.inflate(layoutInflater)
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) {
         getActivityComponent()?.inject(this)
+        super.onCreate(savedInstanceState)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         initRvAllSurah()
         initRvStaredSurah()
