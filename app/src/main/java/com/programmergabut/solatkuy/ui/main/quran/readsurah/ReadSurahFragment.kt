@@ -141,17 +141,17 @@ class ReadSurahFragment(
                     when(sharedPrefUtil.getReadSurahContentType()){
                         1 -> {
                             tvFontType.text = "ا"
-                            fabArSize.isVisible = true
+                            fabArSizeVisibility(true)
                             sharedPrefUtil.setReadSurahContentType(2)
                         }
                         2 -> {
                             tvFontType.text = "A"
-                            fabArSize.isVisible = false
+                            fabArSizeVisibility(false)
                             sharedPrefUtil.setReadSurahContentType(3)
                         }
                         3 -> {
                             tvFontType.text = "Aا"
-                            fabArSize.isVisible = true
+                            fabArSizeVisibility(true)
                             sharedPrefUtil.setReadSurahContentType(1)
                         }
                     }
@@ -177,6 +177,13 @@ class ReadSurahFragment(
                     readSurahAdapter.notifyDataSetChanged()
                 }
             }
+        }
+    }
+
+    private fun fabArSizeVisibility(isVisible: Boolean){
+        binding.apply {
+            fabArSize.isVisible = isVisible
+            tvArSize.isVisible = isVisible
         }
     }
 
