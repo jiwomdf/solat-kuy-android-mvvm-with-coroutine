@@ -15,10 +15,10 @@ jobs:
 
 
     steps:
+      - uses: actions/checkout@v1
+
       - name: Make gradlew executable
         run: chmod +x ./gradlew
-
-      - uses: actions/checkout@v1
 
       - name: Set Up JDK
         uses: actions/setup-java@v1
