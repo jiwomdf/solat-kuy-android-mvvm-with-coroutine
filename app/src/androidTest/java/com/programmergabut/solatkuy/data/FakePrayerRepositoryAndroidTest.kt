@@ -14,6 +14,7 @@ import com.programmergabut.solatkuy.data.local.localentity.MsSetting
 import com.programmergabut.solatkuy.data.local.localentity.MsNotifiedPrayer
 import com.programmergabut.solatkuy.data.remote.json.compassJson.CompassResponse
 import com.programmergabut.solatkuy.data.remote.json.prayerJson.PrayerResponse
+import com.programmergabut.solatkuy.data.repository.PrayerRepository
 import com.programmergabut.solatkuy.util.Resource
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.CoroutineScope

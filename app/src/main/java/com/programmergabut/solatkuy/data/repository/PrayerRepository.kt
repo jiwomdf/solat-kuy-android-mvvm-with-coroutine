@@ -1,4 +1,4 @@
-package com.programmergabut.solatkuy.data
+package com.programmergabut.solatkuy.data.repository
 
 import androidx.lifecycle.LiveData
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1

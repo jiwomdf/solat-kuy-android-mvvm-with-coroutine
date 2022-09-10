@@ -64,7 +64,7 @@ class ListMsSurahFragmentViewModelTest {
     /* @Test
     fun `getSurahBySeachString, observe allSurah that contains searched string`() = coroutinesTestRule.testDispatcher.runBlockingTest{
         val searchString = "Al Faatiha"
-        val observer = mock<Observer<Resource<List<Result>?>>>()
+        val observer = mock<Observer<Resource<List<MsSurah>?>>>()
         val dummySelectedSurahAr = Resource.success(DummyRetValueTest.fetchAllSurahAr<QuranRepositoryImplTest>())
         dummySelectedSurahAr.data?.status = "1"
         val dummySelectedSurahData = Resource.success(DummyRetValueTest.fetchAllSurahWithLowerCase<ListMsSurahFragmentViewModelTest>())
@@ -72,12 +72,12 @@ class ListMsSurahFragmentViewModelTest {
             data.englishNameLowerCase == searchString.toLowerCase()
         }
 
-        `when`(fakeQuranRepository.fetchAllSurah()).thenReturn(dummySelectedSurahAr.data!!.toDeferred())
+        `when`(fakeQuranRepository.fetchAllSurah()).thenReturn(dummySelectedSurahAr.toDeferred())
 
         viewModel.allSurah.observeForever(observer)
 
         viewModel.getAllSurah()
-        viewModel.getSurahBySeachString(searchString)
+        viewModel.searchSurah(searchString)
         val result = viewModel.allSurah.value
 
         assertEquals(filteredData, result?.data)

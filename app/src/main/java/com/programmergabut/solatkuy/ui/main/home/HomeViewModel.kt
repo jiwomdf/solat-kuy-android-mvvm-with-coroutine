@@ -1,8 +1,8 @@
 package com.programmergabut.solatkuy.ui.main.home
 
 import androidx.lifecycle.*
-import com.programmergabut.solatkuy.data.PrayerRepository
-import com.programmergabut.solatkuy.data.QuranRepository
+import com.programmergabut.solatkuy.data.repository.PrayerRepository
+import com.programmergabut.solatkuy.data.repository.QuranRepository
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
 import com.programmergabut.solatkuy.data.local.localentity.MsSetting
 import com.programmergabut.solatkuy.data.remote.json.prayerJson.PrayerResponse

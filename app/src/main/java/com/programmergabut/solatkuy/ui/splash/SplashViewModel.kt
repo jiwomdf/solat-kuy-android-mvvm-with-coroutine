@@ -1,7 +1,7 @@
 package com.programmergabut.solatkuy.ui.splash
 
 import androidx.lifecycle.ViewModel
-import com.programmergabut.solatkuy.data.PrayerRepository
+import com.programmergabut.solatkuy.data.repository.PrayerRepository
 import dagger.hilt.android.lifecycle.HiltViewModel
 import javax.inject.Inject
 

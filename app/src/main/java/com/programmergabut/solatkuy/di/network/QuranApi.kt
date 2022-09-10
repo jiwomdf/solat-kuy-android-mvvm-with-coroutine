@@ -1,4 +1,4 @@
-package com.programmergabut.solatkuy.di
+package com.programmergabut.solatkuy.di.network
 
 import javax.inject.Qualifier
 

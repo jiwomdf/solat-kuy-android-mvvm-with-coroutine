@@ -1,4 +1,4 @@
-package com.programmergabut.solatkuy.data
+package com.programmergabut.solatkuy.data.repository
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
@@ -15,16 +15,16 @@ import com.programmergabut.solatkuy.data.remote.json.compassJson.CompassResponse
 import com.programmergabut.solatkuy.data.remote.json.prayerJson.Result
 import com.programmergabut.solatkuy.data.remote.json.prayerJson.PrayerResponse
 import com.programmergabut.solatkuy.data.remote.json.prayerJson.Timings
-import com.programmergabut.solatkuy.util.ContextProviders
+import com.programmergabut.solatkuy.di.contextprovider.ContextProviderImpl
 import com.programmergabut.solatkuy.base.BaseRepository
 import com.programmergabut.solatkuy.data.local.dao.MsCalculationMethodsDao
 import com.programmergabut.solatkuy.data.local.localentity.MsCalculationMethods
 import com.programmergabut.solatkuy.data.remote.json.methodJson.MethodResponse
+import com.programmergabut.solatkuy.di.contextprovider.ContextProvider
 import com.programmergabut.solatkuy.util.Constant
 import com.programmergabut.solatkuy.util.Resource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Deferred
-import kotlinx.coroutines.Dispatchers.IO
 import kotlinx.coroutines.async
 import kotlinx.coroutines.withContext
 import java.text.SimpleDateFormat
@@ -40,12 +40,14 @@ class PrayerRepositoryImpl @Inject constructor(
     private val msApi1Dao: MsApi1Dao,
     private val msSettingDao: MsSettingDao,
     private val msCalculationMethodsDao: MsCalculationMethodsDao,
-    private val contextProviders: ContextProviders,
+    private val contextProvider: ContextProvider,
     private val qiblaApiService: QiblaApiService,
     private val prayerApiService: PrayerApiService
 ): BaseRepository(), PrayerRepository {
 
-    /* NotifiedPrayer */
+    /**
+     *  NotifiedPrayer
+     */
     override suspend fun updatePrayerIsNotified(prayerName: String, isNotified: Boolean) =
         msNotifiedPrayerDao.updatePrayerIsNotified(prayerName, isNotified)
     override suspend fun updatePrayerTime(prayerName: String, prayerTime: String) =
@@ -53,7 +55,9 @@ class PrayerRepositoryImpl @Inject constructor(
     override suspend fun getListNotifiedPrayer(): List<MsNotifiedPrayer> =
         msNotifiedPrayerDao.getListNotifiedPrayerSync()
 
-    /* MsApi1 */
+    /**
+     *  MsApi1
+     */
     override fun observeMsApi1(): LiveData<MsApi1> = msApi1Dao.observeMsApi1()
     override suspend fun updateMsApi1(msApi1: MsApi1) =
         msApi1Dao.updateMsApi1(msApi1.api1ID, msApi1.latitude, msApi1.longitude, msApi1.method, msApi1.month, msApi1.year)
@@ -62,15 +66,19 @@ class PrayerRepositoryImpl @Inject constructor(
         msApi1Dao.updateMsApi1Method(api1ID, methodID)
     }
 
-    /* MsSetting */
+    /**
+     *  MsSetting
+     */
     override fun observeMsSetting(): LiveData<MsSetting> = msSettingDao.observeMsSetting()
     override suspend fun updateMsApi1MonthAndYear(api1ID: Int, month: String, year:String) =
         msApi1Dao.updateMsApi1MonthAndYear(api1ID, month, year)
     override suspend fun updateIsHasOpenApp(isHasOpen: Boolean) = msSettingDao.updateIsHasOpenApp(isHasOpen)
 
-    /* Remote */
+    /**
+     *  Remote endpoint
+     */
     override suspend fun fetchQibla(msApi1: MsApi1): Deferred<Resource<CompassResponse>> {
-      return CoroutineScope(IO).async {
+      return CoroutineScope(contextProvider.io()).async {
           lateinit var response: Resource<CompassResponse>
           try {
               val result = execute(qiblaApiService.fetchQibla(msApi1.latitude, msApi1.longitude))
@@ -84,7 +92,7 @@ class PrayerRepositoryImpl @Inject constructor(
     }
 
     override suspend fun fetchPrayerApi(msApi1: MsApi1): Deferred<Resource<PrayerResponse>> {
-        return CoroutineScope(IO).async {
+        return CoroutineScope(contextProvider.io()).async {
             lateinit var response: Resource<PrayerResponse>
             try {
                 val result = execute(prayerApiService.fetchPrayer(msApi1.latitude, msApi1.longitude,
@@ -100,7 +108,7 @@ class PrayerRepositoryImpl @Inject constructor(
 
     override fun getMethods(): LiveData<Resource<List<MsCalculationMethods>>> {
         return object :
-            NetworkBoundResource<List<MsCalculationMethods>, MethodResponse>(contextProviders) {
+            NetworkBoundResource<List<MsCalculationMethods>, MethodResponse>(contextProvider) {
             override fun loadFromDB(): LiveData<List<MsCalculationMethods>> =
                 msCalculationMethodsDao.getMethods()
 
@@ -108,7 +116,7 @@ class PrayerRepositoryImpl @Inject constructor(
 
             override fun createCall(): LiveData<ApiResponse<MethodResponse>> {
                 return liveData {
-                    withContext(CoroutineScope(IO).coroutineContext) {
+                    withContext(contextProvider.io()) {
                         lateinit var response: MethodResponse
                         try {
                             response = execute(prayerApiService.fetchMethod())
@@ -147,14 +155,14 @@ class PrayerRepositoryImpl @Inject constructor(
     }
 
     override fun getListNotifiedPrayer(msApi1: MsApi1): LiveData<Resource<List<MsNotifiedPrayer>>> {
-        return object : NetworkBoundResource<List<MsNotifiedPrayer>, PrayerResponse>(contextProviders) {
+        return object : NetworkBoundResource<List<MsNotifiedPrayer>, PrayerResponse>(contextProvider) {
             override fun loadFromDB(): LiveData<List<MsNotifiedPrayer>> = msNotifiedPrayerDao.getListNotifiedPrayer()
 
             override fun shouldFetch(data: List<MsNotifiedPrayer>?): Boolean = true
 
             override fun createCall(): LiveData<ApiResponse<PrayerResponse>> {
                 return liveData {
-                    withContext(CoroutineScope(IO).coroutineContext) {
+                    withContext(contextProvider.io()) {
                         lateinit var response: PrayerResponse
                         try {
                             response = execute(prayerApiService.fetchPrayer(msApi1.latitude,

@@ -1,12 +1,13 @@
 package com.programmergabut.solatkuy.di
 
-import com.programmergabut.solatkuy.data.PrayerRepository
-import com.programmergabut.solatkuy.data.PrayerRepositoryImpl
-import com.programmergabut.solatkuy.data.QuranRepository
-import com.programmergabut.solatkuy.data.QuranRepositoryImpl
+import com.programmergabut.solatkuy.data.repository.PrayerRepository
+import com.programmergabut.solatkuy.data.repository.PrayerRepositoryImpl
+import com.programmergabut.solatkuy.data.repository.QuranRepository
+import com.programmergabut.solatkuy.data.repository.QuranRepositoryImpl
 import com.programmergabut.solatkuy.data.local.dao.*
 import com.programmergabut.solatkuy.data.remote.api.*
-import com.programmergabut.solatkuy.util.ContextProviders
+import com.programmergabut.solatkuy.di.contextprovider.ContextProvider
+import com.programmergabut.solatkuy.di.contextprovider.ContextProviderImpl
 import dagger.Module
 import dagger.Provides
 import dagger.hilt.InstallIn
@@ -19,7 +20,7 @@ object RepositoryModule {
 
     @Singleton
     @Provides
-    fun provideContextProvider(): ContextProviders = ContextProviders.getInstance()
+    fun provideContextProvider(): ContextProvider = ContextProviderImpl()
 
     @Singleton
     @Provides
@@ -28,11 +29,11 @@ object RepositoryModule {
         msApi1Dao: MsApi1Dao,
         msSettingDao: MsSettingDao,
         msCalculationMethodsDao: MsCalculationMethodsDao,
-        contextProviders: ContextProviders,
+        contextProvider: ContextProvider,
         qiblaApiService: QiblaApiService,
         prayerApiService: PrayerApiService
     ) = PrayerRepositoryImpl(msNotifiedPrayerDao,
-        msApi1Dao, msSettingDao, msCalculationMethodsDao, contextProviders, qiblaApiService, prayerApiService) as PrayerRepository
+        msApi1Dao, msSettingDao, msCalculationMethodsDao, contextProvider, qiblaApiService, prayerApiService) as PrayerRepository
 
     @Singleton
     @Provides
@@ -43,7 +44,7 @@ object RepositoryModule {
         readSurahEnService: ReadSurahEnService,
         allSurahService: AllSurahService,
         readSurahArService: ReadSurahArService,
-        contextProviders: ContextProviders
+        contextProvider: ContextProvider
     ) = QuranRepositoryImpl(
         msFavSurahDao,
         msSurahDao,
@@ -51,7 +52,7 @@ object RepositoryModule {
         readSurahEnService,
         allSurahService,
         readSurahArService,
-        contextProviders,
+        contextProvider,
     ) as QuranRepository
 
 

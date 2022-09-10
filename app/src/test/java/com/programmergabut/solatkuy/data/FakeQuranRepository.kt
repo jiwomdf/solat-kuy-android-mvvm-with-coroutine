@@ -16,7 +16,10 @@ import com.programmergabut.solatkuy.data.remote.api.ReadSurahEnService
 import com.programmergabut.solatkuy.data.remote.json.quranallsurahJson.AllSurahResponse
 import com.programmergabut.solatkuy.data.remote.json.readsurahJsonAr.ReadSurahArResponse
 import com.programmergabut.solatkuy.data.remote.json.readsurahJsonEn.ReadSurahEnResponse
-import com.programmergabut.solatkuy.util.ContextProviders
+import com.programmergabut.solatkuy.data.repository.NetworkBoundResource
+import com.programmergabut.solatkuy.data.repository.QuranRepository
+import com.programmergabut.solatkuy.di.contextprovider.ContextProvider
+import com.programmergabut.solatkuy.di.contextprovider.ContextProviderImpl
 import com.programmergabut.solatkuy.util.Resource
 import kotlinx.coroutines.*
 import java.util.*
@@ -28,7 +31,7 @@ class FakeQuranRepository constructor(
     private val readSurahEnService: ReadSurahEnService,
     private val allSurahService: AllSurahService,
     private val readSurahArService: ReadSurahArService,
-    private val contextProviders: ContextProviders,
+    private val contextProvider: ContextProvider,
 ):BaseRepository(), QuranRepository {
 
     /* MsFavSurah */
@@ -39,7 +42,7 @@ class FakeQuranRepository constructor(
 
     /* Remote */
     override suspend fun fetchReadSurahEn(surahID: Int): Deferred<Resource<ReadSurahEnResponse>> {
-        return CoroutineScope(contextProviders.IO).async {
+        return CoroutineScope(contextProvider.io()).async {
             lateinit var response: Resource<ReadSurahEnResponse>
             try {
                 val result = execute(readSurahEnService.fetchReadSurahEn(surahID))
@@ -54,7 +57,7 @@ class FakeQuranRepository constructor(
     }
 
     override suspend fun fetchAllSurah(): Deferred<Resource<AllSurahResponse>> {
-        return CoroutineScope(contextProviders.IO).async {
+        return CoroutineScope(contextProvider.io()).async {
             lateinit var response: Resource<AllSurahResponse>
             try {
                 val result = execute(allSurahService.fetchAllSurah())
@@ -69,14 +72,14 @@ class FakeQuranRepository constructor(
     }
 
     override fun getAllSurah(): LiveData<Resource<List<MsSurah>>> {
-        return object : NetworkBoundResource<List<MsSurah>, AllSurahResponse>(contextProviders) {
+        return object : NetworkBoundResource<List<MsSurah>, AllSurahResponse>(contextProvider) {
             override fun loadFromDB(): LiveData<List<MsSurah>> = msSurahDao.getSurahs()
 
             override fun shouldFetch(data: List<MsSurah>?): Boolean = data == null || data.isEmpty()
 
             override fun createCall(): LiveData<ApiResponse<AllSurahResponse>> {
                 return liveData {
-                    withContext(contextProviders.IO) {
+                    withContext(contextProvider.io()) {
                         lateinit var response: AllSurahResponse
                         try {
                             response = execute(allSurahService.fetchAllSurah())
@@ -109,7 +112,7 @@ class FakeQuranRepository constructor(
     }
 
     override suspend fun fetchReadSurahAr(surahID: Int): Deferred<Resource<ReadSurahArResponse>> {
-        return CoroutineScope(contextProviders.IO).async {
+        return CoroutineScope(contextProvider.io()).async {
             lateinit var response : Resource<ReadSurahArResponse>
             try {
                 val result = execute(readSurahArService.fetchReadSurahAr(surahID))

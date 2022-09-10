@@ -1,4 +1,4 @@
-package com.programmergabut.solatkuy.di
+package com.programmergabut.solatkuy.di.network
 
 import com.google.gson.GsonBuilder
 import com.programmergabut.solatkuy.BuildConfig

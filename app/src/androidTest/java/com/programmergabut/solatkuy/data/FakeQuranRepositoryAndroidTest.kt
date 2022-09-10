@@ -15,6 +15,7 @@ import com.programmergabut.solatkuy.DummyValueAndroidTest
 import com.programmergabut.solatkuy.data.local.localentity.MsAyah
 import com.programmergabut.solatkuy.data.local.localentity.MsSurah
 import com.programmergabut.solatkuy.data.remote.json.readsurahJsonAr.Ayah
+import com.programmergabut.solatkuy.data.repository.QuranRepository
 import com.programmergabut.solatkuy.util.Resource
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.*

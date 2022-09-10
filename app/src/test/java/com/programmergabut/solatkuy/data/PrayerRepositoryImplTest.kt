@@ -9,7 +9,8 @@ import com.programmergabut.solatkuy.data.local.dao.*
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
 import com.programmergabut.solatkuy.data.remote.api.PrayerApiService
 import com.programmergabut.solatkuy.data.remote.api.QiblaApiService
-import com.programmergabut.solatkuy.util.ContextProviders
+import com.programmergabut.solatkuy.di.contextprovider.ContextProviderImpl
+import com.programmergabut.solatkuy.di.contextprovider.ContextProviderTest
 import junit.framework.TestCase.assertNotNull
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
@@ -30,13 +31,13 @@ class PrayerRepositoryImplTest: BaseRepository(){
     private val notifiedPrayerDao = mock(MsNotifiedPrayerDao::class.java)
     private val msApi1Dao = mock(MsApi1Dao::class.java)
     private val msSettingDao = mock(MsSettingDao::class.java)
-    private val contextProviders = mock(ContextProviders::class.java)
+    private val contextProvider = ContextProviderTest()
     private val qiblaApiService = mock(QiblaApiService::class.java)
     private val prayerApiService = mock(PrayerApiService::class.java)
     private val msFavSurahDao = mock(MsFavSurahDao::class.java)
     private val msCalculationMethodsDao = mock(MsCalculationMethodsDao::class.java)
     private val prayerRepository = FakePrayerRepository(notifiedPrayerDao, msApi1Dao, msSettingDao,
-        msCalculationMethodsDao, contextProviders, qiblaApiService, prayerApiService)
+        msCalculationMethodsDao, contextProvider, qiblaApiService, prayerApiService)
     private val msApi1 = DummyRetValueTest.msApi1
     private val msFavSurah = DummyRetValueTest.msfavSurah
 

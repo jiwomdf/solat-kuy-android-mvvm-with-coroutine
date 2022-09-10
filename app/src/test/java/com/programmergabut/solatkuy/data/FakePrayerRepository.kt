@@ -22,7 +22,10 @@ import com.programmergabut.solatkuy.data.remote.json.methodJson.MethodResponse
 import com.programmergabut.solatkuy.data.remote.json.prayerJson.PrayerResponse
 import com.programmergabut.solatkuy.data.remote.json.prayerJson.Result
 import com.programmergabut.solatkuy.data.remote.json.prayerJson.Timings
-import com.programmergabut.solatkuy.util.ContextProviders
+import com.programmergabut.solatkuy.data.repository.NetworkBoundResource
+import com.programmergabut.solatkuy.data.repository.PrayerRepository
+import com.programmergabut.solatkuy.di.contextprovider.ContextProvider
+import com.programmergabut.solatkuy.di.contextprovider.ContextProviderImpl
 import com.programmergabut.solatkuy.util.Constant
 import com.programmergabut.solatkuy.util.Resource
 import kotlinx.coroutines.*
@@ -35,7 +38,7 @@ class FakePrayerRepository constructor(
     private val msApi1Dao: MsApi1Dao,
     private val msSettingDao: MsSettingDao,
     private val msCalculationMethodsDao: MsCalculationMethodsDao,
-    private val contextProviders: ContextProviders,
+    private val contextProvider: ContextProvider,
     private val qiblaApiService: QiblaApiService,
     private val prayerApiService: PrayerApiService
 ): BaseRepository(), PrayerRepository {
@@ -96,7 +99,7 @@ class FakePrayerRepository constructor(
 
     override fun getMethods(): LiveData<Resource<List<MsCalculationMethods>>> {
         return object :
-            NetworkBoundResource<List<MsCalculationMethods>, MethodResponse>(contextProviders) {
+            NetworkBoundResource<List<MsCalculationMethods>, MethodResponse>(contextProvider) {
             override fun loadFromDB(): LiveData<List<MsCalculationMethods>> =
                 msCalculationMethodsDao.getMethods()
 
@@ -143,7 +146,7 @@ class FakePrayerRepository constructor(
     }
 
     override fun getListNotifiedPrayer(msApi1: MsApi1): LiveData<Resource<List<MsNotifiedPrayer>>> {
-        return object : NetworkBoundResource<List<MsNotifiedPrayer>, PrayerResponse>(contextProviders) {
+        return object : NetworkBoundResource<List<MsNotifiedPrayer>, PrayerResponse>(contextProvider) {
             override fun loadFromDB(): LiveData<List<MsNotifiedPrayer>> = msNotifiedPrayerDao.getListNotifiedPrayer()
 
             override fun shouldFetch(data: List<MsNotifiedPrayer>?): Boolean = true

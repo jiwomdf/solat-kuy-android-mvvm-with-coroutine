@@ -1,7 +1,7 @@
 package com.programmergabut.solatkuy.ui.main.setting
 
 import androidx.lifecycle.*
-import com.programmergabut.solatkuy.data.PrayerRepository
+import com.programmergabut.solatkuy.data.repository.PrayerRepository
 import com.programmergabut.solatkuy.data.local.localentity.MsApi1
 import com.programmergabut.solatkuy.data.local.localentity.MsCalculationMethods
 import com.programmergabut.solatkuy.util.Resource

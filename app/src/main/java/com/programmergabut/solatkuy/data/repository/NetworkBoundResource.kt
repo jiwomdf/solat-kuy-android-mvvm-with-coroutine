@@ -1,10 +1,11 @@
-package com.programmergabut.solatkuy.data
+package com.programmergabut.solatkuy.data.repository
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MediatorLiveData
 import com.programmergabut.solatkuy.data.remote.ApiResponse
 import com.programmergabut.solatkuy.data.remote.StatusResponse
-import com.programmergabut.solatkuy.util.ContextProviders
+import com.programmergabut.solatkuy.di.contextprovider.ContextProvider
+import com.programmergabut.solatkuy.di.contextprovider.ContextProviderImpl
 import com.programmergabut.solatkuy.util.Resource
 import kotlinx.coroutines.CoroutineScope
 import kotlinx.coroutines.Dispatchers
@@ -12,7 +13,7 @@ import kotlinx.coroutines.launch
 import kotlinx.coroutines.withContext
 
 abstract class NetworkBoundResource<ResultType, RequestType>(
-    private val contextProviders: ContextProviders
+    private val contextProvider: ContextProvider
 ) {
 
     private val result = MediatorLiveData<Resource<ResultType>>()
@@ -57,7 +58,7 @@ abstract class NetworkBoundResource<ResultType, RequestType>(
             result.removeSource(dbSource)
             when (response.status) {
                 StatusResponse.SUCCESS ->
-                    CoroutineScope(contextProviders.IO).launch {
+                    CoroutineScope(contextProvider.io()).launch {
                         saveCallResult(response.body)
                         withContext(Dispatchers.Main) {
                             result.addSource(loadFromDB()) { newData ->
@@ -65,7 +66,7 @@ abstract class NetworkBoundResource<ResultType, RequestType>(
                             }
                         }
                     }
-                StatusResponse.EMPTY -> CoroutineScope(contextProviders.Main).launch {
+                StatusResponse.EMPTY -> CoroutineScope(contextProvider.main()).launch {
                     result.addSource(loadFromDB()) { newData ->
                         result.value = Resource.success(newData)
                     }
