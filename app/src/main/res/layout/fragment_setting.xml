@@ -13,20 +13,30 @@
         android:layout_height="wrap_content"
         android:orientation="vertical">
 
+        <TextView
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_margin="@dimen/dp16"
+            android:fontFamily="@font/sourcesanspro_semibold"
+            android:text="@string/setting"
+            android:textSize="@dimen/sp30" />
+
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/small_margin"
-            app:cardBackgroundColor="@color/dark_200"
-            app:cardCornerRadius="@dimen/medium_margin">
+            android:layout_marginStart="@dimen/dp16"
+            android:layout_marginTop="@dimen/dp16"
+            android:layout_marginEnd="@dimen/dp16"
+            app:cardBackgroundColor="@color/dark_700"
+            app:cardCornerRadius="@dimen/dp12">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/medium_margin"
-                android:layout_marginEnd="@dimen/medium_margin"
-                android:layout_marginTop="@dimen/medium_margin"
-                android:layout_marginBottom="@dimen/medium_margin"
+                android:layout_marginStart="@dimen/dp16"
+                android:layout_marginTop="@dimen/dp12"
+                android:layout_marginEnd="@dimen/dp16"
+                android:layout_marginBottom="@dimen/dp12"
                 android:orientation="vertical"
                 app:layout_constraintBottom_toBottomOf="@+id/rg_lcation_setting"
                 app:layout_constraintEnd_toEndOf="parent"
@@ -37,9 +47,9 @@
                     android:id="@+id/tv_cur_loc"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginBottom="@dimen/small_margin"
+                    android:layout_marginBottom="@dimen/dp8"
                     android:text="@string/current_location"
-                    android:textSize="@dimen/medium_text_size"
+                    android:textSize="@dimen/sp20"
                     android:textStyle="bold"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toTopOf="parent" />
@@ -49,6 +59,7 @@
                     android:layout_width="@dimen/info_width_size"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="16dp"
+                    android:fontFamily="@font/sourcesanspro_semibold"
                     android:text="@string/latitude"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tv_cur_loc" />
@@ -57,7 +68,7 @@
                     android:id="@+id/tv_view_latitude"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/large_margin"
+                    android:layout_marginStart="@dimen/dp24"
                     android:layout_marginTop="16dp"
                     android:gravity="start"
                     android:text="@string/loading"
@@ -69,6 +80,7 @@
                     android:layout_width="@dimen/info_width_size"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
+                    android:fontFamily="@font/sourcesanspro_semibold"
                     android:text="@string/longitude"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tv_text_latitude" />
@@ -77,7 +89,7 @@
                     android:id="@+id/tv_view_longitude"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/large_margin"
+                    android:layout_marginStart="@dimen/dp24"
                     android:layout_marginTop="8dp"
                     android:gravity="start"
                     android:text="@string/loading"
@@ -89,6 +101,7 @@
                     android:layout_width="@dimen/info_width_size"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
+                    android:fontFamily="@font/sourcesanspro_semibold"
                     android:text="@string/city"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tv_text_longitude" />
@@ -97,7 +110,7 @@
                     android:id="@+id/tv_view_city"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/large_margin"
+                    android:layout_marginStart="@dimen/dp24"
                     android:layout_marginTop="8dp"
                     android:gravity="start"
                     android:text="@string/loading"
@@ -109,6 +122,7 @@
                     android:layout_width="@dimen/info_width_size"
                     android:layout_height="wrap_content"
                     android:layout_marginTop="8dp"
+                    android:fontFamily="@font/sourcesanspro_semibold"
                     android:text="@string/calculation_method"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintStart_toStartOf="parent"
@@ -116,16 +130,16 @@
 
                 <TextView
                     android:id="@+id/tv_view_method"
-                    android:layout_width="wrap_content"
+                    android:layout_width="0dp"
                     android:layout_height="wrap_content"
-                    app:layout_constraintHorizontal_bias="0.0"
-                    android:layout_marginStart="@dimen/large_margin"
+                    android:layout_marginStart="@dimen/dp24"
                     android:layout_marginTop="8dp"
                     android:layout_marginEnd="16dp"
                     android:gravity="start"
                     android:text="@string/loading"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
+                    app:layout_constraintHorizontal_bias="0.0"
                     app:layout_constraintStart_toEndOf="@+id/tv_text_city"
                     app:layout_constraintTop_toBottomOf="@+id/tv_view_city" />
 
@@ -136,22 +150,25 @@
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/small_margin"
-            app:cardBackgroundColor="@color/dark_200"
-            app:cardCornerRadius="@dimen/medium_margin">
+            android:layout_marginStart="@dimen/dp16"
+            android:layout_marginTop="@dimen/dp16"
+            android:layout_marginEnd="@dimen/dp16"
+            app:cardBackgroundColor="@color/dark_700"
+            app:cardCornerRadius="@dimen/dp12">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/medium_margin"
-                android:layout_marginBottom="@dimen/medium_margin">
+                android:layout_marginStart="@dimen/dp8"
+                android:layout_marginTop="@dimen/dp12"
+                android:layout_marginEnd="@dimen/dp8"
+                android:layout_marginBottom="@dimen/dp12">
 
                 <ImageView
                     android:id="@+id/iv_location_logo"
                     android:layout_width="@dimen/avatar_size"
                     android:layout_height="@dimen/avatar_size"
-                    android:layout_marginStart="@dimen/small_margin"
-                    android:layout_marginBottom="@dimen/small_margin"
+                    android:layout_marginBottom="@dimen/dp8"
                     android:contentDescription="@string/locationicon"
                     android:src="@drawable/ic_location_24dp"
                     app:layout_constraintBottom_toTopOf="@+id/rg_lcation_setting"
@@ -162,39 +179,44 @@
                     android:id="@+id/tv_changeLocation"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/small_margin"
+                    android:layout_marginStart="@dimen/dp8"
                     android:text="@string/changelocation"
-                    android:textSize="@dimen/medium_text_size"
+                    android:textSize="@dimen/sp20"
                     android:textStyle="bold"
-                    app:layout_constraintBottom_toTopOf="@+id/rg_lcation_setting"
+                    app:layout_constraintBottom_toBottomOf="@+id/iv_location_logo"
                     app:layout_constraintStart_toEndOf="@+id/iv_location_logo"
-                    app:layout_constraintTop_toTopOf="parent"
+                    app:layout_constraintTop_toTopOf="@+id/iv_location_logo"
                     app:layout_constraintVertical_bias="0.506" />
 
                 <LinearLayout
                     android:id="@+id/rg_lcation_setting"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/small_margin"
+                    android:layout_marginStart="@dimen/dp8"
+                    android:layout_marginTop="@dimen/dp16"
                     android:orientation="vertical"
-                    app:layout_constraintBottom_toBottomOf="parent"
-                    app:layout_constraintStart_toStartOf="parent">
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_changeLocation">
 
-                    <Button
+                    <androidx.appcompat.widget.AppCompatButton
                         android:id="@+id/btn_by_latitude_longitude"
+                        style="@style/ButtonBorderLightWithRadius"
                         android:layout_width="wrap_content"
-                        android:layout_height="match_parent"
-                        android:layout_marginTop="@dimen/small_margin"
+                        android:layout_height="@dimen/button_height"
+                        android:layout_marginTop="@dimen/dp8"
+                        android:paddingStart="6dp"
+                        android:paddingEnd="6dp"
                         android:text="@string/by_latitude_amp_longitude"
-                        android:textSize="@dimen/small_text_size" />
+                        android:textSize="@dimen/sp12" />
 
-                    <Button
+                    <androidx.appcompat.widget.AppCompatButton
                         android:id="@+id/btn_by_gps"
+                        style="@style/ButtonBorderLight"
                         android:layout_width="match_parent"
-                        android:layout_height="wrap_content"
-                        android:layout_marginTop="@dimen/small_margin"
+                        android:layout_height="@dimen/button_height"
+                        android:layout_marginTop="@dimen/dp8"
                         android:text="@string/by_gps"
-                        android:textSize="@dimen/small_text_size" />
+                        android:textSize="@dimen/sp12" />
 
                 </LinearLayout>
 
@@ -204,23 +226,25 @@
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/small_margin"
-            app:cardBackgroundColor="@color/dark_200"
-            app:cardCornerRadius="@dimen/medium_margin">
+            android:layout_marginStart="@dimen/dp16"
+            android:layout_marginTop="@dimen/dp16"
+            android:layout_marginEnd="@dimen/dp16"
+            app:cardBackgroundColor="@color/dark_700"
+            app:cardCornerRadius="@dimen/dp12">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/medium_margin"
-                android:layout_marginBottom="@dimen/medium_margin">
+                android:layout_marginTop="@dimen/dp12"
+                android:layout_marginBottom="@dimen/dp12">
 
                 <ImageView
                     android:id="@+id/iv_methods_logo"
                     android:layout_width="@dimen/avatar_size"
                     android:layout_height="@dimen/avatar_size"
+                    android:layout_marginStart="@dimen/dp8"
                     android:layout_marginTop="2dp"
-                    android:layout_marginStart="@dimen/small_margin"
-                    android:layout_marginBottom="@dimen/small_margin"
+                    android:layout_marginBottom="@dimen/dp8"
                     android:contentDescription="@string/locationicon"
                     android:src="@drawable/ic_access_time_24"
                     app:layout_constraintBottom_toTopOf="@+id/rg_methods_setting"
@@ -231,11 +255,12 @@
                     android:id="@+id/tv_calculate_method"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/small_margin"
-                    android:text="@string/change_prayer_calculation_method"
-                    android:textSize="@dimen/medium_text_size"
+                    android:layout_marginStart="@dimen/dp8"
+                    android:layout_marginBottom="1dp"
+                    android:text="@string/prayer_calculation_method"
+                    android:textSize="@dimen/sp20"
                     android:textStyle="bold"
-                    app:layout_constraintBottom_toTopOf="@+id/rg_methods_setting"
+                    app:layout_constraintBottom_toBottomOf="@+id/iv_methods_logo"
                     app:layout_constraintStart_toEndOf="@+id/iv_methods_logo"
                     app:layout_constraintTop_toTopOf="parent"
                     app:layout_constraintVertical_bias="0.506" />
@@ -247,17 +272,18 @@
                     android:orientation="vertical"
                     app:layout_constraintBottom_toBottomOf="parent"
                     app:layout_constraintEnd_toEndOf="parent"
-                    app:layout_constraintStart_toStartOf="parent">
+                    app:layout_constraintStart_toStartOf="parent"
+                    app:layout_constraintTop_toBottomOf="@id/tv_calculate_method">
 
                     <Spinner
                         android:id="@+id/s_methods"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_marginStart="@dimen/small_margin"
-                        android:layout_marginEnd="@dimen/small_margin"
-                        android:layout_marginTop="@dimen/small_margin"
+                        android:layout_marginStart="@dimen/dp8"
+                        android:layout_marginTop="@dimen/dp8"
+                        android:layout_marginEnd="@dimen/dp8"
                         android:text="@string/by_latitude_amp_longitude"
-                        android:textSize="@dimen/small_text_size" />
+                        android:textSize="@dimen/sp12" />
 
                 </LinearLayout>
 
@@ -267,22 +293,25 @@
         <androidx.cardview.widget.CardView
             android:layout_width="match_parent"
             android:layout_height="wrap_content"
-            android:layout_margin="@dimen/small_margin"
-            app:cardBackgroundColor="@color/dark_200"
-            app:cardCornerRadius="@dimen/medium_margin">
+            android:layout_marginStart="@dimen/dp16"
+            android:layout_marginTop="@dimen/dp16"
+            android:layout_marginEnd="@dimen/dp16"
+            android:layout_marginBottom="@dimen/dp16"
+            app:cardBackgroundColor="@color/dark_700"
+            app:cardCornerRadius="@dimen/dp12">
 
             <androidx.constraintlayout.widget.ConstraintLayout
                 android:layout_width="match_parent"
                 android:layout_height="match_parent"
-                android:layout_marginTop="@dimen/medium_margin"
-                android:layout_marginBottom="@dimen/medium_margin">
+                android:layout_marginTop="@dimen/dp12"
+                android:layout_marginBottom="@dimen/dp12">
 
                 <ImageView
                     android:id="@+id/iv_author_logo"
                     android:layout_width="@dimen/avatar_size"
                     android:layout_height="@dimen/avatar_size"
-                    android:layout_marginStart="@dimen/small_margin"
-                    android:layout_marginBottom="@dimen/small_margin"
+                    android:layout_marginStart="@dimen/dp8"
+                    android:layout_marginBottom="@dimen/dp8"
                     android:contentDescription="@string/abouticon"
                     android:src="@drawable/ic_person_accent_24dp"
                     app:layout_constraintStart_toStartOf="parent"
@@ -294,17 +323,21 @@
                     android:layout_height="wrap_content"
                     android:layout_marginStart="8dp"
                     android:text="@string/author_credit"
-                    android:textSize="@dimen/large_text_size"
+                    android:textSize="@dimen/sp20"
                     android:textStyle="bold"
+                    app:layout_constraintBottom_toBottomOf="@+id/iv_author_logo"
                     app:layout_constraintStart_toEndOf="@+id/iv_author_logo"
                     app:layout_constraintTop_toTopOf="parent" />
 
-                <Button
+                <androidx.appcompat.widget.AppCompatButton
                     android:id="@+id/btn_seeAuthor"
+                    style="@style/ButtonBorderLightWithRadius"
                     android:layout_width="wrap_content"
-                    android:layout_height="wrap_content"
+                    android:layout_height="@dimen/button_height"
                     android:layout_marginStart="8dp"
-                    android:layout_marginTop="16dp"
+                    android:layout_marginTop="@dimen/dp16"
+                    android:paddingStart="6dp"
+                    android:paddingEnd="6dp"
                     android:text="@string/see_author_and_credit"
                     app:layout_constraintStart_toStartOf="parent"
                     app:layout_constraintTop_toBottomOf="@+id/tv_authorCredit" />

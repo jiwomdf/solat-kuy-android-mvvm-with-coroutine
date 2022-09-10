@@ -3,7 +3,7 @@ package com.programmergabut.solatkuy.ui.main.setting
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import com.programmergabut.solatkuy.CoroutinesTestRule
 import com.programmergabut.solatkuy.data.FakePrayerRepository
-import com.programmergabut.solatkuy.data.local.localentity.MsApi1
+import com.programmergabut.solatkuy.data.local.localentity.MsConfiguration
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Before
@@ -30,33 +30,33 @@ class SettingFragmentViewModelTest {
     @Before
     fun setUp() {
         viewModel = SettingViewModel(prayerRepository)
-        verify(prayerRepository).observeMsApi1()
+        verify(prayerRepository).observeMsConfiguration()
     }
 
     @Test
-    fun `update MsApi1 with correct parameter, message return success`() = coroutinesTestRule.testDispatcher.runBlockingTest{
-        val msApi1 = MsApi1(1,"123","123","3","3","2020")
+    fun `update MsConfiguration with correct parameter, message return success`() = coroutinesTestRule.testDispatcher.runBlockingTest{
+        val msConfiguration = MsConfiguration(1,"123","123","3","3","2020")
         val successChangeTheCoordinate = "Success change the coordinate"
-        viewModel.updateMsApi1(msApi1)
-        verify(prayerRepository).updateMsApi1(msApi1)
+        viewModel.updateMsConfiguration(msConfiguration)
+        verify(prayerRepository).updateMsConfiguration(msConfiguration)
     }
 
     /* @Test
-    fun `update MsApi1 with incorrect format, message return error`() = coroutinesTestRule.testDispatcher.runBlockingTest{
+    fun `update MsConfiguration with incorrect format, message return error`() = coroutinesTestRule.testDispatcher.runBlockingTest{
         val latitudeAndLongitudeCannotBeEmpty = "latitude and longitude cannot be empty"
         val latitudeAndLongitudeCannotBeStartedWithDot = "latitude and longitude cannot be started with ."
         val latitudeAndLongitudeCannotBeEndedWithDot = "latitude and longitude cannot be ended with ."
 
-        var msApi1 = MsApi1(1,"","123","3","3","2020")
-        viewModel.updateMsApi1(msApi1)
+        var msConfiguration = MsConfiguration(1,"","123","3","3","2020")
+        viewModel.updateMsConfiguration(msConfiguration)
         assertEquals(viewModel.updateMessage.value?.message, latitudeAndLongitudeCannotBeEmpty)
 
-        msApi1 = MsApi1(1,".123","123","3","3","2020")
-        viewModel.updateMsApi1(msApi1)
+        msConfiguration = MsConfiguration(1,".123","123","3","3","2020")
+        viewModel.updateMsConfiguration(msConfiguration)
         assertEquals(viewModel.updateMessage.value?.message, latitudeAndLongitudeCannotBeStartedWithDot)
 
-        msApi1 = MsApi1(1,"123","123.","3","3","2020")
-        viewModel.updateMsApi1(msApi1)
+        msConfiguration = MsConfiguration(1,"123","123.","3","3","2020")
+        viewModel.updateMsConfiguration(msConfiguration)
         assertEquals(viewModel.updateMessage.value?.message, latitudeAndLongitudeCannotBeEndedWithDot)
     } */
 

@@ -2,27 +2,30 @@
 <resources>
     <dimen name="elevation">16dp</dimen>
 
-    <dimen name="smaller_margin">4dp</dimen>
-    <dimen name="small_margin">8dp</dimen>
-    <dimen name="medium_margin">12dp</dimen>
-    <dimen name="large_margin">24dp</dimen>
-    <dimen name="larger_margin">48dp</dimen>
+    <dimen name="dp4">4dp</dimen>
+    <dimen name="dp8">8dp</dimen>
+    <dimen name="dp12">12dp</dimen>
+    <dimen name="dp16">16dp</dimen>
+    <dimen name="dp24">24dp</dimen>
+    <dimen name="dp32">32dp</dimen>
+    <dimen name="dp48">48dp</dimen>
 
-    <dimen name="small_text_size">12sp</dimen>
-    <dimen name="medium_text_size">16sp</dimen>
-    <dimen name="large_text_size">20sp</dimen>
-    <dimen name="large2_text_size">30sp</dimen>
+    <dimen name="sp12">12sp</dimen>
+    <dimen name="sp16">16sp</dimen>
+    <dimen name="sp20">20sp</dimen>
+    <dimen name="sp30">30sp</dimen>
 
     <dimen name="info_width_size">80dp</dimen>
-
     <dimen name="avatar_size">30sp</dimen>
     <dimen name="avatar_size_small">30sp</dimen>
     <dimen name="list_width_size">40dp</dimen>
     <dimen name="widget_size">250dp</dimen>
 
+    <dimen name="button_height">42dp</dimen>
+
     <dimen name="editText_size">200dp</dimen>
 
-    <dimen name="bottomSheet_size">200dp</dimen>
+    <dimen name="bottomSheet_size">250dp</dimen>
 
     <dimen name="progressBar_size">170dp</dimen>
 </resources>

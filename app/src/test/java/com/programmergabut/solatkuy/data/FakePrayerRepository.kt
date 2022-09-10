@@ -6,11 +6,11 @@ package com.programmergabut.solatkuy.data
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
 import com.programmergabut.solatkuy.base.BaseRepository
-import com.programmergabut.solatkuy.data.local.dao.MsApi1Dao
+import com.programmergabut.solatkuy.data.local.dao.MsConfigurationDao
 import com.programmergabut.solatkuy.data.local.dao.MsCalculationMethodsDao
 import com.programmergabut.solatkuy.data.local.dao.MsSettingDao
 import com.programmergabut.solatkuy.data.local.dao.MsNotifiedPrayerDao
-import com.programmergabut.solatkuy.data.local.localentity.MsApi1
+import com.programmergabut.solatkuy.data.local.localentity.MsConfiguration
 import com.programmergabut.solatkuy.data.local.localentity.MsCalculationMethods
 import com.programmergabut.solatkuy.data.local.localentity.MsSetting
 import com.programmergabut.solatkuy.data.local.localentity.MsNotifiedPrayer
@@ -22,7 +22,9 @@ import com.programmergabut.solatkuy.data.remote.json.methodJson.MethodResponse
 import com.programmergabut.solatkuy.data.remote.json.prayerJson.PrayerResponse
 import com.programmergabut.solatkuy.data.remote.json.prayerJson.Result
 import com.programmergabut.solatkuy.data.remote.json.prayerJson.Timings
-import com.programmergabut.solatkuy.util.ContextProviders
+import com.programmergabut.solatkuy.data.repository.NetworkBoundResource
+import com.programmergabut.solatkuy.data.repository.PrayerRepository
+import com.programmergabut.solatkuy.di.contextprovider.ContextProvider
 import com.programmergabut.solatkuy.util.Constant
 import com.programmergabut.solatkuy.util.Resource
 import kotlinx.coroutines.*
@@ -32,10 +34,10 @@ import java.util.*
 
 class FakePrayerRepository constructor(
     private val msNotifiedPrayerDao: MsNotifiedPrayerDao,
-    private val msApi1Dao: MsApi1Dao,
+    private val msConfigurationDao: MsConfigurationDao,
     private val msSettingDao: MsSettingDao,
     private val msCalculationMethodsDao: MsCalculationMethodsDao,
-    private val contextProviders: ContextProviders,
+    private val contextProvider: ContextProvider,
     private val qiblaApiService: QiblaApiService,
     private val prayerApiService: PrayerApiService
 ): BaseRepository(), PrayerRepository {
@@ -48,50 +50,46 @@ class FakePrayerRepository constructor(
     override suspend fun getListNotifiedPrayer(): List<MsNotifiedPrayer> =
         msNotifiedPrayerDao.getListNotifiedPrayerSync()
 
-    /* MsApi1 */
-    override fun observeMsApi1(): LiveData<MsApi1> = msApi1Dao.observeMsApi1()
-    override suspend fun updateMsApi1(msApi1: MsApi1) =
-        msApi1Dao.updateMsApi1(msApi1.api1ID, msApi1.latitude, msApi1.longitude, msApi1.method, msApi1.month, msApi1.year)
+    /* MsConfiguration */
+    override fun observeMsConfiguration(): LiveData<MsConfiguration> = msConfigurationDao.observeMsConfiguration()
+    override suspend fun updateMsConfiguration(msConfiguration: MsConfiguration) =
+        msConfigurationDao.updateMsConfiguration(msConfiguration.api1ID, msConfiguration.latitude, msConfiguration.longitude, msConfiguration.method, msConfiguration.month, msConfiguration.year)
 
-    override suspend fun updateMsApi1Method(api1ID: Int, methodID: String) {
-        msApi1Dao.updateMsApi1Method(api1ID, methodID)
+    override suspend fun updateMsConfigurationMethod(api1ID: Int, methodID: String) {
+        msConfigurationDao.updateMsConfigurationMethod(api1ID, methodID)
     }
 
     /* MsSetting */
     override fun observeMsSetting(): LiveData<MsSetting> = msSettingDao.observeMsSetting()
-    override suspend fun updateMsApi1MonthAndYear(api1ID: Int, month: String, year:String) =
-        msApi1Dao.updateMsApi1MonthAndYear(api1ID, month, year)
+    override suspend fun updateMsConfigurationMonthAndYear(api1ID: Int, month: String, year:String) =
+        msConfigurationDao.updateMsConfigurationMonthAndYear(api1ID, month, year)
     override suspend fun updateIsHasOpenApp(isHasOpen: Boolean) =
         msSettingDao.updateIsHasOpenApp(isHasOpen)
 
     /* Remote */
-    override suspend fun fetchQibla(msApi1: MsApi1): Deferred<CompassResponse> {
+    override suspend fun fetchQibla(msConfiguration: MsConfiguration): Deferred<Resource<CompassResponse>> {
         return CoroutineScope(Dispatchers.IO).async {
-            lateinit var response: CompassResponse
+            lateinit var response: Resource<CompassResponse>
             try {
-                response = execute(qiblaApiService.fetchQibla(msApi1.latitude, msApi1.longitude))
-                response.status = "1"
-            }
-            catch (ex: Exception){
-                response = CompassResponse()
-                response.status = "-1"
+                val result = execute(qiblaApiService.fetchQibla(msConfiguration.latitude, msConfiguration.longitude))
+                response = Resource.success(result)
+            } catch (ex: Exception){
+                response = Resource.error(CompassResponse())
                 response.message = ex.message.toString()
             }
             response
         }
     }
 
-    override suspend fun fetchPrayerApi(msApi1: MsApi1): Deferred<PrayerResponse> {
+    override suspend fun fetchPrayerApi(msConfiguration: MsConfiguration): Deferred<Resource<PrayerResponse>> {
         return CoroutineScope(Dispatchers.IO).async {
-            lateinit var response: PrayerResponse
+            lateinit var response: Resource<PrayerResponse>
             try {
-                response = execute(prayerApiService.fetchPrayer(msApi1.latitude, msApi1.longitude,
-                    msApi1.method, msApi1.month, msApi1.year))
-                response.status= "1"
-            }
-            catch (ex: Exception){
-                response = PrayerResponse()
-                response.status= "-1"
+                val result = execute(prayerApiService.fetchPrayer(msConfiguration.latitude, msConfiguration.longitude,
+                    msConfiguration.method, msConfiguration.month, msConfiguration.year))
+                response = Resource.success(result)
+            } catch (ex: Exception){
+                response = Resource.error(PrayerResponse())
                 response.message = ex.message.toString()
             }
             response
@@ -100,7 +98,7 @@ class FakePrayerRepository constructor(
 
     override fun getMethods(): LiveData<Resource<List<MsCalculationMethods>>> {
         return object :
-            NetworkBoundResource<List<MsCalculationMethods>, MethodResponse>(contextProviders) {
+            NetworkBoundResource<List<MsCalculationMethods>, MethodResponse>(contextProvider) {
             override fun loadFromDB(): LiveData<List<MsCalculationMethods>> =
                 msCalculationMethodsDao.getMethods()
 
@@ -146,8 +144,8 @@ class FakePrayerRepository constructor(
         }.asLiveData()
     }
 
-    override fun getListNotifiedPrayer(msApi1: MsApi1): LiveData<Resource<List<MsNotifiedPrayer>>> {
-        return object : NetworkBoundResource<List<MsNotifiedPrayer>, PrayerResponse>(contextProviders) {
+    override fun getListNotifiedPrayer(msConfiguration: MsConfiguration): LiveData<Resource<List<MsNotifiedPrayer>>> {
+        return object : NetworkBoundResource<List<MsNotifiedPrayer>, PrayerResponse>(contextProvider) {
             override fun loadFromDB(): LiveData<List<MsNotifiedPrayer>> = msNotifiedPrayerDao.getListNotifiedPrayer()
 
             override fun shouldFetch(data: List<MsNotifiedPrayer>?): Boolean = true
@@ -157,7 +155,7 @@ class FakePrayerRepository constructor(
                     withContext(CoroutineScope(Dispatchers.IO).coroutineContext) {
                         lateinit var response: PrayerResponse
                         try {
-                            response = execute(prayerApiService.fetchPrayer(msApi1.latitude, msApi1.longitude, msApi1.method, msApi1.month, msApi1.year))
+                            response = execute(prayerApiService.fetchPrayer(msConfiguration.latitude, msConfiguration.longitude, msConfiguration.method, msConfiguration.month, msConfiguration.year))
                             emit(ApiResponse.success(response))
                         } catch (ex: Exception) {
                             response = PrayerResponse()

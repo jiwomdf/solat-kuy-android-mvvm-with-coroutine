@@ -34,16 +34,18 @@ class AllSurahAdapter: RecyclerView.Adapter<AllSurahAdapter.AllSurahViewHolder>(
 
     inner class AllSurahViewHolder(private val binding: ListAllSurahBinding): RecyclerView.ViewHolder(binding.root) {
         fun bind(data: MsSurah){
-            binding.tvAllsurahNo.text = data.number.toString()
-            binding.tvAllsurahEn.text = data.englishName
-            binding.tvAllsurahEnMeaning.text = data.englishNameTranslation
-            binding.tvAllsurahAr.text = data.name
-            binding.ccAllsurah.setOnClickListener {
-                onClick?.invoke(
-                    data.number.toString(),
-                    data.englishName,
-                    data.englishNameTranslation
-                )
+            binding.apply {
+                tvAllsurahNo.text = data.number.toString()
+                tvAllsurahEn.text = data.englishName
+                tvAllsurahEnMeaning.text = data.englishNameTranslation
+                tvAllsurahAr.text = data.name
+                ccAllsurah.setOnClickListener {
+                    onClick?.invoke(
+                        data.number.toString(),
+                        data.englishName,
+                        data.englishNameTranslation
+                    )
+                }
             }
         }
     }

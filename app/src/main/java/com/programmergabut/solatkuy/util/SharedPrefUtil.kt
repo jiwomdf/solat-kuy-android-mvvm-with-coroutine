@@ -44,6 +44,28 @@ class SharedPrefUtil @Inject constructor() {
         }
     }
 
+    fun getReadSurahContentType(): Int {
+        return sharedPref.getInt("setReadSurahContentType", 1)
+    }
+
+    fun setReadSurahContentType(contentType: Int) {
+        sharedPref.edit()?.apply{
+            putInt("setReadSurahContentType", contentType)
+            apply()
+        }
+    }
+
+    fun getReadSurahArTextSize(): Int {
+        return sharedPref.getInt("setReadSurahArTextSize", 1)
+    }
+
+    fun setReadSurahArTextSize(textSize: Int) {
+        sharedPref.edit()?.apply{
+            putInt("setReadSurahArTextSize", textSize)
+            apply()
+        }
+    }
+
     fun insertLastReadSharedPref(selectedSurahId: Int, numberInSurah: Int) {
         sharedPref.edit()?.apply{
             putInt(LAST_READ_SURAH, selectedSurahId)

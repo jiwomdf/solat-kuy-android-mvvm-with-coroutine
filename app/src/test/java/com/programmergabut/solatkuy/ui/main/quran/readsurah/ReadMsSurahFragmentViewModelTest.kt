@@ -71,6 +71,4 @@ class ReadMsSurahFragmentViewModelTest{
         verify(fakeQuranRepository).deleteFavSurah(msFavSurah)
     }
 
-    fun <T> T.toDeferred() = CompletableDeferred(this)
-
 }

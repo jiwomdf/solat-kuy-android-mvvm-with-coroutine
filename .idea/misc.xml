@@ -1,5 +1,59 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <project version="4">
+  <component name="DesignSurface">
+    <option name="filePathToZoomLevelMap">
+      <map>
+        <entry key="..\:/Users/User/StudioProjects/solat-kuy-android-mvvm-with-coroutine/app/src/main/res/drawable/bg_blue_light_rounded.xml" value="0.2255" />
+        <entry key="..\:/Users/User/StudioProjects/solat-kuy-android-mvvm-with-coroutine/app/src/main/res/drawable/bg_border_light_with_radius.xml" value="0.2255" />
+        <entry key="..\:/Users/User/StudioProjects/solat-kuy-android-mvvm-with-coroutine/app/src/main/res/drawable/bg_dark_rounded_top.xml" value="0.2255" />
+        <entry key="..\:/Users/User/StudioProjects/solat-kuy-android-mvvm-with-coroutine/app/src/main/res/drawable/btn_border_light.xml" value="0.2255" />
+        <entry key="..\:/Users/User/StudioProjects/solat-kuy-android-mvvm-with-coroutine/app/src/main/res/drawable/btn_border_light_with_radius.xml" value="0.2255" />
+        <entry key="..\:/Users/User/StudioProjects/solat-kuy-android-mvvm-with-coroutine/app/src/main/res/drawable/ic_access_time_24.xml" value="0.2255" />
+        <entry key="..\:/Users/User/StudioProjects/solat-kuy-android-mvvm-with-coroutine/app/src/main/res/drawable/ic_add_24.xml" value="0.1885" />
+        <entry key="..\:/Users/User/StudioProjects/solat-kuy-android-mvvm-with-coroutine/app/src/main/res/layout/activity_boarding.xml" value="0.264" />
+        <entry key="..\:/Users/User/StudioProjects/solat-kuy-android-mvvm-with-coroutine/app/src/main/res/layout/activity_dua.xml" value="0.25" />
+        <entry key="..\:/Users/User/StudioProjects/solat-kuy-android-mvvm-with-coroutine/app/src/main/res/layout/activity_main.xml" value="0.25" />
+        <entry key="..\:/Users/User/StudioProjects/solat-kuy-android-mvvm-with-coroutine/app/src/main/res/layout/activity_splash.xml" value="0.25" />
+        <entry key="..\:/Users/User/StudioProjects/solat-kuy-android-mvvm-with-coroutine/app/src/main/res/layout/fragment_compass.xml" value="0.25" />
+        <entry key="..\:/Users/User/StudioProjects/solat-kuy-android-mvvm-with-coroutine/app/src/main/res/layout/fragment_home.xml" value="0.18518518518518517" />
+        <entry key="..\:/Users/User/StudioProjects/solat-kuy-android-mvvm-with-coroutine/app/src/main/res/layout/fragment_list_surah.xml" value="0.1875" />
+        <entry key="..\:/Users/User/StudioProjects/solat-kuy-android-mvvm-with-coroutine/app/src/main/res/layout/fragment_read_surah.xml" value="0.264" />
+        <entry key="..\:/Users/User/StudioProjects/solat-kuy-android-mvvm-with-coroutine/app/src/main/res/layout/fragment_setting.xml" value="0.264" />
+        <entry key="..\:/Users/User/StudioProjects/solat-kuy-android-mvvm-with-coroutine/app/src/main/res/layout/layout_about_author.xml" value="0.25" />
+        <entry key="..\:/Users/User/StudioProjects/solat-kuy-android-mvvm-with-coroutine/app/src/main/res/layout/layout_bottomsheet_bygps.xml" value="0.4" />
+        <entry key="..\:/Users/User/StudioProjects/solat-kuy-android-mvvm-with-coroutine/app/src/main/res/layout/layout_bottomsheet_bylatitudelongitude.xml" value="0.25" />
+        <entry key="..\:/Users/User/StudioProjects/solat-kuy-android-mvvm-with-coroutine/app/src/main/res/layout/layout_delete.xml" value="0.25" />
+        <entry key="..\:/Users/User/StudioProjects/solat-kuy-android-mvvm-with-coroutine/app/src/main/res/layout/layout_error_bottomsheet.xml" value="0.25" />
+        <entry key="..\:/Users/User/StudioProjects/solat-kuy-android-mvvm-with-coroutine/app/src/main/res/layout/layout_fristopenapp.xml" value="0.25" />
+        <entry key="..\:/Users/User/StudioProjects/solat-kuy-android-mvvm-with-coroutine/app/src/main/res/layout/layout_info.xml" value="0.2359375" />
+        <entry key="..\:/Users/User/StudioProjects/solat-kuy-android-mvvm-with-coroutine/app/src/main/res/layout/layout_loader.xml" value="0.25" />
+        <entry key="..\:/Users/User/StudioProjects/solat-kuy-android-mvvm-with-coroutine/app/src/main/res/layout/layout_loading_card.xml" value="0.25" />
+        <entry key="..\:/Users/User/StudioProjects/solat-kuy-android-mvvm-with-coroutine/app/src/main/res/layout/layout_loading_rounded.xml" value="0.25" />
+        <entry key="..\:/Users/User/StudioProjects/solat-kuy-android-mvvm-with-coroutine/app/src/main/res/layout/layout_phone_tilt.xml" value="0.25" />
+        <entry key="..\:/Users/User/StudioProjects/solat-kuy-android-mvvm-with-coroutine/app/src/main/res/layout/layout_prayer_time.xml" value="0.264" />
+        <entry key="..\:/Users/User/StudioProjects/solat-kuy-android-mvvm-with-coroutine/app/src/main/res/layout/layout_quran_quote.xml" value="0.25" />
+        <entry key="..\:/Users/User/StudioProjects/solat-kuy-android-mvvm-with-coroutine/app/src/main/res/layout/layout_read_surah_loading.xml" value="0.24895833333333334" />
+        <entry key="..\:/Users/User/StudioProjects/solat-kuy-android-mvvm-with-coroutine/app/src/main/res/layout/list_all_surah.xml" value="0.25" />
+        <entry key="..\:/Users/User/StudioProjects/solat-kuy-android-mvvm-with-coroutine/app/src/main/res/layout/list_asma_alhusna.xml" value="0.25" />
+        <entry key="..\:/Users/User/StudioProjects/solat-kuy-android-mvvm-with-coroutine/app/src/main/res/layout/list_dua.xml" value="0.10885416666666667" />
+        <entry key="..\:/Users/User/StudioProjects/solat-kuy-android-mvvm-with-coroutine/app/src/main/res/layout/list_fav_ayah.xml" value="0.25" />
+        <entry key="..\:/Users/User/StudioProjects/solat-kuy-android-mvvm-with-coroutine/app/src/main/res/layout/list_read_surah.xml" value="0.264" />
+        <entry key="..\:/Users/User/StudioProjects/solat-kuy-android-mvvm-with-coroutine/app/src/main/res/layout/list_stared_surah.xml" value="0.25" />
+        <entry key="..\:/Users/User/StudioProjects/solat-kuy-android-mvvm-with-coroutine/app/src/main/res/layout/rounded_grey.xml" value="0.25" />
+        <entry key="..\:/Users/User/StudioProjects/solat-kuy-android-mvvm-with-coroutine/app/src/main/res/layout/spinner_item.xml" value="0.25" />
+        <entry key="..\:/Users/User/StudioProjects/solat-kuy-android-mvvm-with-coroutine/app/src/main/res/menu/bottom_navigation_menu.xml" value="0.25" />
+        <entry key="..\:/Users/User/StudioProjects/solat-kuy-android-mvvm-with-coroutine/app/src/main/res/menu/read_surah_menu.xml" value="0.25" />
+        <entry key="..\:/Users/User/StudioProjects/solat-kuy-android-mvvm-with-coroutine/quran/src/main/res/layout/fragment_list_surah.xml" value="0.25" />
+        <entry key="..\:/Users/User/StudioProjects/solat-kuy-android-mvvm-with-coroutine/quran/src/main/res/layout/fragment_read_surah.xml" value="0.25" />
+        <entry key="..\:/Users/User/StudioProjects/solat-kuy-android-mvvm-with-coroutine/quran/src/main/res/layout/list_read_surah.xml" value="0.25" />
+        <entry key="..\:/Users/User/StudioProjects/solat-kuy-android-mvvm-with-coroutine/quran/src/main/res/layout/list_stared_surah.xml" value="0.25" />
+        <entry key="app/src/main/res/layout/fragment_read_surah.xml" value="0.2375" />
+        <entry key="app/src/main/res/layout/fragment_setting.xml" value="0.2375" />
+        <entry key="app/src/main/res/layout/layout_read_surah_loading.xml" value="0.2375" />
+        <entry key="app/src/main/res/layout/list_read_surah.xml" value="0.2234375" />
+      </map>
+    </option>
+  </component>
   <component name="ProjectRootManager" version="2" languageLevel="JDK_11" default="true" project-jdk-name="11" project-jdk-type="JavaSDK">
     <output url="file://$PROJECT_DIR$/build/classes" />
   </component>

@@ -16,7 +16,7 @@ object Constant {
     const val STARTED_SURAH = 1
     const val ENDED_SURAH = 114
 
-    /* For the first time populating the database MsApi1 table */
+    /* For the first time populating the database MsConfiguration table */
     const val START_LAT = "0.0"
     const val START_LNG = "0.0"
     const val STARTED_METHOD = "11"

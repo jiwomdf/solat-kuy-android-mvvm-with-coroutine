@@ -4,11 +4,16 @@
     android:layout_width="wrap_content"
     android:layout_height="wrap_content">
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
+        style="@style/ButtonBorderLightWithRadius"
         android:id="@+id/btn_duaBtn"
         android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="@dimen/small_margin"
+        android:layout_height="@dimen/button_height"
+        android:paddingStart="@dimen/dp8"
+        android:paddingEnd="@dimen/dp8"
+        android:layout_marginStart="@dimen/dp8"
+        android:layout_marginTop="@dimen/dp8"
+        android:layout_marginBottom="@dimen/dp8"
         tools:text="Dua Save From Hell And World" />
 
 </LinearLayout>

@@ -5,7 +5,7 @@ import android.util.Log
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.google.firebase.crashlytics.FirebaseCrashlytics
-import com.programmergabut.solatkuy.data.local.dao.MsApi1Dao
+import com.programmergabut.solatkuy.data.local.dao.MsConfigurationDao
 import kotlinx.coroutines.runBlocking
 import org.joda.time.LocalDate
 import java.lang.Exception
@@ -13,7 +13,7 @@ import java.lang.Exception
 class UpdateMonthAndYearWorker(
     context: Context,
     workerParameters: WorkerParameters,
-    private val msApi1Dao: MsApi1Dao
+    private val msConfigurationDao: MsConfigurationDao
 ): Worker(context, workerParameters) {
 
     private val TAG = "UpdateMonthAndYearWorker"
@@ -24,7 +24,7 @@ class UpdateMonthAndYearWorker(
 
     override fun doWork(): Result {
         return try {
-            updateMonthAndYearMsApi1()
+            updateMonthAndYearMsConfiguration()
 
             Log.e(TAG, "Result.success()")
             Result.success()
@@ -35,21 +35,21 @@ class UpdateMonthAndYearWorker(
         }
     }
 
-    private fun updateMonthAndYearMsApi1() = runBlocking {
+    private fun updateMonthAndYearMsConfiguration() = runBlocking {
         try {
-            val msApi1 = msApi1Dao.getMsApi1()
+            val msConfiguration = msConfigurationDao.getMsConfiguration()
             val arrDate = LocalDate.now().toString("dd/M/yyyy").split("/")
 
-            if(msApi1 == null)
+            if(msConfiguration == null)
                 throw NullPointerException(TAG)
 
             val year = arrDate[2]
             val month = arrDate[1]
-            val dbYear = msApi1.year.toInt()
-            val dbMoth = msApi1.month.toInt()
+            val dbYear = msConfiguration.year.toInt()
+            val dbMoth = msConfiguration.month.toInt()
 
             if(year.toInt() > dbYear && month.toInt() > dbMoth){
-                msApi1Dao.updateMsApi1MonthAndYear(1, arrDate[1], arrDate[2])
+                msConfigurationDao.updateMsConfigurationMonthAndYear(1, arrDate[1], arrDate[2])
                 Log.e(TAG, "$year $month $dbYear $dbMoth")
             } else {
                 Log.e(TAG, "return@runBlocking")

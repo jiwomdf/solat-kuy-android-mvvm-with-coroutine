@@ -1,5 +1,6 @@
 package com.programmergabut.solatkuy.ui.splash
 
+import android.os.Bundle
 import android.os.Handler
 import android.os.Looper
 import com.programmergabut.solatkuy.R
@@ -20,24 +21,24 @@ class SplashActivity : BaseActivity<ActivitySplashBinding, SplashViewModel>(
 
     override fun getViewBinding() = ActivitySplashBinding.inflate(layoutInflater)
 
-    override fun setListener() {
-        super.setListener()
-        observeDb()
+    override fun onCreate(savedInstanceState: Bundle?) {
+        super.onCreate(savedInstanceState)
+        setListener()
     }
 
-    private fun observeDb(){
-        viewModel.msSetting.observe(this, {
-            if(it != null){
-                if(it.isHasOpenApp){
+    private fun setListener() {
+        viewModel.msSetting.observe(this) {
+            it?.let {
+                if (it.isHasOpenApp)
                     gotoMainActivity()
-                } else {
+                else
                     gotoBoardingActivity()
-                }
-            } else {
+            } ?: run {
                 SolatKuyRoom.populateDatabase(db)
             }
-        })
+        }
     }
+
 
     private fun gotoMainActivity() {
         Handler(Looper.getMainLooper()).postDelayed({

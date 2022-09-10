@@ -10,22 +10,23 @@
         android:id="@+id/cv_imsak_info"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/smaller_margin"
-        app:cardCornerRadius="@dimen/medium_margin">
+        app:cardCornerRadius="@dimen/dp16">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/dark_200"
+            android:background="@color/dark_700"
+            android:scaleType="centerCrop"
             android:orientation="vertical">
 
             <TextView
                 android:id="@+id/tv_imsak_info_title"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/medium_margin"
-                android:layout_marginTop="@dimen/medium_margin"
+                android:layout_marginStart="@dimen/dp16"
+                android:layout_marginTop="@dimen/dp16"
                 android:text="@string/imsak_info"
+                android:textSize="@dimen/sp20"
                 android:textStyle="bold"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent" />
@@ -34,9 +35,9 @@
                 android:id="@+id/tv_imsak_date"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/medium_margin"
-                android:layout_marginTop="@dimen/smaller_margin"
-                android:layout_marginBottom="@dimen/smaller_margin"
+                android:layout_marginStart="@dimen/dp16"
+                android:layout_marginTop="@dimen/dp4"
+                android:layout_marginBottom="@dimen/dp4"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/tv_imsak_info_title"
                 tools:text="April 24 2020" />
@@ -45,9 +46,9 @@
                 android:id="@+id/tv_city"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/medium_margin"
-                android:layout_marginTop="@dimen/smaller_margin"
-                android:layout_marginBottom="@dimen/medium_margin"
+                android:layout_marginStart="@dimen/dp16"
+                android:layout_marginTop="@dimen/dp4"
+                android:layout_marginBottom="@dimen/dp16"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@id/tv_imsak_date"
@@ -57,9 +58,9 @@
                 android:id="@+id/tv_imsak_time"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginEnd="@dimen/medium_margin"
+                android:layout_marginEnd="@dimen/dp16"
                 android:text="@string/loading"
-                android:textSize="@dimen/large2_text_size"
+                android:textSize="@dimen/sp30"
                 app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintTop_toTopOf="parent"
@@ -72,20 +73,20 @@
         android:id="@+id/cv_date_info"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/smaller_margin"
-        app:cardCornerRadius="@dimen/medium_margin">
+        android:layout_marginTop="@dimen/dp16"
+        app:cardCornerRadius="@dimen/dp16">
 
         <androidx.constraintlayout.widget.ConstraintLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/dark_200"
+            android:background="@color/dark_700"
             android:orientation="vertical">
 
             <LinearLayout
                 android:id="@+id/ll_title_date_info"
                 android:layout_width="wrap_content"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/medium_margin"
+                android:layout_marginTop="@dimen/dp16"
                 android:gravity="center"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toTopOf="parent">
@@ -94,8 +95,9 @@
                     android:id="@+id/tv_title_date_info"
                     android:layout_width="wrap_content"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/medium_margin"
+                    android:layout_marginStart="@dimen/dp16"
                     android:text="@string/gregorian_to_hijri"
+                    android:textSize="@dimen/sp20"
                     android:textStyle="bold" />
             </LinearLayout>
 
@@ -104,10 +106,12 @@
                 android:id="@+id/tableLayout"
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginStart="@dimen/medium_margin"
-                android:layout_marginTop="@dimen/smaller_margin"
+                android:layout_marginStart="@dimen/dp16"
+                android:layout_marginTop="@dimen/dp4"
+                android:layout_marginBottom="@dimen/dp4"
                 android:stretchColumns="*"
                 android:textStyle="bold"
+                app:layout_constraintBottom_toBottomOf="parent"
                 app:layout_constraintEnd_toEndOf="parent"
                 app:layout_constraintStart_toStartOf="parent"
                 app:layout_constraintTop_toBottomOf="@+id/ll_title_date_info">
@@ -115,24 +119,27 @@
                 <TableRow
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginTop="@dimen/smaller_margin">
+                    android:layout_marginTop="@dimen/dp4">
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_margin="@dimen/smaller_margin"
+                        android:layout_margin="@dimen/dp4"
+                        android:fontFamily="@font/sourcesanspro_bold"
                         android:text="@string/type" />
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_margin="@dimen/smaller_margin"
+                        android:layout_margin="@dimen/dp4"
+                        android:fontFamily="@font/sourcesanspro_bold"
                         android:text="@string/gregorian" />
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_margin="@dimen/smaller_margin"
+                        android:layout_margin="@dimen/dp4"
+                        android:fontFamily="@font/sourcesanspro_bold"
                         android:text="@string/hijri" />
                 </TableRow>
 
@@ -143,14 +150,15 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_margin="@dimen/smaller_margin"
+                        android:layout_margin="@dimen/dp4"
+                        android:fontFamily="@font/sourcesanspro_bold"
                         android:text="@string/date" />
 
                     <TextView
                         android:id="@+id/tv_gregorian_date"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_margin="@dimen/smaller_margin"
+                        android:layout_margin="@dimen/dp4"
                         android:text="@string/loading"
                         tools:text="01-03-2020" />
 
@@ -158,7 +166,7 @@
                         android:id="@+id/tv_hijri_date"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_margin="@dimen/smaller_margin"
+                        android:layout_margin="@dimen/dp4"
                         android:text="@string/loading"
                         tools:text="06-07-1441" />
                 </TableRow>
@@ -170,14 +178,15 @@
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_margin="@dimen/smaller_margin"
+                        android:layout_margin="@dimen/dp4"
+                        android:fontFamily="@font/sourcesanspro_bold"
                         android:text="@string/month" />
 
                     <TextView
                         android:id="@+id/tv_gregorian_month"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_margin="@dimen/smaller_margin"
+                        android:layout_margin="@dimen/dp4"
                         android:text="@string/loading"
                         tools:text="March" />
 
@@ -185,7 +194,7 @@
                         android:id="@+id/tv_hijri_month"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_margin="@dimen/smaller_margin"
+                        android:layout_margin="@dimen/dp4"
                         android:text="@string/loading"
                         tools:text="Rajab / رَجَب" />
                 </TableRow>
@@ -193,19 +202,20 @@
                 <TableRow
                     android:layout_width="match_parent"
                     android:layout_height="match_parent"
-                    android:layout_marginBottom="@dimen/smaller_margin">
+                    android:layout_marginBottom="@dimen/dp4">
 
                     <TextView
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_margin="@dimen/smaller_margin"
+                        android:layout_margin="@dimen/dp4"
+                        android:fontFamily="@font/sourcesanspro_bold"
                         android:text="@string/day" />
 
                     <TextView
                         android:id="@+id/tv_gregorian_day"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_margin="@dimen/smaller_margin"
+                        android:layout_margin="@dimen/dp4"
                         android:text="@string/loading"
                         tools:text="Sunday" />
 
@@ -213,7 +223,7 @@
                         android:id="@+id/tv_hijri_day"
                         android:layout_width="match_parent"
                         android:layout_height="match_parent"
-                        android:layout_margin="@dimen/smaller_margin"
+                        android:layout_margin="@dimen/dp4"
                         android:text="@string/loading"
                         tools:text="Al Ahad / الاحد" />
                 </TableRow>
@@ -226,36 +236,39 @@
         android:id="@+id/cv_dua_info"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_margin="@dimen/smaller_margin"
-        app:cardCornerRadius="@dimen/medium_margin">
+        android:layout_marginTop="@dimen/dp16"
+        app:cardCornerRadius="@dimen/dp16"
+        app:cardBackgroundColor="@color/dark_700">
 
         <LinearLayout
             android:layout_width="match_parent"
             android:layout_height="match_parent"
-            android:background="@color/dark_200"
             android:orientation="vertical">
 
             <LinearLayout
                 android:layout_width="match_parent"
                 android:layout_height="wrap_content"
-                android:layout_marginTop="@dimen/medium_margin"
-                android:layout_marginBottom="@dimen/smaller_margin"
+                android:layout_marginTop="@dimen/dp16"
+                android:layout_marginBottom="@dimen/dp4"
                 android:gravity="center"
                 android:orientation="horizontal">
 
                 <TextView
                     android:layout_width="match_parent"
                     android:layout_height="wrap_content"
-                    android:layout_marginStart="@dimen/medium_margin"
+                    android:layout_marginStart="@dimen/dp16"
                     android:text="@string/dua_collection"
+                    android:textSize="@dimen/sp20"
                     android:textStyle="bold" />
             </LinearLayout>
 
             <androidx.recyclerview.widget.RecyclerView
                 android:id="@+id/rvDuaCollection"
-                android:layout_width="match_parent"
+                android:layout_width="wrap_content"
                 android:layout_height="match_parent"
-                android:layout_marginBottom="@dimen/smaller_margin"
+                android:layout_marginBottom="@dimen/dp4"
+                app:spanCount="2"
+                app:layoutManager="androidx.recyclerview.widget.GridLayoutManager"
                 tools:listitem="@layout/list_dua" />
 
         </LinearLayout>

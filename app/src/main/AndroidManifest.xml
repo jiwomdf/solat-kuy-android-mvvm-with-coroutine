@@ -3,12 +3,11 @@
     xmlns:tools="http://schemas.android.com/tools"
     package="com.programmergabut.solatkuy">
 
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
-    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.INTERNET" />
+    <uses-permission android:name="android.permission.VIBRATE" />
+    <uses-permission android:name="android.permission.ACCESS_NETWORK_STATE" />
     <uses-permission android:name="android.permission.ACCESS_FINE_LOCATION" />
     <uses-permission android:name="android.permission.ACCESS_COARSE_LOCATION" />
-    <uses-permission android:name="android.permission.VIBRATE" />
     <uses-permission android:name="android.permission.RECEIVE_BOOT_COMPLETED" />
 
     <application
@@ -21,7 +20,10 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:targetApi="n">
-        <activity android:name=".ui.splash.SplashActivity"
+
+        <activity
+            android:name=".ui.splash.SplashActivity"
+            android:exported="true"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity">
             <intent-filter>
@@ -29,14 +31,20 @@
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-        <activity android:name=".ui.dua.DuaActivity" />
+
+        <activity
+            android:name=".ui.dua.DuaActivity"
+            android:exported="false" />
+
         <activity
             android:name=".ui.boarding.BoardingActivity"
+            android:exported="false"
             android:screenOrientation="portrait"
-            tools:ignore="LockedOrientationActivity">
-        </activity>
+            tools:ignore="LockedOrientationActivity" />
+
         <activity
             android:name=".ui.main.MainActivity"
+            android:exported="false"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
 
@@ -45,9 +53,14 @@
             android:authorities="${applicationId}.workmanager-init"
             tools:node="remove" />
 
+        <receiver
+            android:name=".broadcaster.PrayerBroadcastReceiver"
+            android:exported="true"
+            tools:node="merge" />
 
-        <receiver android:name=".broadcaster.PrayerBroadcastReceiver" />
-        <receiver android:name=".broadcaster.BootCompleteReceiver">
+        <receiver
+            android:name=".broadcaster.BootCompleteReceiver"
+            android:exported="true">
             <intent-filter>
                 <action android:name="android.intent.action.BOOT_COMPLETED" />
                 <action android:name="android.intent.action.QUICKBOOT_POWERON" />

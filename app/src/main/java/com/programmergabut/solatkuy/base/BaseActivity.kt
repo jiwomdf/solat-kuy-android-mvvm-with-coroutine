@@ -9,6 +9,7 @@ import androidx.lifecycle.ViewModelProvider
 import android.view.MotionEvent
 import android.view.ViewGroup
 import android.view.inputmethod.InputMethodManager
+import android.widget.FrameLayout
 import androidx.appcompat.app.AppCompatActivity
 import androidx.core.app.ActivityCompat
 import androidx.lifecycle.ViewModel
@@ -34,6 +35,7 @@ abstract class BaseActivity<VB: ViewBinding, VM: ViewModel>(
     protected lateinit var viewModel: VM
 
     abstract fun getViewBinding(): VB
+
     private var _binding: ViewBinding? = null
     protected val binding: VB
         get() = _binding as VB
@@ -45,8 +47,6 @@ abstract class BaseActivity<VB: ViewBinding, VM: ViewModel>(
         viewModelClass?.let {
             viewModel = ViewModelProvider(this).get(it)
         }
-        inflateBinding()
-        setListener()
         setContentView(requireNotNull(_binding).root)
     }
 
@@ -54,11 +54,6 @@ abstract class BaseActivity<VB: ViewBinding, VM: ViewModel>(
         super.onDestroy()
         _binding = null
     }
-
-
-    protected open fun setListener(){}
-
-    protected open fun inflateBinding(){}
 
     protected fun isLocationPermissionGranted(): Boolean {
         return (ActivityCompat.checkSelfPermission(this, Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
@@ -97,6 +92,12 @@ abstract class BaseActivity<VB: ViewBinding, VM: ViewModel>(
             window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
             setCancelable(isCancelable)
             setContentView(dialogBinding.root)
+            setOnShowListener { dia ->
+                val bottomSheetDialog = dia as BottomSheetDialog
+                val bottomSheetInternal: FrameLayout =
+                    bottomSheetDialog.findViewById(R.id.design_bottom_sheet)!!
+                bottomSheetInternal.setBackgroundResource(R.drawable.bg_dark_rounded_top)
+            }
         }
         dialogBinding.apply{
             tvTitle.text = title

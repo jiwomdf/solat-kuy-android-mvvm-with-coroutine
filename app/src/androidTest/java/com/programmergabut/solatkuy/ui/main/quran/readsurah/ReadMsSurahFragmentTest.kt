@@ -73,7 +73,7 @@ class ReadMsSurahFragmentTest {
         onView(withId(R.id.tb_readSurah)).check(matches(isDisplayed()))
         onView(withId(R.id.i_star_surah)).check(matches(isDisplayed()))
         onView(withId(R.id.rv_read_surah)).check(matches(isDisplayed()))
-        onView(withId(R.id.fab_brightness)).check(matches(isDisplayed()))
+        onView(withId(R.id.fab_more)).check(matches(isDisplayed()))
     }
 
     @Test

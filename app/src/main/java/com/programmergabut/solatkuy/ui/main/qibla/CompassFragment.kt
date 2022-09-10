@@ -1,6 +1,5 @@
 package com.programmergabut.solatkuy.ui.main.qibla
 
-import android.app.Dialog
 import android.content.Context.SENSOR_SERVICE
 import android.hardware.Sensor
 import android.hardware.SensorEvent
@@ -11,14 +10,16 @@ import android.view.View
 import android.view.ViewGroup
 import android.view.animation.Animation
 import android.view.animation.RotateAnimation
+import android.widget.FrameLayout
 import androidx.core.content.ContextCompat
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
+import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.base.BaseFragment
 import com.programmergabut.solatkuy.data.remote.json.compassJson.Result
 import com.programmergabut.solatkuy.databinding.FragmentCompassBinding
 import com.programmergabut.solatkuy.databinding.LayoutPhoneTiltBinding
-import com.programmergabut.solatkuy.util.EnumStatus
+import com.programmergabut.solatkuy.util.Status
 import dagger.hilt.android.AndroidEntryPoint
 
 /*
@@ -44,14 +45,12 @@ class CompassFragment constructor(
 
     override fun onResume() {
         super.onResume()
-        mSensorManager.registerListener(
-            this, mSensorManager.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD),
-            SensorManager.SENSOR_DELAY_GAME
-        )
-        mSensorManager.registerListener(
-            this, mSensorManager.getDefaultSensor(Sensor.TYPE_ACCELEROMETER),
-            SensorManager.SENSOR_DELAY_GAME
-        )
+        mSensorManager.also {
+            it.registerListener(this,
+                it.getDefaultSensor(Sensor.TYPE_MAGNETIC_FIELD), SensorManager.SENSOR_DELAY_GAME)
+            it.registerListener(this,
+                it.getDefaultSensor(Sensor.TYPE_ACCELEROMETER), SensorManager.SENSOR_DELAY_GAME)
+        }
     }
 
     override fun onPause() {
@@ -62,36 +61,37 @@ class CompassFragment constructor(
     override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         mSensorManager = activity?.getSystemService(SENSOR_SERVICE) as SensorManager
-        openLottieAnimation()
-    }
-
-    override fun setListener() {
-        super.setListener()
-        binding.slCompass.setOnRefreshListener(this)
-        subscribeObserversDB()
-        subscribeObserversAPI()
-    }
-
-    private fun openLottieAnimation() {
-        val isHasOpenAnimation = sharedPrefUtil.getIsHasOpenAnimation()
-        if(!isHasOpenAnimation)
+        if(!sharedPrefUtil.getIsHasOpenAnimation())
             createLottieAnimation()
+        setListener()
     }
 
-    private fun subscribeObserversAPI() {
-        viewModel.compass.observe(viewLifecycleOwner, { retVal ->
-            when (retVal.status) {
-                EnumStatus.SUCCESS -> {
-                    if (retVal.data == null) {
-                        showBottomSheet()
-                        return@observe
-                    }
-                    binding.tvQiblaDir.text = shortenTextDegree(retVal.data.data)
+    private fun setListener() {
+        binding.apply {
+            slCompass.setOnRefreshListener(this@CompassFragment)
+
+            viewModel.msConfiguration.observe(viewLifecycleOwner) {
+                if (it == null) {
+                    showBottomSheet(isCancelable = false, isFinish = true)
+                    return@observe
                 }
-                EnumStatus.LOADING -> binding.tvQiblaDir.text = getString(R.string.loading)
-                EnumStatus.ERROR -> binding.tvQiblaDir.text = getString(R.string.fetch_failed)
+                viewModel.fetchCompassApi(it)
             }
-        })
+
+            viewModel.compass.observe(viewLifecycleOwner) { data ->
+                tvQiblaDir.text = when (data.status) {
+                    Status.Success -> {
+                        if (data.data == null) {
+                            showBottomSheet()
+                            return@observe
+                        }
+                        shortenTextDegree(data.data.data)
+                    }
+                    Status.Loading -> getString(R.string.loading)
+                    Status.Error -> getString(R.string.fetch_failed)
+                }
+            }
+        }
     }
 
     private fun shortenTextDegree(data: Result): String {
@@ -99,16 +99,6 @@ class CompassFragment constructor(
             data.direction.toString().substring(0, 6).trim() + "°"
         else
             data.direction.toString()
-    }
-
-    private fun subscribeObserversDB() {
-        viewModel.msApi1.observe(viewLifecycleOwner, {
-            if (it == null) {
-                showBottomSheet(isCancelable = false, isFinish = true)
-                return@observe
-            }
-            viewModel.fetchCompassApi(it)
-        })
     }
 
     override fun onSensorChanged(event: SensorEvent?) {
@@ -146,41 +136,49 @@ class CompassFragment constructor(
     }
 
     override fun onAccuracyChanged(sensor: Sensor?, accuracy: Int) {
-        when (accuracy) {
-            0 -> {
-                binding.tvQiblaAccuracy.text = getString(R.string.unreliable)
-                binding.tvQiblaAccuracy.setTextColor(ContextCompat.getColor(requireContext(), R.color.red_700))
-            }
-            1 -> {
-                binding.tvQiblaAccuracy.text = getString(R.string.lowAccuracy)
-                binding.tvQiblaAccuracy.setTextColor(ContextCompat.getColor(requireContext(), R.color.red_200))
-            }
-            2 -> {
-                binding.tvQiblaAccuracy.text = getString(R.string.mediumAccuracy)
-                binding.tvQiblaAccuracy.setTextColor(ContextCompat.getColor(requireContext(), R.color.blue_500))
-            }
-            3 -> {
-                binding.tvQiblaAccuracy.text = getString(R.string.highAccuracy)
-                binding.tvQiblaAccuracy.setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+        binding.tvQiblaAccuracy.apply {
+            when (accuracy) {
+                0 -> {
+                    text = getString(R.string.unreliable)
+                    setTextColor(ContextCompat.getColor(requireContext(), R.color.red_700))
+                }
+                1 -> {
+                    text = getString(R.string.lowAccuracy)
+                    setTextColor(ContextCompat.getColor(requireContext(), R.color.red_200))
+                }
+                2 -> {
+                    text = getString(R.string.mediumAccuracy)
+                    setTextColor(ContextCompat.getColor(requireContext(), R.color.blue_500))
+                }
+                3 -> {
+                    text = getString(R.string.highAccuracy)
+                    setTextColor(ContextCompat.getColor(requireContext(), R.color.white))
+                }
             }
         }
     }
 
     override fun onRefresh() {
-        if(viewModel.msApi1.value == null)
+        if(viewModel.msConfiguration.value == null)
             return
-        viewModel.fetchCompassApi(viewModel.msApi1.value!!)
+        viewModel.fetchCompassApi(viewModel.msConfiguration.value!!)
         binding.slCompass.isRefreshing = false
     }
 
     private fun createLottieAnimation() {
-        val dialog =  Dialog(requireContext())
+        val dialog =  BottomSheetDialog(requireContext())
         val dialogBinding = LayoutPhoneTiltBinding.inflate(layoutInflater)
         dialog.apply {
             window?.setLayout(
                 ViewGroup.LayoutParams.MATCH_PARENT,
                 ViewGroup.LayoutParams.WRAP_CONTENT
             )
+            setOnShowListener { dia ->
+                val bottomSheetDialog = dia as BottomSheetDialog
+                val bottomSheetInternal: FrameLayout =
+                    bottomSheetDialog.findViewById(R.id.design_bottom_sheet)!!
+                bottomSheetInternal.setBackgroundResource(R.drawable.bg_dark_rounded_top)
+            }
             setCancelable(false)
             setContentView(dialogBinding.root)
             show()

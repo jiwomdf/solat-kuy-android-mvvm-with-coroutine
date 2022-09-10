@@ -3,17 +3,19 @@
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
     android:layout_height="wrap_content"
-    android:background="@color/dark_700"
+    android:background="@drawable/bg_dark_rounded_top"
     android:orientation="vertical">
 
     <TextView
         android:id="@+id/tv_dialog_fragmentCompass_note"
         android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginTop="@dimen/small_margin"
+        android:layout_marginTop="@dimen/dp16"
+        android:layout_marginStart="@dimen/dp16"
+        android:layout_marginEnd="@dimen/dp16"
         android:gravity="center"
         android:text="@string/please_do_this_move_before_using_the_compass_to_calibrate_the_compass"
-        android:textSize="@dimen/medium_text_size"
+        android:textSize="@dimen/sp16"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
         app:layout_constraintTop_toTopOf="parent" />
@@ -21,8 +23,6 @@
     <com.airbnb.lottie.LottieAnimationView
         android:layout_width="match_parent"
         android:layout_height="200dp"
-        android:layout_marginTop="@dimen/medium_margin"
-        android:layout_marginBottom="@dimen/medium_margin"
         app:layout_constraintBottom_toTopOf="@+id/btn_hideAnimation"
         app:layout_constraintEnd_toEndOf="parent"
         app:layout_constraintStart_toStartOf="parent"
@@ -31,11 +31,12 @@
         app:lottie_fileName="2754-move-phone-around-for-ar-app.json"
         app:lottie_loop="true" />
 
-    <Button
+    <androidx.appcompat.widget.AppCompatButton
+        style="@style/ButtonBorderLight"
         android:id="@+id/btn_hideAnimation"
         android:layout_width="wrap_content"
-        android:layout_height="55dp"
-        android:layout_marginBottom="@dimen/small_margin"
+        android:layout_height="@dimen/button_height"
+        android:layout_marginBottom="@dimen/dp16"
         android:text="@string/hide"
         app:layout_constraintBottom_toBottomOf="parent"
         app:layout_constraintEnd_toEndOf="parent"

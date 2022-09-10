@@ -27,13 +27,11 @@ class PushNotificationHelper(context: Context, prayerListMs: List<MsNotifiedPray
         newList.toMutableList().sortBy { x -> x.prayerID }
 
         newList.forEach { prayer ->
-
             val intent = createIntent(context, prayer)
             val pendingIntent = PendingIntent.getBroadcast(context, prayer.prayerID, intent, PendingIntent.FLAG_CANCEL_CURRENT)
             val calendar = createCalendar(prayer)
             if(calendar.before(Calendar.getInstance()))
                 calendar.add(Calendar.DATE, 1)
-
             fireAlarmManager(prayer, pendingIntent, alarmManager, calendar)
         }
     }

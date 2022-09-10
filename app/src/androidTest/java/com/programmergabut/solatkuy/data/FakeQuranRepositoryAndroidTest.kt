@@ -15,6 +15,7 @@ import com.programmergabut.solatkuy.DummyValueAndroidTest
 import com.programmergabut.solatkuy.data.local.localentity.MsAyah
 import com.programmergabut.solatkuy.data.local.localentity.MsSurah
 import com.programmergabut.solatkuy.data.remote.json.readsurahJsonAr.Ayah
+import com.programmergabut.solatkuy.data.repository.QuranRepository
 import com.programmergabut.solatkuy.util.Resource
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.*
@@ -51,21 +52,19 @@ class FakeQuranRepositoryAndroidTest : QuranRepository {
     }
 
     /* Retrofit */
-    override suspend fun fetchReadSurahEn(surahID: Int): Deferred<ReadSurahEnResponse> {
+    override suspend fun fetchReadSurahEn(surahID: Int): Deferred<Resource<ReadSurahEnResponse>> {
         return CoroutineScope(IO).async {
             val data = DummyValueAndroidTest.surahEnID_1<FakeQuranRepositoryAndroidTest>()
-            data.responseStatus = "1"
             data.message = "testing"
-            data
+            Resource.success(data)
         }
     }
 
-    override suspend fun fetchAllSurah(): Deferred<AllSurahResponse> {
+    override suspend fun fetchAllSurah(): Deferred<Resource<AllSurahResponse>> {
         return CoroutineScope(IO).async {
             val data = DummyValueAndroidTest.fetchAllSurah<FakeQuranRepositoryAndroidTest>()
-            data.responseStatus = "1"
             data.message = "testing"
-            data
+            Resource.success(data)
         }
     }
 
@@ -91,12 +90,11 @@ class FakeQuranRepositoryAndroidTest : QuranRepository {
         }
     }
 
-    override suspend fun fetchReadSurahAr(surahID: Int): Deferred<ReadSurahArResponse> {
+    override suspend fun fetchReadSurahAr(surahID: Int): Deferred<Resource<ReadSurahArResponse>> {
         return CoroutineScope(IO).async {
             val data = DummyValueAndroidTest.surahArID_1<FakeQuranRepositoryAndroidTest>()
-            data.responseStatus = "1"
             data.message = "testing"
-            data
+            Resource.success(data)
         }
     }
 

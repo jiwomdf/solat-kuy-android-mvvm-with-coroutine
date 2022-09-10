@@ -1,0 +1,170 @@
+<?xml version="1.0" encoding="utf-8"?>
+<com.facebook.shimmer.ShimmerFrameLayout xmlns:android="http://schemas.android.com/apk/res/android"
+    xmlns:app="http://schemas.android.com/apk/res-auto"
+    android:id="@+id/shimmer_view_container"
+    android:layout_width="wrap_content"
+    android:layout_height="wrap_content">
+
+    <LinearLayout
+        android:id="@+id/cc_readQuran_loading"
+        android:layout_width="match_parent"
+        android:layout_height="match_parent"
+        android:orientation="vertical"
+        android:visibility="visible">
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_loading_1"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <include
+                android:id="@+id/loading_ar_1"
+                layout="@layout/layout_loading_rounded"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginStart="@dimen/dp32"
+                android:layout_marginTop="85dp"
+                android:layout_marginEnd="@dimen/dp16"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <include
+                android:id="@+id/loading_ar_2"
+                layout="@layout/layout_loading_rounded"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginStart="@dimen/dp48"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="@dimen/dp16"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/loading_ar_1" />
+
+            <include
+                android:id="@+id/loading_en_1"
+                layout="@layout/layout_loading_rounded"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:layout_marginStart="@dimen/dp16"
+                android:layout_marginTop="40dp"
+                android:layout_marginEnd="@dimen/dp32"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/loading_ar_2" />
+
+            <include
+                layout="@layout/layout_loading_rounded"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="@dimen/dp32"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/loading_en_1" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_loading_2"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <include
+                android:id="@+id/loading_ar_3"
+                layout="@layout/layout_loading_rounded"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginStart="@dimen/dp32"
+                android:layout_marginTop="40dp"
+                android:layout_marginEnd="@dimen/dp16"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <include
+                android:id="@+id/loading_ar_4"
+                layout="@layout/layout_loading_rounded"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginStart="@dimen/dp48"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="@dimen/dp16"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/loading_ar_3" />
+
+            <include
+                android:id="@+id/loading_en_2"
+                layout="@layout/layout_loading_rounded"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:layout_marginStart="@dimen/dp16"
+                android:layout_marginTop="40dp"
+                android:layout_marginEnd="@dimen/dp32"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/loading_ar_4" />
+
+            <include
+                layout="@layout/layout_loading_rounded"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="@dimen/dp32"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/loading_en_2" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+        <androidx.constraintlayout.widget.ConstraintLayout
+            android:id="@+id/cl_loading_3"
+            android:layout_width="match_parent"
+            android:layout_height="wrap_content">
+
+            <include
+                android:id="@+id/loading_ar_5"
+                layout="@layout/layout_loading_rounded"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginStart="@dimen/dp32"
+                android:layout_marginTop="40dp"
+                android:layout_marginEnd="@dimen/dp16"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toTopOf="parent" />
+
+            <include
+                android:id="@+id/loading_ar_6"
+                layout="@layout/layout_loading_rounded"
+                android:layout_width="match_parent"
+                android:layout_height="40dp"
+                android:layout_marginStart="@dimen/dp48"
+                android:layout_marginTop="8dp"
+                android:layout_marginEnd="@dimen/dp16"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/loading_ar_5" />
+
+            <include
+                android:id="@+id/loading_en_3"
+                layout="@layout/layout_loading_rounded"
+                android:layout_width="match_parent"
+                android:layout_height="20dp"
+                android:layout_marginStart="@dimen/dp16"
+                android:layout_marginTop="40dp"
+                android:layout_marginEnd="@dimen/dp32"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintStart_toStartOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/loading_ar_6" />
+
+            <include
+                layout="@layout/layout_loading_rounded"
+                android:layout_width="20dp"
+                android:layout_height="20dp"
+                android:layout_marginTop="20dp"
+                android:layout_marginEnd="@dimen/dp32"
+                app:layout_constraintEnd_toEndOf="parent"
+                app:layout_constraintTop_toBottomOf="@+id/loading_en_3" />
+        </androidx.constraintlayout.widget.ConstraintLayout>
+
+    </LinearLayout>
+
+</com.facebook.shimmer.ShimmerFrameLayout>

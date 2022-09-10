@@ -1,7 +1,5 @@
 package com.programmergabut.solatkuy.model
 
-import android.os.Bundle
-import android.os.Parcel
 import android.os.Parcelable
 import kotlinx.android.parcel.Parcelize
 

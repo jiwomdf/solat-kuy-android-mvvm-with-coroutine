@@ -31,7 +31,7 @@ object DatabaseModule {
 
     @Singleton
     @Provides
-    fun provideMsApi1Dao(db: SolatKuyRoom) = db.msApi1Dao()
+    fun provideMsConfigurationDao(db: SolatKuyRoom) = db.msConfigurationDao()
 
     @Singleton
     @Provides

@@ -128,7 +128,7 @@ object DummyRetValueTest {
     val surahID = 1
     val msfavSurah = MsFavSurah(1,"test","test")
     val msFavSurah = MsFavSurah(1,"test", "test")
-    val msApi1: MsApi1 = MsApi1(1, EnumConfigTesting.START_LAT, EnumConfigTesting.START_LNG,
+    val msConfiguration: MsConfiguration = MsConfiguration(1, EnumConfigTesting.START_LAT, EnumConfigTesting.START_LNG,
             EnumConfigTesting.START_METHOD, EnumConfigTesting.START_MONTH, EnumConfigTesting.START_YEAR)
     val msSetting = MsSetting(1, true)
 

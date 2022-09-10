@@ -7,6 +7,7 @@ import android.os.Bundle
 import android.view.LayoutInflater
 import android.view.View
 import android.view.ViewGroup
+import android.widget.FrameLayout
 import androidx.core.app.ActivityCompat
 import androidx.fragment.app.Fragment
 import androidx.lifecycle.*
@@ -49,15 +50,6 @@ abstract class BaseFragment<VB: ViewBinding, VM: ViewModel>(
         return binding.root
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
-        super.onViewCreated(view, savedInstanceState)
-        inflateBinding()
-        setListener()
-    }
-
-    protected open fun setListener(){}
-    protected open fun inflateBinding(){}
-
     protected fun isLocationPermissionGranted(): Boolean {
         return (ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_FINE_LOCATION) == PackageManager.PERMISSION_GRANTED &&
                 ActivityCompat.checkSelfPermission(requireContext(), Manifest.permission.ACCESS_COARSE_LOCATION) == PackageManager.PERMISSION_GRANTED)
@@ -90,6 +82,12 @@ abstract class BaseFragment<VB: ViewBinding, VM: ViewModel>(
             window?.setLayout(ViewGroup.LayoutParams.MATCH_PARENT, ViewGroup.LayoutParams.WRAP_CONTENT)
             setCancelable(isCancelable)
             setContentView(dialogBinding.root)
+            setOnShowListener { dia ->
+                val bottomSheetDialog = dia as BottomSheetDialog
+                val bottomSheetInternal: FrameLayout =
+                    bottomSheetDialog.findViewById(R.id.design_bottom_sheet)!!
+                bottomSheetInternal.setBackgroundResource(R.drawable.bg_dark_rounded_top)
+            }
         }
         dialogBinding.apply {
             tvTitle.text = title

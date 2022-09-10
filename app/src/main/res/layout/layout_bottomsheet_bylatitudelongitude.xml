@@ -1,75 +1,80 @@
 <?xml version="1.0" encoding="utf-8"?>
-<androidx.constraintlayout.widget.ConstraintLayout xmlns:android="http://schemas.android.com/apk/res/android"
+<RelativeLayout xmlns:android="http://schemas.android.com/apk/res/android"
     xmlns:app="http://schemas.android.com/apk/res-auto"
     android:layout_width="match_parent"
-    android:layout_height="wrap_content"
-    android:background="@color/dark_700">
+    android:layout_height="@dimen/bottomSheet_size"
+    android:background="@drawable/bg_dark_rounded_top">
 
-    <TextView
-        android:id="@+id/tv_llDialog_title"
-        android:layout_width="wrap_content"
+    <androidx.constraintlayout.widget.ConstraintLayout
+        android:layout_width="match_parent"
         android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        android:text="@string/by_latitude_amp_longitude"
-        android:textSize="@dimen/medium_text_size"
-        android:textStyle="bold"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toTopOf="parent" />
+        android:paddingBottom="@dimen/dp24">
 
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/et_llDialog_latitude_layout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        app:boxBackgroundColor="@color/white"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/tv_llDialog_title">
+        <TextView
+            android:id="@+id/tv_llDialog_title"
+            android:layout_width="wrap_content"
+            android:layout_height="wrap_content"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="16dp"
+            android:text="@string/by_latitude_amp_longitude"
+            android:textSize="@dimen/sp20"
+            android:textStyle="bold"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toTopOf="parent" />
 
-        <com.google.android.material.textfield.TextInputEditText
+
+        <EditText
             android:id="@+id/et_llDialog_latitude"
             android:layout_width="@dimen/editText_size"
-            android:layout_height="wrap_content"
+            android:layout_height="50dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="32dp"
+            android:background="@drawable/btn_border_light_with_radius"
             android:hint="@string/latitude"
             android:importantForAutofill="no"
-            android:inputType="numberDecimal" />
+            android:inputType="numberDecimal"
+            android:paddingStart="@dimen/dp16"
+            android:paddingEnd="@dimen/dp16"
+            android:textColor="@color/dark_700"
+            android:textColorHint="@color/dark_200"
+            android:textSize="@dimen/sp16"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/tv_llDialog_title" />
 
-    </com.google.android.material.textfield.TextInputLayout>
 
-
-    <com.google.android.material.textfield.TextInputLayout
-        android:id="@+id/textInputLayout"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginStart="16dp"
-        android:layout_marginTop="16dp"
-        app:boxBackgroundColor="@color/white"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintStart_toStartOf="parent"
-        app:layout_constraintTop_toBottomOf="@+id/et_llDialog_latitude_layout">
-
-        <com.google.android.material.textfield.TextInputEditText
+        <EditText
             android:id="@+id/et_llDialog_longitude"
             android:layout_width="@dimen/editText_size"
-            android:layout_height="wrap_content"
-            android:layout_marginBottom="@dimen/medium_margin"
+            android:layout_height="50dp"
+            android:layout_marginStart="16dp"
+            android:layout_marginTop="@dimen/dp16"
+            android:background="@drawable/btn_border_light_with_radius"
             android:hint="@string/longitude"
             android:importantForAutofill="no"
-            android:inputType="numberDecimal" />
-    </com.google.android.material.textfield.TextInputLayout>
+            android:inputType="numberDecimal"
+            android:paddingStart="@dimen/dp16"
+            android:paddingEnd="@dimen/dp16"
+            android:textColor="@color/dark_700"
+            android:textColorHint="@color/dark_200"
+            android:textSize="@dimen/sp16"
+            app:layout_constraintStart_toStartOf="parent"
+            app:layout_constraintTop_toBottomOf="@+id/et_llDialog_latitude" />
 
-    <Button
-        android:id="@+id/btn_proceedByLL"
-        android:layout_width="wrap_content"
-        android:layout_height="wrap_content"
-        android:layout_marginEnd="@dimen/medium_margin"
-        android:layout_marginBottom="@dimen/medium_margin"
-        android:backgroundTint="@color/purple_700"
-        android:text="@string/proceeded"
-        app:layout_constraintBottom_toBottomOf="parent"
-        app:layout_constraintEnd_toEndOf="parent"
-        app:layout_constraintHorizontal_bias="1.0"
-        app:layout_constraintStart_toEndOf="@+id/textInputLayout" />
+        <androidx.appcompat.widget.AppCompatButton
+            android:id="@+id/btn_proceedByLL"
+            style="@style/ButtonBorderLight"
+            android:layout_width="wrap_content"
+            android:layout_height="@dimen/button_height"
+            android:layout_marginEnd="@dimen/dp12"
 
-</androidx.constraintlayout.widget.ConstraintLayout>
+            android:backgroundTint="@color/purple_700"
+            android:text="@string/proceeded"
+            app:layout_constraintBottom_toBottomOf="parent"
+            app:layout_constraintEnd_toEndOf="parent"
+            app:layout_constraintHorizontal_bias="1.0"
+            app:layout_constraintStart_toEndOf="@+id/et_llDialog_longitude" />
+
+
+    </androidx.constraintlayout.widget.ConstraintLayout>
+
+</RelativeLayout>

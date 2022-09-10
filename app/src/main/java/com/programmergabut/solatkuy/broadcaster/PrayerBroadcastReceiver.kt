@@ -43,11 +43,15 @@ class PrayerBroadcastReceiver: BroadcastReceiver() {
         removeAllNotification(context)
 
         val duaIntent = createDuaIntent(context)
-        val pendingIntent = PendingIntent.getActivity(context, Constant.ID_DUA_PENDING_INTENT, duaIntent, PendingIntent.FLAG_UPDATE_CURRENT)
-        val notificationBuilder = notificationHelper.createPrayerReminderNotification(prayerData.prayerTime!!,
+        val pendingIntent = PendingIntent.getActivity(context, Constant.ID_DUA_PENDING_INTENT,
+            duaIntent, PendingIntent.FLAG_UPDATE_CURRENT)
+        val notificationBuilder = notificationHelper
+            .createPrayerReminderNotification(prayerData.prayerTime!!,
             prayerData.prayerCity ?: "-", prayerData.prayerName!!, pendingIntent)
 
-        notificationHelper.getManager()?.notify(Constant.ID_PRAYER_NOTIFICATION, notificationBuilder.build())
+        notificationHelper
+            .getManager()
+            ?.notify(Constant.ID_PRAYER_NOTIFICATION, notificationBuilder.build())
     }
 
     private fun setIntent(intent: Intent): PrayerExtraData {

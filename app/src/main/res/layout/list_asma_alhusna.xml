@@ -3,7 +3,7 @@
     xmlns:tools="http://schemas.android.com/tools"
     android:layout_width="wrap_content"
     android:layout_height="wrap_content"
-    android:layout_margin="@dimen/small_margin"
+    android:layout_margin="@dimen/dp8"
     android:orientation="vertical">
 
     <TextView
@@ -11,8 +11,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="@dimen/small_margin"
-        android:textSize="@dimen/large_text_size"
+        android:layout_marginTop="@dimen/dp8"
+        android:textSize="@dimen/sp20"
         tools:text="الْوَالِي" />
 
     <TextView
@@ -20,9 +20,9 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginTop="@dimen/small_margin"
-        android:layout_marginBottom="@dimen/small_margin"
-        android:textSize="@dimen/small_text_size"
+        android:layout_marginTop="@dimen/dp8"
+        android:layout_marginBottom="@dimen/dp8"
+        android:textSize="@dimen/sp12"
         android:textStyle="bold"
         tools:text="Al Waali" />
 
@@ -31,8 +31,8 @@
         android:layout_width="wrap_content"
         android:layout_height="wrap_content"
         android:layout_gravity="center"
-        android:layout_marginBottom="@dimen/small_margin"
-        android:textSize="@dimen/small_text_size"
+        android:layout_marginBottom="@dimen/dp8"
+        android:textSize="@dimen/sp12"
         android:textStyle="bold"
         tools:text="1" />
 
