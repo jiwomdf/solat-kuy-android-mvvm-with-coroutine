@@ -12,20 +12,17 @@ created with:
 - Retrofit 
 - Dagger Hilt
 - Data Binding
-- CI Integration
 - Navigation Component
 - Motion Layout
 - Work Manager
-- Material Design 
 - Testing with Mockito, espresso, & Junit4
-- minifyEnabled
+- MinifyEnabled for release
+- Fastline support
+- GitHub Actions support
 
 <b>Note</b>: turn off the window scale, transition scale, and animator duration scale when testing
 
 Feel free to see and contribute
-
-**Update**  
-For the new UI please checkout the branch "2.0", but the unit test & multi module is still under development, thanks!
 
 ![](https://firebasestorage.googleapis.com/v0/b/personalwebsite-cbad4.appspot.com/o/Solat%20Kuy%20SS%2FScreenshot_20220618-171148_Solat%20Kuy.jpg?alt=media&token=91044e21-9f9e-4bb5-9806-9d6d35796f06)
 ![](https://firebasestorage.googleapis.com/v0/b/personalwebsite-cbad4.appspot.com/o/Solat%20Kuy%20SS%2FScreenshot_20220618-171156_Solat%20Kuy.jpg?alt=media&token=da9faec4-0dfd-4df8-8c73-111bb3664917)
