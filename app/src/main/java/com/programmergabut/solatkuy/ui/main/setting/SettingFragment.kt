@@ -2,7 +2,6 @@ package com.programmergabut.solatkuy.ui.main.setting
 
 import android.annotation.SuppressLint
 import android.app.AlertDialog
-import android.app.Dialog
 import android.content.Context
 import android.content.DialogInterface
 import android.content.Intent
@@ -24,7 +23,7 @@ import com.google.android.gms.location.LocationServices.getFusedLocationProvider
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.base.BaseFragment
-import com.programmergabut.solatkuy.data.local.localentity.MsApi1
+import com.programmergabut.solatkuy.data.local.localentity.MsConfiguration
 import com.programmergabut.solatkuy.databinding.FragmentSettingBinding
 import com.programmergabut.solatkuy.databinding.LayoutAboutAuthorBinding
 import com.programmergabut.solatkuy.databinding.LayoutBottomsheetBygpsBinding
@@ -107,7 +106,7 @@ BaseFragment<FragmentSettingBinding, SettingViewModel>(
                 }
             }
 
-            viewModel.msApi1.observe(viewLifecycleOwner) { retVal ->
+            viewModel.msConfiguration.observe(viewLifecycleOwner) { retVal ->
                 if (retVal != null) {
                     val city = LocationHelper.getCity(
                         requireContext(),
@@ -215,7 +214,7 @@ BaseFragment<FragmentSettingBinding, SettingViewModel>(
                         val method = listMethods?.find { method -> method.index == position }
                         if(method != null){
                             sharedPrefUtil.insertSelectedMethod(method.method)
-                            viewModel.updateMsApi1Method(1 , method.method.toString())
+                            viewModel.updateMsConfigurationMethod(1 , method.method.toString())
                             tvViewMethod.text = method.name
                         }
                     }
@@ -228,7 +227,7 @@ BaseFragment<FragmentSettingBinding, SettingViewModel>(
     }
 
     private fun insertLocationSettingToDb(latitude: String, longitude: String) {
-        val msApi1 = MsApi1(
+        val msConfiguration = MsConfiguration(
             1,
             latitude,
             longitude,
@@ -237,13 +236,13 @@ BaseFragment<FragmentSettingBinding, SettingViewModel>(
             LocalDate().year.toString()
         )
 
-        if(msApi1.latitude.isEmpty() || msApi1.longitude.isEmpty() || msApi1.latitude == "." || msApi1.longitude == "."){
+        if(msConfiguration.latitude.isEmpty() || msConfiguration.longitude.isEmpty() || msConfiguration.latitude == "." || msConfiguration.longitude == "."){
             Toasty.error(requireContext(), getString(R.string.latitude_and_longitude_cannot_be_empty), Toasty.LENGTH_SHORT).show()
             return
         }
 
-        val arrLatitude = msApi1.latitude.toCharArray()
-        val arrLongitude = msApi1.longitude.toCharArray()
+        val arrLatitude = msConfiguration.latitude.toCharArray()
+        val arrLongitude = msConfiguration.longitude.toCharArray()
 
         if(arrLatitude[arrLatitude.size - 1] == '.' || arrLongitude[arrLongitude.size - 1] == '.'){
             Toasty.error(requireContext(), getString(R.string.latitude_and_longitude_cannot_be_ended_with_dot), Toasty.LENGTH_SHORT).show()
@@ -255,7 +254,7 @@ BaseFragment<FragmentSettingBinding, SettingViewModel>(
             return
         }
 
-        viewModel.updateMsApi1(msApi1)
+        viewModel.updateMsConfiguration(msConfiguration)
         Toasty.success(requireContext(), getString(R.string.success_change_the_coordinate), Toasty.LENGTH_SHORT).show()
     }
 

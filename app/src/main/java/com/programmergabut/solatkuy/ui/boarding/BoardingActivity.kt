@@ -11,7 +11,6 @@ import android.location.LocationManager
 import android.os.Bundle
 import android.os.Looper
 import android.provider.Settings
-import android.util.Log
 import android.view.View
 import android.widget.FrameLayout
 import android.widget.Toast
@@ -28,7 +27,7 @@ import com.google.android.gms.location.LocationServices
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.base.BaseActivity
-import com.programmergabut.solatkuy.data.local.localentity.MsApi1
+import com.programmergabut.solatkuy.data.local.localentity.MsConfiguration
 import com.programmergabut.solatkuy.databinding.ActivityBoardingBinding
 import com.programmergabut.solatkuy.databinding.LayoutBottomsheetBygpsBinding
 import com.programmergabut.solatkuy.databinding.LayoutBottomsheetBylatitudelongitudeBinding
@@ -166,7 +165,7 @@ class BoardingActivity : BaseActivity<ActivityBoardingBinding, BoardingViewModel
     }
 
     private fun insertLocationSettingToDb(latitude: String, longitude: String) {
-        val msApi1 = MsApi1(
+        val msConfiguration = MsConfiguration(
             1,
             latitude,
             longitude,
@@ -175,13 +174,13 @@ class BoardingActivity : BaseActivity<ActivityBoardingBinding, BoardingViewModel
             LocalDate().year.toString()
         )
 
-        if(msApi1.latitude.isEmpty() || msApi1.longitude.isEmpty() || msApi1.latitude == "." || msApi1.longitude == "."){
+        if(msConfiguration.latitude.isEmpty() || msConfiguration.longitude.isEmpty() || msConfiguration.latitude == "." || msConfiguration.longitude == "."){
             Toasty.error(this, getString(R.string.latitude_and_longitude_cannot_be_empty), Toasty.LENGTH_SHORT).show()
             return
         }
 
-        val arrLatitude = msApi1.latitude.toCharArray()
-        val arrLongitude = msApi1.longitude.toCharArray()
+        val arrLatitude = msConfiguration.latitude.toCharArray()
+        val arrLongitude = msConfiguration.longitude.toCharArray()
 
         if(arrLatitude[arrLatitude.size - 1] == '.' || arrLongitude[arrLongitude.size - 1] == '.'){
             Toasty.error(this, getString(R.string.latitude_and_longitude_cannot_be_ended_with_dot), Toasty.LENGTH_SHORT).show()
@@ -193,7 +192,7 @@ class BoardingActivity : BaseActivity<ActivityBoardingBinding, BoardingViewModel
             return
         }
 
-        viewModel.updateMsApi1(msApi1)
+        viewModel.updateMsConfiguration(msConfiguration)
         Toasty.success(this, getString(R.string.success_change_the_coordinate), Toasty.LENGTH_SHORT).show()
 
         updateIsHasOpenApp()

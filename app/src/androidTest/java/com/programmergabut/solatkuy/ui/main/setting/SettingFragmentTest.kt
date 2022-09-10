@@ -57,7 +57,7 @@ class SettingFragmentTest{
         onView(withId(R.id.tv_authorCredit)).check(matches(isDisplayed()))
         onView(withId(R.id.btn_seeAuthor)).check(matches(isDisplayed()))
 
-        val data = testViewModel?.msApi1?.value!!
+        val data = testViewModel?.msConfiguration?.value!!
 
         onView(withId(R.id.tv_cur_loc)).check(matches(withText("Current Location")))
         onView(withId(R.id.tv_view_latitude)).check(matches((withText(data.latitude + " °S"))))

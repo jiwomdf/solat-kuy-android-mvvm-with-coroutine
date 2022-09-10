@@ -3,7 +3,7 @@ package com.programmergabut.solatkuy.ui.boarding
 import androidx.lifecycle.ViewModel
 import androidx.lifecycle.viewModelScope
 import com.programmergabut.solatkuy.data.repository.PrayerRepository
-import com.programmergabut.solatkuy.data.local.localentity.MsApi1
+import com.programmergabut.solatkuy.data.local.localentity.MsConfiguration
 import dagger.hilt.android.lifecycle.HiltViewModel
 import kotlinx.coroutines.launch
 import javax.inject.Inject
@@ -13,8 +13,8 @@ class BoardingViewModel @Inject constructor(val prayerRepository: PrayerReposito
 
     val msSetting =  prayerRepository.observeMsSetting()
 
-    fun updateMsApi1(msApi1: MsApi1) = viewModelScope.launch {
-        prayerRepository.updateMsApi1(msApi1)
+    fun updateMsConfiguration(msConfiguration: MsConfiguration) = viewModelScope.launch {
+        prayerRepository.updateMsConfiguration(msConfiguration)
     }
 
     fun updateIsHasOpenApp(isHasOpen: Boolean) = viewModelScope.launch{

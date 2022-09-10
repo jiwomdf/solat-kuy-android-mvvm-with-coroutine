@@ -2,7 +2,6 @@ package com.programmergabut.solatkuy
 
 import com.programmergabut.solatkuy.data.local.localentity.*
 import com.programmergabut.solatkuy.data.remote.json.compassJson.CompassResponse
-import com.programmergabut.solatkuy.data.remote.json.methodJson.MethodResponse
 import com.programmergabut.solatkuy.data.remote.json.prayerJson.PrayerResponse
 import com.programmergabut.solatkuy.data.remote.json.quranallsurahJson.AllSurahResponse
 import com.programmergabut.solatkuy.data.remote.json.readsurahJsonAr.ReadSurahArResponse
@@ -95,8 +94,8 @@ object DummyValueAndroidTest {
     }*/
 
     /* Database */
-    fun getMsApi1(): MsApi1 {
-        return MsApi1(0, "-7.5633548", "110.8041806", "11","7","2020")
+    fun getMsConfiguration(): MsConfiguration {
+        return MsConfiguration(0, "-7.5633548", "110.8041806", "11","7","2020")
     }
 
     fun getListMsFavSurah(): MutableList<MsFavSurah> {

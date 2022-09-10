@@ -1,7 +1,5 @@
 package com.programmergabut.solatkuy
 
-import com.programmergabut.solatkuy.data.local.localentity.MsApi1
-
 /*
  * Created by Katili Jiwo Adi Wiyono on 12/04/20.
  */
@@ -17,7 +15,7 @@ class EnumConfigAndroidTesting {
         const val STARTED_SURAH = 1
         const val ENDED_SURAH = 114
 
-        /* MsApi1 */
+        /* MsConfiguration */
         const val START_LAT = "0.0"
         const val START_LNG = "0.0"
         const val START_METHOD = "3"

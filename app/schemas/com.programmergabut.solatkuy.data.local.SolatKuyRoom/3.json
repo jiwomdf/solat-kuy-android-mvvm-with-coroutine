@@ -2,7 +2,7 @@
   "formatVersion": 1,
   "database": {
     "version": 3,
-    "identityHash": "335f897ef90555b8e60c06d6c2d1b45b",
+    "identityHash": "5ab8fa0eaa444cdba8d4e2d4bfdbd15d",
     "entities": [
       {
         "tableName": "ms_notified_prayer",
@@ -43,7 +43,7 @@
         "foreignKeys": []
       },
       {
-        "tableName": "ms_api_1",
+        "tableName": "ms_configuration",
         "createSql": "CREATE TABLE IF NOT EXISTS `${TABLE_NAME}` (`api1ID` INTEGER NOT NULL, `latitude` TEXT NOT NULL, `longitude` TEXT NOT NULL, `method` TEXT NOT NULL, `month` TEXT NOT NULL, `year` TEXT NOT NULL, PRIMARY KEY(`api1ID`))",
         "fields": [
           {
@@ -364,7 +364,7 @@
     "views": [],
     "setupQueries": [
       "CREATE TABLE IF NOT EXISTS room_master_table (id INTEGER PRIMARY KEY,identity_hash TEXT)",
-      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '335f897ef90555b8e60c06d6c2d1b45b')"
+      "INSERT OR REPLACE INTO room_master_table (id,identity_hash) VALUES(42, '5ab8fa0eaa444cdba8d4e2d4bfdbd15d')"
     ]
   }
 }

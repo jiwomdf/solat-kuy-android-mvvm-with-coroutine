@@ -1,6 +1,5 @@
 package com.programmergabut.solatkuy.ui.main.qibla
 
-import android.app.Dialog
 import android.content.Context.SENSOR_SERVICE
 import android.hardware.Sensor
 import android.hardware.SensorEvent
@@ -71,7 +70,7 @@ class CompassFragment constructor(
         binding.apply {
             slCompass.setOnRefreshListener(this@CompassFragment)
 
-            viewModel.msApi1.observe(viewLifecycleOwner) {
+            viewModel.msConfiguration.observe(viewLifecycleOwner) {
                 if (it == null) {
                     showBottomSheet(isCancelable = false, isFinish = true)
                     return@observe
@@ -160,9 +159,9 @@ class CompassFragment constructor(
     }
 
     override fun onRefresh() {
-        if(viewModel.msApi1.value == null)
+        if(viewModel.msConfiguration.value == null)
             return
-        viewModel.fetchCompassApi(viewModel.msApi1.value!!)
+        viewModel.fetchCompassApi(viewModel.msConfiguration.value!!)
         binding.slCompass.isRefreshing = false
     }
 

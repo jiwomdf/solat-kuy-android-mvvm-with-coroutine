@@ -8,7 +8,6 @@ import com.programmergabut.solatkuy.data.local.SolatKuyRoom
 import com.programmergabut.solatkuy.worker.MyWorkerFactory
 import dagger.hilt.android.HiltAndroidApp
 import javax.inject.Inject
-import androidx.work.DelegatingWorkerFactory
 
 @HiltAndroidApp
 class Application : Application(), Configuration.Provider {
@@ -24,7 +23,7 @@ class Application : Application(), Configuration.Provider {
     override fun getWorkManagerConfiguration(): Configuration {
         return Configuration.Builder()
             .setMinimumLoggingLevel(android.util.Log.DEBUG)
-            .setWorkerFactory(MyWorkerFactory(db.notifiedPrayerDao(), db.msApi1Dao()))
+            .setWorkerFactory(MyWorkerFactory(db.notifiedPrayerDao(), db.msConfigurationDao()))
             .build()
     }
 

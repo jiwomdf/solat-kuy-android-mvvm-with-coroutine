@@ -68,7 +68,7 @@ class HomeFragmentTest{
         onView(withId(R.id.tv_widget_prayer_countdown)).check(matches(isDisplayed()))
         onView(withId(R.id.tv_widget_prayer_name)).check(matches(isDisplayed()))
 
-        val data = testViewModel?.msApi1?.value
+        val data = testViewModel?.msConfiguration?.value
         onView(withId(R.id.tv_view_city)).check(matches(withText("Kota Surakarta")))
         onView(withId(R.id.tv_view_latitude)).check(matches(withText("${data?.latitude} °N")))
         onView(withId(R.id.tv_view_longitude)).check(matches(withText("${data?.longitude} °W")))

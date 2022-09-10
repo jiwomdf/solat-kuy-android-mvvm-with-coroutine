@@ -3,7 +3,7 @@ package com.programmergabut.solatkuy.ui.main.home
 import androidx.lifecycle.*
 import com.programmergabut.solatkuy.data.repository.PrayerRepository
 import com.programmergabut.solatkuy.data.repository.QuranRepository
-import com.programmergabut.solatkuy.data.local.localentity.MsApi1
+import com.programmergabut.solatkuy.data.local.localentity.MsConfiguration
 import com.programmergabut.solatkuy.data.local.localentity.MsSetting
 import com.programmergabut.solatkuy.data.remote.json.prayerJson.PrayerResponse
 import com.programmergabut.solatkuy.data.remote.json.readsurahJsonEn.ReadSurahEnResponse
@@ -25,17 +25,17 @@ class HomeViewModel @Inject constructor(
     private val quranRepository: QuranRepository
 ): ViewModel() {
 
-    val msApi1 = prayerRepository.observeMsApi1()
-    private val _msApi1 = MutableLiveData<MsApi1>()
-    val notifiedPrayer = Transformations.switchMap(_msApi1){
-        if(_msApi1 == null){
+    val msConfiguration = prayerRepository.observeMsConfiguration()
+    private val _msConfiguration = MutableLiveData<MsConfiguration>()
+    val notifiedPrayer = Transformations.switchMap(_msConfiguration){
+        if(_msConfiguration == null){
             AbsentLiveData.create()
         } else {
             prayerRepository.getListNotifiedPrayer(it)
         }
     }
-    fun getListNotifiedPrayer(msApi1: MsApi1){
-        _msApi1.value = msApi1
+    fun getListNotifiedPrayer(msConfiguration: MsConfiguration){
+        _msConfiguration.value = msConfiguration
     }
 
     private var _readSurahEn = MutableLiveData<Resource<ReadSurahEnResponse>>()
@@ -57,10 +57,10 @@ class HomeViewModel @Inject constructor(
 
     private var _prayer = MutableLiveData<Resource<PrayerResponse>>()
     val prayer: LiveData<Resource<PrayerResponse>> = _prayer
-    fun fetchPrayerApi(msApi1: MsApi1) = viewModelScope.launch {
+    fun fetchPrayerApi(msConfiguration: MsConfiguration) = viewModelScope.launch {
         _prayer.postValue(Resource.loading(null))
         try{
-            val response  = prayerRepository.fetchPrayerApi(msApi1).await()
+            val response  = prayerRepository.fetchPrayerApi(msConfiguration).await()
             if(response.status == Status.Success){
                 _prayer.postValue(Resource.success(response.data))
             } else {
@@ -84,13 +84,13 @@ class HomeViewModel @Inject constructor(
         this.isSettingCalled.value = value
     }
 
-    fun updateMsApi1(msApi1: MsApi1) = viewModelScope.launch {
-        prayerRepository.updateMsApi1(msApi1)
+    fun updateMsConfiguration(msConfiguration: MsConfiguration) = viewModelScope.launch {
+        prayerRepository.updateMsConfiguration(msConfiguration)
     }
     fun updatePrayerIsNotified(prayerName: String, isNotified: Boolean) = viewModelScope.launch {
         prayerRepository.updatePrayerIsNotified(prayerName, isNotified)
     }
-    fun updateMsApi1MonthAndYear(api1ID: Int, month: String, year:String) = viewModelScope.launch{
-        prayerRepository.updateMsApi1MonthAndYear(api1ID, month, year)
+    fun updateMsConfigurationMonthAndYear(api1ID: Int, month: String, year:String) = viewModelScope.launch{
+        prayerRepository.updateMsConfigurationMonthAndYear(api1ID, month, year)
     }
 }

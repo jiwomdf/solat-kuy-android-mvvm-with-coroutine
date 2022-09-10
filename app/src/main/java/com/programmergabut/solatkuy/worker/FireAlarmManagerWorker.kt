@@ -5,7 +5,7 @@ import android.util.Log
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.google.firebase.crashlytics.FirebaseCrashlytics
-import com.programmergabut.solatkuy.data.local.dao.MsApi1Dao
+import com.programmergabut.solatkuy.data.local.dao.MsConfigurationDao
 import com.programmergabut.solatkuy.data.local.dao.MsNotifiedPrayerDao
 import com.programmergabut.solatkuy.ui.LocationHelper
 import com.programmergabut.solatkuy.ui.PushNotificationHelper
@@ -14,7 +14,7 @@ class FireAlarmManagerWorker(
     val context: Context,
     workerParameters: WorkerParameters,
     private val msNotifiedPrayerDao: MsNotifiedPrayerDao,
-    private val msApi1Dao: MsApi1Dao
+    private val msConfigurationDao: MsConfigurationDao
 ): Worker(context, workerParameters) {
 
     private val TAG = "FireAlarmManagerWorker"
@@ -25,7 +25,7 @@ class FireAlarmManagerWorker(
 
     override fun doWork(): Result {
         return try {
-            val api1 = msApi1Dao.getMsApi1()
+            val api1 = msConfigurationDao.getMsConfiguration()
             val cityName = if(api1?.latitude == null || api1?.longitude == null){
                 "-"
             } else {

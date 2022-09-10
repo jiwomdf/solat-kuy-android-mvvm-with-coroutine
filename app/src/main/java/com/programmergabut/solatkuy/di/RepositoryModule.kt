@@ -26,14 +26,14 @@ object RepositoryModule {
     @Provides
     fun providePrayerRepositoryImpl(
         msNotifiedPrayerDao: MsNotifiedPrayerDao,
-        msApi1Dao: MsApi1Dao,
+        msConfigurationDao: MsConfigurationDao,
         msSettingDao: MsSettingDao,
         msCalculationMethodsDao: MsCalculationMethodsDao,
         contextProvider: ContextProvider,
         qiblaApiService: QiblaApiService,
         prayerApiService: PrayerApiService
     ) = PrayerRepositoryImpl(msNotifiedPrayerDao,
-        msApi1Dao, msSettingDao, msCalculationMethodsDao, contextProvider, qiblaApiService, prayerApiService) as PrayerRepository
+        msConfigurationDao, msSettingDao, msCalculationMethodsDao, contextProvider, qiblaApiService, prayerApiService) as PrayerRepository
 
     @Singleton
     @Provides

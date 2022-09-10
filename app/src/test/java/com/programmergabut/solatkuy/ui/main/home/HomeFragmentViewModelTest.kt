@@ -38,14 +38,14 @@ class HomeFragmentViewModelTest {
     private lateinit var fakePrayerRepository: FakePrayerRepository
     @Mock
     private lateinit var fakeQuranRepository: FakeQuranRepository
-    private val msApi1 = DummyRetValueTest.msApi1
+    private val msConfiguration = DummyRetValueTest.msConfiguration
     private val surahID = DummyRetValueTest.surahID
     private val mapPrayer = DummyRetValueTest.getMapPrayer()
 
     @Before
     fun before(){
         viewModel = HomeViewModel(fakePrayerRepository, fakeQuranRepository)
-        verify(fakePrayerRepository).observeMsApi1()
+        verify(fakePrayerRepository).observeMsConfiguration()
     }
 
     @Test
@@ -85,9 +85,9 @@ class HomeFragmentViewModelTest {
 
 
     @Test
-    fun `updateMsApi1, updateMsApi1() called`() = coroutinesTestRule.testDispatcher.runBlockingTest {
-        viewModel.updateMsApi1(msApi1)
-        verify(fakePrayerRepository).updateMsApi1(msApi1)
+    fun `updateMsConfiguration, updateMsConfiguration() called`() = coroutinesTestRule.testDispatcher.runBlockingTest {
+        viewModel.updateMsConfiguration(msConfiguration)
+        verify(fakePrayerRepository).updateMsConfiguration(msConfiguration)
     }
 
     @Test
