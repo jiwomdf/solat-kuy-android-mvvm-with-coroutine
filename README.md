@@ -4,13 +4,13 @@
 
 Solat Kuy is an open source reminder prayer time application, created to remind us to pray 🌙
 
-link : https://play.google.com/store/apps/details?id=com.programmergabut.solatkuy
+<b>Link</b> : https://play.google.com/store/apps/details?id=com.programmergabut.solatkuy <br>
 
-created with: 
-- MVVM pattern 
-- Live Data 
+created with:
+- MVVM pattern
+- Live Data
 - Coroutine
-- Retrofit 
+- Retrofit
 - Dagger Hilt
 - Data Binding
 - Navigation Component
@@ -21,7 +21,15 @@ created with:
 - Fastline support
 - GitHub Actions support
 
-<b>Note</b>: turn off the window scale, transition scale, and animator duration scale when testing
+<b>Note</b>:
+- Turn off the window scale, transition scale, and animator duration scale when testing
+- If you want to run the project from the <b>main</b> branch, please create file named <b>keystore.properties</b> in root project that contain this value <br>
+```
+storeFile=lorem ipsum
+storePassword=lorem ipsum
+keyAlias=lorem ipsum
+keyPassword=lorem ipsum
+```
 
 Feel free to see and contribute
 
@@ -51,10 +59,10 @@ furnished to do so, subject to the following conditions:
 The above copyright notice and this permission notice shall be included in all
 copies or substantial portions of the Software.
 
-THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
-IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
-FITNESS FOR A PARTICULAR PURPOSE AND NONINFRINGEMENT. IN NO EVENT SHALL THE
-AUTHORS OR COPYRIGHT HOLDERS BE LIABLE FOR ANY CLAIM, DAMAGES OR OTHER
-LIABILITY, WHETHER IN AN ACTION OF CONTRACT, TORT OR OTHERWISE, ARISING FROM,
-OUT OF OR IN CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE
-SOFTWARE.
+The software is provided "As is", without warranty of any kind, express or
+Implied, including but not limited to the warranties of merchantability,
+Fitness for a particular purpose and noninfringement. In no event shall the
+Authors or copyright holders be liable for any claim, damages or other
+Liability, whether in an action of contract, tort or otherwise, arising from,
+Out of or in connection with the software or the use or other dealings in the
+Software.
