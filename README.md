@@ -1,5 +1,6 @@
 # Solat-Kuy-Android-MVVM-with-Coroutine
-[![CircleCI](https://circleci.com/gh/circleci/circleci-docs.svg?style=svg)](https://circleci.com/gh/circleci/circleci-docs)
+
+![example workflow](https://github.com/jiwomdf/solat-kuy-android-mvvm-with-coroutine/actions/workflows/android_build.yml/badge.svg)
 
 Solat Kuy is an open source reminder prayer time application, created to remind us to pray 🌙
 
