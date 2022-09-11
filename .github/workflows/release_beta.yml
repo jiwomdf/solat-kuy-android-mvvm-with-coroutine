@@ -19,6 +19,9 @@ jobs:
         with:
           ruby-version: '2.6'
 
+      - name: Grant Permission to Execute
+        run: chmod +x gradlew
+
       - name: Install bundle
         run: |
           bundle config path vendor/bundle
