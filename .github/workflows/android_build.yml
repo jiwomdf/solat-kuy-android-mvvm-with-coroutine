@@ -3,10 +3,10 @@ name: Android Build
 on:
   pull_request:
     branches:
-      - run_github_action
+      - '!master'
   push:
     branches:
-      - run_github_action
+      - '!master'
 
 jobs:
   build:
@@ -26,3 +26,6 @@ jobs:
 
       - name: Build Project
         run: ./gradlew assembleDebug
+
+      - name: Run Unit Tests
+        run: ./gradlew testStagingDebugUnitTest
