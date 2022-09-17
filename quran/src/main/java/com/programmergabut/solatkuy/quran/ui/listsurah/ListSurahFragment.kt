@@ -3,23 +3,17 @@ package com.programmergabut.solatkuy.quran.ui.listsurah
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
-import android.view.LayoutInflater
 import android.view.View
-import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
 import com.programmergabut.solatkuy.data.local.localentity.MsSurah
-import com.programmergabut.solatkuy.di.SubModuleDependencies
 import com.programmergabut.solatkuy.quran.R
 import com.programmergabut.solatkuy.quran.base.BaseFragmentQuran
 import com.programmergabut.solatkuy.quran.databinding.FragmentListSurahBinding
-import com.programmergabut.solatkuy.quran.di.DaggerQuranViewModelComponent
-import com.programmergabut.solatkuy.quran.di.QuranViewModelComponent
 import com.programmergabut.solatkuy.util.Status
-import dagger.hilt.android.EntryPointAccessors
 import com.programmergabut.solatkuy.R as superappR
 
 /*
@@ -35,7 +29,6 @@ class ListSurahFragment(
 ), SwipeRefreshLayout.OnRefreshListener, View.OnClickListener {
 
     private val ALL_JUZZ = "All Juzz"
-    private var component: QuranViewModelComponent? = null
     private lateinit var allSurahAdapter: AllSurahAdapter
     private lateinit var staredSurahAdapter: StaredSurahAdapter
 
@@ -53,21 +46,6 @@ class ListSurahFragment(
         initJuzzSpinner()
         setListener()
         viewModel.getAllSurah()
-    }
-
-    private fun getActivityComponent(): QuranViewModelComponent? {
-        if (component == null) {
-            component = DaggerQuranViewModelComponent.builder()
-                .context(requireContext().applicationContext)
-                .dependencies(
-                    EntryPointAccessors.fromApplication(
-                        requireContext().applicationContext,
-                        SubModuleDependencies::class.java
-                    )
-                )
-                .build()
-        }
-        return component
     }
 
     private fun setListener() {
@@ -113,7 +91,7 @@ class ListSurahFragment(
                     }
                     resetSpinnerAndSearchBarValue()
                     findNavController().navigate(
-                        ListSurahFragmentDirections.actionQuranFragmentToReadSurahActivity(
+                        ListSurahFragmentDirections.actionQuranFragmentToReadSurahFragment(
                             selectedSurah.number.toString(),
                             selectedSurah.englishName,
                             selectedSurah.englishNameTranslation,
@@ -206,7 +184,7 @@ class ListSurahFragment(
         allSurahAdapter.onClick = { number, englishName, englishNameTranslation ->
             resetSpinnerAndSearchBarValue()
             findNavController().navigate(ListSurahFragmentDirections
-                .actionQuranFragmentToReadSurahActivity(
+                .actionQuranFragmentToReadSurahFragment(
                     number,
                     englishName,
                     englishNameTranslation,
@@ -223,7 +201,7 @@ class ListSurahFragment(
         }
         staredSurahAdapter.onClick = { surahID, surahName, surahTranslation ->
             resetSpinnerAndSearchBarValue()
-            findNavController().navigate(ListSurahFragmentDirections.actionQuranFragmentToReadSurahActivity(
+            findNavController().navigate(ListSurahFragmentDirections.actionQuranFragmentToReadSurahFragment(
                 surahID,
                 surahName,
                 surahTranslation,
@@ -231,8 +209,6 @@ class ListSurahFragment(
             ))
         }
     }
-
-
 
     private fun resetSpinnerAndSearchBarValue(){
         binding.apply {

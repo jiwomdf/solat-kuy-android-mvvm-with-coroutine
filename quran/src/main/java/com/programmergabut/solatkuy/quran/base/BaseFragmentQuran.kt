@@ -19,7 +19,11 @@ import androidx.viewbinding.ViewBinding
 import com.google.android.material.bottomsheet.BottomSheetDialog
 import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.databinding.LayoutErrorBottomsheetBinding
+import com.programmergabut.solatkuy.di.SubModuleDependencies
+import com.programmergabut.solatkuy.quran.di.DaggerQuranComponent
+import com.programmergabut.solatkuy.quran.di.QuranComponent
 import com.programmergabut.solatkuy.util.SharedPrefUtil
+import dagger.hilt.android.EntryPointAccessors
 import javax.inject.Inject
 
 abstract class BaseFragmentQuran<VB: ViewBinding, VM: ViewModel>(
@@ -32,6 +36,8 @@ abstract class BaseFragmentQuran<VB: ViewBinding, VM: ViewModel>(
     lateinit var sharedPrefUtil: SharedPrefUtil
     @Inject
     lateinit var viewModelFactory: ViewModelProvider.Factory
+
+    private var component: QuranComponent? = null
 
     lateinit var viewModel: VM
     protected val LOCATION_PERMISSIONS = 101
@@ -51,6 +57,21 @@ abstract class BaseFragmentQuran<VB: ViewBinding, VM: ViewModel>(
             viewModel = viewModelTest ?: ViewModelProvider(requireActivity(), viewModelFactory).get(it)
         }
         return binding.root
+    }
+
+    protected fun getActivityComponent(): QuranComponent? {
+        if (component == null) {
+            component = DaggerQuranComponent.builder()
+                .context(requireContext().applicationContext)
+                .dependencies(
+                    EntryPointAccessors.fromApplication(
+                        requireContext().applicationContext,
+                        SubModuleDependencies::class.java
+                    )
+                )
+                .build()
+        }
+        return component
     }
 
     protected fun isLocationPermissionGranted(): Boolean {

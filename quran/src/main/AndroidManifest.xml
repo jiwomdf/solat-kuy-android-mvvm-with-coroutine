@@ -5,6 +5,7 @@
 
     <dist:module
         dist:instant="false"
+        dist:onDemand="true"
         dist:title="@string/title_quran">
         <dist:delivery>
             <dist:on-demand />

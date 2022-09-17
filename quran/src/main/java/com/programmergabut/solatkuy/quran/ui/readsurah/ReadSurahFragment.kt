@@ -18,20 +18,14 @@ import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
 import com.programmergabut.solatkuy.data.local.localentity.MsAyah
 import com.programmergabut.solatkuy.data.local.localentity.MsFavSurah
-import com.programmergabut.solatkuy.di.SubModuleDependencies
 import com.programmergabut.solatkuy.quran.R
 import com.programmergabut.solatkuy.quran.base.BaseFragmentQuran
 import com.programmergabut.solatkuy.quran.databinding.FragmentReadSurahBinding
 import com.programmergabut.solatkuy.quran.databinding.ListReadSurahBinding
-import com.programmergabut.solatkuy.quran.di.DaggerQuranViewModelComponent
-import com.programmergabut.solatkuy.quran.di.QuranViewModelComponent
 import com.programmergabut.solatkuy.util.Status
-import dagger.hilt.android.AndroidEntryPoint
-import dagger.hilt.android.EntryPointAccessors
 import es.dmoral.toasty.Toasty
 import com.programmergabut.solatkuy.R as superappR
 
-@AndroidEntryPoint
 class ReadSurahFragment(
     viewModelTest: ReadSurahViewModel? = null
 ) : BaseFragmentQuran<FragmentReadSurahBinding, ReadSurahViewModel>(
@@ -41,7 +35,6 @@ class ReadSurahFragment(
 ), View.OnClickListener {
 
     private val args: ReadSurahFragmentArgs by navArgs()
-    private var component: QuranViewModelComponent? = null
     private lateinit var readSurahAdapter: ReadSurahAdapter
     private var menu: Menu? = null
     private var isMoreFabClick = false
@@ -73,21 +66,6 @@ class ReadSurahFragment(
         initRVReadSurah()
         setListener()
         viewModel.getSelectedSurah(args.selectedSurahId.toInt())
-    }
-
-    private fun getActivityComponent(): QuranViewModelComponent? {
-        if (component == null) {
-            component = DaggerQuranViewModelComponent.builder()
-                .context(requireContext().applicationContext)
-                .dependencies(
-                    EntryPointAccessors.fromApplication(
-                        requireContext().applicationContext,
-                        SubModuleDependencies::class.java
-                    )
-                )
-                .build()
-        }
-        return component
     }
 
     private fun setupView() {
