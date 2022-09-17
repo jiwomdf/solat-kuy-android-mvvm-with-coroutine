@@ -7,7 +7,6 @@ import android.util.TypedValue
 import android.view.*
 import android.view.animation.AnimationUtils
 import androidx.appcompat.app.AppCompatActivity
-import androidx.appcompat.widget.Toolbar
 import androidx.constraintlayout.widget.ConstraintLayout
 import androidx.core.content.ContextCompat
 import androidx.core.view.isVisible
@@ -17,11 +16,11 @@ import androidx.recyclerview.widget.ItemTouchHelper
 import androidx.recyclerview.widget.ItemTouchHelper.LEFT
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.recyclerview.widget.RecyclerView
-import com.programmergabut.solatkuy.base.BaseFragment
 import com.programmergabut.solatkuy.data.local.localentity.MsAyah
 import com.programmergabut.solatkuy.data.local.localentity.MsFavSurah
 import com.programmergabut.solatkuy.di.SubModuleDependencies
 import com.programmergabut.solatkuy.quran.R
+import com.programmergabut.solatkuy.quran.base.BaseFragmentQuran
 import com.programmergabut.solatkuy.quran.databinding.FragmentReadSurahBinding
 import com.programmergabut.solatkuy.quran.databinding.ListReadSurahBinding
 import com.programmergabut.solatkuy.quran.di.DaggerQuranViewModelComponent
@@ -35,7 +34,7 @@ import com.programmergabut.solatkuy.R as superappR
 @AndroidEntryPoint
 class ReadSurahFragment(
     viewModelTest: ReadSurahViewModel? = null
-) : BaseFragment<FragmentReadSurahBinding, ReadSurahViewModel>(
+) : BaseFragmentQuran<FragmentReadSurahBinding, ReadSurahViewModel>(
     R.layout.fragment_read_surah,
     ReadSurahViewModel::class.java,
     viewModelTest
@@ -63,8 +62,12 @@ class ReadSurahFragment(
         return super.onCreateView(inflater, container, savedInstanceState)
     }
 
-    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
+    override fun onCreate(savedInstanceState: Bundle?) {
         getActivityComponent()?.inject(this)
+        super.onCreate(savedInstanceState)
+    }
+
+    override fun onViewCreated(view: View, savedInstanceState: Bundle?) {
         super.onViewCreated(view, savedInstanceState)
         setupView()
         initRVReadSurah()

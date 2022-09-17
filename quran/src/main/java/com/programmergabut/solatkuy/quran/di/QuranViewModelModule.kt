@@ -1,6 +1,8 @@
 package com.programmergabut.solatkuy.quran.di
 
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.ViewModelProvider
+import com.programmergabut.solatkuy.DaggerViewModelFactory
 import com.programmergabut.solatkuy.quran.ui.listsurah.ListSurahViewModel
 import com.programmergabut.solatkuy.quran.ui.readsurah.ReadSurahViewModel
 import dagger.Binds
@@ -14,6 +16,8 @@ import dagger.multibindings.IntoMap
 @InstallIn(ViewModelComponent::class)
 abstract class QuranViewModelModule {
 
+    @Binds
+    abstract fun bindViewModelFactory(factory: DaggerViewModelFactory): ViewModelProvider.Factory
 
     @Binds
     @IntoMap

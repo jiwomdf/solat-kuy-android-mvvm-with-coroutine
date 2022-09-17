@@ -3,22 +3,23 @@ package com.programmergabut.solatkuy.quran.ui.listsurah
 import android.os.Bundle
 import android.text.Editable
 import android.text.TextWatcher
+import android.view.LayoutInflater
 import android.view.View
+import android.view.ViewGroup
 import android.widget.AdapterView
 import android.widget.ArrayAdapter
 import androidx.navigation.fragment.findNavController
 import androidx.recyclerview.widget.LinearLayoutManager
 import androidx.swiperefreshlayout.widget.SwipeRefreshLayout
-import com.programmergabut.solatkuy.base.BaseFragment
 import com.programmergabut.solatkuy.data.local.localentity.MsSurah
 import com.programmergabut.solatkuy.di.SubModuleDependencies
 import com.programmergabut.solatkuy.quran.R
+import com.programmergabut.solatkuy.quran.base.BaseFragmentQuran
 import com.programmergabut.solatkuy.quran.databinding.FragmentListSurahBinding
 import com.programmergabut.solatkuy.quran.di.DaggerQuranViewModelComponent
 import com.programmergabut.solatkuy.quran.di.QuranViewModelComponent
 import com.programmergabut.solatkuy.util.Status
 import dagger.hilt.android.EntryPointAccessors
-import java.util.*
 import com.programmergabut.solatkuy.R as superappR
 
 /*
@@ -27,7 +28,7 @@ import com.programmergabut.solatkuy.R as superappR
 
 class ListSurahFragment(
     viewModelTest: ListSurahViewModel? = null
-) : BaseFragment<FragmentListSurahBinding, ListSurahViewModel>(
+) : BaseFragmentQuran<FragmentListSurahBinding, ListSurahViewModel>(
     R.layout.fragment_list_surah,
     ListSurahViewModel::class.java,
     viewModelTest

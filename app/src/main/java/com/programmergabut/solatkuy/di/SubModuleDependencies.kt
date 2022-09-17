@@ -1,9 +1,7 @@
 package com.programmergabut.solatkuy.di
 
 import android.content.SharedPreferences
-import com.programmergabut.solatkuy.data.QuranRepositoryImpl
-import com.programmergabut.solatkuy.data.local.SolatKuyRoom
-import com.programmergabut.solatkuy.data.local.dao.*
+import com.programmergabut.solatkuy.data.QuranRepository
 import com.programmergabut.solatkuy.ui.SolatKuyFragmentFactory
 import dagger.hilt.EntryPoint
 import dagger.hilt.InstallIn
@@ -17,7 +15,7 @@ interface SubModuleDependencies {
 
     fun provideSolatKuyFragmentFactory(): SolatKuyFragmentFactory
 
-    fun provideQuran(): QuranRepositoryImpl
+    fun provideQuran(): QuranRepository
 
     fun provideSharedPreferences(): SharedPreferences
     fun provideGsonConverterFactory(): GsonConverterFactory
