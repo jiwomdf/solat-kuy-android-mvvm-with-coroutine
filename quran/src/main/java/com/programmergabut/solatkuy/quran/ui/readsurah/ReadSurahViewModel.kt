@@ -1,7 +1,7 @@
 package com.programmergabut.solatkuy.quran.ui.readsurah
 
 import androidx.lifecycle.*
-import com.programmergabut.solatkuy.data.QuranRepository
+import com.programmergabut.solatkuy.data.repository.QuranRepository
 import com.programmergabut.solatkuy.data.local.localentity.MsFavSurah
 import com.programmergabut.solatkuy.util.livedata.AbsentLiveData
 import dagger.hilt.android.lifecycle.HiltViewModel

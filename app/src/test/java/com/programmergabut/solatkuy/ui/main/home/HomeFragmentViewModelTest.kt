@@ -38,34 +38,15 @@ class HomeFragmentViewModelTest {
     private lateinit var fakePrayerRepository: FakePrayerRepository
     @Mock
     private lateinit var fakeQuranRepository: FakeQuranRepository
-    private val msApi1 = DummyRetValueTest.msApi1
+    private val msConfiguration = DummyRetValueTest.msConfiguration
     private val surahID = DummyRetValueTest.surahID
     private val mapPrayer = DummyRetValueTest.getMapPrayer()
 
     @Before
     fun before(){
         viewModel = HomeViewModel(fakePrayerRepository, fakeQuranRepository)
-        verify(fakePrayerRepository).observeMsApi1()
+        verify(fakePrayerRepository).observeMsConfiguration()
     }
-
-    /* @Test
-    fun `getListNotifiedPrayer, observe notifiedPrayer`() = coroutinesTestRule.testDispatcher.runBlockingTest{
-        val observer = mock<Observer<Resource<List<NotifiedPrayer>>>>()
-        val dummyNotifiedPrayer = Resource.success(DummyRetValueTest.fetchPrayerApi<HomeFragmentViewModelTest>())
-        val dummyPrayerResponse = Resource.success(DummyRetValueTest.getListNotifiedPrayer(), "Application Online")
-        dummyNotifiedPrayer.data?.responseStatus = "1"
-        `when`(fakePrayerRepository.fetchPrayerApi(msApi1)).thenReturn(dummyNotifiedPrayer.data!!.toDeferred())
-        `when`(fakePrayerRepository.getListNotifiedPrayer()).thenReturn(dummyPrayerResponse.data)
-
-        viewModel.getListNotifiedPrayer(msApi1)
-        val result = viewModel.notifiedPrayer.value
-
-        verify(fakePrayerRepository).fetchPrayerApi(msApi1).toDeferred()
-        assertEquals(dummyPrayerResponse, result)
-
-        viewModel.notifiedPrayer.observeForever(observer)
-        verify(observer).onChanged(dummyPrayerResponse)
-    } */
 
     @Test
     fun `fetchReadSurahEn, observe readSurahEn`() = coroutinesTestRule.testDispatcher.runBlockingTest{
@@ -104,9 +85,9 @@ class HomeFragmentViewModelTest {
 
 
     @Test
-    fun `updateMsApi1, updateMsApi1() called`() = coroutinesTestRule.testDispatcher.runBlockingTest {
-        viewModel.updateMsApi1(msApi1)
-        verify(fakePrayerRepository).updateMsApi1(msApi1)
+    fun `updateMsConfiguration, updateMsConfiguration() called`() = coroutinesTestRule.testDispatcher.runBlockingTest {
+        viewModel.updateMsConfiguration(msConfiguration)
+        verify(fakePrayerRepository).updateMsConfiguration(msConfiguration)
     }
 
     @Test

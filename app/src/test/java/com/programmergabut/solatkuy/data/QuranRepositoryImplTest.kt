@@ -1,7 +1,6 @@
 package com.programmergabut.solatkuy.data
 
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
-import androidx.lifecycle.MutableLiveData
 import com.nhaarman.mockitokotlin2.verify
 import com.programmergabut.solatkuy.CoroutinesTestRule
 import com.programmergabut.solatkuy.DummyRetValueTest
@@ -12,11 +11,10 @@ import com.programmergabut.solatkuy.data.local.dao.MsSurahDao
 import com.programmergabut.solatkuy.data.remote.api.AllSurahService
 import com.programmergabut.solatkuy.data.remote.api.ReadSurahArService
 import com.programmergabut.solatkuy.data.remote.api.ReadSurahEnService
-import com.programmergabut.solatkuy.util.ContextProviders
-import junit.framework.TestCase.assertNotNull
+import com.programmergabut.solatkuy.di.contextprovider.ContextProviderImpl
+import com.programmergabut.solatkuy.di.contextprovider.ContextProviderTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking
-import kotlinx.coroutines.test.runBlockingTest
 import org.junit.Rule
 import org.junit.Test
 import org.mockito.Mockito.*
@@ -34,9 +32,9 @@ class QuranRepositoryImplTest: BaseRepository() {
     private val readSurahEnService = mock(ReadSurahEnService::class.java)
     private val allSurahService = mock(AllSurahService::class.java)
     private val readSurahArService = mock(ReadSurahArService::class.java)
-    private val contextProviders = mock(ContextProviders::class.java)
+    private val contextProvider = ContextProviderTest()
     private val quranRepository = FakeQuranRepository(msFavSurahDao, msSurahDao,
-        msAyahDao, readSurahEnService,allSurahService, readSurahArService,contextProviders)
+        msAyahDao, readSurahEnService,allSurahService, readSurahArService, contextProvider)
     private val surahID = DummyRetValueTest.surahID
 
     /* Remote */

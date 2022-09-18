@@ -15,7 +15,7 @@ import com.bumptech.glide.request.transition.DrawableCrossFadeFactory
 import com.programmergabut.solatkuy.R
 import com.programmergabut.solatkuy.base.BaseFragment
 import com.programmergabut.solatkuy.data.hardcodedata.DuaData
-import com.programmergabut.solatkuy.data.local.localentity.MsApi1
+import com.programmergabut.solatkuy.data.local.localentity.MsConfiguration
 import com.programmergabut.solatkuy.model.Timings
 import com.programmergabut.solatkuy.data.local.localentity.MsNotifiedPrayer
 import com.programmergabut.solatkuy.data.remote.json.prayerJson.Result
@@ -196,12 +196,12 @@ class HomeFragment(
     }
 
     private fun subscribeObserversDB() {
-        viewModel.msApi1.observe(viewLifecycleOwner) { api1 ->
+        viewModel.msConfiguration.observe(viewLifecycleOwner) { api1 ->
             if (api1 == null)
                 return@observe
 
             bindWidgetLocation(api1)
-            updateMonthAndYearMsApi1(api1)
+            updateMonthAndYearMsConfiguration(api1)
             viewModel.getListNotifiedPrayer(api1)
 
             val city = LocationHelper.getCity(
@@ -257,7 +257,7 @@ class HomeFragment(
         obj -> obj.date.gregorian?.day == SimpleDateFormat("dd", Locale.getDefault()).format(Date())
     }
 
-    private fun updateMonthAndYearMsApi1(data: MsApi1) {
+    private fun updateMonthAndYearMsConfiguration(data: MsConfiguration) {
         val arrDate = LocalDate.now().toString("dd/M/yyyy").split("/")
         val year = arrDate[2]
         val month = arrDate[1]
@@ -265,7 +265,7 @@ class HomeFragment(
         val dbMoth = data.month.toInt()
 
         if(year.toInt() > dbYear && month.toInt() > dbMoth){
-            viewModel.updateMsApi1MonthAndYear(1, arrDate[1], arrDate[2])
+            viewModel.updateMsConfigurationMonthAndYear(1, arrDate[1], arrDate[2])
         }
     }
 
@@ -344,7 +344,7 @@ class HomeFragment(
         selectNextPrayerTime(selectedPrayer, data)
     }
 
-    private fun bindWidgetLocation(it: MsApi1) {
+    private fun bindWidgetLocation(it: MsConfiguration) {
         val city = LocationHelper.getCity(requireContext(), it.latitude.toDouble(), it.longitude.toDouble())
         binding.tvViewLatitude.text = it.latitude + " °N"
         binding.tvViewLongitude.text = it.longitude + " °W"
@@ -491,7 +491,7 @@ class HomeFragment(
             /* fetching Prayer API */
             if(tempHour == 0 && tempMinute == 0 && tempSecond == 1){
                 withContext(Dispatchers.Main){
-                    viewModel.msApi1.value?.let {
+                    viewModel.msConfiguration.value?.let {
                         viewModel.getListNotifiedPrayer(it)
                         isTimerHasBanded = false
                     }

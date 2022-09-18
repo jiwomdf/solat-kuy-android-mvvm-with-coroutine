@@ -8,12 +8,13 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.liveData
 import com.programmergabut.solatkuy.DummyValueAndroidTest
-import com.programmergabut.solatkuy.data.local.localentity.MsApi1
+import com.programmergabut.solatkuy.data.local.localentity.MsConfiguration
 import com.programmergabut.solatkuy.data.local.localentity.MsCalculationMethods
 import com.programmergabut.solatkuy.data.local.localentity.MsSetting
 import com.programmergabut.solatkuy.data.local.localentity.MsNotifiedPrayer
 import com.programmergabut.solatkuy.data.remote.json.compassJson.CompassResponse
 import com.programmergabut.solatkuy.data.remote.json.prayerJson.PrayerResponse
+import com.programmergabut.solatkuy.data.repository.PrayerRepository
 import com.programmergabut.solatkuy.util.Resource
 import dagger.hilt.android.testing.HiltAndroidTest
 import kotlinx.coroutines.CoroutineScope
@@ -24,23 +25,23 @@ import kotlinx.coroutines.async
 @HiltAndroidTest
 class FakePrayerRepositoryAndroidTest : PrayerRepository {
 
-    private var msApi11 = DummyValueAndroidTest.getMsApi1()
+    private var msConfiguration = DummyValueAndroidTest.getMsConfiguration()
     private var msSetting = DummyValueAndroidTest.getMsSetting()
     private var notifiedPrayer = DummyValueAndroidTest.getNotifiedPrayer()
     private var msCalculationMethods = DummyValueAndroidTest.getMsCalculationMethods()
 
-    private val observableMsApi1 = MutableLiveData<MsApi1>()
+    private val observableMsConfiguration = MutableLiveData<MsConfiguration>()
     private val observableMsSetting = MutableLiveData<MsSetting>()
     private val observableNotifiedPrayer = MutableLiveData<List<MsNotifiedPrayer>>()
 
     init {
-        observableMsApi1.postValue(msApi11)
+        observableMsConfiguration.postValue(msConfiguration)
         observableMsSetting.postValue(msSetting)
         observableNotifiedPrayer.postValue(notifiedPrayer)
     }
 
-    private fun refreshMsApi1(){
-        observableMsApi1.postValue(msApi11)
+    private fun refreshMsConfiguration(){
+        observableMsConfiguration.postValue(msConfiguration)
     }
     private fun refreshMsSetting(){
         observableMsSetting.postValue(msSetting)
@@ -71,17 +72,17 @@ class FakePrayerRepositoryAndroidTest : PrayerRepository {
         observableNotifiedPrayer.postValue(newList)
     }
 
-    /* MsApi1 */
-    override fun observeMsApi1(): LiveData<MsApi1> {
-        return observableMsApi1
+    /* MsConfiguration */
+    override fun observeMsConfiguration(): LiveData<MsConfiguration> {
+        return observableMsConfiguration
     }
-    override suspend fun updateMsApi1(msApi1: MsApi1){
-        msApi11 = msApi1
-        refreshMsApi1()
+    override suspend fun updateMsConfiguration(msConfiguration: MsConfiguration){
+        this.msConfiguration = msConfiguration
+        refreshMsConfiguration()
     }
 
-    override suspend fun updateMsApi1Method(api1ID: Int, methodID: String) {
-        msApi11 = MsApi1(api1ID, msApi11.latitude, msApi11.longitude, methodID, msApi11.month, msApi11.year)
+    override suspend fun updateMsConfigurationMethod(api1ID: Int, methodID: String) {
+        msConfiguration = MsConfiguration(api1ID, msConfiguration.latitude, msConfiguration.longitude, methodID, msConfiguration.month, msConfiguration.year)
     }
 
     override fun observeMsSetting(): LiveData<MsSetting> {
@@ -89,8 +90,8 @@ class FakePrayerRepositoryAndroidTest : PrayerRepository {
     }
 
     /* MsSetting */
-    override suspend fun updateMsApi1MonthAndYear(api1ID: Int, month: String, year:String){
-        msApi11 = MsApi1(api1ID, msApi11.latitude, msApi11.longitude, msApi11.method, month, year)
+    override suspend fun updateMsConfigurationMonthAndYear(api1ID: Int, month: String, year:String){
+        msConfiguration = MsConfiguration(api1ID, msConfiguration.latitude, msConfiguration.longitude, msConfiguration.method, month, year)
         refreshMsSetting()
     }
     override suspend fun updateIsHasOpenApp(isHasOpen: Boolean){
@@ -99,14 +100,14 @@ class FakePrayerRepositoryAndroidTest : PrayerRepository {
     }
 
     /* Retrofit */
-    override suspend fun fetchQibla(msApi1: MsApi1): Deferred<Resource<CompassResponse>> {
+    override suspend fun fetchQibla(msConfiguration: MsConfiguration): Deferred<Resource<CompassResponse>> {
         return CoroutineScope(IO).async {
             val data = DummyValueAndroidTest.fetchCompassApi<FakePrayerRepositoryAndroidTest>()
             data.message = "testing"
             Resource.success(data)
         }
     }
-    override suspend fun fetchPrayerApi(msApi1: MsApi1): Deferred<Resource<PrayerResponse>> {
+    override suspend fun fetchPrayerApi(msConfiguration: MsConfiguration): Deferred<Resource<PrayerResponse>> {
         return CoroutineScope(IO).async {
             val data = DummyValueAndroidTest.fetchPrayerApi<FakePrayerRepositoryAndroidTest>()
             data.message = "testing"
@@ -120,7 +121,7 @@ class FakePrayerRepositoryAndroidTest : PrayerRepository {
         }
     }
 
-    override fun getListNotifiedPrayer(msApi1: MsApi1): LiveData<Resource<List<MsNotifiedPrayer>>> {
+    override fun getListNotifiedPrayer(msConfiguration: MsConfiguration): LiveData<Resource<List<MsNotifiedPrayer>>> {
         return liveData {
             emit(Resource.success(notifiedPrayer))
         }

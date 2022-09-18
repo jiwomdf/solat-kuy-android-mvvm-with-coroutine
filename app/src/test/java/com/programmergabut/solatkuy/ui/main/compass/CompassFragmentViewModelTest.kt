@@ -33,24 +33,24 @@ class CompassFragmentViewModelTest {
     val coroutinesTestRule: CoroutinesTestRule = CoroutinesTestRule()
     @Mock
     private lateinit var prayerRepository: FakePrayerRepository
-    private val msApi1 = DummyRetValueTest.msApi1
+    private val msConfiguration = DummyRetValueTest.msConfiguration
 
     @Before
     fun before(){
         viewModel = CompassViewModel(prayerRepository)
-        Mockito.verify(prayerRepository).observeMsApi1()
+        Mockito.verify(prayerRepository).observeMsConfiguration()
     }
 
     @Test
     fun `fetchCompassApi, observe compass change`() = coroutinesTestRule.testDispatcher.runBlockingTest{
         val observer = mock<Observer<Resource<CompassResponse>>>()
         val dummyCompass = Resource.success(DummyRetValueTest.fetchCompassApi<CompassFragmentViewModelTest>())
-        `when`(prayerRepository.fetchQibla(msApi1)).thenReturn(Resource.success(dummyCompass.data).toDeferred())
+        `when`(prayerRepository.fetchQibla(msConfiguration)).thenReturn(Resource.success(dummyCompass.data).toDeferred())
 
-        viewModel.fetchCompassApi(msApi1)
+        viewModel.fetchCompassApi(msConfiguration)
         val result = viewModel.compass.value
 
-        Mockito.verify(prayerRepository).fetchQibla(msApi1).toDeferred()
+        Mockito.verify(prayerRepository).fetchQibla(msConfiguration).toDeferred()
         Assert.assertEquals(dummyCompass, result)
 
         viewModel.compass.observeForever(observer)

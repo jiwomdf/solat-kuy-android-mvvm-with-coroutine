@@ -1,8 +1,8 @@
 package com.programmergabut.solatkuy.ui.main.setting
 
 import androidx.lifecycle.*
-import com.programmergabut.solatkuy.data.PrayerRepository
-import com.programmergabut.solatkuy.data.local.localentity.MsApi1
+import com.programmergabut.solatkuy.data.repository.PrayerRepository
+import com.programmergabut.solatkuy.data.local.localentity.MsConfiguration
 import com.programmergabut.solatkuy.data.local.localentity.MsCalculationMethods
 import com.programmergabut.solatkuy.util.Resource
 import com.programmergabut.solatkuy.util.livedata.AbsentLiveData
@@ -17,7 +17,7 @@ import javax.inject.Inject
 @HiltViewModel
 class SettingViewModel @Inject constructor(private val prayerRepository: PrayerRepository): ViewModel() {
 
-    val msApi1 = prayerRepository.observeMsApi1()
+    val msConfiguration = prayerRepository.observeMsConfiguration()
 
     private var _methods = MutableLiveData(false)
     val methods: LiveData<Resource<List<MsCalculationMethods>>> = Transformations.switchMap(_methods) { isFirstLoad ->
@@ -31,12 +31,12 @@ class SettingViewModel @Inject constructor(private val prayerRepository: PrayerR
         this._methods.value = value
     }
 
-    fun updateMsApi1(msApi1: MsApi1) = viewModelScope.launch {
-        prayerRepository.updateMsApi1(msApi1)
+    fun updateMsConfiguration(msConfiguration: MsConfiguration) = viewModelScope.launch {
+        prayerRepository.updateMsConfiguration(msConfiguration)
     }
 
-    fun updateMsApi1Method(api1ID: Int, methodID: String) = viewModelScope.launch {
-        prayerRepository.updateMsApi1Method(api1ID, methodID)
+    fun updateMsConfigurationMethod(api1ID: Int, methodID: String) = viewModelScope.launch {
+        prayerRepository.updateMsConfigurationMethod(api1ID, methodID)
     }
 
 

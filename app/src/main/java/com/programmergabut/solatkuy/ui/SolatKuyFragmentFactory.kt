@@ -3,8 +3,8 @@ package com.programmergabut.solatkuy.ui
 import android.content.Context
 import androidx.fragment.app.Fragment
 import androidx.fragment.app.FragmentFactory
-import com.programmergabut.solatkuy.data.PrayerRepositoryImpl
-import com.programmergabut.solatkuy.data.QuranRepositoryImpl
+import com.programmergabut.solatkuy.data.repository.PrayerRepositoryImpl
+import com.programmergabut.solatkuy.data.repository.QuranRepositoryImpl
 import com.programmergabut.solatkuy.ui.main.home.HomeFragment
 import com.programmergabut.solatkuy.ui.main.home.HomeViewModel
 import com.programmergabut.solatkuy.ui.main.qibla.CompassFragment

@@ -13,3 +13,5 @@
 .externalNativeBuild
 .cxx
 /app/release
+/keystore.properties
+/play_config.json
