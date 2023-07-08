@@ -21,9 +21,9 @@ created with:
 - Fastline support
 - GitHub Actions support
 
-<b>Note</b>:
-- Turn off the window scale, transition scale, and animator duration scale when testing
-- If you want to run the project from the <b>main</b> branch, please create file named <b>keystore.properties</b> in root project that contain this value <br>
+<h3>How to run the project from the main branch</h3>
+If you want to run the project from the <b>main</b> branch, please create file named <b>keystore.properties</b> in root project that contain this value <br><br>
+
 ```
 storeFile=lorem ipsum
 storePassword=lorem ipsum
