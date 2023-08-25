@@ -8,10 +8,6 @@ import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.liveData
 import com.programmergabut.solatkuy.DummyValueAndroidTest
-import com.programmergabut.solatkuy.data.local.localentity.MsConfiguration
-import com.programmergabut.solatkuy.data.local.localentity.MsCalculationMethods
-import com.programmergabut.solatkuy.data.local.localentity.MsSetting
-import com.programmergabut.solatkuy.data.local.localentity.MsNotifiedPrayer
 import com.programmergabut.solatkuy.data.remote.json.compassJson.CompassResponse
 import com.programmergabut.solatkuy.data.remote.json.prayerJson.PrayerResponse
 import com.programmergabut.solatkuy.data.repository.PrayerRepository

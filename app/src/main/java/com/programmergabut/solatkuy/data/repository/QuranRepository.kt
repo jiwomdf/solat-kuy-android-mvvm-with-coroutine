@@ -10,6 +10,8 @@ import com.programmergabut.solatkuy.util.Resource
 import kotlinx.coroutines.Deferred
 
 interface QuranRepository {
+    fun insertFastRataItems(data: FastRataItemEntity)
+    fun getFastRata(): LiveData<List<FastRataItemEntity>>
     fun observeListFavSurah(): LiveData<List<MsFavSurah>>
     fun observeFavSurahBySurahID(surahID: Int): LiveData<MsFavSurah?>
     suspend fun insertFavSurah(msFavSurah: MsFavSurah)

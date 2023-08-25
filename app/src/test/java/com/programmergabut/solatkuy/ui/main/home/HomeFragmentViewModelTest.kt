@@ -10,7 +10,6 @@ import com.programmergabut.solatkuy.util.Resource
 import com.programmergabut.solatkuy.DummyRetValueTest
 import com.programmergabut.solatkuy.data.FakePrayerRepository
 import com.programmergabut.solatkuy.data.FakeQuranRepository
-import com.programmergabut.solatkuy.data.local.localentity.MsSetting
 import com.programmergabut.solatkuy.data.remote.json.readsurahJsonEn.ReadSurahEnResponse
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest

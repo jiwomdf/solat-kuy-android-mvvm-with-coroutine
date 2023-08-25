@@ -13,7 +13,9 @@ import kotlinx.coroutines.launch
  * Created by Katili Jiwo Adi Wiyono on 25/03/20.
  */
 
-@Database(version = 4, entities = [MsNotifiedPrayer::class, MsConfiguration::class, MsSetting::class, MsFavSurah::class, MsSurah::class, MsAyah::class, MsCalculationMethods::class])
+@Database(version = 4, entities =
+[MsNotifiedPrayer::class, MsConfiguration::class, MsSetting::class, MsFavSurah::class,
+    MsSurah::class, MsAyah::class, MsCalculationMethods::class, FastRataItemEntity::class])
 abstract class SolatKuyRoom : RoomDatabase() {
 
     abstract fun notifiedPrayerDao(): MsNotifiedPrayerDao
@@ -23,6 +25,7 @@ abstract class SolatKuyRoom : RoomDatabase() {
     abstract fun msAyahDao(): MsAyahDao
     abstract fun msFavSurahDao(): MsFavSurahDao
     abstract fun msCalculationMethodsDao(): MsCalculationMethodsDao
+    abstract fun fastRataDao(): FastRataDao
 
     companion object{
         fun populateDatabase(instance: SolatKuyRoom){

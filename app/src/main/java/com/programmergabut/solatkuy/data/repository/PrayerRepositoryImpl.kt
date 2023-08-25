@@ -2,22 +2,13 @@ package com.programmergabut.solatkuy.data.repository
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
-import com.programmergabut.solatkuy.data.local.dao.MsConfigurationDao
-import com.programmergabut.solatkuy.data.local.dao.MsSettingDao
-import com.programmergabut.solatkuy.data.local.dao.MsNotifiedPrayerDao
-import com.programmergabut.solatkuy.data.local.localentity.MsConfiguration
-import com.programmergabut.solatkuy.data.local.localentity.MsSetting
-import com.programmergabut.solatkuy.data.local.localentity.MsNotifiedPrayer
 import com.programmergabut.solatkuy.data.remote.ApiResponse
 import com.programmergabut.solatkuy.data.remote.api.PrayerApiService
 import com.programmergabut.solatkuy.data.remote.api.QiblaApiService
 import com.programmergabut.solatkuy.data.remote.json.compassJson.CompassResponse
-import com.programmergabut.solatkuy.data.remote.json.prayerJson.Result
 import com.programmergabut.solatkuy.data.remote.json.prayerJson.PrayerResponse
 import com.programmergabut.solatkuy.data.remote.json.prayerJson.Timings
 import com.programmergabut.solatkuy.base.BaseRepository
-import com.programmergabut.solatkuy.data.local.dao.MsCalculationMethodsDao
-import com.programmergabut.solatkuy.data.local.localentity.MsCalculationMethods
 import com.programmergabut.solatkuy.data.remote.json.methodJson.MethodResponse
 import com.programmergabut.solatkuy.di.contextprovider.ContextProvider
 import com.programmergabut.solatkuy.util.Constant

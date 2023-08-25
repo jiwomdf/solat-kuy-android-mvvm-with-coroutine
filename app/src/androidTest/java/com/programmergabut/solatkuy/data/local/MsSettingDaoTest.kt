@@ -3,8 +3,6 @@ package com.programmergabut.solatkuy.data.local
 import androidx.arch.core.executor.testing.InstantTaskExecutorRule
 import androidx.test.espresso.matcher.ViewMatchers.assertThat
 import androidx.test.filters.SmallTest
-import com.programmergabut.solatkuy.data.local.dao.MsSettingDao
-import com.programmergabut.solatkuy.data.local.localentity.MsSetting
 import com.programmergabut.solatkuy.getOrAwaitValue
 import dagger.hilt.android.testing.HiltAndroidRule
 import dagger.hilt.android.testing.HiltAndroidTest

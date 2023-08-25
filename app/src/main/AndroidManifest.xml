@@ -20,28 +20,28 @@
         android:supportsRtl="true"
         android:theme="@style/AppTheme"
         tools:targetApi="n">
-
         <activity
             android:name=".ui.splash.SplashActivity"
+            android:exported="false" />
+        <activity
+            android:name=".ui.fastrata.FastRataActivity"
             android:exported="true"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity">
             <intent-filter>
                 <action android:name="android.intent.action.MAIN" />
+
                 <category android:name="android.intent.category.LAUNCHER" />
             </intent-filter>
         </activity>
-
         <activity
             android:name=".ui.dua.DuaActivity"
             android:exported="false" />
-
         <activity
             android:name=".ui.boarding.BoardingActivity"
             android:exported="false"
             android:screenOrientation="portrait"
             tools:ignore="LockedOrientationActivity" />
-
         <activity
             android:name=".ui.main.MainActivity"
             android:exported="false"
@@ -57,7 +57,6 @@
             android:name=".broadcaster.PrayerBroadcastReceiver"
             android:exported="true"
             tools:node="merge" />
-
         <receiver
             android:name=".broadcaster.BootCompleteReceiver"
             android:exported="true">

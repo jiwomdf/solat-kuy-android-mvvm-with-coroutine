@@ -9,8 +9,6 @@ import com.programmergabut.solatkuy.CoroutinesTestRule
 import com.programmergabut.solatkuy.DummyRetValueTest
 import com.programmergabut.solatkuy.data.FakeQuranRepository
 import com.programmergabut.solatkuy.data.QuranRepositoryImplTest
-import com.programmergabut.solatkuy.data.local.localentity.MsSurah
-import com.programmergabut.solatkuy.data.remote.json.quranallsurahJson.Result
 import com.programmergabut.solatkuy.util.Resource
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.test.runBlockingTest

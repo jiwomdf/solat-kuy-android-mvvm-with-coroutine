@@ -52,4 +52,8 @@ object DatabaseModule {
     @Singleton
     @Provides
     fun provideMsCalculationMethodsDao(db: SolatKuyRoom) = db.msCalculationMethodsDao()
+
+    @Singleton
+    @Provides
+    fun provideFastRataDao(db: SolatKuyRoom) = db.fastRataDao()
 }

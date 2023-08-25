@@ -8,7 +8,6 @@ import android.content.Intent
 import com.google.firebase.crashlytics.FirebaseCrashlytics
 import com.programmergabut.solatkuy.ui.dua.DuaActivity
 import com.programmergabut.solatkuy.util.Constant
-import com.programmergabut.solatkuy.ui.NotificationHelper
 import com.programmergabut.solatkuy.data.hardcodedata.DuaData
 import com.programmergabut.solatkuy.model.DuaExtraData
 import com.programmergabut.solatkuy.model.PrayerExtraData

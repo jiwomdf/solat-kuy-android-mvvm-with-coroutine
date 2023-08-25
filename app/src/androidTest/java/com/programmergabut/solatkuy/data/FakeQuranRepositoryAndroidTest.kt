@@ -7,13 +7,11 @@ package com.programmergabut.solatkuy.data
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
 import androidx.lifecycle.liveData
-import com.programmergabut.solatkuy.data.local.localentity.MsFavSurah
 import com.programmergabut.solatkuy.data.remote.json.quranallsurahJson.AllSurahResponse
 import com.programmergabut.solatkuy.data.remote.json.readsurahJsonAr.ReadSurahArResponse
 import com.programmergabut.solatkuy.data.remote.json.readsurahJsonEn.ReadSurahEnResponse
 import com.programmergabut.solatkuy.DummyValueAndroidTest
-import com.programmergabut.solatkuy.data.local.localentity.MsAyah
-import com.programmergabut.solatkuy.data.local.localentity.MsSurah
+import com.programmergabut.solatkuy.data.local.localentity.FastRataItemEntity
 import com.programmergabut.solatkuy.data.remote.json.readsurahJsonAr.Ayah
 import com.programmergabut.solatkuy.data.repository.QuranRepository
 import com.programmergabut.solatkuy.util.Resource
@@ -30,6 +28,14 @@ class FakeQuranRepositoryAndroidTest : QuranRepository {
     private fun refreshMsFavSurah() {
         observableMsFavSurahs.postValue(listMsFavSurah)
         observableMsFavSurah.value = listMsFavSurah[0]
+    }
+
+    override fun insertFastRataItems(data: FastRataItemEntity) {
+        TODO("Not yet implemented")
+    }
+
+    override fun getFastRata(): LiveData<List<FastRataItemEntity>> {
+        TODO("Not yet implemented")
     }
 
     /* MsFavSurah */

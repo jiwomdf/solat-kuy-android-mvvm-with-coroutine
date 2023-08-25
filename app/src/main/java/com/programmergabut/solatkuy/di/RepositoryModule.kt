@@ -41,18 +41,20 @@ object RepositoryModule {
         msFavSurahDao: MsFavSurahDao,
         msSurahDao: MsSurahDao,
         msAyahDao: MsAyahDao,
+        fastRataDao: FastRataDao,
         readSurahEnService: ReadSurahEnService,
         allSurahService: AllSurahService,
         readSurahArService: ReadSurahArService,
         contextProvider: ContextProvider
     ) = QuranRepositoryImpl(
+        fastRataDao,
         msFavSurahDao,
         msSurahDao,
         msAyahDao,
         readSurahEnService,
         allSurahService,
         readSurahArService,
-        contextProvider,
+        contextProvider
     ) as QuranRepository
 
 

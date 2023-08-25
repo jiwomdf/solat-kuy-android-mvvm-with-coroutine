@@ -5,10 +5,6 @@ import android.util.Log
 import androidx.work.Worker
 import androidx.work.WorkerParameters
 import com.google.firebase.crashlytics.FirebaseCrashlytics
-import com.programmergabut.solatkuy.data.local.dao.MsConfigurationDao
-import com.programmergabut.solatkuy.data.local.dao.MsNotifiedPrayerDao
-import com.programmergabut.solatkuy.ui.LocationHelper
-import com.programmergabut.solatkuy.ui.PushNotificationHelper
 
 class FireAlarmManagerWorker(
     val context: Context,

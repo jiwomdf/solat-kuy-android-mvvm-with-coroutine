@@ -5,13 +5,9 @@ import com.nhaarman.mockitokotlin2.verify
 import com.programmergabut.solatkuy.CoroutinesTestRule
 import com.programmergabut.solatkuy.DummyRetValueTest
 import com.programmergabut.solatkuy.base.BaseRepository
-import com.programmergabut.solatkuy.data.local.dao.MsAyahDao
-import com.programmergabut.solatkuy.data.local.dao.MsFavSurahDao
-import com.programmergabut.solatkuy.data.local.dao.MsSurahDao
 import com.programmergabut.solatkuy.data.remote.api.AllSurahService
 import com.programmergabut.solatkuy.data.remote.api.ReadSurahArService
 import com.programmergabut.solatkuy.data.remote.api.ReadSurahEnService
-import com.programmergabut.solatkuy.di.contextprovider.ContextProviderImpl
 import com.programmergabut.solatkuy.di.contextprovider.ContextProviderTest
 import kotlinx.coroutines.ExperimentalCoroutinesApi
 import kotlinx.coroutines.runBlocking

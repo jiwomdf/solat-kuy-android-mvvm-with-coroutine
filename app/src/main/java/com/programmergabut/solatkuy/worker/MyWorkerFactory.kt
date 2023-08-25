@@ -4,8 +4,6 @@ import android.content.Context
 import androidx.work.ListenableWorker
 import androidx.work.WorkerFactory
 import androidx.work.WorkerParameters
-import com.programmergabut.solatkuy.data.local.dao.MsConfigurationDao
-import com.programmergabut.solatkuy.data.local.dao.MsNotifiedPrayerDao
 
 class MyWorkerFactory(
     private val msNotifiedPrayerDao: MsNotifiedPrayerDao,

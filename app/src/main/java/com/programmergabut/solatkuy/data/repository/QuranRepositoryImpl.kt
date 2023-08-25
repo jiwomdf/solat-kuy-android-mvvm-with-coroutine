@@ -2,11 +2,6 @@ package com.programmergabut.solatkuy.data.repository
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
-import com.programmergabut.solatkuy.data.local.dao.MsAyahDao
-import com.programmergabut.solatkuy.data.local.dao.MsSurahDao
-import com.programmergabut.solatkuy.data.local.localentity.MsAyah
-import com.programmergabut.solatkuy.data.local.localentity.MsFavSurah
-import com.programmergabut.solatkuy.data.local.localentity.MsSurah
 import com.programmergabut.solatkuy.data.remote.ApiResponse
 import com.programmergabut.solatkuy.data.remote.api.AllSurahService
 import com.programmergabut.solatkuy.data.remote.api.ReadSurahArService
@@ -15,9 +10,9 @@ import com.programmergabut.solatkuy.data.remote.json.quranallsurahJson.AllSurahR
 import com.programmergabut.solatkuy.data.remote.json.readsurahJsonAr.Ayah
 import com.programmergabut.solatkuy.data.remote.json.readsurahJsonAr.ReadSurahArResponse
 import com.programmergabut.solatkuy.data.remote.json.readsurahJsonEn.ReadSurahEnResponse
-import com.programmergabut.solatkuy.di.contextprovider.ContextProviderImpl
 import com.programmergabut.solatkuy.base.BaseRepository
-import com.programmergabut.solatkuy.data.local.dao.MsFavSurahDao
+import com.programmergabut.solatkuy.data.local.dao.FastRataDao
+import com.programmergabut.solatkuy.data.local.localentity.FastRataItemEntity
 import com.programmergabut.solatkuy.di.contextprovider.ContextProvider
 import com.programmergabut.solatkuy.util.Resource
 import kotlinx.coroutines.CoroutineScope
@@ -28,6 +23,7 @@ import java.util.*
 import javax.inject.Inject
 
 class QuranRepositoryImpl @Inject constructor(
+    private val fastRataDao: FastRataDao,
     private val msFavSurahDao: MsFavSurahDao,
     private val msSurahDao: MsSurahDao,
     private val msAyahDao: MsAyahDao,
@@ -36,6 +32,15 @@ class QuranRepositoryImpl @Inject constructor(
     private val readSurahArService: ReadSurahArService,
     private val contextProvider: ContextProvider,
 ): BaseRepository(), QuranRepository {
+
+    /** Fastrata **/
+    override fun insertFastRataItems(data: FastRataItemEntity) {
+        return fastRataDao.insertFastRataItems(data)
+    }
+
+    override fun getFastRata(): LiveData<List<FastRataItemEntity>> {
+        return fastRataDao.getFastRataItems()
+    }
 
     /* MsFavSurah */
     override fun observeListFavSurah(): LiveData<List<MsFavSurah>> = msFavSurahDao.observeFavSurahs()

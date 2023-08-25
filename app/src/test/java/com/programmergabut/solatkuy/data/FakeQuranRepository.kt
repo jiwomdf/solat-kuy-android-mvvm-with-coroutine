@@ -3,12 +3,7 @@ package com.programmergabut.solatkuy.data
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.liveData
 import com.programmergabut.solatkuy.base.BaseRepository
-import com.programmergabut.solatkuy.data.local.dao.MsAyahDao
-import com.programmergabut.solatkuy.data.local.dao.MsFavSurahDao
-import com.programmergabut.solatkuy.data.local.dao.MsSurahDao
-import com.programmergabut.solatkuy.data.local.localentity.MsAyah
-import com.programmergabut.solatkuy.data.local.localentity.MsFavSurah
-import com.programmergabut.solatkuy.data.local.localentity.MsSurah
+import com.programmergabut.solatkuy.data.local.localentity.FastRataItemEntity
 import com.programmergabut.solatkuy.data.remote.ApiResponse
 import com.programmergabut.solatkuy.data.remote.api.AllSurahService
 import com.programmergabut.solatkuy.data.remote.api.ReadSurahArService
@@ -16,10 +11,8 @@ import com.programmergabut.solatkuy.data.remote.api.ReadSurahEnService
 import com.programmergabut.solatkuy.data.remote.json.quranallsurahJson.AllSurahResponse
 import com.programmergabut.solatkuy.data.remote.json.readsurahJsonAr.ReadSurahArResponse
 import com.programmergabut.solatkuy.data.remote.json.readsurahJsonEn.ReadSurahEnResponse
-import com.programmergabut.solatkuy.data.repository.NetworkBoundResource
 import com.programmergabut.solatkuy.data.repository.QuranRepository
 import com.programmergabut.solatkuy.di.contextprovider.ContextProvider
-import com.programmergabut.solatkuy.di.contextprovider.ContextProviderImpl
 import com.programmergabut.solatkuy.util.Resource
 import kotlinx.coroutines.*
 import java.util.*
@@ -33,6 +26,13 @@ class FakeQuranRepository constructor(
     private val readSurahArService: ReadSurahArService,
     private val contextProvider: ContextProvider,
 ):BaseRepository(), QuranRepository {
+    override fun insertFastRataItems(data: FastRataItemEntity) {
+        TODO("Not yet implemented")
+    }
+
+    override fun getFastRata(): LiveData<List<FastRataItemEntity>> {
+        TODO("Not yet implemented")
+    }
 
     /* MsFavSurah */
     override fun observeListFavSurah() = msFavSurahDao.observeFavSurahs()
