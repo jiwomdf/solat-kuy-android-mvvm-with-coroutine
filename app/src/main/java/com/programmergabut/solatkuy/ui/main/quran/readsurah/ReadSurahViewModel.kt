@@ -12,10 +12,10 @@ import javax.inject.Inject
 class ReadSurahViewModel @Inject constructor(val quranRepository: QuranRepository): ViewModel() {
 
     private var surahID = MutableLiveData<Int>()
-    val favSurahBySurahID: LiveData<MsFavSurah?> = Transformations.switchMap(surahID) { ayahID ->
+    val favSurahBySurahID: LiveData<MsFavSurah?> = surahID.switchMap { ayahID ->
         quranRepository.observeFavSurahBySurahID(ayahID)
     }
-    val selectedSurah = Transformations.switchMap(surahID){
+    val selectedSurah = surahID.switchMap{
         if (it == null) {
             AbsentLiveData.create()
         } else {

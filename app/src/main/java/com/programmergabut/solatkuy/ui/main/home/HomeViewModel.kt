@@ -27,12 +27,8 @@ class HomeViewModel @Inject constructor(
 
     val msConfiguration = prayerRepository.observeMsConfiguration()
     private val _msConfiguration = MutableLiveData<MsConfiguration>()
-    val notifiedPrayer = Transformations.switchMap(_msConfiguration){
-        if(_msConfiguration == null){
-            AbsentLiveData.create()
-        } else {
-            prayerRepository.getListNotifiedPrayer(it)
-        }
+    val notifiedPrayer = _msConfiguration.switchMap{
+        prayerRepository.getListNotifiedPrayer(it)
     }
     fun getListNotifiedPrayer(msConfiguration: MsConfiguration){
         _msConfiguration.value = msConfiguration
@@ -73,7 +69,7 @@ class HomeViewModel @Inject constructor(
     }
 
     private var isSettingCalled = MutableLiveData(false)
-    val msSetting: LiveData<MsSetting> = Transformations.switchMap(isSettingCalled) { isFirstLoad ->
+    val msSetting: LiveData<MsSetting> = isSettingCalled.switchMap { isFirstLoad ->
         if (!isFirstLoad) {
             AbsentLiveData.create()
         } else {

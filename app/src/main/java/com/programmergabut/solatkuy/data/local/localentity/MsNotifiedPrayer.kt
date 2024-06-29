@@ -1,6 +1,7 @@
 package com.programmergabut.solatkuy.data.local.localentity
 
 import androidx.room.Entity
+import androidx.room.Ignore
 import androidx.room.PrimaryKey
 
 /*
@@ -17,7 +18,8 @@ class MsNotifiedPrayer (
     @PrimaryKey(autoGenerate = true)
     var prayerID: Int = 0
 
-    constructor(prayerID: Int,  prayerName: String,  isNotified: Boolean,  prayerTime: String): this (prayerName, isNotified, prayerTime){
+    @Ignore
+    constructor (prayerID: Int, prayerName: String, isNotified: Boolean, prayerTime: String): this (prayerName, isNotified, prayerTime){
         this.prayerID = prayerID
     }
 

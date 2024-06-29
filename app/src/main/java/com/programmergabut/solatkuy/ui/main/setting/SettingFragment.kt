@@ -258,6 +258,7 @@ BaseFragment<FragmentSettingBinding, SettingViewModel>(
         Toasty.success(requireContext(), getString(R.string.success_change_the_coordinate), Toasty.LENGTH_SHORT).show()
     }
 
+    @Deprecated("Deprecated in Java")
     override fun onRequestPermissionsResult(requestCode: Int, permissions: Array<out String>, grantResults: IntArray) {
         super.onRequestPermissionsResult(requestCode, permissions, grantResults)
         if(requestCode == LOCATION_PERMISSIONS){

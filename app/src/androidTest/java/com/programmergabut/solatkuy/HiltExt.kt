@@ -23,7 +23,7 @@ inline fun <reified T: Fragment> launchFragmentInHiltContainer(
             ApplicationProvider.getApplicationContext(),
             HiltTestActivity::class.java,
         )
-    ).putExtra(FragmentScenario.EmptyFragmentActivity.THEME_EXTRAS_BUNDLE_KEY, themeResId)
+    ).putExtra("FragmentScenario.EmptyFragmentActivity.THEME_EXTRAS_BUNDLE_KEY", themeResId)
 
     ActivityScenario.launch<HiltTestActivity>(mainActivityIntent).onActivity { activity ->
         fragmentFactory?.let {

@@ -1,34 +1,32 @@
 // Top-level build file where you can add configuration options common to all sub-projects/modules.
 
 buildscript {
-    ext.kotlin_version = '1.5.10'
-    ext.nav_version = "2.3.5"
-    ext.roomVersion = '2.3.0'
+    ext.kotlin_version = '1.8.0'
+    ext.nav_version = '2.7.7'
+    ext.roomVersion = '2.6.1'
     repositories {
         google()
+        maven {url "https://maven.google.com"}
         jcenter()
-        maven {
-            url "http://storage.googleapis.com/r8-releases/raw/master"
-        }
     }
     dependencies {
-        classpath 'com.android.tools.build:gradle:4.2.2'
+        classpath 'com.android.tools.build:gradle:8.5.0'
         classpath "org.jetbrains.kotlin:kotlin-gradle-plugin:$kotlin_version"
 
         //Dagger Hilt
-        classpath 'com.google.dagger:hilt-android-gradle-plugin:2.35.1'
+        classpath 'com.google.dagger:hilt-android-gradle-plugin:2.48'
 
         //Navigation Component
         classpath "androidx.navigation:navigation-safe-args-gradle-plugin:$nav_version"
 
         //Material Design
-        classpath 'com.android.tools:r8:2.2.64'
-        classpath 'com.android.tools.build:gradle:4.2.2'
+        classpath 'com.android.tools:r8:8.3.37'
+        classpath 'com.android.tools.build:gradle:8.5.0'
         classpath "org.jetbrains.kotlin:kotlin-allopen:$kotlin_version"
 
         // Google
-        classpath 'com.google.gms:google-services:4.3.8'
-        classpath 'com.google.firebase:firebase-crashlytics-gradle:2.7.1'
+        classpath 'com.google.gms:google-services:4.4.2'
+        classpath 'com.google.firebase:firebase-crashlytics-gradle:3.0.2'
 
         // NOTE: Do not place your application dependencies here; they belong
         // in the individual module build.gradle files
@@ -36,11 +34,16 @@ buildscript {
 }
 
 allprojects {
+    configurations.configureEach {
+        resolutionStrategy.force 'org.objenesis:objenesis:2.6'
+        resolutionStrategy.force 'androidx.test:core:1.6.0'
+    }
+
     repositories {
         google()
-        jcenter()
+        maven {url "https://maven.google.com"}
         maven { url "https://jitpack.io" }
-
+        jcenter()
     }
 }
 

@@ -78,7 +78,7 @@ class HomeFragmentViewModelTest {
 
         verify(fakePrayerRepository).observeMsSetting()
         assertEquals(dummyData.value, result)
-        verify(observer).onChanged(dummyData.value)
+        dummyData.value?.let { verify(observer).onChanged(it) }
 
         viewModel.msSetting.removeObserver(observer)
     }

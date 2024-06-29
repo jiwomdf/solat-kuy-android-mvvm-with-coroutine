@@ -67,8 +67,8 @@ class HomeFragment(
         super.onStart()
         binding.apply {
             tvWidgetPrayerCountdown.text = getString(R.string.loading)
-            includeQuranQuote?.tvQuranAyahQuote.visibility = View.GONE
-            includeQuranQuote?.tvQuranAyahQuoteClick.visibility = View.VISIBLE
+            includeQuranQuote.tvQuranAyahQuote.visibility = View.GONE
+            includeQuranQuote.tvQuranAyahQuoteClick.visibility = View.VISIBLE
 
             viewModel.notifiedPrayer.value?.data?.let {
                 val timing = createWidgetData(it)

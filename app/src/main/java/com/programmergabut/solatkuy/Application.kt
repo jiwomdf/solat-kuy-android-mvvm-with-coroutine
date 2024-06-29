@@ -20,12 +20,11 @@ class Application : Application(), Configuration.Provider {
         MultiDex.install(this)
     }
 
-    override fun getWorkManagerConfiguration(): Configuration {
-        return Configuration.Builder()
+    override val workManagerConfiguration: Configuration
+        get() = Configuration.Builder()
             .setMinimumLoggingLevel(android.util.Log.DEBUG)
             .setWorkerFactory(MyWorkerFactory(db.notifiedPrayerDao(), db.msConfigurationDao()))
             .build()
-    }
 
 
 }

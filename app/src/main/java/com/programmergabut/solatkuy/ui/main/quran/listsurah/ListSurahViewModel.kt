@@ -2,8 +2,8 @@ package com.programmergabut.solatkuy.ui.main.quran.listsurah
 
 import androidx.lifecycle.LiveData
 import androidx.lifecycle.MutableLiveData
-import androidx.lifecycle.Transformations
 import androidx.lifecycle.ViewModel
+import androidx.lifecycle.switchMap
 import com.programmergabut.solatkuy.data.repository.QuranRepository
 import com.programmergabut.solatkuy.data.local.localentity.MsSurah
 import com.programmergabut.solatkuy.util.Resource
@@ -18,7 +18,7 @@ class ListSurahViewModel @Inject constructor(private val quranRepository: QuranR
     val staredSurah = quranRepository.observeListFavSurah()
 
     private var isAyahsCalled = MutableLiveData(false)
-    val allSurah: LiveData<Resource<List<MsSurah>>> = Transformations.switchMap(isAyahsCalled){ isAyahsCalled ->
+    val allSurah: LiveData<Resource<List<MsSurah>>> = isAyahsCalled.switchMap { isAyahsCalled ->
         if (!isAyahsCalled) {
             AbsentLiveData.create()
         } else {

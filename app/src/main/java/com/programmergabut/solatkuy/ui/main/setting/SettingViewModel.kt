@@ -20,7 +20,7 @@ class SettingViewModel @Inject constructor(private val prayerRepository: PrayerR
     val msConfiguration = prayerRepository.observeMsConfiguration()
 
     private var _methods = MutableLiveData(false)
-    val methods: LiveData<Resource<List<MsCalculationMethods>>> = Transformations.switchMap(_methods) { isFirstLoad ->
+    val methods: LiveData<Resource<List<MsCalculationMethods>>> = _methods.switchMap { isFirstLoad ->
         if (!isFirstLoad) {
             AbsentLiveData.create()
         } else {
